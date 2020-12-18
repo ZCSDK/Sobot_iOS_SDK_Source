@@ -1,0 +1,1766 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXAggregateTarget section */
+		7BB220C01C005746003539F7 /* CreateFrameworScript */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 7BB220C11C005746003539F7 /* Build configuration list for PBXAggregateTarget "CreateFrameworScript" */;
+			buildPhases = (
+				7BB220C41C005753003539F7 /* Run Script */,
+			);
+			dependencies = (
+			);
+			name = CreateFrameworScript;
+			productName = CreateFrameworScript;
+		};
+/* End PBXAggregateTarget section */
+
+/* Begin PBXBuildFile section */
+		59E4A0C423B4532000680CD7 /* libSobotLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 59E4A0A423B4532000680CD7 /* libSobotLib.a */; };
+		59E4A0C623B4532000680CD7 /* ZCLIbGlobalDefine.h in Headers */ = {isa = PBXBuildFile; fileRef = 59E4A0A723B4532000680CD7 /* ZCLIbGlobalDefine.h */; };
+		59E4A0C723B4532000680CD7 /* ZCLibCommon.h in Headers */ = {isa = PBXBuildFile; fileRef = 59E4A0A823B4532000680CD7 /* ZCLibCommon.h */; };
+		59E4A0C823B4532000680CD7 /* ZCLibHttpConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = 59E4A0A923B4532000680CD7 /* ZCLibHttpConstants.h */; };
+		59E4A0C923B4532000680CD7 /* ZCLibNetworkTools.h in Headers */ = {isa = PBXBuildFile; fileRef = 59E4A0AA23B4532000680CD7 /* ZCLibNetworkTools.h */; };
+		59E4A0CA23B4532000680CD7 /* ZCLibRich.h in Headers */ = {isa = PBXBuildFile; fileRef = 59E4A0AB23B4532000680CD7 /* ZCLibRich.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		59E4A0CB23B4532000680CD7 /* ZCHtmlCore.h in Headers */ = {isa = PBXBuildFile; fileRef = 59E4A0AC23B4532000680CD7 /* ZCHtmlCore.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		59E4A0CC23B4532000680CD7 /* ZCIMChat.h in Headers */ = {isa = PBXBuildFile; fileRef = 59E4A0AD23B4532000680CD7 /* ZCIMChat.h */; };
+		59E4A0CD23B4532000680CD7 /* ZCMultiwheelModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 59E4A0AE23B4532000680CD7 /* ZCMultiwheelModel.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		59E4A0CE23B4532000680CD7 /* ZCLogUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 59E4A0AF23B4532000680CD7 /* ZCLogUtils.h */; };
+		59E4A0CF23B4532000680CD7 /* ZCRecordListModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 59E4A0B023B4532000680CD7 /* ZCRecordListModel.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		59E4A0D023B4532000680CD7 /* ZCPlatformInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 59E4A0B123B4532000680CD7 /* ZCPlatformInfo.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		59E4A0D123B4532000680CD7 /* ZCLibOrderCusFieldsModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 59E4A0B223B4532000680CD7 /* ZCLibOrderCusFieldsModel.h */; };
+		59E4A0D223B4532000680CD7 /* ZCLibSkillSet.h in Headers */ = {isa = PBXBuildFile; fileRef = 59E4A0B323B4532000680CD7 /* ZCLibSkillSet.h */; };
+		59E4A0D323B4532000680CD7 /* ZCLibServer.h in Headers */ = {isa = PBXBuildFile; fileRef = 59E4A0B423B4532000680CD7 /* ZCLibServer.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		59E4A0D423B4532000680CD7 /* ZCLocalStore.h in Headers */ = {isa = PBXBuildFile; fileRef = 59E4A0B523B4532000680CD7 /* ZCLocalStore.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		59E4A0D523B4532000680CD7 /* ZCLibClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 59E4A0B623B4532000680CD7 /* ZCLibClient.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		59E4A0D623B4532000680CD7 /* ZCLibHttpManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 59E4A0B723B4532000680CD7 /* ZCLibHttpManager.h */; };
+		59E4A0D723B4532000680CD7 /* ZCPlatformTools.h in Headers */ = {isa = PBXBuildFile; fileRef = 59E4A0B823B4532000680CD7 /* ZCPlatformTools.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		59E4A0D823B4532000680CD7 /* ZCLibMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = 59E4A0B923B4532000680CD7 /* ZCLibMessage.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		59E4A0D923B4532000680CD7 /* ZCLibSatisfaction.h in Headers */ = {isa = PBXBuildFile; fileRef = 59E4A0BA23B4532000680CD7 /* ZCLibSatisfaction.h */; };
+		59E4A0DA23B4532000680CD7 /* ZCLibConfig.h in Headers */ = {isa = PBXBuildFile; fileRef = 59E4A0BB23B4532000680CD7 /* ZCLibConfig.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		59E4A0DB23B4532000680CD7 /* UIDeviceTools.h in Headers */ = {isa = PBXBuildFile; fileRef = 59E4A0BC23B4532000680CD7 /* UIDeviceTools.h */; };
+		59E4A0DC23B4532000680CD7 /* ZCLibReachability.h in Headers */ = {isa = PBXBuildFile; fileRef = 59E4A0BD23B4532000680CD7 /* ZCLibReachability.h */; };
+		59E4A0DD23B4532000680CD7 /* SobotLib.h in Headers */ = {isa = PBXBuildFile; fileRef = 59E4A0BE23B4532000680CD7 /* SobotLib.h */; };
+		59E4A0DE23B4532000680CD7 /* ZCLibTicketTypeModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 59E4A0BF23B4532000680CD7 /* ZCLibTicketTypeModel.h */; };
+		59E4A0DF23B4532000680CD7 /* ZCLibInitInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 59E4A0C023B4532000680CD7 /* ZCLibInitInfo.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		59E4A0E023B4532000680CD7 /* ZCLibContent.h in Headers */ = {isa = PBXBuildFile; fileRef = 59E4A0C123B4532000680CD7 /* ZCLibContent.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		59E4A0E123B4532000680CD7 /* ZCLibStatusDefine.h in Headers */ = {isa = PBXBuildFile; fileRef = 59E4A0C223B4532000680CD7 /* ZCLibStatusDefine.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		59E4A0E223B4532000680CD7 /* ZCLibMessageConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = 59E4A0C323B4532000680CD7 /* ZCLibMessageConstants.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7B18AF1C2576177C00C7C7FF /* ZCChatAllRichCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B18AF1A2576177C00C7C7FF /* ZCChatAllRichCell.m */; };
+		7B18AF1D2576177C00C7C7FF /* ZCChatAllRichCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 7B18AF1B2576177C00C7C7FF /* ZCChatAllRichCell.h */; };
+		7BB21FA41C005611003539F7 /* SobotKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BB21FA31C005611003539F7 /* SobotKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7BB220BC1C005653003539F7 /* ZCSobot.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BB2203F1C005653003539F7 /* ZCSobot.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7BB220BD1C005653003539F7 /* ZCSobot.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BB220401C005653003539F7 /* ZCSobot.m */; };
+		7BB220BF1C00566F003539F7 /* SobotKit.pch in Headers */ = {isa = PBXBuildFile; fileRef = 7BB220BE1C00566F003539F7 /* SobotKit.pch */; };
+		7BDB5F032433283E00D655C5 /* ZCSobotApi.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5F012433283E00D655C5 /* ZCSobotApi.m */; };
+		7BDB5F042433283E00D655C5 /* ZCSobotApi.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5F022433283E00D655C5 /* ZCSobotApi.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7BDB6007243328F800D655C5 /* ZCUIWebController.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5F06243328F700D655C5 /* ZCUIWebController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7BDB6008243328F800D655C5 /* ZCUIAskTableController.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5F08243328F700D655C5 /* ZCUIAskTableController.h */; };
+		7BDB6009243328F800D655C5 /* ZCUIAskTableController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5F09243328F700D655C5 /* ZCUIAskTableController.m */; };
+		7BDB600A243328F800D655C5 /* ZCUIBaseController.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5F0A243328F700D655C5 /* ZCUIBaseController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7BDB600B243328F800D655C5 /* ZCUIChatListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5F0B243328F700D655C5 /* ZCUIChatListController.m */; };
+		7BDB600C243328F800D655C5 /* ZCChatCellDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5F0D243328F700D655C5 /* ZCChatCellDelegate.h */; };
+		7BDB600D243328F800D655C5 /* ZCFileCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5F0E243328F700D655C5 /* ZCFileCell.m */; };
+		7BDB600E243328F800D655C5 /* ZCVoiceChatCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5F0F243328F700D655C5 /* ZCVoiceChatCell.h */; };
+		7BDB600F243328F800D655C5 /* ZCLocationCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5F10243328F700D655C5 /* ZCLocationCell.h */; };
+		7BDB6010243328F800D655C5 /* ZCImageChatCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5F11243328F700D655C5 /* ZCImageChatCell.m */; };
+		7BDB6011243328F800D655C5 /* ZCSatisfactionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5F12243328F700D655C5 /* ZCSatisfactionCell.m */; };
+		7BDB6012243328F800D655C5 /* ZCMultiItemCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5F14243328F700D655C5 /* ZCMultiItemCell.h */; };
+		7BDB6013243328F800D655C5 /* ZCCardCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5F15243328F700D655C5 /* ZCCardCollectionViewCell.m */; };
+		7BDB6014243328F800D655C5 /* ZCHotGuideCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5F16243328F700D655C5 /* ZCHotGuideCell.h */; };
+		7BDB6015243328F800D655C5 /* ZCCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5F17243328F700D655C5 /* ZCCollectionViewCell.m */; };
+		7BDB6016243328F800D655C5 /* ZCCardCollectionViewFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5F18243328F700D655C5 /* ZCCardCollectionViewFlowLayout.m */; };
+		7BDB6017243328F800D655C5 /* ZCMultitemHorizontaRollCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5F19243328F700D655C5 /* ZCMultitemHorizontaRollCell.h */; };
+		7BDB6018243328F800D655C5 /* ZCMultiItemCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5F1A243328F700D655C5 /* ZCMultiItemCell.m */; };
+		7BDB6019243328F800D655C5 /* ZCCardCollectionViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5F1B243328F700D655C5 /* ZCCardCollectionViewCell.h */; };
+		7BDB601A243328F800D655C5 /* ZCHotGuideCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5F1C243328F700D655C5 /* ZCHotGuideCell.m */; };
+		7BDB601B243328F800D655C5 /* ZCMultitemHorizontaRollCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5F1D243328F700D655C5 /* ZCMultitemHorizontaRollCell.m */; };
+		7BDB601C243328F800D655C5 /* ZCCardCollectionViewFlowLayout.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5F1E243328F700D655C5 /* ZCCardCollectionViewFlowLayout.h */; };
+		7BDB601D243328F800D655C5 /* ZCCollectionViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5F1F243328F700D655C5 /* ZCCollectionViewCell.h */; };
+		7BDB601E243328F800D655C5 /* ZCOrderGoodsCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5F20243328F700D655C5 /* ZCOrderGoodsCell.m */; };
+		7BDB601F243328F800D655C5 /* ZCInfoCardCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5F21243328F700D655C5 /* ZCInfoCardCell.h */; };
+		7BDB6020243328F800D655C5 /* ZCRichTextChatCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5F22243328F700D655C5 /* ZCRichTextChatCell.m */; };
+		7BDB6021243328F800D655C5 /* ZCGoodsCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5F23243328F700D655C5 /* ZCGoodsCell.h */; };
+		7BDB6022243328F800D655C5 /* ZCTextGuideCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5F24243328F700D655C5 /* ZCTextGuideCell.m */; };
+		7BDB6023243328F800D655C5 /* ZCTipsChatCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5F25243328F700D655C5 /* ZCTipsChatCell.m */; };
+		7BDB6024243328F800D655C5 /* ZCChatBaseCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5F26243328F700D655C5 /* ZCChatBaseCell.h */; };
+		7BDB6025243328F800D655C5 /* ZCMultiRichCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5F27243328F700D655C5 /* ZCMultiRichCell.m */; };
+		7BDB6026243328F800D655C5 /* ZCUIChatListCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5F28243328F700D655C5 /* ZCUIChatListCell.h */; };
+		7BDB6027243328F800D655C5 /* ZCNoticeCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5F29243328F700D655C5 /* ZCNoticeCell.m */; };
+		7BDB6028243328F800D655C5 /* ZCLocationCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5F2A243328F700D655C5 /* ZCLocationCell.m */; };
+		7BDB6029243328F800D655C5 /* ZCVoiceChatCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5F2B243328F700D655C5 /* ZCVoiceChatCell.m */; };
+		7BDB602A243328F800D655C5 /* ZCFileCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5F2C243328F700D655C5 /* ZCFileCell.h */; };
+		7BDB602B243328F800D655C5 /* ZCInfoCardCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5F2D243328F700D655C5 /* ZCInfoCardCell.m */; };
+		7BDB602C243328F800D655C5 /* ZCOrderGoodsCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5F2E243328F700D655C5 /* ZCOrderGoodsCell.h */; };
+		7BDB602D243328F800D655C5 /* ZCSatisfactionCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5F2F243328F700D655C5 /* ZCSatisfactionCell.h */; };
+		7BDB602E243328F800D655C5 /* ZCImageChatCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5F30243328F700D655C5 /* ZCImageChatCell.h */; };
+		7BDB602F243328F800D655C5 /* ZCTextGuideCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5F31243328F700D655C5 /* ZCTextGuideCell.h */; };
+		7BDB6030243328F800D655C5 /* ZCGoodsCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5F32243328F700D655C5 /* ZCGoodsCell.m */; };
+		7BDB6031243328F800D655C5 /* ZCRichTextChatCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5F33243328F700D655C5 /* ZCRichTextChatCell.h */; };
+		7BDB6032243328F800D655C5 /* ZCNoticeCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5F34243328F700D655C5 /* ZCNoticeCell.h */; };
+		7BDB6033243328F800D655C5 /* ZCUIChatListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5F35243328F700D655C5 /* ZCUIChatListCell.m */; };
+		7BDB6034243328F800D655C5 /* ZCMultiRichCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5F36243328F700D655C5 /* ZCMultiRichCell.h */; };
+		7BDB6035243328F800D655C5 /* ZCChatBaseCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5F37243328F700D655C5 /* ZCChatBaseCell.m */; };
+		7BDB6036243328F800D655C5 /* ZCTipsChatCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5F38243328F700D655C5 /* ZCTipsChatCell.h */; };
+		7BDB6038243328F800D655C5 /* ZCUIWebController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5F3A243328F700D655C5 /* ZCUIWebController.m */; };
+		7BDB6039243328F800D655C5 /* ZCServiceListCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5F3C243328F700D655C5 /* ZCServiceListCell.h */; };
+		7BDB603A243328F800D655C5 /* ZCServiceDetailVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5F3D243328F700D655C5 /* ZCServiceDetailVC.m */; };
+		7BDB603B243328F800D655C5 /* ZCServiceListVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5F3E243328F700D655C5 /* ZCServiceListVC.h */; };
+		7BDB603C243328F800D655C5 /* ZCServiceCentreVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5F3F243328F700D655C5 /* ZCServiceCentreVC.h */; };
+		7BDB603D243328F800D655C5 /* ZCServiceListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5F40243328F700D655C5 /* ZCServiceListCell.m */; };
+		7BDB603E243328F800D655C5 /* ZCServiceDetailVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5F41243328F700D655C5 /* ZCServiceDetailVC.h */; };
+		7BDB603F243328F800D655C5 /* ZCServiceCentreVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5F42243328F700D655C5 /* ZCServiceCentreVC.m */; };
+		7BDB6040243328F800D655C5 /* ZCServiceListVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5F43243328F700D655C5 /* ZCServiceListVC.m */; };
+		7BDB6041243328F800D655C5 /* ZCUIBaseController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5F44243328F700D655C5 /* ZCUIBaseController.m */; };
+		7BDB6042243328F800D655C5 /* ZCUIChatListController.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5F45243328F700D655C5 /* ZCUIChatListController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7BDB6043243328F800D655C5 /* ZCXJAlbumController.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5F47243328F700D655C5 /* ZCXJAlbumController.h */; };
+		7BDB6044243328F800D655C5 /* ZCOrderCheckCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5F49243328F700D655C5 /* ZCOrderCheckCell.m */; };
+		7BDB6045243328F800D655C5 /* ZCOrderCreateCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5F4A243328F700D655C5 /* ZCOrderCreateCell.h */; };
+		7BDB6046243328F800D655C5 /* ZCMsgRecordCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5F4B243328F700D655C5 /* ZCMsgRecordCell.m */; };
+		7BDB6047243328F800D655C5 /* ZCOrderOnlyEditCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5F4C243328F700D655C5 /* ZCOrderOnlyEditCell.h */; };
+		7BDB6048243328F800D655C5 /* ZCOrderEditCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5F4D243328F700D655C5 /* ZCOrderEditCell.h */; };
+		7BDB6049243328F800D655C5 /* ZCOrderContentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5F4E243328F700D655C5 /* ZCOrderContentCell.m */; };
+		7BDB604A243328F800D655C5 /* ZCOrderCreateCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5F4F243328F700D655C5 /* ZCOrderCreateCell.m */; };
+		7BDB604B243328F800D655C5 /* ZCOrderCheckCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5F50243328F700D655C5 /* ZCOrderCheckCell.h */; };
+		7BDB604C243328F800D655C5 /* ZCOrderOnlyEditCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5F51243328F700D655C5 /* ZCOrderOnlyEditCell.m */; };
+		7BDB604D243328F800D655C5 /* ZCMsgRecordCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5F52243328F700D655C5 /* ZCMsgRecordCell.h */; };
+		7BDB604E243328F800D655C5 /* ZCOrderContentCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5F53243328F700D655C5 /* ZCOrderContentCell.h */; };
+		7BDB604F243328F800D655C5 /* ZCOrderEditCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5F54243328F700D655C5 /* ZCOrderEditCell.m */; };
+		7BDB6050243328F800D655C5 /* ZCUILeaveMessageController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5F55243328F700D655C5 /* ZCUILeaveMessageController.m */; };
+		7BDB6051243328F800D655C5 /* ZCReplyFileView.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5F57243328F700D655C5 /* ZCReplyFileView.h */; };
+		7BDB6052243328F800D655C5 /* ZCLeaveDetailCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5F58243328F700D655C5 /* ZCLeaveDetailCell.h */; };
+		7BDB6053243328F800D655C5 /* ZCMsgDetailsVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5F59243328F700D655C5 /* ZCMsgDetailsVC.h */; };
+		7BDB6054243328F800D655C5 /* ZCReplyLeaveView.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5F5A243328F700D655C5 /* ZCReplyLeaveView.h */; };
+		7BDB6055243328F800D655C5 /* ZCReplyLeaveView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5F5B243328F700D655C5 /* ZCReplyLeaveView.m */; };
+		7BDB6056243328F800D655C5 /* ZCMsgDetailsVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5F5C243328F700D655C5 /* ZCMsgDetailsVC.m */; };
+		7BDB6057243328F800D655C5 /* ZCLeaveDetailCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5F5D243328F700D655C5 /* ZCLeaveDetailCell.m */; };
+		7BDB6058243328F800D655C5 /* ZCReplyFileView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5F5E243328F700D655C5 /* ZCReplyFileView.m */; };
+		7BDB6059243328F800D655C5 /* ZCReplyLeaveController.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5F5F243328F700D655C5 /* ZCReplyLeaveController.h */; };
+		7BDB605A243328F800D655C5 /* ZCMsgRecordVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5F60243328F700D655C5 /* ZCMsgRecordVC.m */; };
+		7BDB605B243328F800D655C5 /* ZCXJAlbumController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5F61243328F700D655C5 /* ZCXJAlbumController.m */; };
+		7BDB605C243328F800D655C5 /* ZCReplyLeaveController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5F62243328F700D655C5 /* ZCReplyLeaveController.m */; };
+		7BDB605D243328F800D655C5 /* ZCUILeaveMessageController.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5F63243328F700D655C5 /* ZCUILeaveMessageController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7BDB605E243328F800D655C5 /* ZCMsgRecordVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5F64243328F700D655C5 /* ZCMsgRecordVC.h */; };
+		7BDB605F243328F800D655C5 /* ZCChatView.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5F67243328F700D655C5 /* ZCChatView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7BDB6060243328F800D655C5 /* ZCUIKeyboard.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5F69243328F700D655C5 /* ZCUIKeyboard.h */; };
+		7BDB6061243328F800D655C5 /* ZCUIKeyboard.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5F6A243328F700D655C5 /* ZCUIKeyboard.m */; };
+		7BDB6062243328F800D655C5 /* ZCChatView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5F6B243328F700D655C5 /* ZCChatView.m */; };
+		7BDB6063243328F800D655C5 /* ZCChatController.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5F6E243328F700D655C5 /* ZCChatController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7BDB6064243328F800D655C5 /* ZCLocationController.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5F6F243328F700D655C5 /* ZCLocationController.h */; };
+		7BDB6065243328F800D655C5 /* ZCDocumentLookController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5F70243328F700D655C5 /* ZCDocumentLookController.m */; };
+		7BDB6066243328F800D655C5 /* ZCVideoViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5F71243328F700D655C5 /* ZCVideoViewController.h */; };
+		7BDB6067243328F800D655C5 /* ZCChatController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5F72243328F700D655C5 /* ZCChatController.m */; };
+		7BDB6068243328F800D655C5 /* ZCDocumentLookController.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5F73243328F700D655C5 /* ZCDocumentLookController.h */; };
+		7BDB6069243328F800D655C5 /* ZCLocationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5F74243328F700D655C5 /* ZCLocationController.m */; };
+		7BDB606A243328F800D655C5 /* ZCVideoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5F75243328F700D655C5 /* ZCVideoViewController.m */; };
+		7BDB606B243328F800D655C5 /* ZCLeaveMsgVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5F77243328F700D655C5 /* ZCLeaveMsgVC.m */; };
+		7BDB606C243328F800D655C5 /* ZCLeaveMsgVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5F78243328F700D655C5 /* ZCLeaveMsgVC.h */; };
+		7BDB606D243328F800D655C5 /* ZCPageSheetView.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5F7A243328F700D655C5 /* ZCPageSheetView.h */; };
+		7BDB606E243328F800D655C5 /* ZCCheckCusFieldView.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5F7B243328F700D655C5 /* ZCCheckCusFieldView.h */; };
+		7BDB606F243328F800D655C5 /* ZCCheckTypeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5F7C243328F700D655C5 /* ZCCheckTypeView.m */; };
+		7BDB6070243328F800D655C5 /* ZCCircleProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5F7D243328F700D655C5 /* ZCCircleProgressView.m */; };
+		7BDB6071243328F800D655C5 /* ZCCheckCityView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5F7E243328F700D655C5 /* ZCCheckCityView.m */; };
+		7BDB6072243328F800D655C5 /* ZCProgressView.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5F7F243328F700D655C5 /* ZCProgressView.h */; };
+		7BDB6073243328F800D655C5 /* ZCVideoPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5F80243328F700D655C5 /* ZCVideoPlayer.m */; };
+		7BDB6074243328F800D655C5 /* ZCTitleView.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5F81243328F700D655C5 /* ZCTitleView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7BDB6075243328F800D655C5 /* ZCPageSheetView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5F82243328F700D655C5 /* ZCPageSheetView.m */; };
+		7BDB6076243328F800D655C5 /* ZCCheckTypeView.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5F83243328F700D655C5 /* ZCCheckTypeView.h */; };
+		7BDB6077243328F800D655C5 /* ZCCheckCusFieldView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5F84243328F700D655C5 /* ZCCheckCusFieldView.m */; };
+		7BDB6078243328F800D655C5 /* ZCCircleProgressView.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5F85243328F700D655C5 /* ZCCircleProgressView.h */; };
+		7BDB6079243328F800D655C5 /* ZCCheckCityView.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5F86243328F700D655C5 /* ZCCheckCityView.h */; };
+		7BDB607A243328F800D655C5 /* ZCTitleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5F87243328F700D655C5 /* ZCTitleView.m */; };
+		7BDB607B243328F800D655C5 /* ZCVideoPlayer.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5F88243328F700D655C5 /* ZCVideoPlayer.h */; };
+		7BDB607C243328F800D655C5 /* ZCProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5F89243328F700D655C5 /* ZCProgressView.m */; };
+		7BDB607D243328F800D655C5 /* ZCUICore.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5F8B243328F700D655C5 /* ZCUICore.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7BDB607E243328F800D655C5 /* ZCToolsCore.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5F8C243328F700D655C5 /* ZCToolsCore.h */; };
+		7BDB607F243328F800D655C5 /* ZCToolsCore.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5F8D243328F700D655C5 /* ZCToolsCore.m */; };
+		7BDB6080243328F800D655C5 /* ZCUICore.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5F8E243328F700D655C5 /* ZCUICore.m */; };
+		7BDB6081243328F800D655C5 /* ZCOrderGoodsModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5F90243328F700D655C5 /* ZCOrderGoodsModel.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7BDB6082243328F800D655C5 /* ZCKitInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5F91243328F700D655C5 /* ZCKitInfo.m */; };
+		7BDB6083243328F800D655C5 /* ZCProductInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5F92243328F700D655C5 /* ZCProductInfo.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7BDB6084243328F800D655C5 /* ZCSCListModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5F93243328F700D655C5 /* ZCSCListModel.m */; };
+		7BDB6085243328F800D655C5 /* ZCOrderModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5F94243328F700D655C5 /* ZCOrderModel.h */; };
+		7BDB6086243328F800D655C5 /* ZCLibCusMenu.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5F95243328F700D655C5 /* ZCLibCusMenu.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7BDB6087243328F800D655C5 /* ZCLibRobotSet.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5F96243328F700D655C5 /* ZCLibRobotSet.h */; };
+		7BDB6088243328F800D655C5 /* ZCAddressModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5F97243328F700D655C5 /* ZCAddressModel.h */; };
+		7BDB6089243328F800D655C5 /* ZCWsTemplateModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5F98243328F700D655C5 /* ZCWsTemplateModel.h */; };
+		7BDB608A243328F800D655C5 /* ZCProductInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5F99243328F700D655C5 /* ZCProductInfo.m */; };
+		7BDB608B243328F800D655C5 /* ZCKitInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5F9A243328F700D655C5 /* ZCKitInfo.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7BDB608C243328F800D655C5 /* ZCOrderGoodsModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5F9B243328F700D655C5 /* ZCOrderGoodsModel.m */; };
+		7BDB608D243328F800D655C5 /* ZCAddressModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5F9C243328F700D655C5 /* ZCAddressModel.m */; };
+		7BDB608E243328F800D655C5 /* ZCLibCusMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5F9D243328F700D655C5 /* ZCLibCusMenu.m */; };
+		7BDB608F243328F800D655C5 /* ZCLibRobotSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5F9E243328F700D655C5 /* ZCLibRobotSet.m */; };
+		7BDB6090243328F800D655C5 /* ZCOrderModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5F9F243328F700D655C5 /* ZCOrderModel.m */; };
+		7BDB6091243328F800D655C5 /* ZCSCListModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5FA0243328F700D655C5 /* ZCSCListModel.h */; };
+		7BDB6092243328F800D655C5 /* ZCWsTemplateModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5FA1243328F700D655C5 /* ZCWsTemplateModel.m */; };
+		7BDB6093243328F800D655C5 /* ZCZHPickView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5FA4243328F700D655C5 /* ZCZHPickView.m */; };
+		7BDB6094243328F800D655C5 /* ZCZHPickView.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5FA5243328F700D655C5 /* ZCZHPickView.h */; };
+		7BDB6095243328F800D655C5 /* ZCUICustomActionSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5FA6243328F700D655C5 /* ZCUICustomActionSheet.m */; };
+		7BDB6096243328F800D655C5 /* ZCQuickEntryView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5FA8243328F700D655C5 /* ZCQuickEntryView.m */; };
+		7BDB6097243328F800D655C5 /* ZCQuickEntryView.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5FA9243328F700D655C5 /* ZCQuickEntryView.h */; };
+		7BDB6098243328F800D655C5 /* ZCUISkillSetView.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5FAB243328F700D655C5 /* ZCUISkillSetView.h */; };
+		7BDB6099243328F800D655C5 /* ZCUISkillSetView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5FAC243328F700D655C5 /* ZCUISkillSetView.m */; };
+		7BDB609A243328F800D655C5 /* ZCUIRatingView.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5FAE243328F700D655C5 /* ZCUIRatingView.h */; };
+		7BDB609B243328F800D655C5 /* ZCUIRatingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5FAF243328F700D655C5 /* ZCUIRatingView.m */; };
+		7BDB609C243328F800D655C5 /* ZCEdgeInsetsLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5FB0243328F700D655C5 /* ZCEdgeInsetsLabel.m */; };
+		7BDB60A1243328F800D655C5 /* ZCUIRecordView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5FB7243328F700D655C5 /* ZCUIRecordView.m */; };
+		7BDB60A2243328F800D655C5 /* ZCUIRecordView.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5FB8243328F700D655C5 /* ZCUIRecordView.h */; };
+		7BDB60A3243328F800D655C5 /* ZCPieChartView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5FBA243328F700D655C5 /* ZCPieChartView.m */; };
+		7BDB60A4243328F800D655C5 /* ZCPieChartView.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5FBB243328F700D655C5 /* ZCPieChartView.h */; };
+		7BDB60A5243328F800D655C5 /* ZCButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5FBD243328F700D655C5 /* ZCButton.h */; };
+		7BDB60A6243328F800D655C5 /* ZCObjButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5FBE243328F700D655C5 /* ZCObjButton.m */; };
+		7BDB60A7243328F800D655C5 /* ZCObjButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5FBF243328F700D655C5 /* ZCObjButton.h */; };
+		7BDB60A8243328F800D655C5 /* ZCButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5FC0243328F700D655C5 /* ZCButton.m */; };
+		7BDB60A9243328F800D655C5 /* ZCUIXHImageURLDataSource.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5FC3243328F700D655C5 /* ZCUIXHImageURLDataSource.h */; };
+		7BDB60AA243328F800D655C5 /* ZCUIXHViewState.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5FC5243328F700D655C5 /* ZCUIXHViewState.h */; };
+		7BDB60AB243328F800D655C5 /* ZCUIXHZoomingImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5FC6243328F700D655C5 /* ZCUIXHZoomingImageView.m */; };
+		7BDB60AC243328F800D655C5 /* ZCUIXHImageViewer.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5FC7243328F700D655C5 /* ZCUIXHImageViewer.h */; };
+		7BDB60AD243328F800D655C5 /* ZCUIXHViewState.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5FC8243328F700D655C5 /* ZCUIXHViewState.m */; };
+		7BDB60AE243328F800D655C5 /* ZCUIXHZoomingImageView.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5FC9243328F700D655C5 /* ZCUIXHZoomingImageView.h */; };
+		7BDB60AF243328F800D655C5 /* ZCUIXHImageViewer.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5FCA243328F700D655C5 /* ZCUIXHImageViewer.m */; };
+		7BDB60B0243328F800D655C5 /* ZCUIXHFileAttribute.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5FCC243328F700D655C5 /* ZCUIXHFileAttribute.h */; };
+		7BDB60B1243328F800D655C5 /* ZCUIXHCacheManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5FCD243328F700D655C5 /* ZCUIXHCacheManager.h */; };
+		7BDB60B2243328F800D655C5 /* ZCUIXHFileAttribute.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5FCE243328F700D655C5 /* ZCUIXHFileAttribute.m */; };
+		7BDB60B3243328F800D655C5 /* ZCUIXHCacheManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5FCF243328F700D655C5 /* ZCUIXHCacheManager.m */; };
+		7BDB60B4243328F800D655C5 /* ZCUIImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5FD1243328F700D655C5 /* ZCUIImageView.m */; };
+		7BDB60B5243328F800D655C5 /* ZCUIImageView.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5FD2243328F700D655C5 /* ZCUIImageView.h */; };
+		7BDB60B6243328F800D655C5 /* ZCUICustomActionSheet.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5FD3243328F700D655C5 /* ZCUICustomActionSheet.h */; };
+		7BDB60B7243328F800D655C5 /* ZCActionSheet.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5FD5243328F700D655C5 /* ZCActionSheet.h */; };
+		7BDB60B8243328F800D655C5 /* ZCActionSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5FD6243328F700D655C5 /* ZCActionSheet.m */; };
+		7BDB60B9243328F800D655C5 /* ZCEdgeInsetsLabel.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5FD7243328F700D655C5 /* ZCEdgeInsetsLabel.h */; };
+		7BDB60BA243328F800D655C5 /* ZCMLEmojiLabel.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5FD9243328F700D655C5 /* ZCMLEmojiLabel.h */; };
+		7BDB60BB243328F800D655C5 /* ZCTTTAttributedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5FDB243328F700D655C5 /* ZCTTTAttributedLabel.m */; };
+		7BDB60BC243328F800D655C5 /* ZCTTTAttributedLabel.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5FDC243328F700D655C5 /* ZCTTTAttributedLabel.h */; };
+		7BDB60BD243328F800D655C5 /* ZCMLEmojiLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5FDD243328F700D655C5 /* ZCMLEmojiLabel.m */; };
+		7BDB60BE243328F800D655C5 /* ZCUILoading.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5FDF243328F700D655C5 /* ZCUILoading.m */; };
+		7BDB60BF243328F800D655C5 /* ZCUILoading.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5FE0243328F700D655C5 /* ZCUILoading.h */; };
+		7BDB60C0243328F800D655C5 /* ZCSelLeaveView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5FE2243328F700D655C5 /* ZCSelLeaveView.m */; };
+		7BDB60C1243328F800D655C5 /* ZCSelLeaveView.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5FE3243328F700D655C5 /* ZCSelLeaveView.h */; };
+		7BDB60C2243328F800D655C5 /* ZCAutoListView.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5FE5243328F700D655C5 /* ZCAutoListView.h */; };
+		7BDB60C3243328F800D655C5 /* ZCAutoListView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5FE6243328F700D655C5 /* ZCAutoListView.m */; };
+		7BDB60C4243328F800D655C5 /* EmojiButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5FE8243328F700D655C5 /* EmojiButton.m */; };
+		7BDB60C5243328F800D655C5 /* EmojiBoardView.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5FE9243328F700D655C5 /* EmojiBoardView.h */; };
+		7BDB60C6243328F800D655C5 /* EmojiButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5FEA243328F700D655C5 /* EmojiButton.h */; };
+		7BDB60C7243328F800D655C5 /* EmojiBoardView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5FEB243328F700D655C5 /* EmojiBoardView.m */; };
+		7BDB60C8243328F800D655C5 /* ZCTurnRobotView.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5FED243328F700D655C5 /* ZCTurnRobotView.h */; };
+		7BDB60C9243328F800D655C5 /* ZCTurnRobotView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5FEE243328F700D655C5 /* ZCTurnRobotView.m */; };
+		7BDB60CA243328F800D655C5 /* ZCUIPlaceHolderTextView.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5FF0243328F700D655C5 /* ZCUIPlaceHolderTextView.h */; };
+		7BDB60CB243328F800D655C5 /* ZCItemView.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5FF1243328F700D655C5 /* ZCItemView.h */; };
+		7BDB60CC243328F800D655C5 /* ZCItemView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5FF2243328F700D655C5 /* ZCItemView.m */; };
+		7BDB60CD243328F800D655C5 /* ZCUIPlaceHolderTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5FF3243328F700D655C5 /* ZCUIPlaceHolderTextView.m */; };
+		7BDB60CE243328F800D655C5 /* ZCHtmlFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5FF5243328F700D655C5 /* ZCHtmlFilter.m */; };
+		7BDB60CF243328F800D655C5 /* ZCUIVoiceTools.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5FF6243328F700D655C5 /* ZCUIVoiceTools.h */; };
+		7BDB60D0243328F800D655C5 /* ZCSobotCore.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5FF7243328F700D655C5 /* ZCSobotCore.h */; };
+		7BDB60D1243328F800D655C5 /* ZCUIImageTools.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5FF8243328F700D655C5 /* ZCUIImageTools.h */; };
+		7BDB60D2243328F800D655C5 /* ZCUITools.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5FF9243328F700D655C5 /* ZCUITools.m */; };
+		7BDB60D3243328F800D655C5 /* ZCStoreConfiguration.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5FFA243328F700D655C5 /* ZCStoreConfiguration.h */; };
+		7BDB60D4243328F800D655C5 /* ZCSatisfactionButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5FFB243328F700D655C5 /* ZCSatisfactionButton.h */; };
+		7BDB60D5243328F800D655C5 /* ZCUIToastTools.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5FFC243328F700D655C5 /* ZCUIToastTools.m */; };
+		7BDB60D6243328F800D655C5 /* ZCHtmlFilter.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5FFD243328F700D655C5 /* ZCHtmlFilter.h */; };
+		7BDB60D7243328F800D655C5 /* ZCUIVoiceTools.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5FFE243328F700D655C5 /* ZCUIVoiceTools.m */; };
+		7BDB60D8243328F800D655C5 /* ZCSobotCore.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5FFF243328F700D655C5 /* ZCSobotCore.m */; };
+		7BDB60D9243328F800D655C5 /* ZCStoreConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB6000243328F700D655C5 /* ZCStoreConfiguration.m */; };
+		7BDB60DA243328F800D655C5 /* ZCUITools.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB6001243328F700D655C5 /* ZCUITools.h */; };
+		7BDB60DB243328F800D655C5 /* ZCUIImageTools.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB6002243328F700D655C5 /* ZCUIImageTools.m */; };
+		7BDB60DC243328F800D655C5 /* ZCUIToastTools.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB6003243328F700D655C5 /* ZCUIToastTools.h */; };
+		7BDB60DD243328F800D655C5 /* ZCSatisfactionButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB6004243328F700D655C5 /* ZCSatisfactionButton.m */; };
+		7BDB60DE243328F800D655C5 /* ZCUIColorsDefine.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB6006243328F800D655C5 /* ZCUIColorsDefine.h */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		59E4A0A423B4532000680CD7 /* libSobotLib.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libSobotLib.a; sourceTree = "<group>"; };
+		59E4A0A723B4532000680CD7 /* ZCLIbGlobalDefine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCLIbGlobalDefine.h; sourceTree = "<group>"; };
+		59E4A0A823B4532000680CD7 /* ZCLibCommon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCLibCommon.h; sourceTree = "<group>"; };
+		59E4A0A923B4532000680CD7 /* ZCLibHttpConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCLibHttpConstants.h; sourceTree = "<group>"; };
+		59E4A0AA23B4532000680CD7 /* ZCLibNetworkTools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCLibNetworkTools.h; sourceTree = "<group>"; };
+		59E4A0AB23B4532000680CD7 /* ZCLibRich.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCLibRich.h; sourceTree = "<group>"; };
+		59E4A0AC23B4532000680CD7 /* ZCHtmlCore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCHtmlCore.h; sourceTree = "<group>"; };
+		59E4A0AD23B4532000680CD7 /* ZCIMChat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCIMChat.h; sourceTree = "<group>"; };
+		59E4A0AE23B4532000680CD7 /* ZCMultiwheelModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCMultiwheelModel.h; sourceTree = "<group>"; };
+		59E4A0AF23B4532000680CD7 /* ZCLogUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCLogUtils.h; sourceTree = "<group>"; };
+		59E4A0B023B4532000680CD7 /* ZCRecordListModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCRecordListModel.h; sourceTree = "<group>"; };
+		59E4A0B123B4532000680CD7 /* ZCPlatformInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCPlatformInfo.h; sourceTree = "<group>"; };
+		59E4A0B223B4532000680CD7 /* ZCLibOrderCusFieldsModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCLibOrderCusFieldsModel.h; sourceTree = "<group>"; };
+		59E4A0B323B4532000680CD7 /* ZCLibSkillSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCLibSkillSet.h; sourceTree = "<group>"; };
+		59E4A0B423B4532000680CD7 /* ZCLibServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCLibServer.h; sourceTree = "<group>"; };
+		59E4A0B523B4532000680CD7 /* ZCLocalStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCLocalStore.h; sourceTree = "<group>"; };
+		59E4A0B623B4532000680CD7 /* ZCLibClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCLibClient.h; sourceTree = "<group>"; };
+		59E4A0B723B4532000680CD7 /* ZCLibHttpManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCLibHttpManager.h; sourceTree = "<group>"; };
+		59E4A0B823B4532000680CD7 /* ZCPlatformTools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCPlatformTools.h; sourceTree = "<group>"; };
+		59E4A0B923B4532000680CD7 /* ZCLibMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCLibMessage.h; sourceTree = "<group>"; };
+		59E4A0BA23B4532000680CD7 /* ZCLibSatisfaction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCLibSatisfaction.h; sourceTree = "<group>"; };
+		59E4A0BB23B4532000680CD7 /* ZCLibConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCLibConfig.h; sourceTree = "<group>"; };
+		59E4A0BC23B4532000680CD7 /* UIDeviceTools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIDeviceTools.h; sourceTree = "<group>"; };
+		59E4A0BD23B4532000680CD7 /* ZCLibReachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCLibReachability.h; sourceTree = "<group>"; };
+		59E4A0BE23B4532000680CD7 /* SobotLib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SobotLib.h; sourceTree = "<group>"; };
+		59E4A0BF23B4532000680CD7 /* ZCLibTicketTypeModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCLibTicketTypeModel.h; sourceTree = "<group>"; };
+		59E4A0C023B4532000680CD7 /* ZCLibInitInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCLibInitInfo.h; sourceTree = "<group>"; };
+		59E4A0C123B4532000680CD7 /* ZCLibContent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCLibContent.h; sourceTree = "<group>"; };
+		59E4A0C223B4532000680CD7 /* ZCLibStatusDefine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCLibStatusDefine.h; sourceTree = "<group>"; };
+		59E4A0C323B4532000680CD7 /* ZCLibMessageConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCLibMessageConstants.h; sourceTree = "<group>"; };
+		7B18AF1A2576177C00C7C7FF /* ZCChatAllRichCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCChatAllRichCell.m; sourceTree = "<group>"; };
+		7B18AF1B2576177C00C7C7FF /* ZCChatAllRichCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCChatAllRichCell.h; sourceTree = "<group>"; };
+		7BB21FA01C005611003539F7 /* SobotKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SobotKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		7BB21FA31C005611003539F7 /* SobotKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SobotKit.h; sourceTree = "<group>"; };
+		7BB21FA51C005611003539F7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		7BB2203F1C005653003539F7 /* ZCSobot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCSobot.h; sourceTree = "<group>"; };
+		7BB220401C005653003539F7 /* ZCSobot.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCSobot.m; sourceTree = "<group>"; };
+		7BB220BE1C00566F003539F7 /* SobotKit.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SobotKit.pch; sourceTree = "<group>"; };
+		7BDB5F012433283E00D655C5 /* ZCSobotApi.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCSobotApi.m; sourceTree = "<group>"; };
+		7BDB5F022433283E00D655C5 /* ZCSobotApi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCSobotApi.h; sourceTree = "<group>"; };
+		7BDB5F06243328F700D655C5 /* ZCUIWebController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCUIWebController.h; sourceTree = "<group>"; };
+		7BDB5F08243328F700D655C5 /* ZCUIAskTableController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCUIAskTableController.h; sourceTree = "<group>"; };
+		7BDB5F09243328F700D655C5 /* ZCUIAskTableController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCUIAskTableController.m; sourceTree = "<group>"; };
+		7BDB5F0A243328F700D655C5 /* ZCUIBaseController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCUIBaseController.h; sourceTree = "<group>"; };
+		7BDB5F0B243328F700D655C5 /* ZCUIChatListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCUIChatListController.m; sourceTree = "<group>"; };
+		7BDB5F0D243328F700D655C5 /* ZCChatCellDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCChatCellDelegate.h; sourceTree = "<group>"; };
+		7BDB5F0E243328F700D655C5 /* ZCFileCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCFileCell.m; sourceTree = "<group>"; };
+		7BDB5F0F243328F700D655C5 /* ZCVoiceChatCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCVoiceChatCell.h; sourceTree = "<group>"; };
+		7BDB5F10243328F700D655C5 /* ZCLocationCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCLocationCell.h; sourceTree = "<group>"; };
+		7BDB5F11243328F700D655C5 /* ZCImageChatCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCImageChatCell.m; sourceTree = "<group>"; };
+		7BDB5F12243328F700D655C5 /* ZCSatisfactionCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCSatisfactionCell.m; sourceTree = "<group>"; };
+		7BDB5F14243328F700D655C5 /* ZCMultiItemCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCMultiItemCell.h; sourceTree = "<group>"; };
+		7BDB5F15243328F700D655C5 /* ZCCardCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCCardCollectionViewCell.m; sourceTree = "<group>"; };
+		7BDB5F16243328F700D655C5 /* ZCHotGuideCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCHotGuideCell.h; sourceTree = "<group>"; };
+		7BDB5F17243328F700D655C5 /* ZCCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCCollectionViewCell.m; sourceTree = "<group>"; };
+		7BDB5F18243328F700D655C5 /* ZCCardCollectionViewFlowLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCCardCollectionViewFlowLayout.m; sourceTree = "<group>"; };
+		7BDB5F19243328F700D655C5 /* ZCMultitemHorizontaRollCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCMultitemHorizontaRollCell.h; sourceTree = "<group>"; };
+		7BDB5F1A243328F700D655C5 /* ZCMultiItemCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCMultiItemCell.m; sourceTree = "<group>"; };
+		7BDB5F1B243328F700D655C5 /* ZCCardCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCCardCollectionViewCell.h; sourceTree = "<group>"; };
+		7BDB5F1C243328F700D655C5 /* ZCHotGuideCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCHotGuideCell.m; sourceTree = "<group>"; };
+		7BDB5F1D243328F700D655C5 /* ZCMultitemHorizontaRollCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCMultitemHorizontaRollCell.m; sourceTree = "<group>"; };
+		7BDB5F1E243328F700D655C5 /* ZCCardCollectionViewFlowLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCCardCollectionViewFlowLayout.h; sourceTree = "<group>"; };
+		7BDB5F1F243328F700D655C5 /* ZCCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCCollectionViewCell.h; sourceTree = "<group>"; };
+		7BDB5F20243328F700D655C5 /* ZCOrderGoodsCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCOrderGoodsCell.m; sourceTree = "<group>"; };
+		7BDB5F21243328F700D655C5 /* ZCInfoCardCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCInfoCardCell.h; sourceTree = "<group>"; };
+		7BDB5F22243328F700D655C5 /* ZCRichTextChatCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCRichTextChatCell.m; sourceTree = "<group>"; };
+		7BDB5F23243328F700D655C5 /* ZCGoodsCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCGoodsCell.h; sourceTree = "<group>"; };
+		7BDB5F24243328F700D655C5 /* ZCTextGuideCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCTextGuideCell.m; sourceTree = "<group>"; };
+		7BDB5F25243328F700D655C5 /* ZCTipsChatCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCTipsChatCell.m; sourceTree = "<group>"; };
+		7BDB5F26243328F700D655C5 /* ZCChatBaseCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCChatBaseCell.h; sourceTree = "<group>"; };
+		7BDB5F27243328F700D655C5 /* ZCMultiRichCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCMultiRichCell.m; sourceTree = "<group>"; };
+		7BDB5F28243328F700D655C5 /* ZCUIChatListCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCUIChatListCell.h; sourceTree = "<group>"; };
+		7BDB5F29243328F700D655C5 /* ZCNoticeCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCNoticeCell.m; sourceTree = "<group>"; };
+		7BDB5F2A243328F700D655C5 /* ZCLocationCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCLocationCell.m; sourceTree = "<group>"; };
+		7BDB5F2B243328F700D655C5 /* ZCVoiceChatCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCVoiceChatCell.m; sourceTree = "<group>"; };
+		7BDB5F2C243328F700D655C5 /* ZCFileCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCFileCell.h; sourceTree = "<group>"; };
+		7BDB5F2D243328F700D655C5 /* ZCInfoCardCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCInfoCardCell.m; sourceTree = "<group>"; };
+		7BDB5F2E243328F700D655C5 /* ZCOrderGoodsCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCOrderGoodsCell.h; sourceTree = "<group>"; };
+		7BDB5F2F243328F700D655C5 /* ZCSatisfactionCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCSatisfactionCell.h; sourceTree = "<group>"; };
+		7BDB5F30243328F700D655C5 /* ZCImageChatCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCImageChatCell.h; sourceTree = "<group>"; };
+		7BDB5F31243328F700D655C5 /* ZCTextGuideCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCTextGuideCell.h; sourceTree = "<group>"; };
+		7BDB5F32243328F700D655C5 /* ZCGoodsCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCGoodsCell.m; sourceTree = "<group>"; };
+		7BDB5F33243328F700D655C5 /* ZCRichTextChatCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCRichTextChatCell.h; sourceTree = "<group>"; };
+		7BDB5F34243328F700D655C5 /* ZCNoticeCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCNoticeCell.h; sourceTree = "<group>"; };
+		7BDB5F35243328F700D655C5 /* ZCUIChatListCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCUIChatListCell.m; sourceTree = "<group>"; };
+		7BDB5F36243328F700D655C5 /* ZCMultiRichCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCMultiRichCell.h; sourceTree = "<group>"; };
+		7BDB5F37243328F700D655C5 /* ZCChatBaseCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCChatBaseCell.m; sourceTree = "<group>"; };
+		7BDB5F38243328F700D655C5 /* ZCTipsChatCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCTipsChatCell.h; sourceTree = "<group>"; };
+		7BDB5F3A243328F700D655C5 /* ZCUIWebController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCUIWebController.m; sourceTree = "<group>"; };
+		7BDB5F3C243328F700D655C5 /* ZCServiceListCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCServiceListCell.h; sourceTree = "<group>"; };
+		7BDB5F3D243328F700D655C5 /* ZCServiceDetailVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCServiceDetailVC.m; sourceTree = "<group>"; };
+		7BDB5F3E243328F700D655C5 /* ZCServiceListVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCServiceListVC.h; sourceTree = "<group>"; };
+		7BDB5F3F243328F700D655C5 /* ZCServiceCentreVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCServiceCentreVC.h; sourceTree = "<group>"; };
+		7BDB5F40243328F700D655C5 /* ZCServiceListCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCServiceListCell.m; sourceTree = "<group>"; };
+		7BDB5F41243328F700D655C5 /* ZCServiceDetailVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCServiceDetailVC.h; sourceTree = "<group>"; };
+		7BDB5F42243328F700D655C5 /* ZCServiceCentreVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCServiceCentreVC.m; sourceTree = "<group>"; };
+		7BDB5F43243328F700D655C5 /* ZCServiceListVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCServiceListVC.m; sourceTree = "<group>"; };
+		7BDB5F44243328F700D655C5 /* ZCUIBaseController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCUIBaseController.m; sourceTree = "<group>"; };
+		7BDB5F45243328F700D655C5 /* ZCUIChatListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCUIChatListController.h; sourceTree = "<group>"; };
+		7BDB5F47243328F700D655C5 /* ZCXJAlbumController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCXJAlbumController.h; sourceTree = "<group>"; };
+		7BDB5F49243328F700D655C5 /* ZCOrderCheckCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCOrderCheckCell.m; sourceTree = "<group>"; };
+		7BDB5F4A243328F700D655C5 /* ZCOrderCreateCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCOrderCreateCell.h; sourceTree = "<group>"; };
+		7BDB5F4B243328F700D655C5 /* ZCMsgRecordCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCMsgRecordCell.m; sourceTree = "<group>"; };
+		7BDB5F4C243328F700D655C5 /* ZCOrderOnlyEditCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCOrderOnlyEditCell.h; sourceTree = "<group>"; };
+		7BDB5F4D243328F700D655C5 /* ZCOrderEditCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCOrderEditCell.h; sourceTree = "<group>"; };
+		7BDB5F4E243328F700D655C5 /* ZCOrderContentCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCOrderContentCell.m; sourceTree = "<group>"; };
+		7BDB5F4F243328F700D655C5 /* ZCOrderCreateCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCOrderCreateCell.m; sourceTree = "<group>"; };
+		7BDB5F50243328F700D655C5 /* ZCOrderCheckCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCOrderCheckCell.h; sourceTree = "<group>"; };
+		7BDB5F51243328F700D655C5 /* ZCOrderOnlyEditCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCOrderOnlyEditCell.m; sourceTree = "<group>"; };
+		7BDB5F52243328F700D655C5 /* ZCMsgRecordCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCMsgRecordCell.h; sourceTree = "<group>"; };
+		7BDB5F53243328F700D655C5 /* ZCOrderContentCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCOrderContentCell.h; sourceTree = "<group>"; };
+		7BDB5F54243328F700D655C5 /* ZCOrderEditCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCOrderEditCell.m; sourceTree = "<group>"; };
+		7BDB5F55243328F700D655C5 /* ZCUILeaveMessageController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCUILeaveMessageController.m; sourceTree = "<group>"; };
+		7BDB5F57243328F700D655C5 /* ZCReplyFileView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCReplyFileView.h; sourceTree = "<group>"; };
+		7BDB5F58243328F700D655C5 /* ZCLeaveDetailCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCLeaveDetailCell.h; sourceTree = "<group>"; };
+		7BDB5F59243328F700D655C5 /* ZCMsgDetailsVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCMsgDetailsVC.h; sourceTree = "<group>"; };
+		7BDB5F5A243328F700D655C5 /* ZCReplyLeaveView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCReplyLeaveView.h; sourceTree = "<group>"; };
+		7BDB5F5B243328F700D655C5 /* ZCReplyLeaveView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCReplyLeaveView.m; sourceTree = "<group>"; };
+		7BDB5F5C243328F700D655C5 /* ZCMsgDetailsVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCMsgDetailsVC.m; sourceTree = "<group>"; };
+		7BDB5F5D243328F700D655C5 /* ZCLeaveDetailCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCLeaveDetailCell.m; sourceTree = "<group>"; };
+		7BDB5F5E243328F700D655C5 /* ZCReplyFileView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCReplyFileView.m; sourceTree = "<group>"; };
+		7BDB5F5F243328F700D655C5 /* ZCReplyLeaveController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCReplyLeaveController.h; sourceTree = "<group>"; };
+		7BDB5F60243328F700D655C5 /* ZCMsgRecordVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCMsgRecordVC.m; sourceTree = "<group>"; };
+		7BDB5F61243328F700D655C5 /* ZCXJAlbumController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCXJAlbumController.m; sourceTree = "<group>"; };
+		7BDB5F62243328F700D655C5 /* ZCReplyLeaveController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCReplyLeaveController.m; sourceTree = "<group>"; };
+		7BDB5F63243328F700D655C5 /* ZCUILeaveMessageController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCUILeaveMessageController.h; sourceTree = "<group>"; };
+		7BDB5F64243328F700D655C5 /* ZCMsgRecordVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCMsgRecordVC.h; sourceTree = "<group>"; };
+		7BDB5F67243328F700D655C5 /* ZCChatView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCChatView.h; sourceTree = "<group>"; };
+		7BDB5F69243328F700D655C5 /* ZCUIKeyboard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCUIKeyboard.h; sourceTree = "<group>"; };
+		7BDB5F6A243328F700D655C5 /* ZCUIKeyboard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCUIKeyboard.m; sourceTree = "<group>"; };
+		7BDB5F6B243328F700D655C5 /* ZCChatView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCChatView.m; sourceTree = "<group>"; };
+		7BDB5F6E243328F700D655C5 /* ZCChatController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCChatController.h; sourceTree = "<group>"; };
+		7BDB5F6F243328F700D655C5 /* ZCLocationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCLocationController.h; sourceTree = "<group>"; };
+		7BDB5F70243328F700D655C5 /* ZCDocumentLookController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCDocumentLookController.m; sourceTree = "<group>"; };
+		7BDB5F71243328F700D655C5 /* ZCVideoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCVideoViewController.h; sourceTree = "<group>"; };
+		7BDB5F72243328F700D655C5 /* ZCChatController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCChatController.m; sourceTree = "<group>"; };
+		7BDB5F73243328F700D655C5 /* ZCDocumentLookController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCDocumentLookController.h; sourceTree = "<group>"; };
+		7BDB5F74243328F700D655C5 /* ZCLocationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCLocationController.m; sourceTree = "<group>"; };
+		7BDB5F75243328F700D655C5 /* ZCVideoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCVideoViewController.m; sourceTree = "<group>"; };
+		7BDB5F77243328F700D655C5 /* ZCLeaveMsgVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCLeaveMsgVC.m; sourceTree = "<group>"; };
+		7BDB5F78243328F700D655C5 /* ZCLeaveMsgVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCLeaveMsgVC.h; sourceTree = "<group>"; };
+		7BDB5F7A243328F700D655C5 /* ZCPageSheetView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCPageSheetView.h; sourceTree = "<group>"; };
+		7BDB5F7B243328F700D655C5 /* ZCCheckCusFieldView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCCheckCusFieldView.h; sourceTree = "<group>"; };
+		7BDB5F7C243328F700D655C5 /* ZCCheckTypeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCCheckTypeView.m; sourceTree = "<group>"; };
+		7BDB5F7D243328F700D655C5 /* ZCCircleProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCCircleProgressView.m; sourceTree = "<group>"; };
+		7BDB5F7E243328F700D655C5 /* ZCCheckCityView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCCheckCityView.m; sourceTree = "<group>"; };
+		7BDB5F7F243328F700D655C5 /* ZCProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCProgressView.h; sourceTree = "<group>"; };
+		7BDB5F80243328F700D655C5 /* ZCVideoPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCVideoPlayer.m; sourceTree = "<group>"; };
+		7BDB5F81243328F700D655C5 /* ZCTitleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCTitleView.h; sourceTree = "<group>"; };
+		7BDB5F82243328F700D655C5 /* ZCPageSheetView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCPageSheetView.m; sourceTree = "<group>"; };
+		7BDB5F83243328F700D655C5 /* ZCCheckTypeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCCheckTypeView.h; sourceTree = "<group>"; };
+		7BDB5F84243328F700D655C5 /* ZCCheckCusFieldView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCCheckCusFieldView.m; sourceTree = "<group>"; };
+		7BDB5F85243328F700D655C5 /* ZCCircleProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCCircleProgressView.h; sourceTree = "<group>"; };
+		7BDB5F86243328F700D655C5 /* ZCCheckCityView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCCheckCityView.h; sourceTree = "<group>"; };
+		7BDB5F87243328F700D655C5 /* ZCTitleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCTitleView.m; sourceTree = "<group>"; };
+		7BDB5F88243328F700D655C5 /* ZCVideoPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCVideoPlayer.h; sourceTree = "<group>"; };
+		7BDB5F89243328F700D655C5 /* ZCProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCProgressView.m; sourceTree = "<group>"; };
+		7BDB5F8B243328F700D655C5 /* ZCUICore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCUICore.h; sourceTree = "<group>"; };
+		7BDB5F8C243328F700D655C5 /* ZCToolsCore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCToolsCore.h; sourceTree = "<group>"; };
+		7BDB5F8D243328F700D655C5 /* ZCToolsCore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCToolsCore.m; sourceTree = "<group>"; };
+		7BDB5F8E243328F700D655C5 /* ZCUICore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCUICore.m; sourceTree = "<group>"; };
+		7BDB5F90243328F700D655C5 /* ZCOrderGoodsModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCOrderGoodsModel.h; sourceTree = "<group>"; };
+		7BDB5F91243328F700D655C5 /* ZCKitInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCKitInfo.m; sourceTree = "<group>"; };
+		7BDB5F92243328F700D655C5 /* ZCProductInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCProductInfo.h; sourceTree = "<group>"; };
+		7BDB5F93243328F700D655C5 /* ZCSCListModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCSCListModel.m; sourceTree = "<group>"; };
+		7BDB5F94243328F700D655C5 /* ZCOrderModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCOrderModel.h; sourceTree = "<group>"; };
+		7BDB5F95243328F700D655C5 /* ZCLibCusMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCLibCusMenu.h; sourceTree = "<group>"; };
+		7BDB5F96243328F700D655C5 /* ZCLibRobotSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCLibRobotSet.h; sourceTree = "<group>"; };
+		7BDB5F97243328F700D655C5 /* ZCAddressModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCAddressModel.h; sourceTree = "<group>"; };
+		7BDB5F98243328F700D655C5 /* ZCWsTemplateModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCWsTemplateModel.h; sourceTree = "<group>"; };
+		7BDB5F99243328F700D655C5 /* ZCProductInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCProductInfo.m; sourceTree = "<group>"; };
+		7BDB5F9A243328F700D655C5 /* ZCKitInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCKitInfo.h; sourceTree = "<group>"; };
+		7BDB5F9B243328F700D655C5 /* ZCOrderGoodsModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCOrderGoodsModel.m; sourceTree = "<group>"; };
+		7BDB5F9C243328F700D655C5 /* ZCAddressModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCAddressModel.m; sourceTree = "<group>"; };
+		7BDB5F9D243328F700D655C5 /* ZCLibCusMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCLibCusMenu.m; sourceTree = "<group>"; };
+		7BDB5F9E243328F700D655C5 /* ZCLibRobotSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCLibRobotSet.m; sourceTree = "<group>"; };
+		7BDB5F9F243328F700D655C5 /* ZCOrderModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCOrderModel.m; sourceTree = "<group>"; };
+		7BDB5FA0243328F700D655C5 /* ZCSCListModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCSCListModel.h; sourceTree = "<group>"; };
+		7BDB5FA1243328F700D655C5 /* ZCWsTemplateModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCWsTemplateModel.m; sourceTree = "<group>"; };
+		7BDB5FA4243328F700D655C5 /* ZCZHPickView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCZHPickView.m; sourceTree = "<group>"; };
+		7BDB5FA5243328F700D655C5 /* ZCZHPickView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCZHPickView.h; sourceTree = "<group>"; };
+		7BDB5FA6243328F700D655C5 /* ZCUICustomActionSheet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCUICustomActionSheet.m; sourceTree = "<group>"; };
+		7BDB5FA8243328F700D655C5 /* ZCQuickEntryView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCQuickEntryView.m; sourceTree = "<group>"; };
+		7BDB5FA9243328F700D655C5 /* ZCQuickEntryView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCQuickEntryView.h; sourceTree = "<group>"; };
+		7BDB5FAB243328F700D655C5 /* ZCUISkillSetView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCUISkillSetView.h; sourceTree = "<group>"; };
+		7BDB5FAC243328F700D655C5 /* ZCUISkillSetView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCUISkillSetView.m; sourceTree = "<group>"; };
+		7BDB5FAE243328F700D655C5 /* ZCUIRatingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCUIRatingView.h; sourceTree = "<group>"; };
+		7BDB5FAF243328F700D655C5 /* ZCUIRatingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCUIRatingView.m; sourceTree = "<group>"; };
+		7BDB5FB0243328F700D655C5 /* ZCEdgeInsetsLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCEdgeInsetsLabel.m; sourceTree = "<group>"; };
+		7BDB5FB7243328F700D655C5 /* ZCUIRecordView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCUIRecordView.m; sourceTree = "<group>"; };
+		7BDB5FB8243328F700D655C5 /* ZCUIRecordView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCUIRecordView.h; sourceTree = "<group>"; };
+		7BDB5FBA243328F700D655C5 /* ZCPieChartView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCPieChartView.m; sourceTree = "<group>"; };
+		7BDB5FBB243328F700D655C5 /* ZCPieChartView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCPieChartView.h; sourceTree = "<group>"; };
+		7BDB5FBD243328F700D655C5 /* ZCButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCButton.h; sourceTree = "<group>"; };
+		7BDB5FBE243328F700D655C5 /* ZCObjButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCObjButton.m; sourceTree = "<group>"; };
+		7BDB5FBF243328F700D655C5 /* ZCObjButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCObjButton.h; sourceTree = "<group>"; };
+		7BDB5FC0243328F700D655C5 /* ZCButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCButton.m; sourceTree = "<group>"; };
+		7BDB5FC3243328F700D655C5 /* ZCUIXHImageURLDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCUIXHImageURLDataSource.h; sourceTree = "<group>"; };
+		7BDB5FC5243328F700D655C5 /* ZCUIXHViewState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCUIXHViewState.h; sourceTree = "<group>"; };
+		7BDB5FC6243328F700D655C5 /* ZCUIXHZoomingImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCUIXHZoomingImageView.m; sourceTree = "<group>"; };
+		7BDB5FC7243328F700D655C5 /* ZCUIXHImageViewer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCUIXHImageViewer.h; sourceTree = "<group>"; };
+		7BDB5FC8243328F700D655C5 /* ZCUIXHViewState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCUIXHViewState.m; sourceTree = "<group>"; };
+		7BDB5FC9243328F700D655C5 /* ZCUIXHZoomingImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCUIXHZoomingImageView.h; sourceTree = "<group>"; };
+		7BDB5FCA243328F700D655C5 /* ZCUIXHImageViewer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCUIXHImageViewer.m; sourceTree = "<group>"; };
+		7BDB5FCC243328F700D655C5 /* ZCUIXHFileAttribute.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCUIXHFileAttribute.h; sourceTree = "<group>"; };
+		7BDB5FCD243328F700D655C5 /* ZCUIXHCacheManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCUIXHCacheManager.h; sourceTree = "<group>"; };
+		7BDB5FCE243328F700D655C5 /* ZCUIXHFileAttribute.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCUIXHFileAttribute.m; sourceTree = "<group>"; };
+		7BDB5FCF243328F700D655C5 /* ZCUIXHCacheManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCUIXHCacheManager.m; sourceTree = "<group>"; };
+		7BDB5FD1243328F700D655C5 /* ZCUIImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCUIImageView.m; sourceTree = "<group>"; };
+		7BDB5FD2243328F700D655C5 /* ZCUIImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCUIImageView.h; sourceTree = "<group>"; };
+		7BDB5FD3243328F700D655C5 /* ZCUICustomActionSheet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCUICustomActionSheet.h; sourceTree = "<group>"; };
+		7BDB5FD5243328F700D655C5 /* ZCActionSheet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCActionSheet.h; sourceTree = "<group>"; };
+		7BDB5FD6243328F700D655C5 /* ZCActionSheet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCActionSheet.m; sourceTree = "<group>"; };
+		7BDB5FD7243328F700D655C5 /* ZCEdgeInsetsLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCEdgeInsetsLabel.h; sourceTree = "<group>"; };
+		7BDB5FD9243328F700D655C5 /* ZCMLEmojiLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCMLEmojiLabel.h; sourceTree = "<group>"; };
+		7BDB5FDB243328F700D655C5 /* ZCTTTAttributedLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCTTTAttributedLabel.m; sourceTree = "<group>"; };
+		7BDB5FDC243328F700D655C5 /* ZCTTTAttributedLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCTTTAttributedLabel.h; sourceTree = "<group>"; };
+		7BDB5FDD243328F700D655C5 /* ZCMLEmojiLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCMLEmojiLabel.m; sourceTree = "<group>"; };
+		7BDB5FDF243328F700D655C5 /* ZCUILoading.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCUILoading.m; sourceTree = "<group>"; };
+		7BDB5FE0243328F700D655C5 /* ZCUILoading.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCUILoading.h; sourceTree = "<group>"; };
+		7BDB5FE2243328F700D655C5 /* ZCSelLeaveView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCSelLeaveView.m; sourceTree = "<group>"; };
+		7BDB5FE3243328F700D655C5 /* ZCSelLeaveView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCSelLeaveView.h; sourceTree = "<group>"; };
+		7BDB5FE5243328F700D655C5 /* ZCAutoListView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCAutoListView.h; sourceTree = "<group>"; };
+		7BDB5FE6243328F700D655C5 /* ZCAutoListView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCAutoListView.m; sourceTree = "<group>"; };
+		7BDB5FE8243328F700D655C5 /* EmojiButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EmojiButton.m; sourceTree = "<group>"; };
+		7BDB5FE9243328F700D655C5 /* EmojiBoardView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmojiBoardView.h; sourceTree = "<group>"; };
+		7BDB5FEA243328F700D655C5 /* EmojiButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmojiButton.h; sourceTree = "<group>"; };
+		7BDB5FEB243328F700D655C5 /* EmojiBoardView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EmojiBoardView.m; sourceTree = "<group>"; };
+		7BDB5FED243328F700D655C5 /* ZCTurnRobotView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCTurnRobotView.h; sourceTree = "<group>"; };
+		7BDB5FEE243328F700D655C5 /* ZCTurnRobotView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCTurnRobotView.m; sourceTree = "<group>"; };
+		7BDB5FF0243328F700D655C5 /* ZCUIPlaceHolderTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCUIPlaceHolderTextView.h; sourceTree = "<group>"; };
+		7BDB5FF1243328F700D655C5 /* ZCItemView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCItemView.h; sourceTree = "<group>"; };
+		7BDB5FF2243328F700D655C5 /* ZCItemView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCItemView.m; sourceTree = "<group>"; };
+		7BDB5FF3243328F700D655C5 /* ZCUIPlaceHolderTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCUIPlaceHolderTextView.m; sourceTree = "<group>"; };
+		7BDB5FF5243328F700D655C5 /* ZCHtmlFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCHtmlFilter.m; sourceTree = "<group>"; };
+		7BDB5FF6243328F700D655C5 /* ZCUIVoiceTools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCUIVoiceTools.h; sourceTree = "<group>"; };
+		7BDB5FF7243328F700D655C5 /* ZCSobotCore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCSobotCore.h; sourceTree = "<group>"; };
+		7BDB5FF8243328F700D655C5 /* ZCUIImageTools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCUIImageTools.h; sourceTree = "<group>"; };
+		7BDB5FF9243328F700D655C5 /* ZCUITools.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCUITools.m; sourceTree = "<group>"; };
+		7BDB5FFA243328F700D655C5 /* ZCStoreConfiguration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCStoreConfiguration.h; sourceTree = "<group>"; };
+		7BDB5FFB243328F700D655C5 /* ZCSatisfactionButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCSatisfactionButton.h; sourceTree = "<group>"; };
+		7BDB5FFC243328F700D655C5 /* ZCUIToastTools.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCUIToastTools.m; sourceTree = "<group>"; };
+		7BDB5FFD243328F700D655C5 /* ZCHtmlFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCHtmlFilter.h; sourceTree = "<group>"; };
+		7BDB5FFE243328F700D655C5 /* ZCUIVoiceTools.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCUIVoiceTools.m; sourceTree = "<group>"; };
+		7BDB5FFF243328F700D655C5 /* ZCSobotCore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCSobotCore.m; sourceTree = "<group>"; };
+		7BDB6000243328F700D655C5 /* ZCStoreConfiguration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCStoreConfiguration.m; sourceTree = "<group>"; };
+		7BDB6001243328F700D655C5 /* ZCUITools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCUITools.h; sourceTree = "<group>"; };
+		7BDB6002243328F700D655C5 /* ZCUIImageTools.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCUIImageTools.m; sourceTree = "<group>"; };
+		7BDB6003243328F700D655C5 /* ZCUIToastTools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCUIToastTools.h; sourceTree = "<group>"; };
+		7BDB6004243328F700D655C5 /* ZCSatisfactionButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCSatisfactionButton.m; sourceTree = "<group>"; };
+		7BDB6006243328F800D655C5 /* ZCUIColorsDefine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCUIColorsDefine.h; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		7BB21F9C1C005611003539F7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				59E4A0C423B4532000680CD7 /* libSobotLib.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		26339C161FFB1DF5006760B2 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		59E4A0A323B4532000680CD7 /* SobotLib */ = {
+			isa = PBXGroup;
+			children = (
+				59E4A0A423B4532000680CD7 /* libSobotLib.a */,
+				59E4A0A523B4532000680CD7 /* include */,
+			);
+			path = SobotLib;
+			sourceTree = "<group>";
+		};
+		59E4A0A523B4532000680CD7 /* include */ = {
+			isa = PBXGroup;
+			children = (
+				59E4A0A723B4532000680CD7 /* ZCLIbGlobalDefine.h */,
+				59E4A0A823B4532000680CD7 /* ZCLibCommon.h */,
+				59E4A0A923B4532000680CD7 /* ZCLibHttpConstants.h */,
+				59E4A0AA23B4532000680CD7 /* ZCLibNetworkTools.h */,
+				59E4A0AB23B4532000680CD7 /* ZCLibRich.h */,
+				59E4A0AC23B4532000680CD7 /* ZCHtmlCore.h */,
+				59E4A0AD23B4532000680CD7 /* ZCIMChat.h */,
+				59E4A0AE23B4532000680CD7 /* ZCMultiwheelModel.h */,
+				59E4A0AF23B4532000680CD7 /* ZCLogUtils.h */,
+				59E4A0B023B4532000680CD7 /* ZCRecordListModel.h */,
+				59E4A0B123B4532000680CD7 /* ZCPlatformInfo.h */,
+				59E4A0B223B4532000680CD7 /* ZCLibOrderCusFieldsModel.h */,
+				59E4A0B323B4532000680CD7 /* ZCLibSkillSet.h */,
+				59E4A0B423B4532000680CD7 /* ZCLibServer.h */,
+				59E4A0B523B4532000680CD7 /* ZCLocalStore.h */,
+				59E4A0B623B4532000680CD7 /* ZCLibClient.h */,
+				59E4A0B723B4532000680CD7 /* ZCLibHttpManager.h */,
+				59E4A0B823B4532000680CD7 /* ZCPlatformTools.h */,
+				59E4A0B923B4532000680CD7 /* ZCLibMessage.h */,
+				59E4A0BA23B4532000680CD7 /* ZCLibSatisfaction.h */,
+				59E4A0BB23B4532000680CD7 /* ZCLibConfig.h */,
+				59E4A0BC23B4532000680CD7 /* UIDeviceTools.h */,
+				59E4A0BD23B4532000680CD7 /* ZCLibReachability.h */,
+				59E4A0BE23B4532000680CD7 /* SobotLib.h */,
+				59E4A0BF23B4532000680CD7 /* ZCLibTicketTypeModel.h */,
+				59E4A0C023B4532000680CD7 /* ZCLibInitInfo.h */,
+				59E4A0C123B4532000680CD7 /* ZCLibContent.h */,
+				59E4A0C223B4532000680CD7 /* ZCLibStatusDefine.h */,
+				59E4A0C323B4532000680CD7 /* ZCLibMessageConstants.h */,
+			);
+			path = include;
+			sourceTree = "<group>";
+		};
+		7B18AF192576177C00C7C7FF /* chatcell */ = {
+			isa = PBXGroup;
+			children = (
+				7B18AF1A2576177C00C7C7FF /* ZCChatAllRichCell.m */,
+				7B18AF1B2576177C00C7C7FF /* ZCChatAllRichCell.h */,
+			);
+			path = chatcell;
+			sourceTree = "<group>";
+		};
+		7BB21F961C005611003539F7 = {
+			isa = PBXGroup;
+			children = (
+				7BB21FA21C005611003539F7 /* SobotKit */,
+				7BB21FA11C005611003539F7 /* Products */,
+				26339C161FFB1DF5006760B2 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		7BB21FA11C005611003539F7 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				7BB21FA01C005611003539F7 /* SobotKit.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		7BB21FA21C005611003539F7 /* SobotKit */ = {
+			isa = PBXGroup;
+			children = (
+				7BDB6005243328F800D655C5 /* Defines */,
+				7BDB5F8F243328F700D655C5 /* Entity */,
+				7BDB5FF4243328F700D655C5 /* Tools */,
+				7BDB5F05243328F700D655C5 /* UI */,
+				7BDB5FA2243328F700D655C5 /* Views */,
+				7BDB5F65243328F700D655C5 /* ZCShowLibrary */,
+				59E4A0A323B4532000680CD7 /* SobotLib */,
+				7BB2203F1C005653003539F7 /* ZCSobot.h */,
+				7BB220401C005653003539F7 /* ZCSobot.m */,
+				7BDB5F022433283E00D655C5 /* ZCSobotApi.h */,
+				7BDB5F012433283E00D655C5 /* ZCSobotApi.m */,
+				7BB21FA31C005611003539F7 /* SobotKit.h */,
+				7BB21FA51C005611003539F7 /* Info.plist */,
+				7BB220BE1C00566F003539F7 /* SobotKit.pch */,
+			);
+			path = SobotKit;
+			sourceTree = "<group>";
+		};
+		7BDB5F05243328F700D655C5 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				7BDB5F06243328F700D655C5 /* ZCUIWebController.h */,
+				7BDB5F07243328F700D655C5 /* ZCUIAskTableController */,
+				7BDB5F0A243328F700D655C5 /* ZCUIBaseController.h */,
+				7BDB5F0B243328F700D655C5 /* ZCUIChatListController.m */,
+				7BDB5F0C243328F700D655C5 /* cell */,
+				7BDB5F3A243328F700D655C5 /* ZCUIWebController.m */,
+				7BDB5F3B243328F700D655C5 /* zcserver */,
+				7BDB5F44243328F700D655C5 /* ZCUIBaseController.m */,
+				7BDB5F45243328F700D655C5 /* ZCUIChatListController.h */,
+				7BDB5F46243328F700D655C5 /* LeaveMessage */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
+		7BDB5F07243328F700D655C5 /* ZCUIAskTableController */ = {
+			isa = PBXGroup;
+			children = (
+				7BDB5F08243328F700D655C5 /* ZCUIAskTableController.h */,
+				7BDB5F09243328F700D655C5 /* ZCUIAskTableController.m */,
+			);
+			path = ZCUIAskTableController;
+			sourceTree = "<group>";
+		};
+		7BDB5F0C243328F700D655C5 /* cell */ = {
+			isa = PBXGroup;
+			children = (
+				7BDB5F0D243328F700D655C5 /* ZCChatCellDelegate.h */,
+				7BDB5F0E243328F700D655C5 /* ZCFileCell.m */,
+				7BDB5F0F243328F700D655C5 /* ZCVoiceChatCell.h */,
+				7BDB5F10243328F700D655C5 /* ZCLocationCell.h */,
+				7BDB5F11243328F700D655C5 /* ZCImageChatCell.m */,
+				7BDB5F12243328F700D655C5 /* ZCSatisfactionCell.m */,
+				7BDB5F13243328F700D655C5 /* ZCCollectionViewCell */,
+				7BDB5F20243328F700D655C5 /* ZCOrderGoodsCell.m */,
+				7BDB5F21243328F700D655C5 /* ZCInfoCardCell.h */,
+				7BDB5F22243328F700D655C5 /* ZCRichTextChatCell.m */,
+				7BDB5F23243328F700D655C5 /* ZCGoodsCell.h */,
+				7BDB5F24243328F700D655C5 /* ZCTextGuideCell.m */,
+				7BDB5F25243328F700D655C5 /* ZCTipsChatCell.m */,
+				7BDB5F26243328F700D655C5 /* ZCChatBaseCell.h */,
+				7BDB5F27243328F700D655C5 /* ZCMultiRichCell.m */,
+				7BDB5F28243328F700D655C5 /* ZCUIChatListCell.h */,
+				7BDB5F29243328F700D655C5 /* ZCNoticeCell.m */,
+				7BDB5F2A243328F700D655C5 /* ZCLocationCell.m */,
+				7BDB5F2B243328F700D655C5 /* ZCVoiceChatCell.m */,
+				7BDB5F2C243328F700D655C5 /* ZCFileCell.h */,
+				7BDB5F2D243328F700D655C5 /* ZCInfoCardCell.m */,
+				7BDB5F2E243328F700D655C5 /* ZCOrderGoodsCell.h */,
+				7BDB5F2F243328F700D655C5 /* ZCSatisfactionCell.h */,
+				7BDB5F30243328F700D655C5 /* ZCImageChatCell.h */,
+				7BDB5F31243328F700D655C5 /* ZCTextGuideCell.h */,
+				7BDB5F32243328F700D655C5 /* ZCGoodsCell.m */,
+				7BDB5F33243328F700D655C5 /* ZCRichTextChatCell.h */,
+				7BDB5F34243328F700D655C5 /* ZCNoticeCell.h */,
+				7BDB5F35243328F700D655C5 /* ZCUIChatListCell.m */,
+				7BDB5F36243328F700D655C5 /* ZCMultiRichCell.h */,
+				7BDB5F37243328F700D655C5 /* ZCChatBaseCell.m */,
+				7BDB5F38243328F700D655C5 /* ZCTipsChatCell.h */,
+			);
+			path = cell;
+			sourceTree = "<group>";
+		};
+		7BDB5F13243328F700D655C5 /* ZCCollectionViewCell */ = {
+			isa = PBXGroup;
+			children = (
+				7BDB5F14243328F700D655C5 /* ZCMultiItemCell.h */,
+				7BDB5F15243328F700D655C5 /* ZCCardCollectionViewCell.m */,
+				7BDB5F16243328F700D655C5 /* ZCHotGuideCell.h */,
+				7BDB5F17243328F700D655C5 /* ZCCollectionViewCell.m */,
+				7BDB5F18243328F700D655C5 /* ZCCardCollectionViewFlowLayout.m */,
+				7BDB5F19243328F700D655C5 /* ZCMultitemHorizontaRollCell.h */,
+				7BDB5F1A243328F700D655C5 /* ZCMultiItemCell.m */,
+				7BDB5F1B243328F700D655C5 /* ZCCardCollectionViewCell.h */,
+				7BDB5F1C243328F700D655C5 /* ZCHotGuideCell.m */,
+				7BDB5F1D243328F700D655C5 /* ZCMultitemHorizontaRollCell.m */,
+				7BDB5F1E243328F700D655C5 /* ZCCardCollectionViewFlowLayout.h */,
+				7BDB5F1F243328F700D655C5 /* ZCCollectionViewCell.h */,
+			);
+			path = ZCCollectionViewCell;
+			sourceTree = "<group>";
+		};
+		7BDB5F3B243328F700D655C5 /* zcserver */ = {
+			isa = PBXGroup;
+			children = (
+				7BDB5F3C243328F700D655C5 /* ZCServiceListCell.h */,
+				7BDB5F3D243328F700D655C5 /* ZCServiceDetailVC.m */,
+				7BDB5F3E243328F700D655C5 /* ZCServiceListVC.h */,
+				7BDB5F3F243328F700D655C5 /* ZCServiceCentreVC.h */,
+				7BDB5F40243328F700D655C5 /* ZCServiceListCell.m */,
+				7BDB5F41243328F700D655C5 /* ZCServiceDetailVC.h */,
+				7BDB5F42243328F700D655C5 /* ZCServiceCentreVC.m */,
+				7BDB5F43243328F700D655C5 /* ZCServiceListVC.m */,
+			);
+			path = zcserver;
+			sourceTree = "<group>";
+		};
+		7BDB5F46243328F700D655C5 /* LeaveMessage */ = {
+			isa = PBXGroup;
+			children = (
+				7BDB5F47243328F700D655C5 /* ZCXJAlbumController.h */,
+				7BDB5F48243328F700D655C5 /* editcell */,
+				7BDB5F55243328F700D655C5 /* ZCUILeaveMessageController.m */,
+				7BDB5F56243328F700D655C5 /* ZCMsgDetails */,
+				7BDB5F5F243328F700D655C5 /* ZCReplyLeaveController.h */,
+				7BDB5F60243328F700D655C5 /* ZCMsgRecordVC.m */,
+				7BDB5F61243328F700D655C5 /* ZCXJAlbumController.m */,
+				7BDB5F62243328F700D655C5 /* ZCReplyLeaveController.m */,
+				7BDB5F63243328F700D655C5 /* ZCUILeaveMessageController.h */,
+				7BDB5F64243328F700D655C5 /* ZCMsgRecordVC.h */,
+			);
+			path = LeaveMessage;
+			sourceTree = "<group>";
+		};
+		7BDB5F48243328F700D655C5 /* editcell */ = {
+			isa = PBXGroup;
+			children = (
+				7BDB5F49243328F700D655C5 /* ZCOrderCheckCell.m */,
+				7BDB5F4A243328F700D655C5 /* ZCOrderCreateCell.h */,
+				7BDB5F4B243328F700D655C5 /* ZCMsgRecordCell.m */,
+				7BDB5F4C243328F700D655C5 /* ZCOrderOnlyEditCell.h */,
+				7BDB5F4D243328F700D655C5 /* ZCOrderEditCell.h */,
+				7BDB5F4E243328F700D655C5 /* ZCOrderContentCell.m */,
+				7BDB5F4F243328F700D655C5 /* ZCOrderCreateCell.m */,
+				7BDB5F50243328F700D655C5 /* ZCOrderCheckCell.h */,
+				7BDB5F51243328F700D655C5 /* ZCOrderOnlyEditCell.m */,
+				7BDB5F52243328F700D655C5 /* ZCMsgRecordCell.h */,
+				7BDB5F53243328F700D655C5 /* ZCOrderContentCell.h */,
+				7BDB5F54243328F700D655C5 /* ZCOrderEditCell.m */,
+			);
+			path = editcell;
+			sourceTree = "<group>";
+		};
+		7BDB5F56243328F700D655C5 /* ZCMsgDetails */ = {
+			isa = PBXGroup;
+			children = (
+				7BDB5F57243328F700D655C5 /* ZCReplyFileView.h */,
+				7BDB5F58243328F700D655C5 /* ZCLeaveDetailCell.h */,
+				7BDB5F59243328F700D655C5 /* ZCMsgDetailsVC.h */,
+				7BDB5F5A243328F700D655C5 /* ZCReplyLeaveView.h */,
+				7BDB5F5B243328F700D655C5 /* ZCReplyLeaveView.m */,
+				7BDB5F5C243328F700D655C5 /* ZCMsgDetailsVC.m */,
+				7BDB5F5D243328F700D655C5 /* ZCLeaveDetailCell.m */,
+				7BDB5F5E243328F700D655C5 /* ZCReplyFileView.m */,
+			);
+			path = ZCMsgDetails;
+			sourceTree = "<group>";
+		};
+		7BDB5F65243328F700D655C5 /* ZCShowLibrary */ = {
+			isa = PBXGroup;
+			children = (
+				7BDB5F66243328F700D655C5 /* UI */,
+				7BDB5F8A243328F700D655C5 /* Core */,
+			);
+			path = ZCShowLibrary;
+			sourceTree = "<group>";
+		};
+		7BDB5F66243328F700D655C5 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				7BDB5F67243328F700D655C5 /* ZCChatView.h */,
+				7BDB5F68243328F700D655C5 /* ZCKeyboardTools */,
+				7BDB5F6B243328F700D655C5 /* ZCChatView.m */,
+				7BDB5F6C243328F700D655C5 /* VC */,
+				7BDB5F79243328F700D655C5 /* Views */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
+		7BDB5F68243328F700D655C5 /* ZCKeyboardTools */ = {
+			isa = PBXGroup;
+			children = (
+				7BDB5F69243328F700D655C5 /* ZCUIKeyboard.h */,
+				7BDB5F6A243328F700D655C5 /* ZCUIKeyboard.m */,
+			);
+			path = ZCKeyboardTools;
+			sourceTree = "<group>";
+		};
+		7BDB5F6C243328F700D655C5 /* VC */ = {
+			isa = PBXGroup;
+			children = (
+				7BDB5F6D243328F700D655C5 /* Chat */,
+				7BDB5F76243328F700D655C5 /* Leave */,
+			);
+			path = VC;
+			sourceTree = "<group>";
+		};
+		7BDB5F6D243328F700D655C5 /* Chat */ = {
+			isa = PBXGroup;
+			children = (
+				7B18AF192576177C00C7C7FF /* chatcell */,
+				7BDB5F6E243328F700D655C5 /* ZCChatController.h */,
+				7BDB5F6F243328F700D655C5 /* ZCLocationController.h */,
+				7BDB5F70243328F700D655C5 /* ZCDocumentLookController.m */,
+				7BDB5F71243328F700D655C5 /* ZCVideoViewController.h */,
+				7BDB5F72243328F700D655C5 /* ZCChatController.m */,
+				7BDB5F73243328F700D655C5 /* ZCDocumentLookController.h */,
+				7BDB5F74243328F700D655C5 /* ZCLocationController.m */,
+				7BDB5F75243328F700D655C5 /* ZCVideoViewController.m */,
+			);
+			path = Chat;
+			sourceTree = "<group>";
+		};
+		7BDB5F76243328F700D655C5 /* Leave */ = {
+			isa = PBXGroup;
+			children = (
+				7BDB5F77243328F700D655C5 /* ZCLeaveMsgVC.m */,
+				7BDB5F78243328F700D655C5 /* ZCLeaveMsgVC.h */,
+			);
+			path = Leave;
+			sourceTree = "<group>";
+		};
+		7BDB5F79243328F700D655C5 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				7BDB5F7A243328F700D655C5 /* ZCPageSheetView.h */,
+				7BDB5F7B243328F700D655C5 /* ZCCheckCusFieldView.h */,
+				7BDB5F7C243328F700D655C5 /* ZCCheckTypeView.m */,
+				7BDB5F7D243328F700D655C5 /* ZCCircleProgressView.m */,
+				7BDB5F7E243328F700D655C5 /* ZCCheckCityView.m */,
+				7BDB5F7F243328F700D655C5 /* ZCProgressView.h */,
+				7BDB5F80243328F700D655C5 /* ZCVideoPlayer.m */,
+				7BDB5F81243328F700D655C5 /* ZCTitleView.h */,
+				7BDB5F82243328F700D655C5 /* ZCPageSheetView.m */,
+				7BDB5F83243328F700D655C5 /* ZCCheckTypeView.h */,
+				7BDB5F84243328F700D655C5 /* ZCCheckCusFieldView.m */,
+				7BDB5F85243328F700D655C5 /* ZCCircleProgressView.h */,
+				7BDB5F86243328F700D655C5 /* ZCCheckCityView.h */,
+				7BDB5F87243328F700D655C5 /* ZCTitleView.m */,
+				7BDB5F88243328F700D655C5 /* ZCVideoPlayer.h */,
+				7BDB5F89243328F700D655C5 /* ZCProgressView.m */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		7BDB5F8A243328F700D655C5 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				7BDB5F8B243328F700D655C5 /* ZCUICore.h */,
+				7BDB5F8C243328F700D655C5 /* ZCToolsCore.h */,
+				7BDB5F8D243328F700D655C5 /* ZCToolsCore.m */,
+				7BDB5F8E243328F700D655C5 /* ZCUICore.m */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		7BDB5F8F243328F700D655C5 /* Entity */ = {
+			isa = PBXGroup;
+			children = (
+				7BDB5F90243328F700D655C5 /* ZCOrderGoodsModel.h */,
+				7BDB5F91243328F700D655C5 /* ZCKitInfo.m */,
+				7BDB5F92243328F700D655C5 /* ZCProductInfo.h */,
+				7BDB5F93243328F700D655C5 /* ZCSCListModel.m */,
+				7BDB5F94243328F700D655C5 /* ZCOrderModel.h */,
+				7BDB5F95243328F700D655C5 /* ZCLibCusMenu.h */,
+				7BDB5F96243328F700D655C5 /* ZCLibRobotSet.h */,
+				7BDB5F97243328F700D655C5 /* ZCAddressModel.h */,
+				7BDB5F98243328F700D655C5 /* ZCWsTemplateModel.h */,
+				7BDB5F99243328F700D655C5 /* ZCProductInfo.m */,
+				7BDB5F9A243328F700D655C5 /* ZCKitInfo.h */,
+				7BDB5F9B243328F700D655C5 /* ZCOrderGoodsModel.m */,
+				7BDB5F9C243328F700D655C5 /* ZCAddressModel.m */,
+				7BDB5F9D243328F700D655C5 /* ZCLibCusMenu.m */,
+				7BDB5F9E243328F700D655C5 /* ZCLibRobotSet.m */,
+				7BDB5F9F243328F700D655C5 /* ZCOrderModel.m */,
+				7BDB5FA0243328F700D655C5 /* ZCSCListModel.h */,
+				7BDB5FA1243328F700D655C5 /* ZCWsTemplateModel.m */,
+			);
+			path = Entity;
+			sourceTree = "<group>";
+		};
+		7BDB5FA2243328F700D655C5 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				7BDB5FA3243328F700D655C5 /* ZHPickView */,
+				7BDB5FA6243328F700D655C5 /* ZCUICustomActionSheet.m */,
+				7BDB5FA7243328F700D655C5 /* ZCQuickEntryView */,
+				7BDB5FAA243328F700D655C5 /* ZCSkillGroups */,
+				7BDB5FAD243328F700D655C5 /* Rating */,
+				7BDB5FB0243328F700D655C5 /* ZCEdgeInsetsLabel.m */,
+				7BDB5FB6243328F700D655C5 /* ZCUIRecordView */,
+				7BDB5FB9243328F700D655C5 /* ZCPieChartView */,
+				7BDB5FBC243328F700D655C5 /* ZCButton */,
+				7BDB5FC1243328F700D655C5 /* XHImageViewer */,
+				7BDB5FD3243328F700D655C5 /* ZCUICustomActionSheet.h */,
+				7BDB5FD4243328F700D655C5 /* ZCActionSheetView */,
+				7BDB5FD7243328F700D655C5 /* ZCEdgeInsetsLabel.h */,
+				7BDB5FD8243328F700D655C5 /* ZCEmojiLabel */,
+				7BDB5FDE243328F700D655C5 /* ZCLoading */,
+				7BDB5FE1243328F700D655C5 /* ZCSelLeaveView */,
+				7BDB5FE4243328F700D655C5 /* AutoVIew */,
+				7BDB5FE7243328F700D655C5 /* ZCEmoji */,
+				7BDB5FEC243328F700D655C5 /* ZCTurnRobotView */,
+				7BDB5FEF243328F700D655C5 /* ZCTextView */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		7BDB5FA3243328F700D655C5 /* ZHPickView */ = {
+			isa = PBXGroup;
+			children = (
+				7BDB5FA4243328F700D655C5 /* ZCZHPickView.m */,
+				7BDB5FA5243328F700D655C5 /* ZCZHPickView.h */,
+			);
+			path = ZHPickView;
+			sourceTree = "<group>";
+		};
+		7BDB5FA7243328F700D655C5 /* ZCQuickEntryView */ = {
+			isa = PBXGroup;
+			children = (
+				7BDB5FA8243328F700D655C5 /* ZCQuickEntryView.m */,
+				7BDB5FA9243328F700D655C5 /* ZCQuickEntryView.h */,
+			);
+			path = ZCQuickEntryView;
+			sourceTree = "<group>";
+		};
+		7BDB5FAA243328F700D655C5 /* ZCSkillGroups */ = {
+			isa = PBXGroup;
+			children = (
+				7BDB5FAB243328F700D655C5 /* ZCUISkillSetView.h */,
+				7BDB5FAC243328F700D655C5 /* ZCUISkillSetView.m */,
+			);
+			path = ZCSkillGroups;
+			sourceTree = "<group>";
+		};
+		7BDB5FAD243328F700D655C5 /* Rating */ = {
+			isa = PBXGroup;
+			children = (
+				7BDB5FAE243328F700D655C5 /* ZCUIRatingView.h */,
+				7BDB5FAF243328F700D655C5 /* ZCUIRatingView.m */,
+			);
+			path = Rating;
+			sourceTree = "<group>";
+		};
+		7BDB5FB6243328F700D655C5 /* ZCUIRecordView */ = {
+			isa = PBXGroup;
+			children = (
+				7BDB5FB7243328F700D655C5 /* ZCUIRecordView.m */,
+				7BDB5FB8243328F700D655C5 /* ZCUIRecordView.h */,
+			);
+			path = ZCUIRecordView;
+			sourceTree = "<group>";
+		};
+		7BDB5FB9243328F700D655C5 /* ZCPieChartView */ = {
+			isa = PBXGroup;
+			children = (
+				7BDB5FBA243328F700D655C5 /* ZCPieChartView.m */,
+				7BDB5FBB243328F700D655C5 /* ZCPieChartView.h */,
+			);
+			path = ZCPieChartView;
+			sourceTree = "<group>";
+		};
+		7BDB5FBC243328F700D655C5 /* ZCButton */ = {
+			isa = PBXGroup;
+			children = (
+				7BDB5FBD243328F700D655C5 /* ZCButton.h */,
+				7BDB5FBE243328F700D655C5 /* ZCObjButton.m */,
+				7BDB5FBF243328F700D655C5 /* ZCObjButton.h */,
+				7BDB5FC0243328F700D655C5 /* ZCButton.m */,
+			);
+			path = ZCButton;
+			sourceTree = "<group>";
+		};
+		7BDB5FC1243328F700D655C5 /* XHImageViewer */ = {
+			isa = PBXGroup;
+			children = (
+				7BDB5FC2243328F700D655C5 /* Protocol */,
+				7BDB5FC4243328F700D655C5 /* Views */,
+				7BDB5FCB243328F700D655C5 /* Helpers */,
+				7BDB5FD0243328F700D655C5 /* Categorys */,
+			);
+			path = XHImageViewer;
+			sourceTree = "<group>";
+		};
+		7BDB5FC2243328F700D655C5 /* Protocol */ = {
+			isa = PBXGroup;
+			children = (
+				7BDB5FC3243328F700D655C5 /* ZCUIXHImageURLDataSource.h */,
+			);
+			path = Protocol;
+			sourceTree = "<group>";
+		};
+		7BDB5FC4243328F700D655C5 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				7BDB5FC5243328F700D655C5 /* ZCUIXHViewState.h */,
+				7BDB5FC6243328F700D655C5 /* ZCUIXHZoomingImageView.m */,
+				7BDB5FC7243328F700D655C5 /* ZCUIXHImageViewer.h */,
+				7BDB5FC8243328F700D655C5 /* ZCUIXHViewState.m */,
+				7BDB5FC9243328F700D655C5 /* ZCUIXHZoomingImageView.h */,
+				7BDB5FCA243328F700D655C5 /* ZCUIXHImageViewer.m */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		7BDB5FCB243328F700D655C5 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				7BDB5FCC243328F700D655C5 /* ZCUIXHFileAttribute.h */,
+				7BDB5FCD243328F700D655C5 /* ZCUIXHCacheManager.h */,
+				7BDB5FCE243328F700D655C5 /* ZCUIXHFileAttribute.m */,
+				7BDB5FCF243328F700D655C5 /* ZCUIXHCacheManager.m */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
+		7BDB5FD0243328F700D655C5 /* Categorys */ = {
+			isa = PBXGroup;
+			children = (
+				7BDB5FD1243328F700D655C5 /* ZCUIImageView.m */,
+				7BDB5FD2243328F700D655C5 /* ZCUIImageView.h */,
+			);
+			path = Categorys;
+			sourceTree = "<group>";
+		};
+		7BDB5FD4243328F700D655C5 /* ZCActionSheetView */ = {
+			isa = PBXGroup;
+			children = (
+				7BDB5FD5243328F700D655C5 /* ZCActionSheet.h */,
+				7BDB5FD6243328F700D655C5 /* ZCActionSheet.m */,
+			);
+			path = ZCActionSheetView;
+			sourceTree = "<group>";
+		};
+		7BDB5FD8243328F700D655C5 /* ZCEmojiLabel */ = {
+			isa = PBXGroup;
+			children = (
+				7BDB5FD9243328F700D655C5 /* ZCMLEmojiLabel.h */,
+				7BDB5FDA243328F700D655C5 /* ZCTTTAttributedLabel */,
+				7BDB5FDD243328F700D655C5 /* ZCMLEmojiLabel.m */,
+			);
+			path = ZCEmojiLabel;
+			sourceTree = "<group>";
+		};
+		7BDB5FDA243328F700D655C5 /* ZCTTTAttributedLabel */ = {
+			isa = PBXGroup;
+			children = (
+				7BDB5FDB243328F700D655C5 /* ZCTTTAttributedLabel.m */,
+				7BDB5FDC243328F700D655C5 /* ZCTTTAttributedLabel.h */,
+			);
+			path = ZCTTTAttributedLabel;
+			sourceTree = "<group>";
+		};
+		7BDB5FDE243328F700D655C5 /* ZCLoading */ = {
+			isa = PBXGroup;
+			children = (
+				7BDB5FDF243328F700D655C5 /* ZCUILoading.m */,
+				7BDB5FE0243328F700D655C5 /* ZCUILoading.h */,
+			);
+			path = ZCLoading;
+			sourceTree = "<group>";
+		};
+		7BDB5FE1243328F700D655C5 /* ZCSelLeaveView */ = {
+			isa = PBXGroup;
+			children = (
+				7BDB5FE2243328F700D655C5 /* ZCSelLeaveView.m */,
+				7BDB5FE3243328F700D655C5 /* ZCSelLeaveView.h */,
+			);
+			path = ZCSelLeaveView;
+			sourceTree = "<group>";
+		};
+		7BDB5FE4243328F700D655C5 /* AutoVIew */ = {
+			isa = PBXGroup;
+			children = (
+				7BDB5FE5243328F700D655C5 /* ZCAutoListView.h */,
+				7BDB5FE6243328F700D655C5 /* ZCAutoListView.m */,
+			);
+			path = AutoVIew;
+			sourceTree = "<group>";
+		};
+		7BDB5FE7243328F700D655C5 /* ZCEmoji */ = {
+			isa = PBXGroup;
+			children = (
+				7BDB5FE8243328F700D655C5 /* EmojiButton.m */,
+				7BDB5FE9243328F700D655C5 /* EmojiBoardView.h */,
+				7BDB5FEA243328F700D655C5 /* EmojiButton.h */,
+				7BDB5FEB243328F700D655C5 /* EmojiBoardView.m */,
+			);
+			path = ZCEmoji;
+			sourceTree = "<group>";
+		};
+		7BDB5FEC243328F700D655C5 /* ZCTurnRobotView */ = {
+			isa = PBXGroup;
+			children = (
+				7BDB5FED243328F700D655C5 /* ZCTurnRobotView.h */,
+				7BDB5FEE243328F700D655C5 /* ZCTurnRobotView.m */,
+			);
+			path = ZCTurnRobotView;
+			sourceTree = "<group>";
+		};
+		7BDB5FEF243328F700D655C5 /* ZCTextView */ = {
+			isa = PBXGroup;
+			children = (
+				7BDB5FF0243328F700D655C5 /* ZCUIPlaceHolderTextView.h */,
+				7BDB5FF1243328F700D655C5 /* ZCItemView.h */,
+				7BDB5FF2243328F700D655C5 /* ZCItemView.m */,
+				7BDB5FF3243328F700D655C5 /* ZCUIPlaceHolderTextView.m */,
+			);
+			path = ZCTextView;
+			sourceTree = "<group>";
+		};
+		7BDB5FF4243328F700D655C5 /* Tools */ = {
+			isa = PBXGroup;
+			children = (
+				7BDB5FF5243328F700D655C5 /* ZCHtmlFilter.m */,
+				7BDB5FF6243328F700D655C5 /* ZCUIVoiceTools.h */,
+				7BDB5FF7243328F700D655C5 /* ZCSobotCore.h */,
+				7BDB5FF8243328F700D655C5 /* ZCUIImageTools.h */,
+				7BDB5FF9243328F700D655C5 /* ZCUITools.m */,
+				7BDB5FFA243328F700D655C5 /* ZCStoreConfiguration.h */,
+				7BDB5FFB243328F700D655C5 /* ZCSatisfactionButton.h */,
+				7BDB5FFC243328F700D655C5 /* ZCUIToastTools.m */,
+				7BDB5FFD243328F700D655C5 /* ZCHtmlFilter.h */,
+				7BDB5FFE243328F700D655C5 /* ZCUIVoiceTools.m */,
+				7BDB5FFF243328F700D655C5 /* ZCSobotCore.m */,
+				7BDB6000243328F700D655C5 /* ZCStoreConfiguration.m */,
+				7BDB6001243328F700D655C5 /* ZCUITools.h */,
+				7BDB6002243328F700D655C5 /* ZCUIImageTools.m */,
+				7BDB6003243328F700D655C5 /* ZCUIToastTools.h */,
+				7BDB6004243328F700D655C5 /* ZCSatisfactionButton.m */,
+			);
+			path = Tools;
+			sourceTree = "<group>";
+		};
+		7BDB6005243328F800D655C5 /* Defines */ = {
+			isa = PBXGroup;
+			children = (
+				7BDB6006243328F800D655C5 /* ZCUIColorsDefine.h */,
+			);
+			path = Defines;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		7BB21F9D1C005611003539F7 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				59E4A0D423B4532000680CD7 /* ZCLocalStore.h in Headers */,
+				7BDB6007243328F800D655C5 /* ZCUIWebController.h in Headers */,
+				7BDB6074243328F800D655C5 /* ZCTitleView.h in Headers */,
+				7BDB600A243328F800D655C5 /* ZCUIBaseController.h in Headers */,
+				7BDB6083243328F800D655C5 /* ZCProductInfo.h in Headers */,
+				7BDB6042243328F800D655C5 /* ZCUIChatListController.h in Headers */,
+				7BDB6081243328F800D655C5 /* ZCOrderGoodsModel.h in Headers */,
+				7BDB5F042433283E00D655C5 /* ZCSobotApi.h in Headers */,
+				7BDB605F243328F800D655C5 /* ZCChatView.h in Headers */,
+				7BDB6063243328F800D655C5 /* ZCChatController.h in Headers */,
+				7BDB605D243328F800D655C5 /* ZCUILeaveMessageController.h in Headers */,
+				7BDB607D243328F800D655C5 /* ZCUICore.h in Headers */,
+				59E4A0D323B4532000680CD7 /* ZCLibServer.h in Headers */,
+				59E4A0CB23B4532000680CD7 /* ZCHtmlCore.h in Headers */,
+				59E4A0CF23B4532000680CD7 /* ZCRecordListModel.h in Headers */,
+				7BDB608B243328F800D655C5 /* ZCKitInfo.h in Headers */,
+				59E4A0CD23B4532000680CD7 /* ZCMultiwheelModel.h in Headers */,
+				59E4A0D723B4532000680CD7 /* ZCPlatformTools.h in Headers */,
+				7BDB60CA243328F800D655C5 /* ZCUIPlaceHolderTextView.h in Headers */,
+				59E4A0D023B4532000680CD7 /* ZCPlatformInfo.h in Headers */,
+				7BDB60C1243328F800D655C5 /* ZCSelLeaveView.h in Headers */,
+				7BDB6086243328F800D655C5 /* ZCLibCusMenu.h in Headers */,
+				7BDB600F243328F800D655C5 /* ZCLocationCell.h in Headers */,
+				59E4A0DF23B4532000680CD7 /* ZCLibInitInfo.h in Headers */,
+				7BDB6014243328F800D655C5 /* ZCHotGuideCell.h in Headers */,
+				7BDB6094243328F800D655C5 /* ZCZHPickView.h in Headers */,
+				7BDB60BC243328F800D655C5 /* ZCTTTAttributedLabel.h in Headers */,
+				7BDB60D4243328F800D655C5 /* ZCSatisfactionButton.h in Headers */,
+				7BDB606E243328F800D655C5 /* ZCCheckCusFieldView.h in Headers */,
+				7BDB6085243328F800D655C5 /* ZCOrderModel.h in Headers */,
+				7BDB605E243328F800D655C5 /* ZCMsgRecordVC.h in Headers */,
+				7BDB601C243328F800D655C5 /* ZCCardCollectionViewFlowLayout.h in Headers */,
+				7BDB60AC243328F800D655C5 /* ZCUIXHImageViewer.h in Headers */,
+				7BDB601F243328F800D655C5 /* ZCInfoCardCell.h in Headers */,
+				7BDB6098243328F800D655C5 /* ZCUISkillSetView.h in Headers */,
+				59E4A0E223B4532000680CD7 /* ZCLibMessageConstants.h in Headers */,
+				59E4A0D823B4532000680CD7 /* ZCLibMessage.h in Headers */,
+				7BDB600E243328F800D655C5 /* ZCVoiceChatCell.h in Headers */,
+				59E4A0DA23B4532000680CD7 /* ZCLibConfig.h in Headers */,
+				7BDB60C6243328F800D655C5 /* EmojiButton.h in Headers */,
+				59E4A0E023B4532000680CD7 /* ZCLibContent.h in Headers */,
+				7BDB60A7243328F800D655C5 /* ZCObjButton.h in Headers */,
+				7BDB60DA243328F800D655C5 /* ZCUITools.h in Headers */,
+				7BDB60BF243328F800D655C5 /* ZCUILoading.h in Headers */,
+				7BDB60B9243328F800D655C5 /* ZCEdgeInsetsLabel.h in Headers */,
+				7BDB60C5243328F800D655C5 /* EmojiBoardView.h in Headers */,
+				59E4A0CA23B4532000680CD7 /* ZCLibRich.h in Headers */,
+				59E4A0E123B4532000680CD7 /* ZCLibStatusDefine.h in Headers */,
+				59E4A0D523B4532000680CD7 /* ZCLibClient.h in Headers */,
+				59E4A0D223B4532000680CD7 /* ZCLibSkillSet.h in Headers */,
+				59E4A0DE23B4532000680CD7 /* ZCLibTicketTypeModel.h in Headers */,
+				7BDB60CB243328F800D655C5 /* ZCItemView.h in Headers */,
+				7BDB60B5243328F800D655C5 /* ZCUIImageView.h in Headers */,
+				59E4A0DB23B4532000680CD7 /* UIDeviceTools.h in Headers */,
+				7BDB60D0243328F800D655C5 /* ZCSobotCore.h in Headers */,
+				7BDB603E243328F800D655C5 /* ZCServiceDetailVC.h in Headers */,
+				7BDB6019243328F800D655C5 /* ZCCardCollectionViewCell.h in Headers */,
+				7BDB60A2243328F800D655C5 /* ZCUIRecordView.h in Headers */,
+				7BDB601D243328F800D655C5 /* ZCCollectionViewCell.h in Headers */,
+				7BDB6072243328F800D655C5 /* ZCProgressView.h in Headers */,
+				7BDB60D3243328F800D655C5 /* ZCStoreConfiguration.h in Headers */,
+				59E4A0C923B4532000680CD7 /* ZCLibNetworkTools.h in Headers */,
+				7BDB6039243328F800D655C5 /* ZCServiceListCell.h in Headers */,
+				7BDB604B243328F800D655C5 /* ZCOrderCheckCell.h in Headers */,
+				7BDB60B0243328F800D655C5 /* ZCUIXHFileAttribute.h in Headers */,
+				7BDB6017243328F800D655C5 /* ZCMultitemHorizontaRollCell.h in Headers */,
+				7B18AF1D2576177C00C7C7FF /* ZCChatAllRichCell.h in Headers */,
+				7BDB60DE243328F800D655C5 /* ZCUIColorsDefine.h in Headers */,
+				7BDB6048243328F800D655C5 /* ZCOrderEditCell.h in Headers */,
+				7BDB60B1243328F800D655C5 /* ZCUIXHCacheManager.h in Headers */,
+				7BDB6036243328F800D655C5 /* ZCTipsChatCell.h in Headers */,
+				7BDB6089243328F800D655C5 /* ZCWsTemplateModel.h in Headers */,
+				7BB220BC1C005653003539F7 /* ZCSobot.h in Headers */,
+				7BDB6060243328F800D655C5 /* ZCUIKeyboard.h in Headers */,
+				7BDB60C2243328F800D655C5 /* ZCAutoListView.h in Headers */,
+				7BDB600C243328F800D655C5 /* ZCChatCellDelegate.h in Headers */,
+				7BDB603C243328F800D655C5 /* ZCServiceCentreVC.h in Headers */,
+				7BDB6043243328F800D655C5 /* ZCXJAlbumController.h in Headers */,
+				7BDB6021243328F800D655C5 /* ZCGoodsCell.h in Headers */,
+				7BDB6024243328F800D655C5 /* ZCChatBaseCell.h in Headers */,
+				7BDB6045243328F800D655C5 /* ZCOrderCreateCell.h in Headers */,
+				7BDB6076243328F800D655C5 /* ZCCheckTypeView.h in Headers */,
+				7BDB603B243328F800D655C5 /* ZCServiceListVC.h in Headers */,
+				7BDB604E243328F800D655C5 /* ZCOrderContentCell.h in Headers */,
+				7BDB60AA243328F800D655C5 /* ZCUIXHViewState.h in Headers */,
+				59E4A0DD23B4532000680CD7 /* SobotLib.h in Headers */,
+				7BDB6008243328F800D655C5 /* ZCUIAskTableController.h in Headers */,
+				7BDB606D243328F800D655C5 /* ZCPageSheetView.h in Headers */,
+				7BDB6051243328F800D655C5 /* ZCReplyFileView.h in Headers */,
+				7BDB6034243328F800D655C5 /* ZCMultiRichCell.h in Headers */,
+				7BDB6078243328F800D655C5 /* ZCCircleProgressView.h in Headers */,
+				59E4A0C723B4532000680CD7 /* ZCLibCommon.h in Headers */,
+				7BDB6059243328F800D655C5 /* ZCReplyLeaveController.h in Headers */,
+				59E4A0C823B4532000680CD7 /* ZCLibHttpConstants.h in Headers */,
+				7BDB60B7243328F800D655C5 /* ZCActionSheet.h in Headers */,
+				7BDB607E243328F800D655C5 /* ZCToolsCore.h in Headers */,
+				7BDB6026243328F800D655C5 /* ZCUIChatListCell.h in Headers */,
+				7BDB60D1243328F800D655C5 /* ZCUIImageTools.h in Headers */,
+				7BDB6032243328F800D655C5 /* ZCNoticeCell.h in Headers */,
+				7BDB6091243328F800D655C5 /* ZCSCListModel.h in Headers */,
+				7BDB604D243328F800D655C5 /* ZCMsgRecordCell.h in Headers */,
+				7BDB6012243328F800D655C5 /* ZCMultiItemCell.h in Headers */,
+				7BDB6052243328F800D655C5 /* ZCLeaveDetailCell.h in Headers */,
+				7BDB60A9243328F800D655C5 /* ZCUIXHImageURLDataSource.h in Headers */,
+				7BDB60D6243328F800D655C5 /* ZCHtmlFilter.h in Headers */,
+				7BDB607B243328F800D655C5 /* ZCVideoPlayer.h in Headers */,
+				7BDB6054243328F800D655C5 /* ZCReplyLeaveView.h in Headers */,
+				7BDB60A5243328F800D655C5 /* ZCButton.h in Headers */,
+				59E4A0CC23B4532000680CD7 /* ZCIMChat.h in Headers */,
+				7BDB60B6243328F800D655C5 /* ZCUICustomActionSheet.h in Headers */,
+				7BDB602E243328F800D655C5 /* ZCImageChatCell.h in Headers */,
+				7BDB6031243328F800D655C5 /* ZCRichTextChatCell.h in Headers */,
+				7BDB6087243328F800D655C5 /* ZCLibRobotSet.h in Headers */,
+				7BDB609A243328F800D655C5 /* ZCUIRatingView.h in Headers */,
+				7BB220BF1C00566F003539F7 /* SobotKit.pch in Headers */,
+				59E4A0D623B4532000680CD7 /* ZCLibHttpManager.h in Headers */,
+				7BDB6079243328F800D655C5 /* ZCCheckCityView.h in Headers */,
+				7BDB6088243328F800D655C5 /* ZCAddressModel.h in Headers */,
+				7BDB60BA243328F800D655C5 /* ZCMLEmojiLabel.h in Headers */,
+				7BDB60DC243328F800D655C5 /* ZCUIToastTools.h in Headers */,
+				7BB21FA41C005611003539F7 /* SobotKit.h in Headers */,
+				7BDB60C8243328F800D655C5 /* ZCTurnRobotView.h in Headers */,
+				7BDB6068243328F800D655C5 /* ZCDocumentLookController.h in Headers */,
+				59E4A0C623B4532000680CD7 /* ZCLIbGlobalDefine.h in Headers */,
+				7BDB602D243328F800D655C5 /* ZCSatisfactionCell.h in Headers */,
+				7BDB6097243328F800D655C5 /* ZCQuickEntryView.h in Headers */,
+				7BDB6066243328F800D655C5 /* ZCVideoViewController.h in Headers */,
+				7BDB60CF243328F800D655C5 /* ZCUIVoiceTools.h in Headers */,
+				7BDB602A243328F800D655C5 /* ZCFileCell.h in Headers */,
+				59E4A0D923B4532000680CD7 /* ZCLibSatisfaction.h in Headers */,
+				7BDB6064243328F800D655C5 /* ZCLocationController.h in Headers */,
+				59E4A0D123B4532000680CD7 /* ZCLibOrderCusFieldsModel.h in Headers */,
+				7BDB602C243328F800D655C5 /* ZCOrderGoodsCell.h in Headers */,
+				7BDB602F243328F800D655C5 /* ZCTextGuideCell.h in Headers */,
+				59E4A0DC23B4532000680CD7 /* ZCLibReachability.h in Headers */,
+				7BDB60AE243328F800D655C5 /* ZCUIXHZoomingImageView.h in Headers */,
+				7BDB6047243328F800D655C5 /* ZCOrderOnlyEditCell.h in Headers */,
+				59E4A0CE23B4532000680CD7 /* ZCLogUtils.h in Headers */,
+				7BDB6053243328F800D655C5 /* ZCMsgDetailsVC.h in Headers */,
+				7BDB60A4243328F800D655C5 /* ZCPieChartView.h in Headers */,
+				7BDB606C243328F800D655C5 /* ZCLeaveMsgVC.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		7BB21F9F1C005611003539F7 /* SobotKit */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7BB21FA81C005611003539F7 /* Build configuration list for PBXNativeTarget "SobotKit" */;
+			buildPhases = (
+				7BB21F9B1C005611003539F7 /* Sources */,
+				7BB21F9C1C005611003539F7 /* Frameworks */,
+				7BB21F9D1C005611003539F7 /* Headers */,
+				7BB21F9E1C005611003539F7 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SobotKit;
+			productName = SobotKit;
+			productReference = 7BB21FA01C005611003539F7 /* SobotKit.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		7BB21F971C005611003539F7 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0730;
+				LastUpgradeCheck = 0800;
+				ORGANIZATIONNAME = zhichi;
+				TargetAttributes = {
+					7BB21F9F1C005611003539F7 = {
+						CreatedOnToolsVersion = 7.1;
+						DevelopmentTeam = 94K26P27D8;
+						ProvisioningStyle = Automatic;
+					};
+					7BB220C01C005746003539F7 = {
+						CreatedOnToolsVersion = 7.1;
+					};
+				};
+			};
+			buildConfigurationList = 7BB21F9A1C005611003539F7 /* Build configuration list for PBXProject "SobotKit" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				English,
+				en,
+			);
+			mainGroup = 7BB21F961C005611003539F7;
+			productRefGroup = 7BB21FA11C005611003539F7 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				7BB21F9F1C005611003539F7 /* SobotKit */,
+				7BB220C01C005746003539F7 /* CreateFrameworScript */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		7BB21F9E1C005611003539F7 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		7BB220C41C005753003539F7 /* Run Script */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Run Script";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Sets the target folders and the final framework product.\n# 如果工程名称和Framework的Target名称不一样的话，要自定义FMKNAME\n# 例如: FMK_NAME = \"MyFramework\"\nFMK_NAME=${PROJECT_NAME}\n# Install dir will be the final output to the framework.\n# The following line create it in the root folder of the current project.\nINSTALL_DIR=${SRCROOT}/Products/${FMK_NAME}.framework\n# Working dir will be deleted after the framework creation.\nWRK_DIR=build\nDEVICE_DIR=${WRK_DIR}/Release-iphoneos/${FMK_NAME}.framework\nSIMULATOR_DIR=${WRK_DIR}/Release-iphonesimulator/${FMK_NAME}.framework\n# -configuration ${CONFIGURATION}\n# Clean and Building both architectures.\nxcodebuild clean build\nxcodebuild OTHER_CFLAGS=\"-fembed-bitcode\" -configuration \"Release\" -target \"${FMK_NAME}\" -sdk iphoneos \nxcodebuild -configuration \"Release\" -target \"${FMK_NAME}\" -sdk iphonesimulator -arch i386 -arch x86_64\n\n# Cleaning the oldest.\nif [ -d \"${INSTALL_DIR}\" ]\nthen\nrm -rf \"${INSTALL_DIR}\"\nfi\nmkdir -p \"${INSTALL_DIR}\"\ncp -R \"${DEVICE_DIR}/\" \"${INSTALL_DIR}/\"\n# Uses the Lipo Tool to merge both binary files (i386 + armv6/armv7) into one Universal final product.\nlipo -create \"${DEVICE_DIR}/${FMK_NAME}\" \"${SIMULATOR_DIR}/${FMK_NAME}\" -output \"${INSTALL_DIR}/${FMK_NAME}\"\n#rm -r \"${WRK_DIR}\"\nopen \"${INSTALL_DIR}\"\n\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		7BB21F9B1C005611003539F7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7BDB60A8243328F800D655C5 /* ZCButton.m in Sources */,
+				7BDB607A243328F800D655C5 /* ZCTitleView.m in Sources */,
+				7BDB6080243328F800D655C5 /* ZCUICore.m in Sources */,
+				7BDB6099243328F800D655C5 /* ZCUISkillSetView.m in Sources */,
+				7BDB6050243328F800D655C5 /* ZCUILeaveMessageController.m in Sources */,
+				7BDB6082243328F800D655C5 /* ZCKitInfo.m in Sources */,
+				7BDB6041243328F800D655C5 /* ZCUIBaseController.m in Sources */,
+				7BDB608E243328F800D655C5 /* ZCLibCusMenu.m in Sources */,
+				7BDB60DB243328F800D655C5 /* ZCUIImageTools.m in Sources */,
+				7BDB606F243328F800D655C5 /* ZCCheckTypeView.m in Sources */,
+				7BDB6092243328F800D655C5 /* ZCWsTemplateModel.m in Sources */,
+				7BDB608C243328F800D655C5 /* ZCOrderGoodsModel.m in Sources */,
+				7BDB604F243328F800D655C5 /* ZCOrderEditCell.m in Sources */,
+				7BDB602B243328F800D655C5 /* ZCInfoCardCell.m in Sources */,
+				7BDB6011243328F800D655C5 /* ZCSatisfactionCell.m in Sources */,
+				7BDB6023243328F800D655C5 /* ZCTipsChatCell.m in Sources */,
+				7BDB60CC243328F800D655C5 /* ZCItemView.m in Sources */,
+				7BDB60CD243328F800D655C5 /* ZCUIPlaceHolderTextView.m in Sources */,
+				7BDB607C243328F800D655C5 /* ZCProgressView.m in Sources */,
+				7BDB6044243328F800D655C5 /* ZCOrderCheckCell.m in Sources */,
+				7BDB60A1243328F800D655C5 /* ZCUIRecordView.m in Sources */,
+				7BDB6057243328F800D655C5 /* ZCLeaveDetailCell.m in Sources */,
+				7BDB605B243328F800D655C5 /* ZCXJAlbumController.m in Sources */,
+				7BDB609B243328F800D655C5 /* ZCUIRatingView.m in Sources */,
+				7BDB608A243328F800D655C5 /* ZCProductInfo.m in Sources */,
+				7BDB601A243328F800D655C5 /* ZCHotGuideCell.m in Sources */,
+				7BDB6065243328F800D655C5 /* ZCDocumentLookController.m in Sources */,
+				7BDB6095243328F800D655C5 /* ZCUICustomActionSheet.m in Sources */,
+				7BDB60CE243328F800D655C5 /* ZCHtmlFilter.m in Sources */,
+				7BDB606A243328F800D655C5 /* ZCVideoViewController.m in Sources */,
+				7BDB608F243328F800D655C5 /* ZCLibRobotSet.m in Sources */,
+				7BDB6009243328F800D655C5 /* ZCUIAskTableController.m in Sources */,
+				7BDB6040243328F800D655C5 /* ZCServiceListVC.m in Sources */,
+				7BDB60A6243328F800D655C5 /* ZCObjButton.m in Sources */,
+				7BDB604A243328F800D655C5 /* ZCOrderCreateCell.m in Sources */,
+				7BDB60B3243328F800D655C5 /* ZCUIXHCacheManager.m in Sources */,
+				7BDB6061243328F800D655C5 /* ZCUIKeyboard.m in Sources */,
+				7BDB6016243328F800D655C5 /* ZCCardCollectionViewFlowLayout.m in Sources */,
+				7BDB5F032433283E00D655C5 /* ZCSobotApi.m in Sources */,
+				7BDB6073243328F800D655C5 /* ZCVideoPlayer.m in Sources */,
+				7BDB6035243328F800D655C5 /* ZCChatBaseCell.m in Sources */,
+				7BDB60D8243328F800D655C5 /* ZCSobotCore.m in Sources */,
+				7BDB6013243328F800D655C5 /* ZCCardCollectionViewCell.m in Sources */,
+				7BDB60D7243328F800D655C5 /* ZCUIVoiceTools.m in Sources */,
+				7BDB6058243328F800D655C5 /* ZCReplyFileView.m in Sources */,
+				7B18AF1C2576177C00C7C7FF /* ZCChatAllRichCell.m in Sources */,
+				7BDB6070243328F800D655C5 /* ZCCircleProgressView.m in Sources */,
+				7BDB6010243328F800D655C5 /* ZCImageChatCell.m in Sources */,
+				7BDB6069243328F800D655C5 /* ZCLocationController.m in Sources */,
+				7BDB6096243328F800D655C5 /* ZCQuickEntryView.m in Sources */,
+				7BDB601B243328F800D655C5 /* ZCMultitemHorizontaRollCell.m in Sources */,
+				7BDB60C3243328F800D655C5 /* ZCAutoListView.m in Sources */,
+				7BDB603F243328F800D655C5 /* ZCServiceCentreVC.m in Sources */,
+				7BDB6028243328F800D655C5 /* ZCLocationCell.m in Sources */,
+				7BDB6015243328F800D655C5 /* ZCCollectionViewCell.m in Sources */,
+				7BDB6025243328F800D655C5 /* ZCMultiRichCell.m in Sources */,
+				7BDB600B243328F800D655C5 /* ZCUIChatListController.m in Sources */,
+				7BDB605A243328F800D655C5 /* ZCMsgRecordVC.m in Sources */,
+				7BDB60C9243328F800D655C5 /* ZCTurnRobotView.m in Sources */,
+				7BDB6093243328F800D655C5 /* ZCZHPickView.m in Sources */,
+				7BDB601E243328F800D655C5 /* ZCOrderGoodsCell.m in Sources */,
+				7BDB60BB243328F800D655C5 /* ZCTTTAttributedLabel.m in Sources */,
+				7BB220BD1C005653003539F7 /* ZCSobot.m in Sources */,
+				7BDB60AD243328F800D655C5 /* ZCUIXHViewState.m in Sources */,
+				7BDB6038243328F800D655C5 /* ZCUIWebController.m in Sources */,
+				7BDB6067243328F800D655C5 /* ZCChatController.m in Sources */,
+				7BDB6062243328F800D655C5 /* ZCChatView.m in Sources */,
+				7BDB60A3243328F800D655C5 /* ZCPieChartView.m in Sources */,
+				7BDB6084243328F800D655C5 /* ZCSCListModel.m in Sources */,
+				7BDB6030243328F800D655C5 /* ZCGoodsCell.m in Sources */,
+				7BDB6077243328F800D655C5 /* ZCCheckCusFieldView.m in Sources */,
+				7BDB6022243328F800D655C5 /* ZCTextGuideCell.m in Sources */,
+				7BDB607F243328F800D655C5 /* ZCToolsCore.m in Sources */,
+				7BDB60AF243328F800D655C5 /* ZCUIXHImageViewer.m in Sources */,
+				7BDB6029243328F800D655C5 /* ZCVoiceChatCell.m in Sources */,
+				7BDB6075243328F800D655C5 /* ZCPageSheetView.m in Sources */,
+				7BDB60AB243328F800D655C5 /* ZCUIXHZoomingImageView.m in Sources */,
+				7BDB6020243328F800D655C5 /* ZCRichTextChatCell.m in Sources */,
+				7BDB6046243328F800D655C5 /* ZCMsgRecordCell.m in Sources */,
+				7BDB60DD243328F800D655C5 /* ZCSatisfactionButton.m in Sources */,
+				7BDB6071243328F800D655C5 /* ZCCheckCityView.m in Sources */,
+				7BDB6056243328F800D655C5 /* ZCMsgDetailsVC.m in Sources */,
+				7BDB60C0243328F800D655C5 /* ZCSelLeaveView.m in Sources */,
+				7BDB60D2243328F800D655C5 /* ZCUITools.m in Sources */,
+				7BDB6033243328F800D655C5 /* ZCUIChatListCell.m in Sources */,
+				7BDB60D5243328F800D655C5 /* ZCUIToastTools.m in Sources */,
+				7BDB609C243328F800D655C5 /* ZCEdgeInsetsLabel.m in Sources */,
+				7BDB608D243328F800D655C5 /* ZCAddressModel.m in Sources */,
+				7BDB60B4243328F800D655C5 /* ZCUIImageView.m in Sources */,
+				7BDB6027243328F800D655C5 /* ZCNoticeCell.m in Sources */,
+				7BDB606B243328F800D655C5 /* ZCLeaveMsgVC.m in Sources */,
+				7BDB60BE243328F800D655C5 /* ZCUILoading.m in Sources */,
+				7BDB603D243328F800D655C5 /* ZCServiceListCell.m in Sources */,
+				7BDB600D243328F800D655C5 /* ZCFileCell.m in Sources */,
+				7BDB60D9243328F800D655C5 /* ZCStoreConfiguration.m in Sources */,
+				7BDB6090243328F800D655C5 /* ZCOrderModel.m in Sources */,
+				7BDB605C243328F800D655C5 /* ZCReplyLeaveController.m in Sources */,
+				7BDB60C7243328F800D655C5 /* EmojiBoardView.m in Sources */,
+				7BDB6049243328F800D655C5 /* ZCOrderContentCell.m in Sources */,
+				7BDB60C4243328F800D655C5 /* EmojiButton.m in Sources */,
+				7BDB604C243328F800D655C5 /* ZCOrderOnlyEditCell.m in Sources */,
+				7BDB60B2243328F800D655C5 /* ZCUIXHFileAttribute.m in Sources */,
+				7BDB60BD243328F800D655C5 /* ZCMLEmojiLabel.m in Sources */,
+				7BDB6018243328F800D655C5 /* ZCMultiItemCell.m in Sources */,
+				7BDB603A243328F800D655C5 /* ZCServiceDetailVC.m in Sources */,
+				7BDB60B8243328F800D655C5 /* ZCActionSheet.m in Sources */,
+				7BDB6055243328F800D655C5 /* ZCReplyLeaveView.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		7BB21FA61C005611003539F7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		7BB21FA71C005611003539F7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VALID_ARCHS = "arm64 armv7";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		7BB21FA91C005611003539F7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = 94K26P27D8;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_BITCODE = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Products",
+				);
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREFIX_HEADER = "$(SRCROOT)/SobotKit/SobotKit.pch";
+				INFOPLIST_FILE = SobotKit/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/SobotKit/SobotLib",
+					"$(PROJECT_DIR)/SobotKit/libYvToolsManager",
+				);
+				MACH_O_TYPE = staticlib;
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = "-licucore";
+				PRODUCT_BUNDLE_IDENTIFIER = com.zhichi.kit.SobotKit;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SKIP_INSTALL = YES;
+				STRIP_STYLE = "non-global";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				VALID_ARCHS = "arm64 armv7 i386 x86_64";
+			};
+			name = Debug;
+		};
+		7BB21FAA1C005611003539F7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = 94K26P27D8;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_BITCODE = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Products",
+				);
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_PREFIX_HEADER = "$(SRCROOT)/SobotKit/SobotKit.pch";
+				INFOPLIST_FILE = SobotKit/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/SobotKit/SobotLib",
+					"$(PROJECT_DIR)/SobotKit/libYvToolsManager",
+				);
+				MACH_O_TYPE = staticlib;
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = "-licucore";
+				PRODUCT_BUNDLE_IDENTIFIER = com.zhichi.kit.SobotKit;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SKIP_INSTALL = YES;
+				STRIP_STYLE = "non-global";
+				VALID_ARCHS = "arm64 armv7 i386 x86_64";
+			};
+			name = Release;
+		};
+		7BB220C21C005746003539F7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_OPTIMIZATION_LEVEL = 0;
+				ONLY_ACTIVE_ARCH = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "arm64 armv7  i386   x86_64";
+			};
+			name = Debug;
+		};
+		7BB220C31C005746003539F7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "arm64 armv7  i386   x86_64";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		7BB21F9A1C005611003539F7 /* Build configuration list for PBXProject "SobotKit" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7BB21FA61C005611003539F7 /* Debug */,
+				7BB21FA71C005611003539F7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		7BB21FA81C005611003539F7 /* Build configuration list for PBXNativeTarget "SobotKit" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7BB21FA91C005611003539F7 /* Debug */,
+				7BB21FAA1C005611003539F7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		7BB220C11C005746003539F7 /* Build configuration list for PBXAggregateTarget "CreateFrameworScript" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7BB220C21C005746003539F7 /* Debug */,
+				7BB220C31C005746003539F7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 7BB21F971C005611003539F7 /* Project object */;
+}
