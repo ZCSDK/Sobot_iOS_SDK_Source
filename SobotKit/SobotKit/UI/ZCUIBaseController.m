@@ -34,19 +34,13 @@
     if ([ZCUICore getUICore].kitInfo.isShowPortrait) {
         return UIInterfaceOrientationMaskPortrait;
     }else{
-        if(self.navigationController && self.navigationController.topViewController){
-            return [self.navigationController.topViewController supportedInterfaceOrientations];
-        }
+        // 如果topViewController是自己，
+//        if(self.navigationController && self.navigationController.topViewController && [self.navigationController.topViewController respondsToSelector:@selector(supportedInterfaceOrientations)]){
+//            return [self.navigationController.topViewController supportedInterfaceOrientations];
+//        }
         return UIInterfaceOrientationMaskAll;
     }
 }
-
-// 斑马必须使用以下方法
-//-(UIInterfaceOrientationMask)supportedInterfaceOrientations
-//{
-//
-//    return UIInterfaceOrientationMaskAll;
-//}
 
 // 斑马必须使用以下方法
 - (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation
@@ -54,7 +48,7 @@
     if ([ZCUICore getUICore].kitInfo.isShowPortrait) {
         return UIInterfaceOrientationPortrait;
     }else{
-        if(self.navigationController && self.navigationController.topViewController){
+        if(self.navigationController && self.navigationController.topViewController && [self.navigationController.topViewController respondsToSelector:@selector(preferredInterfaceOrientationForPresentation)]){
             return [self.navigationController.topViewController preferredInterfaceOrientationForPresentation];
         }
         return UIInterfaceOrientationPortrait|UIInterfaceOrientationLandscapeLeft|UIInterfaceOrientationLandscapeRight;

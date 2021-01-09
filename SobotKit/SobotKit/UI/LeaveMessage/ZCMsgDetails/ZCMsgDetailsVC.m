@@ -1396,18 +1396,14 @@ UINavigationControllerDelegate>
 
 -(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
-
-    [_zc_imagepicker dismissViewControllerAnimated:YES completion:^{
+    __weak  ZCMsgDetailsVC *_myselft  = self;
+    [ZCSobotCore imagePickerController:_zc_imagepicker didFinishPickingMediaWithInfo:info WithView:self.view Delegate:self block:^(NSString *filePath, ZCMessageType type, NSDictionary *duration) {
         
-        __weak  ZCMsgDetailsVC *_myselft  = self;
-        [ZCSobotCore imagePickerController:_zc_imagepicker didFinishPickingMediaWithInfo:info WithView:self.view Delegate:self block:^(NSString *filePath, ZCMessageType type, NSDictionary *duration) {
-            
-            if(type == ZCMessageTypePhoto){
-                [_myselft updateloadFile:filePath type:ZCMessageTypePhoto dict:info];
-            }else{
-                [_myselft converToMp4:duration withInfoDic:info];
-            }
-        }];
+        if(type == ZCMessageTypePhoto){
+            [_myselft updateloadFile:filePath type:ZCMessageTypePhoto dict:info];
+        }else{
+            [_myselft converToMp4:duration withInfoDic:info];
+        }
     }];
 }
 

@@ -154,7 +154,7 @@
 }
 
 +(void)imagePickerController:(UIImagePickerController *)zc_imagepicker didFinishPickingMediaWithInfo:(NSDictionary *)info WithView:(UIView *)zc_sourceView Delegate:(id)delegate  block:(DidFinishPickingMediaBlock)finshBlock{
-    [zc_imagepicker dismissViewControllerAnimated:YES completion:^{
+    [zc_imagepicker dismissViewControllerAnimated:NO completion:^{
         NSLog(@"页面消失了");
     }];
     

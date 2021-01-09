@@ -69,6 +69,7 @@
      */
 //    _kitInfo.urlRegular = @"((http[s]{0,1}|ftp)://[a-zA-Z0-9\\.\\-]+\\.([a-zA-Z0-9]{1,4})(:\\d+)?(/[a-zA-Z0-9\\.\\-~!@#$%^&*+?:_/=<>]*)?)";
 
+    _kitInfo.isShowPortrait = YES;
     
 //    _kitInfo.isShowReturnTips = YES;
 //    _kitInfo.isOpenEvaluation = YES;

@@ -51,11 +51,11 @@
 
 普通版：
 
-下载链接：[iOS_SDK_2.9.1](https://img.sobot.com/mobile/sdk/iOS_SDK_2.9.1.zip)
+下载链接：[iOS_SDK_2.9.2](https://img.sobot.com/mobile/sdk/iOS_SDK_2.9.2.zip)
 
 电商版：
 
-下载链接：[iOS_SDK_2.9.1_电商版](https://img.sobot.com/mobile/sdk/iOS_SDK_2.9.1_MALL.zip)
+下载链接：[iOS_SDK_2.9.2_电商版](https://img.sobot.com/mobile/sdk/iOS_SDK_2.9.2_MALL.zip)
 
 解压[iOS_SDK]，添加必要文件SobotKit.framework和SobotKit.bundle到你的工程里。智齿iOS_SDK 的实现，依赖了一些系统的框架，在开发应用时需要在工程里加入这些框架。开发者首先点击工程右边的工程名，然后在工程名右边依次选择TARGETS -> BuiLd Phases -> Link Binary With Libraries，展开 LinkBinary With Libraries后点击展开后下面的 + 来添加下面的依赖项:
 
@@ -553,6 +553,18 @@ ZCKitInfo *kitInfo=[ZCKitInfo new];
 kitInfo.hideMenuSatisfaction = YES;
 // 聊天页面底部加号中功能：隐藏留言，默认NO(不隐藏)
 kitInfo.hideMenuLeave = YES;
+
+```
+
+### 4.1.6 指定机器人引导语  
+不同的场景可以设置不同的机器人引导语
+
+```
+在 ZCKitInfo 中传入相关字段
+eg：
+
+ZCLibInitInfo *_libInitInfo [ZCLibClient getZCLibClient].libInitInfo;
+_libInitInfo.faqId = 24;
 
 ```
 
@@ -1861,6 +1873,8 @@ _kitInfo.hideManualEvaluationLabels = YES;
 | custom_title_url   | NSString   | 自定义图像路径    |    |
 | scope_time   | int   | 历史记录时间范围，单位分钟(例:100-表示从现在起前100分钟的会话)   |    |
 | notifition_icon_url   | NSString   | 通告的icon 的URL   |    |
+| faqId   | int   | 指定引导语,不同的用户设置特定的引导语   |    |
+
 
 ### 其他：
 | 属性名称 | 数据类型 | 说明 | 备注 |

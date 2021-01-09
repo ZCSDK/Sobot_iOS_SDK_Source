@@ -491,7 +491,7 @@ typedef NS_ENUM(NSInteger,ZCSatisfactionCellType){
         if(type == 2){
             if(_satisfaction!=nil){
                 // 内容必填 ，切换为1弹评价页面
-                if(_satisfaction.isInputMust){
+                if([_satisfaction.isInputMust intValue] == 1){
                     type = 1;
                 }
             }

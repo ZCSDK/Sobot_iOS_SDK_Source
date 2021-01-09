@@ -1940,15 +1940,13 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
 -(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
     __weak  ZCUIKeyboard *keyboardSelf  = self;
-    [_zc_imagepicker dismissViewControllerAnimated:YES completion:^{
-        [ZCSobotCore imagePickerController:_zc_imagepicker didFinishPickingMediaWithInfo:info WithView:_zc_sourceView Delegate:_ppView.window.rootViewController block:^(NSString *filePath, ZCMessageType type, NSDictionary *dict) {
-            if(type == ZCMessageTypePhoto){
-                [keyboardSelf sendMessageOrFile:filePath type:type duration:@""];
-            }else{
-                [keyboardSelf converToMp4:dict];
-                
-            }
-        }];
+    [ZCSobotCore imagePickerController:_zc_imagepicker didFinishPickingMediaWithInfo:info WithView:_zc_sourceView Delegate:_ppView.window.rootViewController block:^(NSString *filePath, ZCMessageType type, NSDictionary *dict) {
+        if(type == ZCMessageTypePhoto){
+            [keyboardSelf sendMessageOrFile:filePath type:type duration:@""];
+        }else{
+            [keyboardSelf converToMp4:dict];
+            
+        }
     }];
 }
 

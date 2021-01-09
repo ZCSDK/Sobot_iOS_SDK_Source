@@ -384,18 +384,20 @@
      }
     // 有新消息、消息列表改变
     if(status == ZCShowStatusAddMessage || status ==  ZCShowStatusMessageChanged || status == ZCInitStatusCompleteNoMore){
-       
+        
         if(status == ZCInitStatusCompleteNoMore){
             _isNoMore = YES;
         }
-        
         [_listTable reloadData];
-        if([self.refreshControl isRefreshing]){
+        
+        if(self.refreshControl.refreshing){
             [self.refreshControl endRefreshing];
+            
             isScrollBtm = true;
         }else{
             [self scrollTableToBottom];
         }
+        
         return;
     }
     
@@ -1009,6 +1011,13 @@
 
 // 加载历史消息
 -(void)getHistoryMessage{
+    // 调用endRefresh时，会导致table的y坐标变化，显示不全
+    if(self.listTable.frame.origin.y < navTableY){
+        CGRect f = self.listTable.frame;
+        f.origin.y = navTableY;
+        _listTable.frame = f;
+    }
+    
     [[ZCUICore getUICore] getChatMessages];
 }
 
@@ -1088,16 +1097,16 @@
 
 
 
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView
-{
-    CGFloat sectionHeaderHeight = 40;
-    if (scrollView.contentOffset.y<=sectionHeaderHeight&&scrollView.contentOffset.y>=0) {
-        scrollView.contentInset = UIEdgeInsetsMake(-scrollView.contentOffset.y, 0, 0, 0);
-    }
-    else if (scrollView.contentOffset.y>=sectionHeaderHeight) {
-        scrollView.contentInset = UIEdgeInsetsMake(-sectionHeaderHeight, 0, 0, 0);
-    }
-}
+//- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+//{
+//    CGFloat sectionHeaderHeight = 40;
+//    if (scrollView.contentOffset.y<=sectionHeaderHeight&&scrollView.contentOffset.y>=0) {
+//        scrollView.contentInset = UIEdgeInsetsMake(-scrollView.contentOffset.y, 0, 0, 0);
+//    }
+//    else if (scrollView.contentOffset.y>=sectionHeaderHeight) {
+//        scrollView.contentInset = UIEdgeInsetsMake(-sectionHeaderHeight, 0, 0, 0);
+//    }
+//}
 #pragma mark UITableView delegate Start
 // 返回section数
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
@@ -1445,6 +1454,7 @@
         }else{
             model.richModel.guideGroupPage = 0;
         }
+        [ZCUITools zcModelStringToAttributeString:model];
         [self.listTable reloadData];
         return;
     }
@@ -2337,8 +2347,6 @@
             [_listTable setContentOffset:CGPointMake(0, ch-h) animated:NO];
         });
     }else{
-        [_listTable setContentOffset:CGPointMake(0, 0) animated:NO];
-
         CGRect tf = _listTable.frame;
         if((h - ch) > ([_keyboardTools getKeyboardHeight] + (_keyboardTools.zc_bottomView.frame.size.height-BottomHeight))){
             tf.origin.y   = navTableY;
@@ -2346,6 +2354,8 @@
             tf.origin.y   = navTableY - [_keyboardTools getKeyboardHeight] - (_keyboardTools.zc_bottomView.frame.size.height-BottomHeight) + XBottomBarHeight + (h - ch);
         }
         _listTable.frame  = tf;
+        
+        [_listTable setContentOffset:CGPointMake(0, 0) animated:NO];
     }
 }
 

@@ -545,7 +545,9 @@
         for (int i=0;i<model.richModel.richMsgList.count;i++) {
             NSDictionary *item =  model.richModel.richMsgList[i];
             int type = [item[@"type"] intValue];
-            NSString *msg = [ZCUITools removeAllHTMLTag:item[@"msg"]];
+            
+            NSString *msg = zcLibConvertToString(item[@"msg"]);
+            msg = [ZCUITools removeAllHTMLTag:msg];
             while ([msg hasPrefix:@"\n"]){
                 msg = [msg substringFromIndex:1];
             }
@@ -649,7 +651,6 @@
     
     
     NSString *sugesstionText = zcLibConvertToString([model getModelDisplaySugestionText]);
-    
     if(sugesstionText.length > 0 && model.displaySugestionattr){
 //            while ([sugesstionText hasSuffix:@"\n"]){
 //                sugesstionText = [sugesstionText substringToIndex:sugesstionText.length - 1];
@@ -663,6 +664,7 @@
             [label setTextColor:[ZCUITools zcgetLeftChatTextColor]];
             [label setLinkColor:[ZCUITools zcgetChatLeftLinkColor]];
         }
+        
         [label setText:model.displaySugestionattr];
 //        [label setText:[model getModelDisplaySugestionText]];
         CGSize s = [label preferredSizeWithMaxWidth:maxWidth];
@@ -672,11 +674,53 @@
         }
         
         if(superView){
-            CGRect f = CGRectMake(0, h - s.height - lineSpace, s.width, s.height);
+            CGRect f = CGRectMake(0, h - s.height, s.width, s.height);
             label.frame = f;
             [superView addSubview:label];
         }
+        
+        
+        if([model.richModel.richmoreurl isEqual:@"zc_refresh_newdata"]){
+            
+            if(superView){
+                // 添加线条
+                UIView *_lineView  = [[UIView alloc] init];
+                CGRect lineF = CGRectMake(0, h + 12, contentWidth , 1);
+                [_lineView setFrame:lineF];
+                _lineView.backgroundColor = [ZCUITools zcgetLineRichColor];
+                [superView addSubview:_lineView];
+                
+                NSString *linkText = ZCSTLocalString(@"换一组");
+                ZCMLEmojiLabel *refreshLabel = [ZCChatBaseCell createRichLabel];
+                if([ZCChatBaseCell isRightChat:model]){
+                    [refreshLabel setTextColor:[ZCUITools zcgetRightChatTextColor]];
+                    [refreshLabel setLinkColor:[ZCUITools zcgetChatRightlinkColor]];
+                }else{
+                    [refreshLabel setTextColor:[ZCUITools zcgetLeftChatTextColor]];
+                    [refreshLabel setLinkColor:[ZCUITools zcgetChatLeftLinkColor]];
+                }
+                [refreshLabel setText:linkText];
+                
+                [refreshLabel setTextAlignment:NSTextAlignmentCenter];
+                [refreshLabel setFont:ZCUIFontBold12];
+                [superView addSubview:refreshLabel];
+                
+                
+                UIImageView *img = [[UIImageView alloc] initWithImage:[ZCUITools zcuiGetBundleImage:@"zcicon_refreshbar_new"] ];
+                
+                [img setFrame:CGRectMake(contentWidth/2 - 38, 10, 10, 10)];
+                [refreshLabel addSubview:img];
+                
+                [refreshLabel addLinkToURL:[NSURL URLWithString:model.richModel.richmoreurl] withRange:NSMakeRange(0, linkText.length)];
+        //        CGSize size = [[self lookMoreLabel]preferredSizeWithMaxWidth:maxWidth];
+                refreshLabel.frame = CGRectMake(0, CGRectGetMaxY(lineF) + 5, contentWidth, 30);
+            }
+            h = h + 12 + 30 + 10;
+        }
     }
+    
+    
+    
     if(superView){
         CGRect f = superView.frame;
         f.size.width = contentWidth;

@@ -190,16 +190,16 @@
                 leaveMessageVC.ticketShowFlag  = (showRecored == 1)?0:1;
             }
 
-            if(byController.navigationController==nil){
+//            if(byController.navigationController==nil){
                 UINavigationController * navc = [[UINavigationController alloc]initWithRootViewController: leaveMessageVC];
                 // 设置动画效果
                 navc.modalPresentationStyle = UIModalPresentationOverFullScreen;
                 [byController presentViewController:navc animated:YES completion:^{
 
                 }];
-            }else{
-                [byController.navigationController pushViewController:leaveMessageVC animated:YES];
-            }
+//            }else{
+//                [byController.navigationController pushViewController:leaveMessageVC animated:YES];
+//            }
         }else{
             if(CloseBlock){
                 CloseBlock(msg,code);
