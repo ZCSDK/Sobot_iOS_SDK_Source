@@ -92,9 +92,9 @@
     }
     
     
-    [_progressView setFaceImage:[ZCUITools getFileIcon:model.richModel.msg fileType:model.richModel.fileType]];
+    [_progressView setFaceImage:[ZCUITools getFileIcon:model.richModel.url fileType:model.richModel.fileType]];
     [_labFileSize setText:model.richModel.fileSize];
-    [_labFileName setText:model.richModel.msg];
+    [_labFileName setText:zcLibTrimString(model.richModel.fileName)];
     if (model.isHistory) {
         model.progress = 1.0;
     }
@@ -114,14 +114,14 @@
         self.ivBgView.frame = CGRectMake(rx, height, bgSize.width, bgSize.height);
         
         [_progressView setFrame:CGRectMake(self.ivBgView.frame.origin.x + 15, height + 12, iconSize.width, iconSize.height)];
-        [_labFileName setFrame:CGRectMake(CGRectGetMaxX(_progressView.frame) + 10, height + 12, bgSize.width - iconSize.width - 30, 20)];
-        [_labFileSize setFrame:CGRectMake(CGRectGetMaxX(_progressView.frame) + 10, height + 34, bgSize.width - iconSize.width - 30, 20)];
+        [_labFileName setFrame:CGRectMake(CGRectGetMaxX(_progressView.frame) + 10, height + 12, bgSize.width - iconSize.width - 36, 20)];
+        [_labFileSize setFrame:CGRectMake(CGRectGetMaxX(_progressView.frame) + 10, height + 34, bgSize.width - iconSize.width - 36, 20)];
     }else{
-        msgX = 15;
+        msgX = 15*2;
 
         [_progressView setFrame:CGRectMake(msgX, height + 12, 30, 40)];
-        [_labFileName setFrame:CGRectMake(msgX+36, height + 12, bgSize.width - 36, 18)];
-        [_labFileSize setFrame:CGRectMake(msgX+36, height + 34, bgSize.width - 36, 18)];
+        [_labFileName setFrame:CGRectMake(msgX+36, height + 12, bgSize.width - 36 - msgX, 18)];
+        [_labFileSize setFrame:CGRectMake(msgX+36, height + 34, bgSize.width - 36 - msgX, 18)];
 
         [self.ivBgView setFrame:CGRectMake(15, height, bgSize.width, bgSize.height)];
     }

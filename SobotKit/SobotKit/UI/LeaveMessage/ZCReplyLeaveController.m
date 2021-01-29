@@ -878,7 +878,7 @@
     __weak  ZCReplyLeaveController *_myself  = self;
 //        [ZCSobotCore imagePickerController:_zc_imagepicker didFinishPickingMediaWithInfo:cover WithView:self.view Delegate:self block:^(NSString *filePath, ZCMessageType type, NSDictionary *dict) {
 
-            [[[ZCUICore getUICore] getAPIServer] fileUploadForLeave:filePath commanyId:@"" start:^{
+            [[[ZCUICore getUICore] getAPIServer] fileUploadForLeave:filePath config:[self getCurConfig] start:^{
                 [[ZCUIToastTools shareToast] showProgress:[NSString stringWithFormat:@"%@...",ZCSTLocalString(@"上传中")]  with:_myself.view];
             } success:^(NSString *fileURL, ZCNetWorkCode code) {
 

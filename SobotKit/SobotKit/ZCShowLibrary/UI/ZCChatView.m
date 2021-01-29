@@ -962,6 +962,11 @@
         }
     }
     
+    // 当延迟转人工没有头像时，设置默认头像
+    if([self getZCIMConfig].invalidSessionFlag && zcLibConvertToString(imageUrl).length == 0 && zcLibConvertToString(titleName).length == 0 && [self getZCIMConfig].type == 2){
+        imageUrl = @"zcicon_useravatart_girl";
+    }
+    
     if ([placeholderName isEqualToString:ZCSTLocalString(@"排队中...")]) {
         titleName = ZCSTLocalString(@"排队中...");
         imageUrl = @"";
@@ -1355,6 +1360,10 @@
 // table 行的高度
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    if ( indexPath.row > [ZCUICore getUICore].chatMessages.count -1) {
+        return 0;
+    }
+    
     ZCLibMessage *model =[[ZCUICore getUICore].chatMessages objectAtIndex:indexPath.row];
     NSString *time=@"";
     NSString *format=@"MM-dd HH:mm";
@@ -2995,7 +3004,7 @@
                 [[ZCPlatformTools sharedInstance] getPlatformInfo].lastMsg = lastMsg.sysTips;
                 [[ZCPlatformTools sharedInstance] getPlatformInfo].lastDate = lastMsg.ts;
             } else {
-                [[ZCPlatformTools sharedInstance] getPlatformInfo].lastMsg = lastMsg.richModel.msg;
+                [[ZCPlatformTools sharedInstance] getPlatformInfo].lastMsg = [lastMsg getLastMessage];
                 [[ZCPlatformTools sharedInstance] getPlatformInfo].lastDate = lastMsg.ts;
             }
         }

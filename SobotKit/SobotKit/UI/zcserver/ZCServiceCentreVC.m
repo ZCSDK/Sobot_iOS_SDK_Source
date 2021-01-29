@@ -197,30 +197,8 @@ typedef void (^PageLoadBlock)(id object,ZCPageBlockType type);
     [serviceBtnBgView setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleTopMargin];
     [self.view addSubview:serviceBtnBgView];
     
-    
-    // 在线客服btn
-    serviceBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-//    serviceBtn.type = 5;
-    [serviceBtn setTitle:ZCSTLocalString(@"在线客服") forState:UIControlStateNormal];
-    [serviceBtn setTitle:ZCSTLocalString(@"在线客服") forState:UIControlStateHighlighted];
-    [serviceBtn setTitleColor:UIColorFromThemeColor(ZCTextMainColor) forState:UIControlStateNormal];
-    [serviceBtn setTitleColor:UIColorFromThemeColor(ZCTextMainColor) forState:UIControlStateHighlighted];
-    serviceBtn.titleLabel.font = ZCUIFontBold14;
-    [serviceBtn addTarget:self action:@selector(openZCSDK:) forControlEvents:UIControlEventTouchUpInside];
-    serviceBtn.frame = CGRectMake(ZCNumber(12), 10, viewWidth - ZCNumber(24), ZCNumber(44));
-
-    serviceBtn.layer.borderColor = UIColorFromThemeColor(ZCBgLineColor).CGColor;
-    serviceBtn.layer.borderWidth = 0.5f;
-    serviceBtn.layer.cornerRadius = 22.0f;
-    serviceBtn.layer.masksToBounds = YES;
-    [serviceBtn setBackgroundColor:UIColorFromThemeColor(ZCBgSystemWhiteLightGrayColor)];
-    [serviceBtn setImageEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 3)];
-    [serviceBtn setTitleEdgeInsets:UIEdgeInsetsMake(0, 3, 0, 0)];
-    [serviceBtn setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleTopMargin];
-    [serviceBtn setAutoresizesSubviews:YES];
-    
-    
-    [serviceBtnBgView addSubview:serviceBtn];
+    serviceBtn = [self createHelpCenterButtons:10 sView:serviceBtnBgView];
+    serviceBtn.titleLabel.adjustsFontSizeToFitWidth = YES;
     
     
 }
@@ -456,11 +434,13 @@ typedef void (^PageLoadBlock)(id object,ZCPageBlockType type);
 }
 
 -(void)openZCSDK:(ZCButton *)sender{
-    
-    if (self.OpenZCSDKTypeBlock) {
-        self.OpenZCSDKTypeBlock(self);
-    }else{
-        [ZCSobot startZCChatVC:_kitInfo with:self target:nil pageBlock:nil messageLinkClick:nil];
+    [super openZCSDK:sender];
+    if(sender.tag == 1){
+        if (self.OpenZCSDKTypeBlock) {
+            self.OpenZCSDKTypeBlock(self);
+        }else{
+            [ZCSobot startZCChatVC:_kitInfo with:self target:nil pageBlock:nil messageLinkClick:nil];
+        }
     }
 }
 

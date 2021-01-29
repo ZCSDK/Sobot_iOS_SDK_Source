@@ -384,14 +384,14 @@ typedef NS_ENUM(NSInteger,ExitType) {
     
     [arr1 addObject:@{@"code":@"2",
                       @"dictName":@"ticketType",
-                      @"dictDesc":[NSString stringWithFormat:@"%@*",ZCSTLocalString(@"问题描述")],
+                      @"dictDesc":[NSString stringWithFormat:@"%@*",ZCSTLocalString(@"问题分类")],
                       @"placeholder":@"",
                       @"dictValue":zcLibConvertToString(_model.ticketTypeName),
                       @"dictType":@"3",
                       @"propertyType":@"0"
                       }];
     if (_typeArr.count && _tickeTypeFlag == 1) {
-       [_listArray addObject:@{@"sectionName":ZCSTLocalString(@"问题描述"),@"arr":arr1}];
+       [_listArray addObject:@{@"sectionName":ZCSTLocalString(@"问题分类"),@"arr":arr1}];
     }
     
     NSMutableArray *arr2 = [[NSMutableArray alloc] init];
@@ -1695,7 +1695,7 @@ return [UIView new];
     __weak  ZCUILeaveMessageController *_myself  = self;
 //        [ZCSobotCore imagePickerController:_zc_imagepicker didFinishPickingMediaWithInfo:cover WithView:self.view Delegate:self block:^(NSString *filePath, ZCMessageType type, NSDictionary *dict) {
 
-            [[[ZCUICore getUICore] getAPIServer] fileUploadForLeave:filePath commanyId:@"" start:^{
+    [[[ZCUICore getUICore] getAPIServer] fileUploadForLeave:filePath config:[self getCurConfig] start:^{
                 [[ZCUIToastTools shareToast] showProgress:[NSString stringWithFormat:@"%@...",ZCSTLocalString(@"上传中")]  with:_myself.view];
             } success:^(NSString *fileURL, ZCNetWorkCode code) {
 

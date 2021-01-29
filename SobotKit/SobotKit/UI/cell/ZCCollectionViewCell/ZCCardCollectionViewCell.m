@@ -283,9 +283,14 @@ NSString *const kZCCardCollectionViewCellID = @"ZCCollectionViewCell";
             [_labTitle setTextColor:[ZCUITools zcgetChatLeftLinkColor]];
         }
         
+        _labTitle.numberOfLines = 1;
         // 显示连接样式时，需要显示序号
         if(showLinkStyle){
-            [_labTitle setText:[NSString stringWithFormat:@"%d、%@",(self.indexPath.row+1),zcLibConvertToString(model[@"title"])]];
+            _labTitle.numberOfLines = 2;
+            // 自动折行设置
+            _labTitle.lineBreakMode = NSLineBreakByCharWrapping;
+            [_labTitle setText:[NSString stringWithFormat:@"%d、%@",(int)self.indexPath.row+1,zcLibConvertToString(model[@"title"])]];
+            [_labTitle sizeToFit];
         }
     }
 }

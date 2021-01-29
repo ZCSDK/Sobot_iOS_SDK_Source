@@ -7,6 +7,9 @@
 //
 
 #import "ZCLocationController.h"
+
+#if SOBOT_OPENLOCATION
+
 #import <CoreLocation/CoreLocation.h>
 #import <MapKit/MapKit.h>
 
@@ -590,3 +593,5 @@
 */
 
 @end
+
+#endif

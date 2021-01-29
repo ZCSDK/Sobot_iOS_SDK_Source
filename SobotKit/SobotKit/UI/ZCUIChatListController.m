@@ -21,7 +21,7 @@
 #import "ZCLibServer.h"
 
 @interface ZCUIChatListController ()<UITableViewDelegate,UITableViewDataSource,ZCMessageDelegate>{
-
+    CGFloat y;
 }
 
 @property(nonatomic,strong)NSString      *partnerid;
@@ -31,6 +31,7 @@
 @property (nonatomic,assign) BOOL isHiddenNav;
 @end
 
+
 @implementation ZCUIChatListController
 
 - (void)viewDidLoad {
@@ -38,24 +39,24 @@
     // Do any additional setup after loading the view.
     [ZCUICore getUICore].kitInfo = _kitInfo;
     
-    self.navigationController.navigationBarHidden = YES;
     self.automaticallyAdjustsScrollViewInsets = false;
-    
+    _isHiddenNav = self.navigationController.navigationBarHidden;
     if ([ZCUICore getUICore].kitInfo.navcBarHidden) {
         self.navigationController.navigationBarHidden = YES;
     }
     
-    [self createTableView];
-    
-    if ([ZCUICore getUICore].kitInfo.navcBarHidden) {
-        self.navigationController.navigationBarHidden = YES;
-    }
-    
-    if(!self.navigationController.navigationBarHidden){
+    if(self.navigationController && !self.navigationController.navigationBarHidden){
         [self setNavigationBarStyle];
         self.title = ZCSTLocalString(@"消息中心");
+        // YES是透明效果并且主view不会偏移 NO是导航栏不透明 主view会向下偏移64px,默认YES
+        y = self.navigationController.navigationBar.translucent?NavBarHeight:0;
         [self.navigationController.navigationBar setTitleTextAttributes:@{NSFontAttributeName:[ZCUITools zcgetscTopTextFont],NSForegroundColorAttributeName:[ZCUITools zcgetscTopTextColor]}];
+        
+        
+        [self createTableView];
+        
     }else{
+        y = NavBarHeight;
         [self createTitleView];
         [self.titleLabel setText:ZCSTLocalString(@"消息中心")];
         self.moreButton.hidden = YES;
@@ -81,9 +82,9 @@
 -(IBAction)buttonClick:(UIButton *) sender{
     if(sender.tag == BUTTON_BACK){
         [ZCIMChat getZCIMChat].delegate = nil;
-        self.byController.navigationController.navigationBarHidden = _isHiddenNav;
-//        self.navigationController.navigationBarHidden = navBarHide;
-        if(self.navigationController != nil ){
+        
+        if(self.navigationController != nil && self.navigationController.viewControllers.count>1){
+            self.byController.navigationController.navigationBarHidden = _isHiddenNav;
             [self.navigationController popViewControllerAnimated:YES];
         }else{
             [self dismissViewControllerAnimated:YES completion:^{
@@ -99,7 +100,7 @@
 -(void)createTableView{
     _listArray = [[NSMutableArray alloc] init];
     
-    _listTable=[[UITableView alloc] initWithFrame:CGRectMake(0, NavBarHeight , ScreenWidth, ScreenHeight-NavBarHeight)];
+    _listTable=[[UITableView alloc] initWithFrame:CGRectMake(0, y , ScreenWidth, self.view.frame.size.height-y)];
     
     [_listTable setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleBottomMargin|UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleTopMargin];
     _listTable.delegate=self;

@@ -146,27 +146,7 @@
     [webView setAutoresizesSubviews:YES];
     self.view.backgroundColor = [ZCUITools zcgetLightGrayBackgroundColor];
     
-    
-    // 在线客服btn
-    serviceBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    //    serviceBtn.type = 5;
-    [serviceBtn setTitle:ZCSTLocalString(@"在线客服") forState:UIControlStateNormal];
-    [serviceBtn setTitle:ZCSTLocalString(@"在线客服") forState:UIControlStateHighlighted];
-    [serviceBtn setTitleColor:UIColorFromThemeColor(ZCTextMainColor) forState:UIControlStateNormal];
-    [serviceBtn setTitleColor:UIColorFromThemeColor(ZCTextMainColor) forState:UIControlStateHighlighted];
-    serviceBtn.titleLabel.font = ZCUIFontBold14;
-    [serviceBtn addTarget:self action:@selector(openZCSDK:) forControlEvents:UIControlEventTouchUpInside];
-    serviceBtn.frame = CGRectMake(ZCNumber(12), CGRectGetMaxY(webView.frame) , [self getCurViewWidth] - ZCNumber(30), ZCNumber(44));
-    serviceBtn.layer.borderColor = UIColorFromThemeColor(ZCBgLineColor).CGColor;
-    serviceBtn.layer.borderWidth = 0.5f;
-    serviceBtn.layer.cornerRadius = 22.0f;
-    serviceBtn.layer.masksToBounds = YES;
-    [serviceBtn setImageEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 3)];
-    [serviceBtn setTitleEdgeInsets:UIEdgeInsetsMake(0, 3, 0, 0)];
-    [serviceBtn setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleTopMargin];
-    [serviceBtn setAutoresizesSubviews:YES];
-    [serviceBtn setBackgroundColor:UIColorFromThemeColor(ZCBgSystemWhiteLightGrayColor)];
-    [self.view addSubview:serviceBtn];
+    serviceBtn = [self createHelpCenterButtons:CGRectGetMaxY(webView.frame) sView:self.view];
     serviceBtn.titleLabel.adjustsFontSizeToFitWidth = YES;
 }
 

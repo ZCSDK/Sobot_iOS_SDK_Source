@@ -251,6 +251,9 @@ NSString *zcGetAppVersion();
  */
 NSString *zcGetIphoneType();
 
+// 获取文件类型
+int zcLibmimeWithURLType(NSString *filePath);
+
 
 /**
  *  获取运营商信息

@@ -511,7 +511,7 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
     
     
     
-    if (![self getZCLibConfig].isArtificial) {
+    if (![self getZCLibConfig].isArtificial && ![ZCUICore getUICore].isAfterConnectUser) {
         if ([self getZCLibConfig].msgFlag == 0) {
             titles = [NSMutableArray arrayWithObjects:menu2,menu1, nil];
             
@@ -812,6 +812,8 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
 //        [self hideKeyboard];
         
         if([[ZCUICore getUICore] LinkClickBlock] == nil || ![ZCUICore getUICore].LinkClickBlock(@"sobot://sendlocation")){
+            
+#if SOBOT_OPENLOCATION
             ZCLocationController *vc = [[ZCLocationController alloc] init];
             [vc setCheckLocationBlock:^(NSDictionary * _Nonnull locations) {
                 // 发送位置
@@ -820,6 +822,7 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
             [[self getCurrentVC] presentViewController:vc animated:YES completion:^{
                 
             }];
+#endif
         }
         
     }else{
@@ -1071,15 +1074,15 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
 }
 
 -(void)setInitConfig:(ZCLibConfig *)config{
-    
-//   如果 刘海屏向左，留出 20 的距离
-    float topGap = 0;
-    if (self.curScreenDirection == 2) {
-        topGap = 20;
-    }
-    
     if (config.type != 2) {
         self.zc_bottomView.hidden = NO;
+    }
+    if([ZCUICore getUICore].isAfterConnectUser){
+        [self setKeyBoardStatus:ZCKeyboardStatusRobot];
+        
+        // 设置仅人工的底部输入框样式，没有更多，没有转人工
+        [self setServiceModeView:1];
+        return;
     }
     
     if(config.isArtificial){
@@ -1108,6 +1111,52 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
     if (config.type == 1) {
         
         [self setKeyBoardStatus:ZCKeyboardStatusRobot];
+        [self setServiceModeView:config.type];
+        
+        [[ZCUICore getUICore] keyboardOnClickAddRobotHelloWolrd];
+    }else if (config.type == 3) {
+        // 3.智能客服-机器人优先    // && self.isShowConnectedButton == 0  isShowTurnBtn记录在会话保持的状态下是否之前显示转人工按钮（一次有效会话之内）
+        
+        [self setKeyBoardStatus:ZCKeyboardStatusRobot];
+        [self setServiceModeView:config.type];
+        
+        
+        // 2.9.2版本开始，如果客服发送过离线消息，直接转接到对应的客服
+        // 不是仅机器人，不是黑名单用户
+        if([ZCPlatformTools sharedInstance].isOfflineMsgConnect && zcLibConvertToString([ZCPlatformTools sharedInstance].offlineMsgAdminId).length > 0 && !config.isblack){
+            [[ZCUICore getUICore] doConnectUserService:nil];
+        }
+    }else if(config.type == 2){
+        [self setServiceModeView:config.type];
+    }
+    if(config.type==4 || config.type==2 || config.ustatus == 1 || ([ZCLibClient getZCLibClient].libInitInfo.service_mode!=1 && config.ustatus == -2)){
+        // 人工优先，直接执行转人工,  ##2 仅人工   ,ustatus，说明断线后用户还在线  //仅机器人模式排队不在去执行转人工操作
+        // 如果显示在线或者排队中，自动转接到人工
+        if(config.ustatus == 1|| config.ustatus == -2){
+            [ZCUICore getUICore].isShowForm = YES;
+            [[ZCUICore getUICore] checkUserServiceWithObject:nil Msg: @"isinitiativeTurn"];
+        }else{
+            [[ZCUICore getUICore] checkUserServiceWithObject:nil Msg:nil];
+        }
+    }
+    //
+    _zc_activityView.hidden = YES;
+    [_zc_activityView stopAnimating];
+    
+    if (_zc_turnButton.isHidden == NO && _zc_voiceButton.isHidden == NO) {
+        _verticalLineView.frame = CGRectMake(CGRectGetMaxX(_zc_turnButton.frame), 12, 0.5, 26);
+        _verticalLineView.hidden = NO;
+    }
+    
+}
+
+-(void)setServiceModeView:(int ) type{
+//   如果 刘海屏向左，留出 20 的距离
+    float topGap = 0;
+    if (self.curScreenDirection == 2) {
+        topGap = 20;
+    }
+    if(type == 1){
         
         _zc_chatTextView.hidden  = NO;
         _zc_turnButton.hidden  = YES;
@@ -1137,14 +1186,35 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
         }
         
         [self createMoreView];
-        [[ZCUICore getUICore] keyboardOnClickAddRobotHelloWolrd];
-        
         _zc_sessionBgView.hidden = YES;
-    }
-    if (config.type == 3) {
-        // 3.智能客服-机器人优先    // && self.isShowConnectedButton == 0  isShowTurnBtn记录在会话保持的状态下是否之前显示转人工按钮（一次有效会话之内）
         
-        [self setKeyBoardStatus:ZCKeyboardStatusRobot];
+        
+    }else if(type == 2){
+//           不显示转人工按钮
+        // 设置textview的frame
+        [_zc_chatTextView setFrame:CGRectMake(topGap + 10, (BottomHeight-35)/2, [self getSourceViewWidth]-68 - topGap, 35)];
+        // 开启语音的功能   机器人开启语音识别
+        if ([ZCUITools zcgetOpenRecord] && [ZCUICore getUICore].kitInfo.isOpenRobotVoice) {
+            
+            [_zc_chatTextView setFrame:CGRectMake(topGap + 48 , (BottomHeight-35)/2, [self getSourceViewWidth]-48-5 - topGap, 35)];
+            _zc_chatTextView.textContainerInset =  UIEdgeInsetsMake(10, 10, 10, 10 );
+            // 显示语音按钮
+            // 显示语音按钮
+            CGRect vf = _zc_voiceButton.frame;
+            vf.origin.x = 0 + topGap;
+            _zc_voiceButton.frame = vf;
+            
+            _zc_voiceButton.hidden = NO;
+        }
+        
+        //设置按钮显示
+        _zc_turnButton.hidden    = YES;
+        
+        _zc_chatTextView.hidden  = NO;
+        _zc_pressedButton.hidden = YES;
+        _zc_addMoreButton.hidden   = NO;
+        _zc_leaveMsgButton.hidden   = YES;
+    }else if(type == 3){
         if (![ZCUICore getUICore].kitInfo.isShowTansfer && ![ZCLibClient getZCLibClient].isShowTurnBtn) {
 //           不显示转人工按钮
             
@@ -1205,33 +1275,7 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
             _zc_addMoreButton.hidden   = NO;
             _zc_leaveMsgButton.hidden   = YES;
         }
-        
-        
-        // 2.9.2版本开始，如果客服发送过离线消息，直接转接到对应的客服
-        // 不是仅机器人，不是黑名单用户
-        if([ZCPlatformTools sharedInstance].isOfflineMsgConnect && zcLibConvertToString([ZCPlatformTools sharedInstance].offlineMsgAdminId).length > 0 && !config.isblack){
-            [[ZCUICore getUICore] doConnectUserService:nil];
-        }
     }
-    if(config.type==4 || config.type==2 || config.ustatus == 1 || ([ZCLibClient getZCLibClient].libInitInfo.service_mode!=1 && config.ustatus == -2)){
-        // 人工优先，直接执行转人工,  ##2 仅人工   ,ustatus，说明断线后用户还在线  //仅机器人模式排队不在去执行转人工操作
-        // 如果显示在线或者排队中，自动转接到人工
-        if(config.ustatus == 1|| config.ustatus == -2){
-            [ZCUICore getUICore].isShowForm = YES;
-            [[ZCUICore getUICore] checkUserServiceWithObject:nil Msg: @"isinitiativeTurn"];
-        }else{
-            [[ZCUICore getUICore] checkUserServiceWithObject:nil Msg:nil];
-        }
-    }
-    //
-    _zc_activityView.hidden = YES;
-    [_zc_activityView stopAnimating];
-    
-    if (_zc_turnButton.isHidden == NO && _zc_voiceButton.isHidden == NO) {
-        _verticalLineView.frame = CGRectMake(CGRectGetMaxX(_zc_turnButton.frame), 12, 0.5, 26);
-        _verticalLineView.hidden = NO;
-    }
-    
 }
 
 
@@ -1242,7 +1286,6 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
     if (self.curScreenDirection == 2) {
         topGap = 20;
     }
-    
     // 设置键盘时设置默认状态
     _zc_faceButton.hidden     = YES;
     _zc_waitLabel.hidden      = YES;
@@ -1276,6 +1319,14 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
         CGRect f = self.zc_bottomView.frame;
         f.origin.x = spaceX;
         self.zc_bottomView.frame = f;
+    }
+    
+    // 如果是延迟转人工，设置键盘样式为仅机器人样式
+    if([ZCUICore getUICore].isAfterConnectUser){
+        status = ZCKeyboardStatusRobot;
+        if([self getZCLibConfig].type == 2){
+            [self setServiceModeView:2];
+        }
     }
 //    status = NEWSESSION_KEYBOARD_STATUS;
     switch (status) {
@@ -1776,7 +1827,7 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
     }
     
     // 还原表情和更多按钮样式
-    if ([self getZCLibConfig].isArtificial) {
+    if ([self getZCLibConfig].isArtificial || [ZCUICore getUICore].isAfterConnectUser) {
         _zc_voiceButton.tag       = BUTTON_ADDVOICE;
         _zc_faceButton.tag       = BUTTON_ADDFACEVIEW;
         [_zc_voiceButton setImage:[ZCUITools zcuiGetBundleImage:@"zcicon_voice_normal"] forState:UIControlStateNormal];

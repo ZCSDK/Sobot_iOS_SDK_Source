@@ -1257,49 +1257,62 @@
     border.frame = CGRectMake(view.frame.size.width - borderWidth, 0, borderWidth, view.frame.size.height);
     [view.layer addSublayer:border];
 }
-
++(int )changeFileType:(int) oldType{
+    int newType = 8;
+    switch (oldType) {
+        case 13:
+            newType = 0;
+            break;
+        case 14:
+            newType = 1;
+            break;
+        case 15:
+            newType = 2;
+            break;
+        case 16:
+            newType = 3;
+            break;
+        case 17:
+            newType = 4;
+            break;
+        case 18:
+            newType = 5;
+            break;
+        case 19:
+            newType = 6;
+            break;
+        case 20:
+            newType = 7;
+            break;
+        default:
+            break;
+    }
+    return newType;
+}
 +(UIImage *) getFileIcon:(NSString * ) filePath fileType:(int) type{
-    NSString *mimeType  = type>0 ? @"" : [ZCUITools mimeWithString:filePath];
+    type  = type>0 ? [ZCUITools changeFileType:type] : zcLibmimeWithURLType(filePath);
     NSString *iconName = @"";
-    if([@"application/msword" isEqual:mimeType] || type == 13 || [@"application/vnd.ms-works" isEqual:mimeType]){
+    if(type == 0){
         iconName = @"zcicon_file_word";
-    }else if([@"application/vnd.ms-powerpoint" isEqual:mimeType] || type == 14){
+    }else if( type == 1){
         iconName = @"zcicon_file_ppt";
-    }else if([@"application/vnd.ms-excel" isEqual:mimeType] || type == 15){
+    }else if(type == 2){
         iconName = @"zcicon_file_excel";
-    }else if([@"application/pdf" isEqual:mimeType] || type == 16){
+    }else if(type == 3){
         iconName = @"zcicon_file_pdf";
-    }else if([@"application/vnd.ms-excel" isEqual:mimeType] || type == 15){
-        iconName = @"zcicon_file_excel";
-    }else if([@"application/zip" isEqual:mimeType] || type == 19 || [@"application/rar" isEqual:mimeType]){
+    }else if(type == 6){
         iconName = @"zcicon_file_zip";
-    }else if([mimeType hasPrefix:@"audio"] || type == 17){
+    }else if(type == 4){
         iconName = @"zcicon_file_mp3";
-    }else if([mimeType hasPrefix:@"video"] || type == 18){
+    }else if(type == 5){
         iconName = @"zcicon_file_mp4";
-    }else if([@"text/plain" isEqual:mimeType] || type == 20){
+    }else if(type == 7){
         iconName = @"zcicon_file_txt";
     }else{
         iconName = @"zcicon_file_unknow";
     }
     
     return [ZCUITools zcuiGetBundleImage:iconName];
-}
-
-+ (NSString *)mimeWithString:(NSString *)string
-{
-    // 先从参入的路径的出URL
-    NSURL *url = [NSURL fileURLWithPath:string];
-    if ([string hasPrefix:@"file:///"]){
-        url = [NSURL URLWithString:string];
-    }
-    NSURLRequest *request = [NSURLRequest requestWithURL:url];
-    
-    // 只有响应头中才有其真实属性 也就是MIME
-    NSURLResponse *response = nil;
-    [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:nil];
-    
-    return response.MIMEType;
 }
 
 

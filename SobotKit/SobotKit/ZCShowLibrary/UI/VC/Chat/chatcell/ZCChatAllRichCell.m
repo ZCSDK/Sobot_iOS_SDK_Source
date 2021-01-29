@@ -547,10 +547,11 @@
             int type = [item[@"type"] intValue];
             
             NSString *msg = zcLibConvertToString(item[@"msg"]);
+            msg = [ZCHtmlCore filterHTMLTag:msg];
             msg = [ZCUITools removeAllHTMLTag:msg];
-            while ([msg hasPrefix:@"\n"]){
-                msg = [msg substringFromIndex:1];
-            }
+//            while ([msg hasPrefix:@"\n"]){
+//                msg = [msg substringFromIndex:1];
+//            }
             
             // 最后一行过滤所有换行，不是最后一行过滤一个换行
             if(i == (model.richModel.richMsgList.count-1)){
@@ -558,9 +559,9 @@
                     msg = [msg substringToIndex:msg.length - 1];
                 }
             }else{
-                if ([msg hasSuffix:@"\n"]){
-                    msg = [msg substringToIndex:msg.length - 1];
-                }
+//                if ([msg hasSuffix:@"\n"]){
+//                    msg = [msg substringToIndex:msg.length - 1];
+//                }
             }
             if(type == 0){
                 ZCMLEmojiLabel *label = [ZCChatBaseCell createRichLabel];

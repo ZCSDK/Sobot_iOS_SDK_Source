@@ -754,6 +754,7 @@
     _textView.delegate            = self;
     _textView.textColor  = [ZCUITools zcgetLeftChatTextColor];
     _textView.backgroundColor =  [ZCUITools zcgetLeftChatColor];
+    [_textView setContentInset:UIEdgeInsetsMake(0,5, 0, 5)];
     
     if (_listArray != nil && _listArray.count >0) {
         if (_ratingView.rating >0) {

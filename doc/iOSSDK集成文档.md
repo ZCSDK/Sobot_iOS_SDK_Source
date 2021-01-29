@@ -51,11 +51,11 @@
 
 普通版：
 
-下载链接：[iOS_SDK_2.9.2](https://img.sobot.com/mobile/sdk/iOS_SDK_2.9.2.zip)
+下载链接：[iOS_SDK_2.9.3](https://img.sobot.com/mobile/sdk/iOS_SDK_2.9.3.zip)
 
 电商版：
 
-下载链接：[iOS_SDK_2.9.2_电商版](https://img.sobot.com/mobile/sdk/iOS_SDK_2.9.2_MALL.zip)
+下载链接：[iOS_SDK_2.9.3_电商版](https://img.sobot.com/mobile/sdk/iOS_SDK_2.9.3_MALL.zip)
 
 解压[iOS_SDK]，添加必要文件SobotKit.framework和SobotKit.bundle到你的工程里。智齿iOS_SDK 的实现，依赖了一些系统的框架，在开发应用时需要在工程里加入这些框架。开发者首先点击工程右边的工程名，然后在工程名右边依次选择TARGETS -> BuiLd Phases -> Link Binary With Libraries，展开 LinkBinary With Libraries后点击展开后下面的 + 来添加下面的依赖项:
 
@@ -381,7 +381,9 @@ uiInfo.topViewBgColor = [UIColor redColor];
 ```js
 
 ZCKitInfo *kitInfo = [ZCKitInfo new];
-     
+//kitInfo.helpCenterTel = @"40012345678";
+//kitInfo.helpCenterTelTitle = @"400-客服";
+
 // 打开帮助中心页面
 + (void)openZCServiceCenter:(ZCKitInfo *) info
                          with:(UIViewController *) byController
@@ -1734,7 +1736,8 @@ _kitInfo.hideManualEvaluationLabels = YES;
 | hideChatTime   | BOOL   | 是否隐藏会话时间   |  默认NO |
 | hideRototEvaluationLabels   | BOOL   | 是否隐藏机器人评价标签   |  默认NO，不隐藏 |
 | hideManualEvaluationLabels   | BOOL   | 是否隐藏人工评价标签   |  默认NO，不隐藏 |
-
+| helpCenterTel   | NSString   | 帮助中心可跳转电话号码   |  默认不显示 |
+| helpCenterTelTitle   | NSString   | 帮助中心电话号码显示内容  |  默认不显示 |
 
 ### 字体相关：
 | 属性名称 | 数据类型 | 说明 | 备注 |

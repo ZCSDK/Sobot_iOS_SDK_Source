@@ -74,7 +74,7 @@
                 }];
                 
             }else{
-                NSString * tipMsg = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleDisplayName"];
+                NSString * tipMsg = @"";//[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleDisplayName"];
                 tipMsg = [tipMsg stringByAppendingString:ZCSTLocalString(@"请在\"设置 - 隐私 - 相机\"选项中，允许访问您的相机")];
                 
                 [[ZCToolsCore getToolsCore] showAlert:nil message:tipMsg cancelTitle:ZCSTLocalString(@"好的") titleArray:nil viewController:nil  confirm:^(NSInteger buttonTag) {
@@ -132,7 +132,7 @@
                         
                     }];
                 }else{
-                    NSString * tipMsg = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleDisplayName"];
+                    NSString * tipMsg = @"";//[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleDisplayName"];
                     tipMsg = [tipMsg stringByAppendingString:ZCSTLocalString(@"请在iPhone的《设置-隐私-照片》选项中，允许访问你的手机相册")];
                     
                     [[ZCToolsCore getToolsCore] showAlert:nil message:tipMsg cancelTitle:ZCSTLocalString(@"好的") titleArray:nil viewController:nil confirm:^(NSInteger buttonTag) {

@@ -43,17 +43,19 @@
 }
 
 // 斑马必须使用以下方法
-- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation
-{
-    if ([ZCUICore getUICore].kitInfo.isShowPortrait) {
-        return UIInterfaceOrientationPortrait;
-    }else{
-        if(self.navigationController && self.navigationController.topViewController && [self.navigationController.topViewController respondsToSelector:@selector(preferredInterfaceOrientationForPresentation)]){
-            return [self.navigationController.topViewController preferredInterfaceOrientationForPresentation];
-        }
-        return UIInterfaceOrientationPortrait|UIInterfaceOrientationLandscapeLeft|UIInterfaceOrientationLandscapeRight;
-    }
-}
+// 添加如下方法，当present时程序会崩溃
+//'UIApplicationInvalidInterfaceOrientation', reason: 'preferredInterfaceOrientationForPresentation 'landscapeLeft' must match a supported interface orientation: 'portrait, landscapeRight'!'
+//- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation
+//{
+//    if ([ZCUICore getUICore].kitInfo.isShowPortrait) {
+//        return UIInterfaceOrientationPortrait;
+//    }else{
+//        if(self.navigationController && self.navigationController.topViewController && [self.navigationController.topViewController respondsToSelector:@selector(preferredInterfaceOrientationForPresentation)]){
+//            return [self.navigationController.topViewController preferredInterfaceOrientationForPresentation];
+//        }
+//        return UIInterfaceOrientationPortrait|UIInterfaceOrientationLandscapeLeft|UIInterfaceOrientationLandscapeRight;
+//    }
+//}
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
@@ -515,6 +517,70 @@
     }
 }
 
+
+-(void)openZCSDK:(UIButton *)sender{
+    if(sender.tag == 2){
+        NSString *link = zcLibConvertToString([ZCUICore getUICore].kitInfo.helpCenterTel);
+        if(![link hasSuffix:@"tel:"]){
+            link = [NSString stringWithFormat:@"tel:%@",link];
+        }
+        if (NSFoundationVersionNumber <= NSFoundationVersionNumber_iOS_9_x_Max) {
+            [[ZCToolsCore getToolsCore] showAlert:nil message:[link stringByReplacingOccurrencesOfString:@"tel:" withString:@""] cancelTitle:ZCSTLocalString(@"取消") viewController:self confirm:^(NSInteger buttonTag) {
+                if(buttonTag>=0){
+                    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:link]];
+                }
+            } buttonTitles:ZCSTLocalString(@"呼叫"), nil];
+        }else{
+            // 打电话
+            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:link]];
+        }
+    }
+}
+
+-(UIButton *)createHelpCenterButtons:(CGFloat ) y sView:(UIView *) superView{
+    UIButton *serviceButton = [self createHelpCenterOpenButton];
+    serviceButton.tag = 1;
+    serviceButton.frame = CGRectMake(ZCNumber(12), y, viewWidth - ZCNumber(24), ZCNumber(44));
+    
+    if(zcLibConvertToString([ZCUICore getUICore].kitInfo.helpCenterTel).length > 0 && zcLibConvertToString([ZCUICore getUICore].kitInfo.helpCenterTelTitle).length > 0){
+        CGFloat itemW =  (viewWidth - ZCNumber(24) - 20)/2;
+        serviceButton.frame = CGRectMake(ZCNumber(12), y, itemW, ZCNumber(44));
+        
+        
+        UIButton *telButton = [self createHelpCenterOpenButton];
+        telButton.frame = CGRectMake(ZCNumber(12) + itemW + 20, y, itemW, ZCNumber(44));
+        telButton.tag = 2;
+        [telButton setTitle:zcLibConvertToString([ZCUICore getUICore].kitInfo.helpCenterTelTitle) forState:UIControlStateNormal];
+        [telButton setTitle:zcLibConvertToString([ZCUICore getUICore].kitInfo.helpCenterTelTitle) forState:UIControlStateHighlighted];
+        [superView addSubview:telButton];
+    }
+    
+    [superView addSubview:serviceButton];
+    return serviceButton;
+}
+
+-(UIButton *)createHelpCenterOpenButton{
+    // 在线客服btn
+    UIButton *serviceBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+//    serviceBtn.type = 5;
+    [serviceBtn setTitle:ZCSTLocalString(@"在线客服") forState:UIControlStateNormal];
+    [serviceBtn setTitle:ZCSTLocalString(@"在线客服") forState:UIControlStateHighlighted];
+    [serviceBtn setTitleColor:UIColorFromThemeColor(ZCTextMainColor) forState:UIControlStateNormal];
+    [serviceBtn setTitleColor:UIColorFromThemeColor(ZCTextMainColor) forState:UIControlStateHighlighted];
+    serviceBtn.titleLabel.font = ZCUIFontBold14;
+    [serviceBtn addTarget:self action:@selector(openZCSDK:) forControlEvents:UIControlEventTouchUpInside];
+
+    serviceBtn.layer.borderColor = UIColorFromThemeColor(ZCBgLineColor).CGColor;
+    serviceBtn.layer.borderWidth = 0.5f;
+    serviceBtn.layer.cornerRadius = 22.0f;
+    serviceBtn.layer.masksToBounds = YES;
+    [serviceBtn setBackgroundColor:UIColorFromThemeColor(ZCBgSystemWhiteLightGrayColor)];
+    [serviceBtn setImageEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 3)];
+    [serviceBtn setTitleEdgeInsets:UIEdgeInsetsMake(0, 3, 0, 0)];
+    [serviceBtn setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleTopMargin];
+    [serviceBtn setAutoresizesSubviews:YES];
+    return serviceBtn;
+}
 
 
 - (void)didReceiveMemoryWarning {

@@ -239,7 +239,7 @@ static const float gap = 15;
                self.collectionViewCellHeight = 34;
                
                if(model.richModel.multiModel.showLinkStyle){
-                   self.collectionViewCellHeight = 24;
+                   self.collectionViewCellHeight = 30;
                }
                self.cellContentViewHeight = self.collectionViewCellHeight*_cellNumOnPageInt + 10*(_cellNumOnPageInt - 1);
                
@@ -428,7 +428,7 @@ static const float gap = 15;
             collectionViewCellHeight = 34;
             
             if(model.richModel.multiModel.showLinkStyle){
-                collectionViewCellHeight = 24;
+                collectionViewCellHeight = 30;
             }
             cellContentViewHeight = collectionViewCellHeight*cellNumOnPageInt + 10*(cellNumOnPageInt - 1);
         }
@@ -466,7 +466,17 @@ static const float gap = 15;
 }
 
 #pragma mark - UICollectionViewDataSource
-
+-(CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
+//    if (self.cellType == ZCMultitemHorizontaRollCellType_text && self.tempModel.richModel.multiModel.showLinkStyle)
+//    {
+//        NSDictionary * model = _listArray[indexPath.row];
+//        NSString *text = [NSString stringWithFormat:@"%d、%@",(int)indexPath.row+1,zcLibConvertToString(model[@"title"])];
+//        CGSize s = [text sizeWithFont:ZCUIFont14 constrainedToSize:CGSizeMake(self.maxWidth-30, 0)];
+//
+//        return CGSizeMake(self.maxWidth, s.height+3);
+//    }
+    return self.layout.itemSize;
+}
 - (void)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout cellCenteredAtIndexPath:(NSIndexPath *)indexPath page:(int)page{
     currentPage = page;
     self.pageControl.currentPage = page; // 分页控制器当前显示的页数

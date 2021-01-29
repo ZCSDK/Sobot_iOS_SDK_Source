@@ -140,10 +140,10 @@
     [chat setOnItemClickBlock:itemClickBlock];
     chat.byController = byController;
     if(byController.navigationController==nil){
-          UINavigationController * navc = [[UINavigationController alloc]initWithRootViewController:chat];
-              // 设置动画效果
-              navc.modalPresentationStyle = UIModalPresentationOverFullScreen;
-        [byController presentViewController:chat animated:YES completion:^{
+        UINavigationController * navc = [[UINavigationController alloc]initWithRootViewController:chat];
+        // 设置动画效果
+        navc.modalPresentationStyle = UIModalPresentationOverFullScreen;
+        [byController presentViewController:navc animated:YES completion:^{
             
         }];
     }else{
