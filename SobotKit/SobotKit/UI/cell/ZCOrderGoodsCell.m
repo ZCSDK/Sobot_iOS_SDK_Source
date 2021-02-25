@@ -391,34 +391,28 @@
 
     [self setSendStatus:self.ivBgView.frame];
 
-    if([ZCUITools getZCThemeStyle] == ZCThemeStyle_Dark){
-
-        self.ivBgView.backgroundColor = UIColorFromThemeColor(ZCBgSystemWhiteLightGrayColor);
-    }else{
+    
+    
+    // 0,自己，1机器人，2客服
+    if(self.isRight){
+        // 右边气泡背景图片
         UIImage * bgImage = [ZCUITools zcuiGetBundleImage:@"zcicon_pop_green_normal_line"];
-         bgImage=[bgImage resizableImageWithCapInsets:UIEdgeInsetsMake(21, 21, 21, 21)];
+        bgImage=[bgImage resizableImageWithCapInsets:UIEdgeInsetsMake(21, 21, 21, 21)];
         
-        [self.ivLayerView setImage:bgImage];
-
         self.ivBgView.image = bgImage;
+        self.ivBgView.backgroundColor = UIColorFromThemeColor(ZCBgSystemWhiteLightGrayColor);
+        //设置尖角
+        [self.ivLayerView setImage:bgImage];
+    }else{
+        self.ivBgView.image = nil;
+        [self.ivBgView setBackgroundColor:[ZCUITools zcgetLeftChatColor]];
     }
-    
-//    __weak __typeof(self) weakSelf = self;
-//      [self.ivBgView updateCornerRadius:^(ZCCorner *corner) {
-//          if (weakSelf.isRight) {
-//              corner.radius = ZCRadiusMake(20,20,20,5);
-//          }else{
-//              corner.radius = ZCRadiusMake(20,20,5,20);
-//          }
-//          corner.borderColor = [ZCUITools zcgetRightChatColor];
-//          corner.borderWidth = 1;
-//      }];
-//
-//    [self.ivBgView setNeedsDisplay];
-    
-    
-     self.ivBgView.contentMode = UIViewContentModeScaleToFill;
 
+    if([ZCUITools getZCThemeStyle] == ZCThemeStyle_Dark){
+        self.ivBgView.backgroundColor = UIColorFromThemeColor(ZCBgSystemWhiteLightGrayColor);
+    }
+    self.ivBgView.contentMode = UIViewContentModeScaleToFill;
+    
      [self.ivLayerView setFrame:self.ivBgView.frame];
      CALayer *layer              = self.ivLayerView.layer;
      layer.frame                 = (CGRect){{0,0},self.ivLayerView.layer.frame.size};

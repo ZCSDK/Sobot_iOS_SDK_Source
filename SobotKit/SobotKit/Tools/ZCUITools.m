@@ -1258,7 +1258,7 @@
     [view.layer addSublayer:border];
 }
 +(int )changeFileType:(int) oldType{
-    int newType = 8;
+    int newType = oldType;
     switch (oldType) {
         case 13:
             newType = 0;

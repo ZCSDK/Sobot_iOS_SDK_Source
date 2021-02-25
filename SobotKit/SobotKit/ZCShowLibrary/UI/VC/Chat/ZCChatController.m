@@ -284,6 +284,9 @@
  */
 -(void)topViewBtnClick:(ZCButtonClickTag)Tag{
     if (Tag == BUTTON_BACK) {
+        if([ZCUICore getUICore].ZCViewControllerCloseBlock != nil){
+            [ZCUICore getUICore].ZCViewControllerCloseBlock(self,ZC_CloseChat);
+        }
         // 延迟返回，解决"Unable to insert COPY_SEND" 警告
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             if (self.navigationController && _isPush) {

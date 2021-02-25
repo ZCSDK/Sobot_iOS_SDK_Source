@@ -51,11 +51,11 @@
 
 普通版：
 
-下载链接：[iOS_SDK_2.9.3](https://img.sobot.com/mobile/sdk/iOS_SDK_2.9.3.zip)
+下载链接：[iOS_SDK_2.9.4](https://img.sobot.com/mobile/sdk/iOS_SDK_2.9.4.zip)
 
 电商版：
 
-下载链接：[iOS_SDK_2.9.3_电商版](https://img.sobot.com/mobile/sdk/iOS_SDK_2.9.3_MALL.zip)
+下载链接：[iOS_SDK_2.9.4_电商版](https://img.sobot.com/mobile/sdk/iOS_SDK_2.9.4_MALL.zip)
 
 解压[iOS_SDK]，添加必要文件SobotKit.framework和SobotKit.bundle到你的工程里。智齿iOS_SDK 的实现，依赖了一些系统的框架，在开发应用时需要在工程里加入这些框架。开发者首先点击工程右边的工程名，然后在工程名右边依次选择TARGETS -> BuiLd Phases -> Link Binary With Libraries，展开 LinkBinary With Libraries后点击展开后下面的 + 来添加下面的依赖项:
 
@@ -100,7 +100,7 @@ pod cache clean SobotKit
 
       * 默认SaaS平台域名为:https://api.sobot.com
 
-      * 如果您是腾讯云服务，请设置为：https://ten.sobot.com
+      * 如果您是腾讯云服务，请设置为：https://www.soboten.com
 
       * 如果您是本地化部署，请使用自己的部署的服务域名
 
@@ -235,26 +235,24 @@ pod cache clean SobotKit
 ```
 ## 3.4 启动智齿页面
 ### 3.4.1 启动客服页面
-普通版本和电商版本启动方式一样
+普通版本和电商版本启动方式一样.  
+【注意：电商版本要重新指定商户app_key，启动那个商户就重新设置那个商户的app_key.】
 
 接口
 
 ```js
 
-/// 启动聊天页面
+
+/// 启动聊天页面，简单处理
 /// @param info 自定义UI属性
 /// @param byController  启动的页面
-/// @param delegate   点击留言拦截操作,如果不为空切实现了代理方法，留言将不再跳转
 /// @param pageClick 页面当前状态
-/// @param messagelinkBlock 链接点击事件，也可使用setMessageLinkClick统一处理
 + (void)openZCChat:(ZCKitInfo *) info
             with:(UIViewController *) byController
-          target:(id<ZCChatControllerDelegate>) delegate
-       pageBlock:(void (^)(id object,ZCPageBlockType type))pageClick
-messageLinkClick:(BOOL (^)(NSString *link)) messagelinkBlock;
+       pageBlock:(void (^)(id object,ZCPageBlockType type))pageClick;
     
  
-// messageLinkClick 也可以单独使用方法设置，messagelinkBlock不为空的时候后面会覆盖之前设置
+// messageLinkClick 链接点击事件
 +(void)setMessageLinkClick:(BOOL (^)(NSString * _Nonnull))messagelinkBlock
     
     
@@ -276,6 +274,10 @@ messageLinkClick:(BOOL (^)(NSString *link)) messagelinkBlock;
 ZCLibInitInfo *initInfo = [ZCLibClient getZCLibClient].libInitInfo;
 // 设置用户id，标识用户的唯一依据，（一定不要写如123456、0、000000等固定值，同一个id的聊天记录会一样），如果不设置，默认会根据手机证书生成一个唯一标
 initInfo.partnerid = @"";
+
+// 如果是电商版本，需要重新指定商户app_key或商户编码customer_code
+//initInfo.app_key = @"";
+
 // 重新赋值
 [ZCLibClient getZCLibClient].libInitInfo = initInfo;
 
@@ -617,6 +619,8 @@ libInitInfo.tran_flag =  @"0";
 
 ![图片](https://img.sobot.com/mobile/sdk/images/i_4_2_3_1.png)
 
+固定key的自定义字段  
+
 ```js
 // 设置用户自定义字段
 - (void)customUserInformation:(ZCLibInitInfo*)libInitInfo{
@@ -627,6 +631,20 @@ libInitInfo.tran_flag =  @"0";
                               @"birthday":@"2017-06-08"};
 }
 ```
+
+
+用户自定义资料，自定义key
+
+```js
+//自定义用户料
+libInitInfo.params = @{@"昵称":@"我是智齿小客服"};
+
+```
+
+效果图如下：
+![图片](https://img.sobot.com/mobile/sdk/images/a-4-2-3-1.png)
+
+
 ### 4.2.4 **设置转接成功后自动发消息**
 ```js
 // 自动发送信息
@@ -1378,6 +1396,13 @@ typedef NS_ENUM(NSInteger,ZCServerConnectStatus) {
        
         
     }];
+    
+    
+    // 返回事件监听
+    [ZCSobotApi setZCViewControllerBackClick:^(id _Nonnull obj, ZCPageCloseType type) {
+        NSLog(@"点击返回了%@，%d",obj,type);
+    }];
+    
 ```
 
 ### 4.5.8 替换消息中手机或固话识别的正则表达式
@@ -1657,7 +1682,6 @@ _kitInfo.hideManualEvaluationLabels = YES;
 
 
 
-
 ```
 
 
@@ -1738,6 +1762,8 @@ _kitInfo.hideManualEvaluationLabels = YES;
 | hideManualEvaluationLabels   | BOOL   | 是否隐藏人工评价标签   |  默认NO，不隐藏 |
 | helpCenterTel   | NSString   | 帮助中心可跳转电话号码   |  默认不显示 |
 | helpCenterTelTitle   | NSString   | 帮助中心电话号码显示内容  |  默认不显示 |
+| showPhotoPreview   | BOOL   | 选择图片时，不直接发送，预览发送【注意：预览方框仅为放大镜效果，不是裁切图片，发送的还是原图】  |  默认NO，关闭 |
+
 
 ### 字体相关：
 | 属性名称 | 数据类型 | 说明 | 备注 |
@@ -1905,5 +1931,7 @@ _kitInfo.hideManualEvaluationLabels = YES;
 请[点击链接](https://www.sobot.com/chat/pc/v2/index.html?sysnum=a76f3cef7d1043c69dd592c3e43f8242#0) 进入智能机器人输入您的问题
 
       
+## 8 更新说明
 
+   [《智齿iOS_SDK 版本更新说明》](https://shimo.im/docs/3no79A6BJ8EbxWJG)
 

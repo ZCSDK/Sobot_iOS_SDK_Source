@@ -379,43 +379,33 @@ typedef NS_ENUM(NSInteger,ZCGoodsCellType){
             break;
     }
     
-    
-    UIImage * bgImage = [ZCUITools zcuiGetBundleImage:@"zcicon_pop_green_normal_line"];
-     bgImage = [bgImage resizableImageWithCapInsets:UIEdgeInsetsMake(21, 21, 21, 21)];
-    
-    [self.ivLayerView setImage:bgImage];
-    
-    self.ivBgView.image = bgImage;
+    // 0,自己，1机器人，2客服
+    if(self.isRight){
+        // 右边气泡背景图片
+        UIImage * bgImage = [ZCUITools zcuiGetBundleImage:@"zcicon_pop_green_normal_line"];
+        bgImage=[bgImage resizableImageWithCapInsets:UIEdgeInsetsMake(21, 21, 21, 21)];
+        
+        self.ivBgView.image = bgImage;
+        self.ivBgView.backgroundColor = UIColorFromThemeColor(ZCBgSystemWhiteLightGrayColor);
+        //设置尖角
+        [self.ivLayerView setImage:bgImage];
+    }else{
+        self.ivBgView.image = nil;
+        [self.ivBgView setBackgroundColor:[ZCUITools zcgetLeftChatColor]];
+    }
+
+    if([ZCUITools getZCThemeStyle] == ZCThemeStyle_Dark){
+        self.ivBgView.backgroundColor = UIColorFromThemeColor(ZCBgSystemWhiteLightGrayColor);
+    }
     self.ivBgView.contentMode = UIViewContentModeScaleToFill;
-    self.ivBgView.backgroundColor = UIColorFromThemeColor(ZCBgSystemWhiteLightGrayColor);
-    
-    
-    
 
     // 设置尖角
-           [self.ivLayerView setFrame:self.ivBgView.frame];
-           CALayer *layer              = self.ivLayerView.layer;
-           layer.frame                 = (CGRect){{0,0},self.ivLayerView.layer.frame.size};
-           self.ivBgView.layer.mask = layer;
+   [self.ivLayerView setFrame:self.ivBgView.frame];
+   CALayer *layer              = self.ivLayerView.layer;
+   layer.frame                 = (CGRect){{0,0},self.ivLayerView.layer.frame.size};
+   self.ivBgView.layer.mask = layer;
 
-           [self.ivBgView setNeedsDisplay];
-    
-//    __weak __typeof(self) weakSelf = self;
-//
-//    [_cellBgView setInsideColor:[UIColor whiteColor]];
-//    [_cellBgView updateCornerRadius:^(ZCCorner *corner) {
-//        if (weakSelf.isRight) {
-//            corner.radius = ZCRadiusMake(20,20,20,5);
-//        }else{
-//            corner.radius = ZCRadiusMake(20,20,5,20);
-//        }
-//        corner.borderColor = [ZCUITools zcgetRightChatColor];
-//        corner.borderWidth = 1;
-//    }];
-////    _cellBgView.layer.masksToBounds = YES;
-//    _btnSendMsg.frame = self.cellBgView.frame;
-//    [_cellBgView setNeedsDisplay];
-
+   [self.ivBgView setNeedsDisplay];
     
     self.frame = CGRectMake(0, 0, self.viewWidth, cellHeight + 5);
     

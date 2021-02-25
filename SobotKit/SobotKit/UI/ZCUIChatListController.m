@@ -81,6 +81,9 @@
 // button点击事件
 -(IBAction)buttonClick:(UIButton *) sender{
     if(sender.tag == BUTTON_BACK){
+        if([ZCUICore getUICore].ZCViewControllerCloseBlock != nil){
+            [ZCUICore getUICore].ZCViewControllerCloseBlock(self,ZC_CloseChatList);
+        }
         [ZCIMChat getZCIMChat].delegate = nil;
         
         if(self.navigationController != nil && self.navigationController.viewControllers.count>1){

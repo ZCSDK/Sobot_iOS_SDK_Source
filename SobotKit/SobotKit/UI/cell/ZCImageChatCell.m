@@ -110,7 +110,11 @@
         }
         [_ivSingleImage setImage:localImage];
     }else{
-        [_ivSingleImage loadWithURL:[NSURL URLWithString:zcUrlEncodedString(model.richModel.msg)] placeholer:[ZCUITools zcuiGetBundleImage:@"zcicon_default_goods_1"]  showActivityIndicatorView:YES];
+        if (model.richModel.msgType == ZCMessageTypeVideo) {
+            [_ivSingleImage loadWithURL:[NSURL URLWithString:zcUrlEncodedString(model.richModel.snapshot)] placeholer:[ZCUITools zcuiGetBundleImage:@"zcicon_default_goods_1"]  showActivityIndicatorView:YES];
+        }else{
+            [_ivSingleImage loadWithURL:[NSURL URLWithString:zcUrlEncodedString(model.richModel.msg)] placeholer:[ZCUITools zcuiGetBundleImage:@"zcicon_default_goods_1"]  showActivityIndicatorView:YES];
+        }
     }
     if(model.richModel.msgType == ZCMessageTypeVideo && _pieChartView == nil){
         _playButton.hidden = NO;

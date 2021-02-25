@@ -85,12 +85,6 @@
 -(CGFloat) InitDataToView:(ZCLibMessage *)model time:(NSString *)showTime{
     CGFloat height=[super InitDataToView:model time:showTime];
     _model = model;
-    if (self.isRight) {
-        [self.ivBgView setBackgroundColor:[ZCUITools zcgetRightChatSelectdeColor]];
-    }else{
-        [self.ivBgView setBackgroundColor:[ZCUITools zcgetLeftChatSelectedColor]];
-    }
-    
     
     [_progressView setFaceImage:[ZCUITools getFileIcon:model.richModel.url fileType:model.richModel.fileType]];
     [_labFileSize setText:model.richModel.fileSize];
@@ -127,15 +121,6 @@
     }
     height = bgSize.height+12;
     
-    // 设置尖角
-    [self.ivLayerView setFrame:self.ivBgView.frame];
-    CALayer *layer              = self.ivLayerView.layer;
-    layer.frame                 = (CGRect){{0,0},self.ivLayerView.layer.frame.size};
-    self.ivBgView.layer.mask = layer;
-    [self.ivBgView setNeedsDisplay];
-   
-    
-    [self setFrame:CGRectMake(0, 0, self.viewWidth, height)];
     
     //    NSLog(@"_progressView.progress ==++++++++%f",_progressView.progress);
     if (self.isRight && _progressView.progress>0&& _progressView.progress != 1) {
@@ -150,7 +135,35 @@
     
     _tapView.frame = self.ivBgView.frame;
     
+    // 0,自己，1机器人，2客服
+    if(self.isRight){
+        // 右边气泡背景图片
+        UIImage * bgImage = [ZCUITools zcuiGetBundleImage:@"zcicon_pop_green_normal_line"];
+        bgImage=[bgImage resizableImageWithCapInsets:UIEdgeInsetsMake(21, 21, 21, 21)];
+        
+        self.ivBgView.image = bgImage;
+        self.ivBgView.backgroundColor = UIColorFromThemeColor(ZCBgSystemWhiteLightGrayColor);
+        //设置尖角
+        [self.ivLayerView setImage:bgImage];
+    }else{
+        self.ivBgView.image = nil;
+        [self.ivBgView setBackgroundColor:[ZCUITools zcgetLeftChatColor]];
+    }
+
+    if([ZCUITools getZCThemeStyle] == ZCThemeStyle_Dark){
+        self.ivBgView.backgroundColor = UIColorFromThemeColor(ZCBgSystemWhiteLightGrayColor);
+    }
+    self.ivBgView.contentMode = UIViewContentModeScaleToFill;
     
+    
+    // 设置尖角
+    [self.ivLayerView setFrame:self.ivBgView.frame];
+    CALayer *layer              = self.ivLayerView.layer;
+    layer.frame                 = (CGRect){{0,0},self.ivLayerView.layer.frame.size};
+    self.ivBgView.layer.mask = layer;
+    [self.ivBgView setNeedsDisplay];
+    
+    self.frame = CGRectMake(0, 0, self.viewWidth, height);
     
     return height;
 }

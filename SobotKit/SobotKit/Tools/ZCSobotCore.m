@@ -14,6 +14,7 @@
 #import <MediaPlayer/MediaPlayer.h>
 #import "ZCToolsCore.h"
 #import <AVFoundation/AVFoundation.h>
+#import "ZCUICore.h"
 
 @implementation ZCSobotCore
 
@@ -126,7 +127,9 @@
                     // 设置系统相册导航条标题文字的大小
                     //[UIColor colorWithRed:245.0/255.0 green:245.0/255.0 blue:245.0/255.0 alpha:1.0]
                     [zc_imagepicker.navigationBar setTitleTextAttributes: [NSDictionary dictionaryWithObjectsAndKeys:[ZCUITools zcgetBannerTitleColor], NSForegroundColorAttributeName,[ZCUITools zcgetTitleFont], NSFontAttributeName, nil]];
-                    zc_imagepicker.allowsEditing=NO;
+                    
+                    // 是否显示预览页面
+                    zc_imagepicker.allowsEditing=[ZCUICore getUICore].kitInfo.showPhotoPreview;
                     
                     [(UIViewController *)delegate presentViewController:zc_imagepicker animated:YES completion:^{
                         

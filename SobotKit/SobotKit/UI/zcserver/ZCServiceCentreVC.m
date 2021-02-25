@@ -69,6 +69,10 @@ typedef void (^PageLoadBlock)(id object,ZCPageBlockType type);
 
 -(void)buttonClick:(UIButton *)sender{
     if (sender.tag == BUTTON_BACK) {
+        if([ZCUICore getUICore].ZCViewControllerCloseBlock != nil){
+            [ZCUICore getUICore].ZCViewControllerCloseBlock(self,ZC_CloseHelpCenter);
+        }
+        
         if (self.navigationController && self.isPush) {
             [self.navigationController popViewControllerAnimated:NO];
         }else{

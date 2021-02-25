@@ -90,6 +90,12 @@
     }
 }
 
++(void)setZCViewControllerBackClick:(void (^)(id currentVC,ZCPageCloseType type))backBlock{
+    if (backBlock != nil) {
+        [[ZCUICore getUICore] setZCViewControllerCloseBlock:backBlock];
+    }
+}
+
 // 打开客户中心页面
 + (void)openZCServiceCenter:(ZCKitInfo *) info
                          with:(UIViewController *) byController

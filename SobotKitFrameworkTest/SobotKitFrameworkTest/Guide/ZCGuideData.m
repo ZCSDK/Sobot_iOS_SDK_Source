@@ -44,6 +44,7 @@
 
 //            NSString *appkey = @"e851c8ec5826445fbf4e63ac49ce257e";  // xinyao  测试
             NSString *appkey = @"e550c6e4250c4ab490f290c6d7cb5ac2";  // xinyao  正式
+    appkey = @"6ab2f5150bf2415cbbabac589731d52a";
     #pragma mark - 环境
             NSString *apiHost = @"https://api.sobot.com";
 //            apiHost = @"http://test.sobot.com";
@@ -55,7 +56,7 @@
 
     _apiHost = apiHost;
     _libInitInfo.app_key = appkey;
-    _libInitInfo.partnerid = @"xinyao123456";
+    _libInitInfo.partnerid = @"xinyao1234567";
 //    _libInitInfo.robotid = @"2";
     
 //    _libInitInfo.absolute_language = @"tr_lproj";
@@ -70,7 +71,7 @@
 //    _kitInfo.urlRegular = @"((http[s]{0,1}|ftp)://[a-zA-Z0-9\\.\\-]+\\.([a-zA-Z0-9]{1,4})(:\\d+)?(/[a-zA-Z0-9\\.\\-~!@#$%^&*+?:_/=<>]*)?)";
 
     _kitInfo.isShowPortrait = YES;
-    
+    _kitInfo.showPhotoPreview = YES;
 //    _kitInfo.isShowReturnTips = YES;
 //    _kitInfo.isOpenEvaluation = YES;
 //    _kitInfo.isShowCloseSatisfaction = YES;

@@ -186,6 +186,10 @@
     _datePicker.locale = [[NSLocale alloc] initWithLocaleIdentifier:zcGetCurrentLanguages()];
 //    _datePicker.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"zh_CN"];
     _datePicker.datePickerMode = datePickerMode;
+    // 兼容iOS 14
+    if(zcGetSystemDoubleVersion()>=13.4){
+        _datePicker.preferredDatePickerStyle = UIDatePickerStyleWheels;
+    }
     
     [_datePicker setValue:UIColorFromThemeColor(ZCTextMainColor) forKey:@"textColor"];
     [_datePicker setBackgroundColor:UIColorFromThemeColor(ZCBgSystemWhiteLightDarkColor)];

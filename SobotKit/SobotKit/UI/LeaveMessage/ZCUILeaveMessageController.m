@@ -991,6 +991,10 @@ typedef NS_ENUM(NSInteger,ExitType) {
 #pragma mark -- 页面返回的事件 *******************************************
 // 关闭页面
 -(void)goBack:(ExitType) isClose{
+    if([ZCUICore getUICore].ZCViewControllerCloseBlock != nil){
+        [ZCUICore getUICore].ZCViewControllerCloseBlock(self,ZC_CloseLeave);
+    }
+    
     if (isClose == ISCOLSE || isClose == ISBACKANDUPDATE) {
         [self isClose];
     }else{
