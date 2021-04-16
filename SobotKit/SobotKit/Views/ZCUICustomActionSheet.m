@@ -58,10 +58,10 @@
 
 
 @implementation ZCUICustomActionSheet{
- 
+    
     BOOL isKeyBoardShow;
     BOOL touchRating;
-
+    
     SatisfactionType currentServerType;
     
     ZCLibConfig *_config;
@@ -69,11 +69,11 @@
     BOOL isDidClose;
     
     // 默认显示 0五星   1  0星
-    int defaultStartType;
-    
+    int defaultStar;
+    int scoreFlag;// 0:5星,1:10分
     CGFloat viewWidth;
     CGFloat viewHeight;
-
+    
     BOOL  _isBack;// 返回
     
     //1 主动评价 2 0邀请评价
@@ -97,7 +97,7 @@
     int  isResolveCount;// 邀请评价记录 是否已解决
     
     BOOL _isAddServerSatifaction;// 满意度cell刷新
-
+    
     CGFloat ZCMaxHeight;
     
 }
@@ -107,7 +107,7 @@
     if (self) {
         
         viewWidth = view.frame.size.width;
-//        viewHeight = view.frame.size.height;
+        //        viewHeight = view.frame.size.height;
         viewHeight = ScreenHeight;
         ZCMaxHeight =   ((ScreenHeight>800) ? (ScreenHeight-420 - 59):(ScreenHeight-340 - 59));
         if(ZCMaxHeight < 160){
@@ -118,7 +118,7 @@
         self.frame = CGRectMake(0, 0, viewWidth, viewHeight);
         self.autoresizingMask = UIViewAutoresizingFlexibleWidth| UIViewAutoresizingFlexibleHeight;
         self.autoresizesSubviews = YES;
-//        self.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.4];
+        //        self.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.4];
         self.backgroundColor = COLORWithAlpha(0, 0, 0, 0.4);
         self.userInteractionEnabled = YES;
         UITapGestureRecognizer * tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(shareViewDismiss:)];
@@ -155,7 +155,7 @@
 //  2.3.0 版本替换初始化方法
 - (ZCUICustomActionSheet*)initActionSheet:(SatisfactionType)type Name:(NSString *)name Cofig:(ZCLibConfig *)config cView:(UIView *)view  IsBack:(BOOL)isBack isInvitation:(int) invitationType  WithUid:(NSString *)uid IsCloseAfterEvaluation:(BOOL) isCloseAfterEvaluation Rating:(int)rating IsResolved:(int)isResolve IsAddServerSatifaction:(BOOL) isAddServerSatifaction{
     
-   return  [self initActionSheet:type Name:name Cofig:config cView:view IsBack:isBack isInvitation:invitationType WithUid:uid IsCloseAfterEvaluation:isCloseAfterEvaluation Rating:rating IsResolved:isResolve IsAddServerSatifaction:isAddServerSatifaction txtFlag:1 ticketld:@"" ticketScoreInfooList:nil];
+    return  [self initActionSheet:type Name:name Cofig:config cView:view IsBack:isBack isInvitation:invitationType WithUid:uid IsCloseAfterEvaluation:isCloseAfterEvaluation Rating:rating IsResolved:isResolve IsAddServerSatifaction:isAddServerSatifaction txtFlag:1 ticketld:@"" ticketScoreInfooList:nil];
     
 }
 
@@ -177,7 +177,7 @@
         if(dict!=nil && dict.count > 0){
             [self refreshSatisfaction];
         }else{
-
+            
             [[ZCUICore getUICore] loadSatisfactionDictlock:^(int code) {
                 [self refreshSatisfaction];
             }];
@@ -195,11 +195,11 @@
             NSMutableArray * satisfactionArr = [NSMutableArray arrayWithCapacity:0];
             for (NSDictionary * item in arr) {
                 ZCLibSatisfaction * satisfaction = [[ZCLibSatisfaction alloc]initWithMyDict:item];
-
+                
                 
                 [satisfactionArr addObject:satisfaction];
             }
-
+            
             if (_listArray == nil) {
                 _listArray = [NSMutableArray arrayWithCapacity:0];
             }else{
@@ -208,7 +208,8 @@
             _listArray = satisfactionArr;
             
             ZCLibSatisfaction * model = _listArray[0];// 0五星   1  0星
-            defaultStartType = model.defaultType;
+            defaultStar = model.defaultStar;
+            scoreFlag = model.scoreFlag;
             
             if ([model.isQuestionFlag  intValue] == 1) {
                 isShowIsOrNoSolveProblemView = YES;
@@ -246,19 +247,19 @@
     [_topView addSubview:closeBtn];
     
     // 2.8.6 达令家需要关闭是也显示暂不评价
-   if((type == RobotSatisfcationBackType || type == ServerSatisfcationBackType)
-          && [ZCUICore getUICore].kitInfo.canBackWithNotEvaluation){
-
-       UIButton * canReturnBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-       canReturnBtn.frame = CGRectMake(10, 8, 94, 44);
-       [canReturnBtn setTitle:ZCSTLocalString(@"暂不评价") forState:0];
-       [canReturnBtn.titleLabel setFont:ZCUIFont14];
-       [canReturnBtn setTitleColor:[ZCUITools zcgetSatisfactionTextSelectedColor] forState:0];
-       [canReturnBtn addTarget:self action:@selector(itemMenuClick:) forControlEvents:UIControlEventTouchUpInside];
-       [canReturnBtn setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
-       canReturnBtn.tag = RobotChangeTag3;
-       [_topView addSubview:canReturnBtn];
-   }
+    if((type == RobotSatisfcationBackType || type == ServerSatisfcationBackType)
+       && [ZCUICore getUICore].kitInfo.canBackWithNotEvaluation){
+        
+        UIButton * canReturnBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        canReturnBtn.frame = CGRectMake(10, 8, 94, 44);
+        [canReturnBtn setTitle:ZCSTLocalString(@"暂不评价") forState:0];
+        [canReturnBtn.titleLabel setFont:ZCUIFont14];
+        [canReturnBtn setTitleColor:[ZCUITools zcgetSatisfactionTextSelectedColor] forState:0];
+        [canReturnBtn addTarget:self action:@selector(itemMenuClick:) forControlEvents:UIControlEventTouchUpInside];
+        [canReturnBtn setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
+        canReturnBtn.tag = RobotChangeTag3;
+        [_topView addSubview:canReturnBtn];
+    }
     
     
     // 标题
@@ -268,7 +269,7 @@
     titlelab.numberOfLines = 0;
     titlelab.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     titlelab.font          = ZCUIFontBold17;
-
+    
     
     if (_isBcakClose && (currentServerType == 4 || currentServerType == 3 || currentServerType == 5)) {// 人工客服返回评价后结束会话
         titlelab.frame = CGRectMake(ScreenWidth/2 - (viewWidth-100)/2, 10, viewWidth -100, 18);
@@ -290,7 +291,7 @@
         titlelab.frame = CGRectMake(ScreenWidth/2 - (viewWidth-100)/2, 20, viewWidth -100, 20);
         titlelab.font = ZCUIFontBold17;
         // 标题只有一行
-       if(currentServerType == RobotSatisfcationNolType){
+        if(currentServerType == RobotSatisfcationNolType){
             titlelab.text = ZCSTLocalString(@"机器人客服评价");
         }else{
             titlelab.text = ZCSTLocalString(@"服务评价");
@@ -339,7 +340,7 @@
         // 已解决 未解决
         for (int i=0; i<2; i++) {
             UIButton *btn=[UIButton buttonWithType:UIButtonTypeCustom];
-//            btn.titleEdgeInsets = UIEdgeInsetsMake(0, 0, 0, 5);
+            //            btn.titleEdgeInsets = UIEdgeInsetsMake(0, 0, 0, 5);
             btn.imageEdgeInsets = UIEdgeInsetsMake(0, 0, 0, 7);
             if(i==0){
                 
@@ -369,8 +370,8 @@
             [btn setTitleColor:[ZCUITools zcgetSatisfactionTextSelectedColor]  forState:UIControlStateSelected];
             [btn addTarget:self action:@selector(robotServerButton:) forControlEvents:UIControlEventTouchUpInside];
             [btn setContentHorizontalAlignment:UIControlContentHorizontalAlignmentCenter];
-//            [btn setBackgroundColor:UIColor.whiteColor];
-//            [btn setBackgroundColor:[UIColor whiteColor] forState:UIControlStateNormal];
+            //            [btn setBackgroundColor:UIColor.whiteColor];
+            //            [btn setBackgroundColor:[UIColor whiteColor] forState:UIControlStateNormal];
             
             [btn setBackgroundColor:[ZCUITools zcgetSatisfactionBgSelectedColor]];
             btn.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin;
@@ -387,13 +388,13 @@
                 if (btn.tag ==  RobotChangeTag2) {
                     btn.selected = YES;
                     isresolve = YES;
-//                    btn.layer.borderColor = [UIColor clearColor].CGColor;
+                    //                    btn.layer.borderColor = [UIColor clearColor].CGColor;
                 }
             }else{
                 if (btn.tag == RobotChangeTag1) {
                     btn.selected = YES;
                     isresolve=NO;
-//                    btn.layer.borderColor = [UIColor clearColor].CGColor;
+                    //                    btn.layer.borderColor = [UIColor clearColor].CGColor;
                 }
             }
             
@@ -401,11 +402,11 @@
             problemView = btn;
             self.problemView = problemView;
         }
-
+        
     }
-  
+    
 #pragma mark -- 星星
-//    UILabel *message ; // 请您对【客服】进行评价
+    //    UILabel *message ; // 请您对【客服】进行评价
     if (type >2) {
         UILabel * nickLab = [[UILabel alloc]init];
         nickLab.autoresizingMask = UIViewAutoresizingFlexibleWidth;
@@ -416,76 +417,66 @@
         
         if ( !self.isOpenProblemSolving) {
             // 不显示已解决 未解决
-//            nickLab.frame = CGRectMake(0, 30, viewWidth, 21);
+            //            nickLab.frame = CGRectMake(0, 30, viewWidth, 21);
             
             nickLab.frame = CGRectMake(0, 0, viewWidth, 21);
             lineView.hidden = YES;
         }else if (self.isOpenProblemSolving){
             // 显示已解决 未解决
-//            nickLab.frame = CGRectMake(10, CGRectGetMaxY(self.problemView.frame) +30, viewWidth-20, 21);
+            //            nickLab.frame = CGRectMake(10, CGRectGetMaxY(self.problemView.frame) +30, viewWidth-20, 21);
             
             // 如果显示已解决、未解决，添加一条线
             nickLab.frame = CGRectMake(20, CGRectGetMaxY(self.problemView.frame) +30, viewWidth-40, 0.5);
-//            [nickLab setBackgroundColor:UIColorFromRGB(lineGrayColor)];
-//            nickLab.backgroundColor = [UIColor redColor];
+            //            [nickLab setBackgroundColor:UIColorFromRGB(lineGrayColor)];
+            //            nickLab.backgroundColor = [UIColor redColor];
             lineView.hidden = NO;
             lineView.frame = nickLab.bounds;
             [nickLab addSubview:lineView];
         }
         
         // 2.8.0去掉这句话
-//        nickLab.textAlignment = NSTextAlignmentCenter;
-//        nickLab.numberOfLines = 0;
-//        nickLab.text = [NSString stringWithFormat:ZCSTLocalString(@"请您对 [%@] 进行评价"),_name];
-//        nickLab.textColor = UIColorFromRGB(SatisfactionTextTitleColor);
-//        nickLab.font = [ZCUITools zcgetVoiceButtonFont];
-
-        
+        //        nickLab.textAlignment = NSTextAlignmentCenter;
+        //        nickLab.numberOfLines = 0;
+        //        nickLab.text = [NSString stringWithFormat:ZCSTLocalString(@"请您对 [%@] 进行评价"),_name];
+        //        nickLab.textColor = UIColorFromRGB(SatisfactionTextTitleColor);
+        //        nickLab.font = [ZCUITools zcgetVoiceButtonFont];
         if (type != 6) {
-           [self.backGroundView addSubview:nickLab];
+            [self.backGroundView addSubview:nickLab];
         }
-        
         float ratingView_margin_top = 0;
         if (isPortrait) {
             ratingView_margin_top = 20;
         }else{
             ratingView_margin_top = 10;
         }
-    
-        _ratingView=[[ZCUIRatingView alloc] initWithFrame:CGRectMake(viewWidth/2 - 250/2,  CGRectGetMaxY(nickLab.frame)+ratingView_margin_top, 250, 40 )];
-        [_ratingView setImagesDeselected:@"zcicon_star_unsatisfied" partlySelected:@"zcicon_star_satisfied" fullSelected:@"zcicon_star_satisfied" andDelegate:self];
+        CGFloat ratingWidth = (scoreFlag==0)?250:280;
+        _ratingView=[[ZCUIRatingView alloc] initWithFrame:CGRectMake(viewWidth/2 - ratingWidth/2,  CGRectGetMaxY(nickLab.frame)+ratingView_margin_top, ratingWidth, 40 )];
+        [_ratingView setImagesDeselected:@"zcicon_star_unsatisfied" partlySelected:@"zcicon_star_satisfied" fullSelected:@"zcicon_star_satisfied" count:(scoreFlag==0)?5:10 andDelegate:self];
         self.ratingView.userInteractionEnabled = YES;
         self.ratingView.autoresizingMask = UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleLeftMargin;
         self.sheetView.userInteractionEnabled = YES;
         self.userInteractionEnabled = YES;
         self.isChangePostion =NO;
-        
-        
+    
         if (_invitationType == 0) {
             [_ratingView displayRating:(float)ratingCount];
         }else{
-            if(defaultStartType == 1){
-                [_ratingView displayRating:0.0f];
-            }else{
-
-                [_ratingView displayRating:5.0f];
-            }
+            [_ratingView displayRating:defaultStar];
         }
         
         [self.backGroundView addSubview:_ratingView];
-        
         
         // 满意度tipmsg
         _tiplab = [[UILabel alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(_ratingView.frame) + 12, viewWidth, 20)];
         _tiplab.textAlignment = NSTextAlignmentCenter;
         _tiplab.textColor  =  [ZCUITools zcgetScoreExplainTextColor];
         _tiplab.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-
+        
         
         if (type == 6) {
-//            _tiplab.text = @"非常满意，完美";
+            //            _tiplab.text = @"非常满意，完美";
             // 先处理排序
-             if (_ticketScoreInfooList.count && _ticketScoreInfooList != nil && ![ZCUICore getUICore].kitInfo.hideManualEvaluationLabels) {
+            if (_ticketScoreInfooList.count && _ticketScoreInfooList != nil && ![ZCUICore getUICore].kitInfo.hideManualEvaluationLabels) {
                 NSComparator cmptr = ^(ZCLibSatisfaction *obj1, ZCLibSatisfaction *obj2){
                     if (obj1.score  > obj2.score) {
                         return (NSComparisonResult)NSOrderedDescending;
@@ -497,7 +488,7 @@
                     return (NSComparisonResult)NSOrderedSame;
                 };
                 NSArray *sorArray = [_ticketScoreInfooList sortedArrayUsingComparator:cmptr];
-               
+                
                 ZCLibSatisfaction *item = sorArray[(int)_ratingView.rating -1];
                 _tiplab.text =  item.scoreExplain;
             }
@@ -527,14 +518,16 @@
         // 评价输入框
         _textView=[[ZCUIPlaceHolderTextView alloc] initWithFrame:CGRectMake(20, CGRectGetMaxY(self.messageLabel.frame)+20, viewWidth - 40 , 74)];
         [_textView setContentInset:UIEdgeInsetsMake( 7, 12, 15, 15)];
-//        _textView.layer.borderWidth   = BorderWith;
-//        _textView.layer.borderColor   = [UIColor colorWithWhite:0.3 alpha:1].CGColor; F2F5F7
+        //        _textView.layer.borderWidth   = BorderWith;
+        //        _textView.layer.borderColor   = [UIColor colorWithWhite:0.3 alpha:1].CGColor; F2F5F7
         _textView.layer.cornerRadius  = 3.0f;
         _textView.layer.masksToBounds = YES;
         _textView.backgroundColor     = [ZCUITools zcgetLeftChatColor];
         _textView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         _textView.placeholder         = [NSString stringWithFormat:@"%@ (%@)",ZCSTLocalString(@"欢迎给我们的服务提建议~"),ZCSTLocalString(@"选填")];
         _textView.placeholderColor    = UIColorFromThemeColor(ZCTextPlaceHolderColor);
+        _textView.placeholderLinkColor = UIColorFromThemeColor(ZCTextPlaceHolderColor);
+        [_textView.placeHolderLabel setLinkColor:UIColorFromThemeColor(ZCTextPlaceHolderColor)];
         _textView.placeholederFont    = ZCUIFont14;
         _textView.font                = ZCUIFont14;
         _textView.delegate            = self;
@@ -544,9 +537,9 @@
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyBoardWillHide:) name:UIKeyboardWillHideNotification object:nil];
     }
     
-
+    
 #pragma mark -- 计算首次 显示的内容大小 计算提交按钮的位置
-//    CGFloat commitBtY = type>2 ? ((type ==6 && self.textFlag)?CGRectGetMaxY(self.textView.frame)+10 :CGRectGetMaxY(self.messageLabel.frame)+10) : CGRectGetMaxY(self.problemView.frame)+10;
+    //    CGFloat commitBtY = type>2 ? ((type ==6 && self.textFlag)?CGRectGetMaxY(self.textView.frame)+10 :CGRectGetMaxY(self.messageLabel.frame)+10) : CGRectGetMaxY(self.problemView.frame)+10;
     CGFloat commitBtY = CGRectGetMaxY(self.problemView.frame)+20;
     if(type > 2){
         commitBtY = CGRectGetMaxY(self.textView.frame)+20;
@@ -559,7 +552,7 @@
     if (bggroundFrame.size.height > ZCMaxHeight) {
         bggroundFrame.size.height = maxHeight;
     }
-
+    
     self.backGroundView.frame = bggroundFrame;
     self.backGroundView.contentSize = CGSizeMake(viewWidth , commitBtY);
     
@@ -578,8 +571,8 @@
     //获取高度
     CGRect sheetFrame = self.sheetView.frame;
     sheetFrame.size.height  = CGRectGetMaxY(self.backGroundView.frame) + _commitBtn.frame.size.height + 30 + XBottomBarHeight + 20;
-    // 0 星评价时，不显示提交按钮
-    if(defaultStartType == 1 && _ratingView.rating < 1){
+    // 0 星评价时，不显示提交按钮,并且是5星的时候，不显示提交按钮
+    if(_ratingView!=nil && _ratingView.rating < 1 && !_ratingView.hidden && scoreFlag == 0){
         _commitBtn.frame = CGRectMake(20 , CGRectGetMaxY(self.backGroundView.frame) + 10, viewWidth-40, 0);
         sheetFrame.size.height  = CGRectGetMaxY(self.backGroundView.frame) + XBottomBarHeight;
     }
@@ -593,10 +586,10 @@
     
 }
 
-#pragma mark -- 点击 已解决 未解决 事件 
+#pragma mark -- 点击 已解决 未解决 事件
 -(IBAction)robotServerButton:(UIButton *)sender{
     [sender setSelected:YES];
-//    sender.layer.borderColor = [UIColor clearColor].CGColor;
+    //    sender.layer.borderColor = [UIColor clearColor].CGColor;
     if (sender.tag == RobotChangeTag1) {
         isresolve=NO;
         UIButton *btn=(UIButton *)[self.backGroundView viewWithTag:RobotChangeTag2];
@@ -618,11 +611,11 @@
         }
     }
     
-//    if (sender.selected) {
-//        sender.layer.backgroundColor = [UIColor clearColor].CGColor;
-//    }else{
-//        sender.layer.borderColor = UIColorFromRGB(LineCommentLineColor).CGColor;
-//    }
+    //    if (sender.selected) {
+    //        sender.layer.backgroundColor = [UIColor clearColor].CGColor;
+    //    }else{
+    //        sender.layer.borderColor = UIColorFromRGB(LineCommentLineColor).CGColor;
+    //    }
     
 }
 
@@ -632,7 +625,7 @@
         [self.item removeFromSuperview];
         [self.textView removeFromSuperview];
         [self.stLable removeFromSuperview];
-//        [self.textBgView removeFromSuperview];
+        //        [self.textBgView removeFromSuperview];
     }
     
     CGFloat itemY = currentServerType >2 ? CGRectGetMaxY(self.messageLabel.frame)+20 : CGRectGetMaxY(self.problemView.frame)+20;
@@ -660,18 +653,34 @@
         self.item.frame = CGRectMake(0, CGRectGetMaxY(stLable.frame)+ 15 + 15, viewWidth, 0);
         
     }else{
-        if (currentServerType >2 &&(_listArray.count > 0 && _listArray != nil) && (_ratingView.rating>0 && _ratingView.rating<= 5) && _listArray.count >= _ratingView.rating) {
-            
-            ZCLibSatisfaction * model = _listArray[(int)_ratingView.rating -1];
-            
-            // 设置是否必填标记
-            _isMustAdd = [model.isTagMust boolValue];
-            _isInputMust = [model.isInputMust boolValue];
-            
-            if (![@"" isEqual: zcLibConvertToString(model.labelName)]) {
-                self.item.frame = CGRectMake(0, CGRectGetMaxY(stLable.frame)+ 15, viewWidth, 0);
+        if (scoreFlag) {
+            if (currentServerType >2 &&(_listArray.count > 0 && _listArray != nil) && (_ratingView.rating>0 && _ratingView.rating<= 11) && _listArray.count >= _ratingView.rating) {
+                
+                ZCLibSatisfaction * model = _listArray[(int)_ratingView.rating - 1];
+                
+                // 设置是否必填标记
+                _isMustAdd = [model.isTagMust boolValue];
+                _isInputMust = [model.isInputMust boolValue];
+                
+                if (![@"" isEqual: zcLibConvertToString(model.labelName)]) {
+                    self.item.frame = CGRectMake(0, CGRectGetMaxY(stLable.frame)+ 15, viewWidth, 0);
+                }
+            }
+        } else {
+            if (currentServerType >2 &&(_listArray.count > 0 && _listArray != nil) && (_ratingView.rating>0 && _ratingView.rating<= 5) && _listArray.count >= _ratingView.rating) {
+                
+                ZCLibSatisfaction * model = _listArray[(int)_ratingView.rating - 1];
+                
+                // 设置是否必填标记
+                _isMustAdd = [model.isTagMust boolValue];
+                _isInputMust = [model.isInputMust boolValue];
+                
+                if (![@"" isEqual: zcLibConvertToString(model.labelName)]) {
+                    self.item.frame = CGRectMake(0, CGRectGetMaxY(stLable.frame)+ 15, viewWidth, 0);
+                }
             }
         }
+        
     }
     
     // 数据源
@@ -695,7 +704,7 @@
             // 接口返回的数据
             if (_ratingView.rating>0 && _listArray.count >= _ratingView.rating) {
                 ZCLibSatisfaction * model = _listArray[(int)_ratingView.rating -1];
-
+                
                 
                 if (![@"" isEqual: zcLibConvertToString(model.labelName)]) {
                     items = [model.labelName componentsSeparatedByString:@"," ];
@@ -727,7 +736,7 @@
     itemF.size.height =[ZCItemView getHeightWithArray:items];
     self.item.frame = itemF;
     [self.backGroundView addSubview:self.item];
-  
+    
     
     // 评价输入框
     _textView = [[ZCUIPlaceHolderTextView alloc] initWithFrame:CGRectMake(20, CGRectGetMaxY(self.item.frame) + 10, viewWidth - 40 , 74)];
@@ -736,19 +745,32 @@
         _textView.frame = CGRectMake(25, CGRectGetMaxY(self.item.frame) + 20, viewWidth - 50 , 74);
         
     }else{
-        if (currentServerType >2 && (_listArray.count > 0 && _listArray != nil) && (_ratingView.rating>0 && _ratingView.rating<= 5) && _listArray.count >= _ratingView.rating) {
-            
-            ZCLibSatisfaction * model = _listArray[(int)_ratingView.rating -1];
-            if (![@"" isEqual: zcLibConvertToString(model.labelName)]) {
-                _textView.frame = CGRectMake(25, CGRectGetMaxY(self.item.frame) + 20, viewWidth - 50 , 74);
-
+        if (scoreFlag) {
+            if (currentServerType >2 && (_listArray.count > 0 && _listArray != nil) && (_ratingView.rating>0 && _ratingView.rating<= 11) && _listArray.count >= _ratingView.rating) {
+                
+                ZCLibSatisfaction * model = _listArray[(int)_ratingView.rating -1];
+                if (![@"" isEqual: zcLibConvertToString(model.labelName)]) {
+                    _textView.frame = CGRectMake(25, CGRectGetMaxY(self.item.frame) + 20, viewWidth - 50 , 74);
+                    
+                }
+            }
+        } else {
+            if (currentServerType >2 && (_listArray.count > 0 && _listArray != nil) && (_ratingView.rating>0 && _ratingView.rating<= 5) && _listArray.count >= _ratingView.rating) {
+                
+                ZCLibSatisfaction * model = _listArray[(int)_ratingView.rating -1];
+                if (![@"" isEqual: zcLibConvertToString(model.labelName)]) {
+                    _textView.frame = CGRectMake(25, CGRectGetMaxY(self.item.frame) + 20, viewWidth - 50 , 74);
+                    
+                }
             }
         }
+        
     }
-
+    
     _textView.backgroundColor = [UIColor clearColor];
     _textView.placeholder         = ZCSTLocalString(@"欢迎给我们的服务提建议~");
     _textView.placeholderColor    = UIColorFromThemeColor(ZCTextPlaceHolderColor);
+    _textView.placeholderLinkColor = UIColorFromThemeColor(ZCTextPlaceHolderColor);
     _textView.placeholederFont    = ZCUIFont14;
     _textView.font                = ZCUIFont14;
     _textView.delegate            = self;
@@ -758,28 +780,28 @@
     
     if (_listArray != nil && _listArray.count >0) {
         if (_ratingView.rating >0) {
-             ZCLibSatisfaction * model = _listArray[(int)_ratingView.rating -1];
+            ZCLibSatisfaction * model = _listArray[(int)_ratingView.rating -1];
             if (![@"" isEqual:zcLibConvertToString(model.inputLanguage)]) {
                 if (_isInputMust) {
                     NSString *needStr = ZCSTLocalString(@"必填");
                     _textView.placeholder = [NSString stringWithFormat:@"(%@)%@",needStr,model.inputLanguage];
                 }else{
-                   _textView.placeholder = model.inputLanguage;
+                    _textView.placeholder = model.inputLanguage;
                 }
                 
             }
         }
         
         // 2.9.0 5星评价也显示输入框
-//        if(_ratingView.rating == 5){
-//            CGRect f = _textView.frame;
-//            f.size.height = 0;
-//            f.origin.y = f.origin.y - 20;
-//            _textView.frame = f;
-//            _textView.hidden = YES;
-//        }
+        //        if(_ratingView.rating == 5){
+        //            CGRect f = _textView.frame;
+        //            f.size.height = 0;
+        //            f.origin.y = f.origin.y - 20;
+        //            _textView.frame = f;
+        //            _textView.hidden = YES;
+        //        }
     }
-
+    
     [self.backGroundView addSubview:_textView];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyBoardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyBoardWillHide:) name:UIKeyboardWillHideNotification object:nil];
@@ -789,7 +811,7 @@
 -(void)showMenuItem:(BOOL) isShow{
     if (isShow) {
         [self createItemViews];
-
+        
         CGRect bgF = self.backGroundView.frame;
         bgF.size.height = CGRectGetMaxY(_textView.frame) + 20;
         self.backGroundView.contentSize = CGSizeMake(viewWidth, bgF.size.height);
@@ -810,7 +832,7 @@
         [UIView animateWithDuration:0.3 animations:^{
             [self sheetViewSetFrameWithNewF:sheetFrame];//self.sheetView.frame = newSheetViewF;
         }];
-
+        
     }else{
         
         // 不显示  标签
@@ -832,17 +854,17 @@
         
         CGRect sheetFrame = self.sheetView.frame;
         sheetFrame.size.height  = CGRectGetMaxY(self.backGroundView.frame)+ 30 + _commitBtn.frame.size.height + 20 + XBottomBarHeight;
-
+        
         sheetFrame.origin.y = viewHeight - sheetFrame.size.height;
         [UIView animateWithDuration:0.3 animations:^{
             [self sheetViewSetFrameWithNewF:sheetFrame];//self.sheetView.frame = newSheetViewF;
             if(isKeyBoardShow){
-               [_textView resignFirstResponder];
+                [_textView resignFirstResponder];
             }
         }];
         [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
         [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
-
+        
     }
     
 }
@@ -863,45 +885,69 @@
     // 留言评价单独处理
     if (currentServerType == 6) {
         // 修改星评描述
-        if (_ratingView.rating > 0 && _ratingView.rating<=5) {
-//            _tiplab.text = [NSString stringWithFormat:@"%d星",_ratingView.rating];
-            if (_ticketScoreInfooList.count && _ticketScoreInfooList != nil) {
-                NSComparator cmptr = ^(ZCLibSatisfaction *obj1, ZCLibSatisfaction *obj2){
-                    if (obj1.score  > obj2.score ) {
-                        return (NSComparisonResult)NSOrderedDescending;
-                    }
+        if (scoreFlag) {
+            if (_ratingView.rating > 0 && _ratingView.rating<=11) {
+                //            _tiplab.text = [NSString stringWithFormat:@"%d星",_ratingView.rating];
+                if (_ticketScoreInfooList.count && _ticketScoreInfooList != nil) {
+                    NSComparator cmptr = ^(ZCLibSatisfaction *obj1, ZCLibSatisfaction *obj2){
+                        if (obj1.score  > obj2.score ) {
+                            return (NSComparisonResult)NSOrderedDescending;
+                        }
+                        
+                        if (obj1.score < obj2.score) {
+                            return (NSComparisonResult)NSOrderedAscending;
+                        }
+                        return (NSComparisonResult)NSOrderedSame;
+                    };
+                    NSArray *sorArray = [_ticketScoreInfooList sortedArrayUsingComparator:cmptr];
                     
-                    if (obj1.score < obj2.score) {
-                        return (NSComparisonResult)NSOrderedAscending;
-                    }
-                    return (NSComparisonResult)NSOrderedSame;
-                };
-                NSArray *sorArray = [_ticketScoreInfooList sortedArrayUsingComparator:cmptr];
-                
-                ZCLibSatisfaction *item = sorArray[(int)_ratingView.rating -1];
-                _tiplab.text = item.scoreExplain;
+                    ZCLibSatisfaction *item = sorArray[(int)_ratingView.rating -1];
+                    _tiplab.text = item.scoreExplain;
+                }
             }
+            return;
+        } else {
+            if (_ratingView.rating > 0 && _ratingView.rating<=5) {
+                //            _tiplab.text = [NSString stringWithFormat:@"%d星",_ratingView.rating];
+                if (_ticketScoreInfooList.count && _ticketScoreInfooList != nil) {
+                    NSComparator cmptr = ^(ZCLibSatisfaction *obj1, ZCLibSatisfaction *obj2){
+                        if (obj1.score  > obj2.score ) {
+                            return (NSComparisonResult)NSOrderedDescending;
+                        }
+                        
+                        if (obj1.score < obj2.score) {
+                            return (NSComparisonResult)NSOrderedAscending;
+                        }
+                        return (NSComparisonResult)NSOrderedSame;
+                    };
+                    NSArray *sorArray = [_ticketScoreInfooList sortedArrayUsingComparator:cmptr];
+                    
+                    ZCLibSatisfaction *item = sorArray[(int)_ratingView.rating -1];
+                    _tiplab.text = item.scoreExplain;
+                }
+            }
+            return;
         }
-        return;
+        
     }
-
+    
     if (self.isChangePostion) {
         // 星评提示语
         if (_listArray != nil && _listArray.count > 0) {
-            if (_ratingView.rating>0 && _ratingView.rating<=5) {
+            if (_ratingView.rating>0 && _ratingView.rating <= _listArray.count) {
                 // 小心数组越界了。。
                 ZCLibSatisfaction *item = _listArray[(int)_ratingView.rating -1];
                 _tiplab.text = item.scoreExplain;
             }
         }
         
-//        if (newRating >0 && newRating <5) {
-            [self showMenuItem:YES];
-//        }else{
-//            [self showMenuItem:NO];
-//        }
+        //        if (newRating >0 && newRating <5) {
+        [self showMenuItem:YES];
+        //        }else{
+        //            [self showMenuItem:NO];
+        //        }
     }
-
+    
     self.isChangePostion = YES;
 }
 
@@ -910,27 +956,27 @@
 #pragma mark --  关闭页面 不做评价  左上角关闭
 - (void)zcDismissView:(UIButton*)sender{
     // 返回时开启满意度评价，点击X提醒不关闭,2.8.6去掉此逻辑
-//    if(_isBack && (currentServerType == RobotSatisfcationBackType || currentServerType == ServerSatisfcationBackType)
-//    && [ZCUICore getUICore].kitInfo.isOpenEvaluation){
-//        // 提示
-//        [[ZCUIToastTools shareToast] showToast:ZCSTLocalString(@"请您对本次服务进行评价~") duration:1.0f view:self position:ZCToastPositionCenter];
-//
-//        return;
-//    }
+    //    if(_isBack && (currentServerType == RobotSatisfcationBackType || currentServerType == ServerSatisfcationBackType)
+    //    && [ZCUICore getUICore].kitInfo.isOpenEvaluation){
+    //        // 提示
+    //        [[ZCUIToastTools shareToast] showToast:ZCSTLocalString(@"请您对本次服务进行评价~") duration:1.0f view:self position:ZCToastPositionCenter];
+    //
+    //        return;
+    //    }
     [self tappedCancel];
 }
 
 
 // 显示弹出层
 - (void)showInView:(UIView *)view{
-//    [view addSubview:self];
+    //    [view addSubview:self];
     [[[ZCToolsCore getToolsCore] getCurWindow] addSubview:self];
     self.sheetView.hidden = NO;
     CGRect newSheetViewF = self.sheetView.frame;
     newSheetViewF.origin.y = viewHeight - self.sheetView.frame.size.height;
     
     [UIView animateWithDuration:0.3 animations:^{
-
+        
         self.sheetView.frame = newSheetViewF;
         
     }];
@@ -939,7 +985,7 @@
 
 // 隐藏弹出层
 - (void)shareViewDismiss:(UITapGestureRecognizer *) gestap{
-   
+    
     // 触摸的评分
     if(touchRating){
         touchRating=NO;
@@ -1004,9 +1050,9 @@
 //键盘隐藏
 - (void)keyBoardWillHide:(NSNotification *)notification {
     // 以前5星好评，没有输入框
-//    if(_ratingView!=nil && (_ratingView.rating>=5 && currentServerType != ServerSatisfcationOrderType)){
-//        return;
-//    }
+    //    if(_ratingView!=nil && (_ratingView.rating>=5 && currentServerType != ServerSatisfcationOrderType)){
+    //        return;
+    //    }
     
     float animationDuration = [[[notification userInfo] valueForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue];
     [UIView beginAnimations:@"bottomBarDown" context:nil];
@@ -1053,19 +1099,19 @@
         NSString * source = [NSString stringWithFormat:@"%.0f",_ratingView.rating];
         
         __weak ZCUICustomActionSheet * saveSelf = self;
-         btn.enabled = false;
+        btn.enabled = false;
         [[[ZCUICore getUICore] getAPIServer] postAddTicketSatisfactionWith:zcLibConvertToString(self.ticketld) Uid:zcLibConvertToString(_config.uid) CompanyId:zcLibConvertToString(_config.companyID) Score:source Remark:textStr start:^{
             
         } success:^(NSDictionary *dict, ZCNetWorkCode sendCode) {
             @try{
                 if (dict && [dict[@"data"][@"retCode"] isEqualToString:@"000000"]) {
                     // 刷新工单详情页面数据
-//                    [[NSNotificationCenter defaultCenter] postNotificationName:@"actionSheetClick:" object:nil];
-//                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                        if (saveSelf.delegate && [saveSelf.delegate respondsToSelector:@selector(actionSheetClick:)]) {
-                            [saveSelf.delegate actionSheetClick:6];
-                        }
-//                    });
+                    //                    [[NSNotificationCenter defaultCenter] postNotificationName:@"actionSheetClick:" object:nil];
+                    //                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    if (saveSelf.delegate && [saveSelf.delegate respondsToSelector:@selector(actionSheetClick:)]) {
+                        [saveSelf.delegate actionSheetClick:6];
+                    }
+                    //                    });
                     if (saveSelf.delegate && [saveSelf.delegate respondsToSelector:@selector(actionSheetClickWithDic:)]) {
                         [saveSelf.delegate actionSheetClickWithDic:dict];
                     }
@@ -1083,7 +1129,7 @@
             
         } failed:^(NSString *errorMessage, ZCNetWorkCode errorCode) {
             NSLog(@"%@",errorMessage);
-             btn.enabled = false;
+            btn.enabled = false;
         }];
         
         return;
@@ -1100,9 +1146,9 @@
         // 评价过机器人了，下次不能再评价了
         [ZCUICore getUICore].isEvaluationRobot = YES;
     }
-        
+    
     NSMutableDictionary *dict=[[NSMutableDictionary alloc] init];
-  
+    
     NSString *comment=_item!=nil ? [_item getSeletedTitle] : @"";
     
     if (currentServerType == 3 || currentServerType == 4 || currentServerType == 5) {
@@ -1113,9 +1159,9 @@
             
             return;
         }
-        if ([@"" isEqualToString:_textView.text] && _isInputMust ) {
+        // 如果是必传 去除两端的 空格+换行  是否为空
+        if (_isInputMust && [@"" isEqualToString:[zcLibConvertToString(_textView.text) stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]]) {
             
-            // 提示
             [[ZCUIToastTools shareToast] showToast:ZCSTLocalString(@"建议为必填") duration:1.0f view:self position:ZCToastPositionCenter];
             return;
         }
@@ -1124,26 +1170,28 @@
     
     [dict setObject:comment forKey:@"problem"];
     
-    
     if(_config){
         [dict setObject:zcLibConvertToString(_config.cid)  forKey:@"cid"];
         [dict setObject:zcLibConvertToString(_config.uid)  forKey:@"userId"];
     }
     if (currentServerType >2) {
-       [dict setObject:[NSString stringWithFormat:@"%d",1] forKey:@"type"];
+        [dict setObject:[NSString stringWithFormat:@"%d",1] forKey:@"type"];
     }else{
-       [dict setObject:[NSString stringWithFormat:@"%d",0] forKey:@"type"];
+        [dict setObject:[NSString stringWithFormat:@"%d",0] forKey:@"type"];
     }
     [dict setObject:[NSString stringWithFormat:@"%.0f",_ratingView.rating] forKey:@"source"];
+    [dict setObject:[NSString stringWithFormat:@"%d",scoreFlag] forKey:@"scoreFlag"];
     
-    
-//    if (_ratingView.rating == 5) {
-//        _textView.text = @"";// 5星 置空之前的建议
-//    }
+    //    if (_ratingView.rating == 5) {
+    //        _textView.text = @"";// 5星 置空之前的建议
+    //    }
     NSString * textStr = @"";
     if (_textView.text!=nil ) {
         textStr = _textView.text;
     }
+    // 去除两端的 空格+换行
+    textStr = [zcLibConvertToString(_textView.text) stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    
     [dict setObject:textStr forKey:@"suggest"];
     
     NSString * solved = @"-1";   // -1 未开启 0 已解决 1未解决
@@ -1161,10 +1209,10 @@
         }
     }
     [dict setObject:solved forKey:@"isresolve"];
-//    [dict setObject:[NSString stringWithFormat:@"%d",isresolve] forKey:@"isresolve"];
+    //    [dict setObject:[NSString stringWithFormat:@"%d",isresolve] forKey:@"isresolve"];
     // commentType  评价类型 主动评价 1 邀请评价0
     [dict setObject:[NSString stringWithFormat:@"%d",_invitationType] forKey:@"commentType"];
-    
+    	
     btn.enabled = false;
     [[[ZCUICore getUICore] getAPIServer] doComment:dict result:^(ZCNetWorkCode code, int status, NSString *msg) {
         
@@ -1179,8 +1227,8 @@
     btn.enabled = true;
     // 隐藏弹出层
     [self tappedCancel];
-    // 客服主动邀请评价相关 
-    if (_invitationType == 0 || (_isAddServerSatifaction && !_isBcakClose  && currentServerType>2 )) {
+    // 客服主动邀请评价相关
+    if (_invitationType == 0 || (!_isBcakClose  && currentServerType>2 )) {
         if (_delegate && [_delegate respondsToSelector:@selector(thankFeedBack:rating:IsResolve:)]) {
             int resolve = 0;
             if (isresolve) {
@@ -1191,11 +1239,11 @@
             [self.delegate thankFeedBack:_invitationType rating:_ratingView.rating IsResolve:resolve];
             return;
         }
-
+        
     }
     
     [ZCUICore getUICore].unknownWordsCount = 0;
-
+    
     // 2.7.0 评价逻辑整理  客服 主动邀请评价 用户 主动评价 返回触发评价 是否开启评价完人工结束会话开关
     if (currentServerType == RobotSatisfcationBackType ) {
         [self closePage:0];
@@ -1209,15 +1257,15 @@
         }else{
             [self closePage:0];
         }
-            /** 人工客服评价 （点击底部评价按钮）*/
+        /** 人工客服评价 （点击底部评价按钮）*/
     }else if (currentServerType == ServerSatisfcationNolType){// 4
         if (_isBcakClose) {
             [self closePage:1];
         }else{
-           [self closePage:2];
+            [self closePage:2];
         }
     }else{
-         [self closePage:2];
+        [self closePage:2];
     }
 }
 
@@ -1255,7 +1303,7 @@
     if (textView.text.length>INPUT_MAXCOUNT) {
         textView.text = [textView.text substringToIndex:INPUT_MAXCOUNT];
     }
-
+    
 }
 
 
@@ -1284,9 +1332,9 @@
 
 
 - (void)sheetViewSetFrameWithNewF:(CGRect)newFrame{
-//    if (ZC_iPhoneX) {
-//        newFrame.origin.y = newFrame.origin.y - 34;
-//    }
+    //    if (ZC_iPhoneX) {
+    //        newFrame.origin.y = newFrame.origin.y - 34;
+    //    }
     self.sheetView.frame = newFrame;
 }
 

@@ -128,7 +128,7 @@
     }
     NSMutableDictionary * detailDict = model.richModel.multiModel.interfaceRetList.firstObject; // 多个
 #pragma mark  -- 图片
-    CGFloat height = 0;
+    CGFloat height = 15;
 
     // 处理图片  当前的图片高度固定110
     if(![@"" isEqualToString:zcLibConvertToString(detailDict[@"thumbnail"])]){
@@ -201,37 +201,7 @@
             }
         }];
         
-        // 处理换行
-//        text = [text stringByReplacingOccurrencesOfString:@"<br />" withString:@"\n"];
-//        text = [text stringByReplacingOccurrencesOfString:@"<br/>" withString:@"\n"];
-//        text = [text stringByReplacingOccurrencesOfString:@"<br>" withString:@"\n"];
-//        text = [text stringByReplacingOccurrencesOfString:@"<BR/>" withString:@"\n"];
-//        text = [text stringByReplacingOccurrencesOfString:@"<BR />" withString:@"\n"];
-//        text = [text stringByReplacingOccurrencesOfString:@"<p " withString:@"\n<p "];
-//        text = [text stringByReplacingOccurrencesOfString:@"&nbsp;" withString:@" "];
-//        while ([text hasPrefix:@"\n"]) {
-//            text=[text substringWithRange:NSMakeRange(1, text.length-1)];
-//        }
-//
-//        NSMutableDictionary *dict = [self.lblTextMsg getTextADict:text];
-//        if(dict){
-//            text = dict[@"text"];
-//        }
-//
-//        _lblTextMsg.text = text;
-//        if(dict){
-//            NSArray *arr = dict[@"arr"];
-//            for (NSDictionary *item in arr) {
-//                NSString *text = item[@"htmlText"];
-//                int loc = [item[@"realFromIndex"] intValue];
-//                // 一定要在设置text文本之后设置
-//                [_lblTextMsg addLinkToURL:[NSURL URLWithString:item[@"url"]] withRange:NSMakeRange(loc, text.length)];
-//            }
-//        }
         CGSize size = [self.lblTextMsg preferredSizeWithMaxWidth:self.maxWidth];
-//        if(rw < size.width){
-//            rw = size.width;
-//        }
         
         // 如果显示图片，文本最多显示3行
         if(![@"" isEqualToString:zcLibConvertToString(detailDict[@"thumbnail"])]){
@@ -254,7 +224,7 @@
         
             // 添加线条
             _lineView  = [[UIView alloc]init];
-            linF = CGRectMake(GetCellItemX(self.isRight), height, ScreenWidth -160, 1);
+            linF = CGRectMake(GetCellItemX(self.isRight), height, self.maxWidth - 30, 1);
             [_lineView setFrame:linF];
             _lineView.backgroundColor = [ZCUITools zcgetLineRichColor];
             [self.contentView addSubview:_lineView];
@@ -279,21 +249,25 @@
         }
         self.lookMoreLabel.hidden = NO;
         self.lookMoreLabel.text = ZCSTLocalString(@"查看详情");
+        self.lookMoreLabel.textAlignment = NSTextAlignmentCenter;
 //        if (!model.richModel.multiModel.isHistoryMessages) {
             // 一定要在设置text文本之后设置
             [[self lookMoreLabel] addLinkToURL:[NSURL URLWithString:zcLibConvertToString(detailDict[@"anchor"])] withRange:NSMakeRange(0, ZCSTLocalString(@"查看详情").length)];
             morelink = zcLibConvertToString(detailDict[@"anchor"]);
+        
 //        }
         CGSize size = [[self lookMoreLabel]preferredSizeWithMaxWidth:self.maxWidth];
-        moreF = CGRectMake(GetCellItemX(self.isRight), height, size.width, size.height);
+        moreF = CGRectMake(GetCellItemX(self.isRight), height, self.maxWidth - 30, size.height);
         [[self lookMoreLabel] setFrame:moreF];
         height = height + size.height ;
     }
     
-    CGFloat msgX = 0;
-     msgX = 78;
+    CGFloat msgX = 30;
+    if(self.isRight){
+        msgX=self.viewWidth-self.maxWidth-15;
+    }
     
-    [self.ivBgView setFrame:CGRectMake(58, bgY, self.maxWidth, height +10)];
+    [self.ivBgView setFrame:CGRectMake(msgX - 15, bgY, self.maxWidth, height +10)];
     
     if(questionF.size.height>0){
         questionF.origin.x = msgX;
@@ -329,18 +303,32 @@
     
     // 重新设置展开的frame
     if (moreF.size.height >0) {
-        moreF.origin.x =   CGRectGetMaxX(_lineView.frame) - CGRectGetWidth(_lookMoreLabel.frame) -5;
+        moreF.origin.x =   msgX;
         moreF.origin.y = moreF.origin.y +bgY;
         [[self lookMoreLabel] setFrame:moreF];
     }
     
    
     
-    if (model.richModel.multiModel.isHistoryMessages) {
-        [self.ivBgView setBackgroundColor:UIColorFromRGB(multiWheelBgColor)];
+    // 0,自己，1机器人，2客服
+    if(self.isRight){
+        // 右边气泡背景图片
+        UIImage * bgImage = [ZCUITools zcuiGetBundleImage:@"zcicon_pop_green_normal_line"];
+        bgImage=[bgImage resizableImageWithCapInsets:UIEdgeInsetsMake(21, 21, 21, 21)];
+        
+        self.ivBgView.image = bgImage;
+        self.ivBgView.backgroundColor = UIColorFromThemeColor(ZCBgSystemWhiteLightGrayColor);
+        //设置尖角
+        [self.ivLayerView setImage:bgImage];
     }else{
+        self.ivBgView.image = nil;
         [self.ivBgView setBackgroundColor:[ZCUITools zcgetLeftChatColor]];
     }
+
+    if([ZCUITools getZCThemeStyle] == ZCThemeStyle_Dark){
+        self.ivBgView.backgroundColor = UIColorFromThemeColor(ZCBgSystemWhiteLightGrayColor);
+    }
+    self.ivBgView.contentMode = UIViewContentModeScaleToFill;
     
 //    CGFloat sh = [self setSendStatus:self.ivBgView.frame];
     

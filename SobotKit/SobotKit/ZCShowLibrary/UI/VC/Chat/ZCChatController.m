@@ -94,7 +94,9 @@
 //**************************项目中的导航栏一部分是自定义的View,一部分是系统自带的NavigationBar*********************************
 - (void)setNavigationBarStyle{
     NSMutableArray *itemsArr = [[NSMutableArray alloc] init];
-    [itemsArr addObject:@(BUTTON_MORE)];
+    if(![ZCUICore getUICore].kitInfo.hideNavBtnMore){
+        [itemsArr addObject:@(BUTTON_MORE)];
+    }
     
     if ([ZCUICore getUICore].kitInfo.isShowEvaluation || [ZCUICore getUICore].kitInfo.isShowTelIcon) {
         if ([ZCUICore getUICore].kitInfo.isShowEvaluation) {
@@ -112,11 +114,10 @@
     }
     
     [self setNavigationBarLeft:@[@(BUTTON_BACK)] right:itemsArr];
-    
 
 
     if(_titleView==nil){
-        CGFloat maxWidth = itemsArr.count * 44 + itemsArr.count * 15;
+        CGFloat maxWidth = itemsArr.count * 40 + itemsArr.count * 15;
         _titleView = [[ZCTitleView alloc] initWithFrame:CGRectMake(maxWidth, 0, ScreenWidth - maxWidth*2, 44)];
         [self.titleView setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleTopMargin];
         [self.titleView setAutoresizesSubviews:YES];
@@ -210,6 +211,7 @@
                    // 点击关闭，离线用户
                    [self.chatView confimGoBackWithType:ZCChatViewGoBackType_close];
                }else{
+                   [self.chatView setIsCloseNo];
                    if (self.navigationController && _isPush) {
                        [self.navigationController popViewControllerAnimated:YES];
                    }else{

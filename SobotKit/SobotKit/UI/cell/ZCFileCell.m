@@ -10,6 +10,8 @@
 #import "ZCProgressView.h"
 #import "ZCLibGlobalDefine.h"
 #import "ZCUIColorsDefine.h"
+#import "ZCToolsCore.h"
+#import "ZCVideoPlayer.h"
 
 #define FileHeight 60
 
@@ -185,8 +187,19 @@
 }
 
 
+-(void)playVideo:(UIButton *)btn{
+    
+    UIWindow *window = [[ZCToolsCore getToolsCore] getCurWindow];
+    ZCVideoPlayer *player = [[ZCVideoPlayer alloc] initWithFrame:window.bounds withShowInView:window url:[NSURL URLWithString:self.tempModel.richModel.richmoreurl] Image:nil];
+    [player showControlsView];
+    
+}
 // 点击查看大图
 -(void) tap:(UITapGestureRecognizer *)recognizer{
+    if(self.tempModel.richModel.fileType == 5){
+        [self playVideo:nil];
+        return;
+    }
     //        [ZCLogUtils logHeader:LogHeader debug:@"查看大图：%@",self.tempModel.richModel.richmoreurl];
     if(self.delegate && [self.delegate respondsToSelector:@selector(cellItemClick:type:obj:)]){
         [self.delegate cellItemClick:self.tempModel type:ZCChatCellClickTypeItemOpenFile obj:nil];

@@ -51,10 +51,6 @@
         // YES是透明效果并且主view不会偏移 NO是导航栏不透明 主view会向下偏移64px,默认YES
         y = self.navigationController.navigationBar.translucent?NavBarHeight:0;
         [self.navigationController.navigationBar setTitleTextAttributes:@{NSFontAttributeName:[ZCUITools zcgetscTopTextFont],NSForegroundColorAttributeName:[ZCUITools zcgetscTopTextColor]}];
-        
-        
-        [self createTableView];
-        
     }else{
         y = NavBarHeight;
         [self createTitleView];
@@ -62,6 +58,7 @@
         self.moreButton.hidden = YES;
     }
     self.moreButton.hidden = YES;
+    [self createTableView];
 }
 
 

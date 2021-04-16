@@ -273,7 +273,7 @@
         [v removeFromSuperview];
     }
     
-    if(model.richModel.msgType == 15 && model.richModel.multiModel.msgType == 3){
+    if(model.richModel.msgType == 15 && model.richModel.multiModel.templateIdType == 3){
         NSMutableDictionary * detailDict = model.richModel.multiModel.interfaceRetList.firstObject; // 多个
         model.richModel.richpricurl = zcLibConvertToString(detailDict[@"thumbnail"]);
         model.richModel.richmoreurl = zcLibConvertToString(detailDict[@"anchor"]);
@@ -408,8 +408,10 @@
 
 
         CGSize sugesstionSize = [self.sugesstionLabel preferredSizeWithMaxWidth:maxWidth];
-
-        sugestionF = CGRectMake(GetCellItemX(self.isRight), height - 5 , sugesstionSize.width, sugesstionSize.height);
+        
+            // 添加引导行间距
+            CGFloat xlineSpace = [ZCUITools zcgetKitChatFont].lineHeight;
+        sugestionF = CGRectMake(GetCellItemX(self.isRight), height - xlineSpace/2 , sugesstionSize.width, sugesstionSize.height);
         
         if (model.richModel.msgType == 15 || model.richModel.msgType == 3) {
             sugesstionSize.height = 0;
@@ -419,7 +421,7 @@
         }else{
             [self sugesstionLabel].hidden = NO;
             [[self sugesstionLabel] setFrame:sugestionF];
-            height = height + sugesstionSize.height +10 + Spaceheight;
+            height = height + sugesstionSize.height +10 + xlineSpace;
 
         }
 
@@ -867,7 +869,10 @@
             cellheith = cellheith - 10;
 
         }else{
-            cellheith = cellheith + msgSize1.height + 10  + Spaceheight;
+            // 添加引导行间距
+            CGFloat xlineSpace = [ZCUITools zcgetKitChatFont].lineHeight;
+            
+            cellheith = cellheith + msgSize1.height + 10  + xlineSpace;
 
         }
         
@@ -879,7 +884,7 @@
     
     
     // 多轮会话的富文本，消息解析错误，需要转换一次
-    if(model.richModel.msgType == 15 && model.richModel.multiModel.msgType == 3){
+    if(model.richModel.msgType == 15 && model.richModel.multiModel.templateIdType == 3){
         NSMutableDictionary * detailDict = model.richModel.multiModel.interfaceRetList.firstObject; // 多个
         model.richModel.richpricurl = zcLibConvertToString(detailDict[@"thumbnail"]);
         model.richModel.richmoreurl = zcLibConvertToString(detailDict[@"anchor"]);

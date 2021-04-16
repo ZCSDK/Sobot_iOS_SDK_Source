@@ -31,7 +31,10 @@
  *  占位文字
  */
 @property(nonatomic, strong) NSString  *placeholder;
-
+/**
+ *  占位页面link颜色
+ */
+@property(nonatomic, retain) UIColor *placeholderLinkColor;
 /**
  *  占位页面背景颜色
  */

@@ -138,6 +138,7 @@
         return NO;
     }];
     
+   
 //
 //    if(ISDebug == 1){
 ////        initInfo.user_nick = @"我是Debug Nick";
@@ -146,21 +147,40 @@
 //        [[ZCLibClient getZCLibClient] setIsDebugMode:NO];
 ////        initInfo.user_nick = @"我是nick";
 //    }
+    ZCOrderGoodsModel *model = [ZCOrderGoodsModel new];
+    model.orderStatus = 1;
+    model.createTime = [NSString stringWithFormat:@"%.0f",[[NSDate date] timeIntervalSince1970]*1000];
+    model.goodsCount = @"3";
+    model.orderUrl  = @"https://www.sobot.com";
+    model.orderCode = @"1000234242342345";
+    model.goods =@[@{@"name":@"商品名称",@"pictureUrl":@"http://pic25.nipic.com/20121112/9252150_150552938000_2.jpg"},@{@"name":@"商品名称",@"pictureUrl":@"http://pic31.nipic.com/20130801/11604791_100539834000_2.jpg"}];
     
+    // 单位是分，显示时会除以100，比如48.90
+    model.totalFee = @"4890";
     
+    [ZCGuideData getZCGuideData].kitInfo.isShowPortrait = true;
+    
+    [ZCGuideData getZCGuideData].kitInfo.orderGoodsInfo = model;
+    /*
+     默认为false
+     设置为true 转人工后 自动发送一个订单卡片
+     */
+    [ZCGuideData getZCGuideData].kitInfo.autoSendOrderMessage = true;
     // 进入聊天页面
-    [ZCSobotApi openZCServiceCenter:[ZCGuideData getZCGuideData].kitInfo with:self onItemClick:^(ZCUIBaseController *object) {
-        
-        [ZCSobotApi openZCChat:[ZCGuideData getZCGuideData].kitInfo with:object pageBlock:^(id  _Nonnull object, ZCPageBlockType type) {
-            if([object isKindOfClass:[ZCChatView class]] && type == ZCPageBlockLoadFinish){
-                UITextView *tv = [((ZCChatView *)object) getChatTextView];
-                if(tv){
-                    //                    tv.textColor  = UIColor.greenColor;
-                }
+    
+    [ZCSobotApi openZCChat:[ZCGuideData getZCGuideData].kitInfo with:self pageBlock:^(id  _Nonnull object, ZCPageBlockType type) {
+        if([object isKindOfClass:[ZCChatView class]] && type == ZCPageBlockLoadFinish){
+            UITextView *tv = [((ZCChatView *)object) getChatTextView];
+            if(tv){
+                //                    tv.textColor  = UIColor.greenColor;
             }
-        }];
-        
+        }
     }];
+//    [ZCSobotApi openZCServiceCenter:[ZCGuideData getZCGuideData].kitInfo with:self onItemClick:^(ZCUIBaseController *object) {
+//
+//
+//
+//    }];
 }
 
 
@@ -176,7 +196,12 @@
     
     
     UIButton * rightBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    rightBtn.frame = CGRectMake(ScreenWidth - 90, NavBarHeight - 40, 80, 40);
+    if (@available(iOS 11.0, *)) {
+        rightBtn.frame = CGRectMake(ScreenWidth - 90, NavBarHeight - 40, 80, 40);
+    } else {
+        rightBtn.frame = CGRectMake(ScreenWidth - 90, 64 - 40, 80, 40);
+        // Fallback on earlier versions
+    }
     rightBtn.titleLabel.font = [UIFont systemFontOfSize:14];
     [rightBtn setTitle:@"联系我们" forState:UIControlStateNormal];
     rightBtn.titleEdgeInsets = UIEdgeInsetsMake(5, 15, 5, -5);
@@ -198,7 +223,13 @@
     
     CGFloat itemW = self.view.frame.size.width;
 
-    self.scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, NavBarHeight, itemW, ScreenHeight - NavBarHeight - 48 - (ZC_iPhoneX? 34 :0))];
+    if (@available(iOS 11.0, *)) {
+        self.scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, NavBarHeight, itemW, ScreenHeight - NavBarHeight - 48 - (ZC_iPhoneX? 34 :0))];
+    } else {
+        // Fallback on earlier versions
+        self.scrollView = [[UIScrollView alloc]initWithFrame:self.view.bounds];
+//        self.scrollView.frame = ;
+    }
     self.scrollView.backgroundColor = [UIColor clearColor];
     self.scrollView.scrollEnabled = YES;
 //    self.scrollView.alwaysBounceVertical = YES;

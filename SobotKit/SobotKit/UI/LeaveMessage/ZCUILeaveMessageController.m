@@ -193,8 +193,31 @@ typedef NS_ENUM(NSInteger,ExitType) {
     [self customLayoutSubviewsWith:[ZCUICore getUICore].kitInfo];
     _isSend = NO;
     
-    // 布局子页面
-    [self refreshViewData];
+    
+    NSString * templateId = @"1";
+    if (self.templateldIdDic != nil && [[self.templateldIdDic allKeys] containsObject:@"templateId"]) {
+        templateId = self.templateldIdDic[@"templateId"];
+    }
+    // 加载自定义字段接口
+    [[ZCLibServer getLibServer] postTemplateFieldInfoWithUid:[self getCurConfig].uid Templateld:templateId start:^{
+        
+    } success:^(NSDictionary *dict,NSMutableArray * cusFieldArray, ZCNetWorkCode sendCode) {
+        @try{
+            if (cusFieldArray.count) {
+                self.coustomArr = [NSMutableArray arrayWithCapacity:0];
+                self.coustomArr = cusFieldArray;
+            }
+            // 布局子页面
+            [self refreshViewData];
+        } @catch (NSException *exception) {
+            
+        } @finally {
+            
+        }
+    } failed:^(NSString *errorMessage, ZCNetWorkCode errorCode) {
+        // 布局子页面
+        [self refreshViewData];
+    }];
     
     
     _model =  [[ZCOrderModel alloc]init];
@@ -229,6 +252,9 @@ typedef NS_ENUM(NSInteger,ExitType) {
     if (self.navigationController.navigationBarHidden) {
         Y = ZC_iPhoneX?40:20;
     }
+    if(self.topView!=nil){
+        Y = CGRectGetHeight(self.topView.frame) - 44;
+    }
     
     NSMutableArray * titleArr = [NSMutableArray arrayWithCapacity:0];
     [titleArr addObject:ZCSTLocalString(@"请您留言")];
@@ -255,6 +281,8 @@ typedef NS_ENUM(NSInteger,ExitType) {
 -(void)createBtnItem:(NSMutableArray *)titleArr withTags:(NSMutableArray *)tagArr Y:(CGFloat)Y{
     CGFloat maxWidth = ScreenWidth - 64*2;
     btnBgView = [[UIView alloc]initWithFrame:CGRectMake(64, Y, maxWidth, 44)];
+    [btnBgView setAutoresizingMask:UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleTopMargin];
+    btnBgView.autoresizesSubviews = true;
     
     CGFloat BY = ZCNumber(15);
     CGFloat BW = maxWidth/2;
@@ -645,7 +673,7 @@ typedef NS_ENUM(NSInteger,ExitType) {
         // 留言不能大于3000字
         if (_model.ticketDesc.length >3000) {
 //            [[ZCUIToastTools shareToast] showToast:ZCSTLocalString(@"问题描述，最多只能输入3000字符") duration:1.0f view:self.view position:ZCToastPositionCenter];
-            return;
+//            return;
         }
         
         
@@ -851,11 +879,9 @@ typedef NS_ENUM(NSInteger,ExitType) {
     self.automaticallyAdjustsScrollViewInsets = NO;
 //    // 计算Y值
     CGFloat TY = 0;
-    if (self.navigationController.navigationBarHidden) {
-        TY = NavBarHeight;
-    }
-    
-    if(self.navigationController.navigationBar.translucent){
+    if(self.topView!=nil){
+        TY = CGRectGetHeight(self.topView.frame);
+    }else{
         TY = NavBarHeight;
     }
     
@@ -1868,13 +1894,14 @@ return [UIView new];
 
 - (void)allHideKeyBoard
 {
-    for (UIWindow* window in [UIApplication sharedApplication].windows)
-    {
-        for (UIView* view in window.subviews)
-        {
-            [self dismissAllKeyBoardInView:view];
-        }
-    }
+//    for (UIWindow* window in [UIApplication sharedApplication].windows)
+//    {
+//        for (UIView* view in window.subviews)
+//        {
+//            [self dismissAllKeyBoardInView:view];
+//        }
+//    }
+    [self.view endEditing:true];
 }
 
 -(BOOL) dismissAllKeyBoardInView:(UIView *)view
@@ -1903,13 +1930,12 @@ return [UIView new];
         
 
     CGFloat TY = 0;
-    if (self.navigationController.navigationBarHidden) {
+    if(self.topView!=nil){
+        TY = CGRectGetHeight(self.topView.frame);
+    }else{
         TY = NavBarHeight;
     }
     
-    if(self.navigationController.navigationBar.translucent){
-        TY = NavBarHeight;
-    }
     if (self.ticketShowFlag != 1) {
         btnBgView.hidden = YES;
     }
@@ -1927,6 +1953,7 @@ return [UIView new];
     if(direction == 2){
         spaceX = XBottomBarHeight;
     }
+    [self.mainScrollView setFrame:CGRectMake(0, TY, LW, scrollHeight)];
     [self.listTable setFrame:CGRectMake(spaceX, 0, LW, scrollHeight)];
     [self.listTable reloadData];
 

@@ -58,14 +58,16 @@
 /** 更新时间 */
 @property (nonatomic,strong) NSString  * updateTime;
 
+//scoreFlag=1:0-默认10分,1-默认5分,2-默认0分
+//scoreFlag=0:0-默认5星,1-默认0星
+@property (nonatomic,assign) int   defaultTypeBack;
+@property (nonatomic,assign) int   defaultStar;
 
-/** 默认星级，0是5星，1是0星 */
-@property (nonatomic,assign) int   defaultType;
+// 1:10分，0是5星
+@property (nonatomic,assign) int   scoreFlag;
 
 // 是否存在以下问题评价
 @property (nonatomic,strong) NSString  *tagTips;
-
-
 
 -(id)initWithMyDict:(NSDictionary *)dict;
 

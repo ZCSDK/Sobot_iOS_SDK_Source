@@ -12,7 +12,7 @@
 @implementation ZCOrderGoodsModel
 
 +(NSString *)getOrderStatusMsg:(int)status{
-    NSString *str = ZCSTLocalString(@"其它");
+    NSString *str = @"";//ZCSTLocalString(@"其它");
     switch (status) {
         case 1:
         str = ZCSTLocalString(@"待付款");

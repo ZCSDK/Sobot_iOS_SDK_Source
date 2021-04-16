@@ -23,7 +23,7 @@
 
 @interface ZCSatisfactionCell ()<RatingViewDelegate>{
     // 0五星   1是0星
-    int defaultStartType;
+    int defaultStar;
     
 }
 typedef NS_ENUM(NSInteger,ZCSatisfactionCellType){
@@ -259,7 +259,28 @@ typedef NS_ENUM(NSInteger,ZCSatisfactionCellType){
     }else{
         cellType = ZCSatisfactionCellType_onlyStar;
     }
+    NSDictionary *dict = [ZCUICore getUICore].satisfactionDict;
     
+    _satisfactionView.hidden = YES;
+    _submitBtn.hidden = NO;
+    int starCount = 5;
+    if(dict!=nil && dict.count > 0){
+        NSArray * arr = dict[@"data"];
+
+        if(arr != nil && [arr isKindOfClass:[NSArray class]] && arr.count >= 5){
+            _satisfaction = [[ZCLibSatisfaction alloc] initWithMyDict:arr[arr.count - 1]];
+            defaultStar = _satisfaction.defaultStar;
+            if(_satisfaction.scoreFlag==1){
+                starCount = 10;
+            }
+            int aDefaultStar = defaultStar;
+            if (!aDefaultStar) {
+                aDefaultStar = 1;
+            }
+            _satisfaction = [[ZCLibSatisfaction alloc] initWithMyDict:arr[aDefaultStar - 1]];
+            
+        }
+    }
     
             
     _titleLab.text = [NSString stringWithFormat:@"%@%@",model.senderName,ZCSTLocalString(@"邀请您对本次服务进行评价")];
@@ -293,66 +314,57 @@ typedef NS_ENUM(NSInteger,ZCSatisfactionCellType){
         
         iy = CGRectGetMaxY(_lineView.frame) + 30;
     }
-    _ratingView =[[ZCUIRatingView alloc]initWithFrame: CGRectMake((_bglayerView.frame.size.width-180)/2, iy,  180, 29 )];
+    CGFloat starWith = (starCount/5==1)?180:300;
+    _ratingView =[[ZCUIRatingView alloc]initWithFrame: CGRectMake((_bglayerView.frame.size.width-starWith)/2, iy,  starWith, 29 )];
     CGPoint bglayerCenter = _bglayerView.center;
     _ratingView.center = CGPointMake(bglayerCenter.x, _ratingView.center.y);
 //    _ratingView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin;
-    [_ratingView setImagesDeselected:@"zcicon_star_unsatisfied" partlySelected:@"zcicon_star_satisfied" fullSelected:@"zcicon_star_satisfied" andDelegate:self];
+    [_ratingView setImagesDeselected:@"zcicon_star_unsatisfied" partlySelected:@"zcicon_star_satisfied" fullSelected:@"zcicon_star_satisfied" count:starCount andDelegate:self];
     _ratingView.backgroundColor = [UIColor clearColor];
     [self.contentView addSubview:_ratingView];
     
     
     _tiplab.frame = CGRectMake(30, CGRectGetMaxY(_ratingView.frame) + 15, self.viewWidth - 60, 20);
     _tiplab.text = ZCSTLocalString(@"非常满意");
+    [_tiplab setTextColor:UIColorFromThemeColor(ZCTextNoticeLinkColor)];
     [self.contentView addSubview:_titleLab];
     
-    NSDictionary *dict = [ZCUICore getUICore].satisfactionDict;
     
     _satisfactionView.hidden = YES;
     _submitBtn.hidden = NO;
-    if(dict!=nil && dict.count > 0){
-        NSArray * arr = dict[@"data"];
 
-        [_tiplab setTextColor:UIColorFromThemeColor(ZCTextLinkYellowColor)];
-        if(arr != nil && [arr isKindOfClass:[NSArray class]] && arr.count >= 5){
-            _satisfaction = [[ZCLibSatisfaction alloc] initWithMyDict:arr[arr.count - 1]];
-            // 0五星   1  0星
-            defaultStartType = _satisfaction.defaultType;
+    if(_satisfaction!=nil && (_satisfaction.scoreFlag==1 || defaultStar > 0 )){
+        [_tiplab setTextColor:UIColorFromThemeColor(ZCTextNoticeLinkColor)];
+        _satisfactionView.hidden = NO;
+        [_satisfactionView setFrame:CGRectMake(30, CGRectGetMaxY(_tiplab.frame) + 15, self.viewWidth - 60, 0)];
+        CGRect itemF = self.satisfactionView.frame ;
+        if(zcLibConvertToString(_satisfaction.labelName).length > 0){
+            NSArray *items =  items = [zcLibConvertToString(_satisfaction.labelName) componentsSeparatedByString:@"," ];
             
+            [_satisfactionView InitDataWithArray:items];
+            itemF.size.height =[ZCItemView getHeightWithArray:items];
+            _satisfactionView.frame = itemF;
         }
         
-        if(_satisfaction!=nil && defaultStartType == 0){
-            _satisfactionView.hidden = NO;
-            [_satisfactionView setFrame:CGRectMake(30, CGRectGetMaxY(_tiplab.frame) + 15, self.viewWidth - 60, 0)];
-            CGRect itemF = self.satisfactionView.frame ;
-            if(zcLibConvertToString(_satisfaction.labelName).length > 0){
-                NSArray *items =  items = [zcLibConvertToString(_satisfaction.labelName) componentsSeparatedByString:@"," ];
-                
-                [_satisfactionView InitDataWithArray:items];
-                itemF.size.height =[ZCItemView getHeightWithArray:items];
-                _satisfactionView.frame = itemF;
-            }
-            
-            bgViewHeight = bgViewHeight + itemF.size.height;
+        bgViewHeight = bgViewHeight + itemF.size.height;
 
-            CGRect bgf = _bglayerView.frame;
-            bgf.size.height =  bgf.size.height + itemF.size.height;
-            _bglayerView.frame = bgf;
-            
-            [_ratingView displayRating:5.0f];
-        }else{
-            _tiplab.text = ZCSTLocalString(@"您的评价会让我们做得更好");
-            [_tiplab setTextColor:UIColorFromThemeColor(ZCTextSubColor)];
-            [_ratingView displayRating:0];
-            _submitBtn.hidden = YES;
-            bgViewHeight = bgViewHeight - 51;
-
-            CGRect bgf = _bglayerView.frame;
-            bgf.size.height =  bgf.size.height - 51;
-            _bglayerView.frame = bgf;
-        }
+        CGRect bgf = _bglayerView.frame;
+        bgf.size.height =  bgf.size.height + itemF.size.height;
+        _bglayerView.frame = bgf;
         
+        [_ratingView displayRating:defaultStar];
+    }else{
+        _tiplab.text = ZCSTLocalString(@"您的评价会让我们做得更好");
+        [_tiplab setTextColor:UIColorFromThemeColor(ZCTextSubColor)];
+        [_ratingView displayRating:0];
+        _submitBtn.hidden = YES;
+        bgViewHeight = bgViewHeight - 51;
+
+        CGRect bgf = _bglayerView.frame;
+        bgf.size.height =  bgf.size.height - 51;
+        _bglayerView.frame = bgf;
     }
+    
     if(!_submitBtn.hidden){
         if(_satisfactionView.hidden){
             _submitBtn.frame = CGRectMake((self.viewWidth - 200)/2, CGRectGetMaxY(_tiplab.frame) + 15, 200, 36);
@@ -365,7 +377,7 @@ typedef NS_ENUM(NSInteger,ZCSatisfactionCellType){
             
     // 本地设置不自动提交
     _isShowAction = NO;
-    self.rating = 5;
+    self.rating = defaultStar;
     self.userInteractionEnabled = YES;
     
     if (self.isRight) {
@@ -392,19 +404,24 @@ typedef NS_ENUM(NSInteger,ZCSatisfactionCellType){
     NSDictionary *dict = [ZCUICore getUICore].satisfactionDict;
     if(dict!=nil && dict.count > 0){
         // 0五星   1  0星
-        int defaultStartType = 0;
+        int defaultStar = 0;
         NSArray * arr = dict[@"data"];
         ZCLibSatisfaction *satisfactionModel = nil;
         if(arr != nil && [arr isKindOfClass:[NSArray class]] && arr.count >= 5){
-            satisfactionModel = [[ZCLibSatisfaction alloc] initWithMyDict:arr[arr.count - 1]];
+            satisfactionModel = [[ZCLibSatisfaction alloc] initWithMyDict:arr.firstObject];
             // 0五星   1  0星
-            defaultStartType = satisfactionModel.defaultType;
+            defaultStar = satisfactionModel.defaultStar;
+            if (!defaultStar) {
+                defaultStar = 1;
+            }
+            satisfactionModel = [[ZCLibSatisfaction alloc] initWithMyDict:arr[defaultStar - 1]];
         }
         
-        if (defaultStartType == 0) {
+        if (defaultStar>0 || satisfactionModel.scoreFlag == 1) {
             ZCItemView *item = [[ZCItemView alloc] initWithFrame:CGRectMake(0,0, width - 60, 0)];
             CGFloat sheight = 0;
-            if(zcLibConvertToString(satisfactionModel.labelName).length > 0 && ![ZCUICore getUICore].kitInfo.hideManualEvaluationLabels){
+            if(zcLibConvertToString(satisfactionModel.labelName).length > 0 && ![ZCUICore getUICore].kitInfo.hideManualEvaluationLabels) {
+                
                 NSArray *items = [zcLibConvertToString(satisfactionModel.labelName) componentsSeparatedByString:@"," ];
                 
                 [item InitDataWithArray:items];
@@ -465,29 +482,18 @@ typedef NS_ENUM(NSInteger,ZCSatisfactionCellType){
 //    }
     
     self.rating = newRating;
-    if (newRating > 0 && newRating < 5) {
-        [self  commitAction:1];
-    }else if(newRating == 5){
-        // 直接提交评价
+    [self  commitAction:1];
+    // 直接提交评价
 //        [self commitAction:2];
-        [self commitAction:1];
-    }
     
     // 设置默认值
-    if(defaultStartType == 0){
-        // 重新赋值到5
-        self.rating = 5;
-        [self.ratingView displayRating:5.0f];
-    }else{
-        // 重新赋值到5
-        self.rating = 0;
-        [self.ratingView displayRating:0.0f];
-    }
+    self.rating = defaultStar;
+    [self.ratingView displayRating:defaultStar];
 }
 
 // 提交评价   type 1代表5星以下  2 代表5星提交
 - (void)commitAction:(int)type{
-    if (self.delegate && [self.delegate respondsToSelector:@selector(cellItemClick:IsResolved:Rating:problem:)]) {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(cellItemClick:IsResolved:Rating:problem:scoreFlag:)]) {
         if(type == 2){
             if(_satisfaction!=nil){
                 // 内容必填 ，切换为1弹评价页面
@@ -497,7 +503,7 @@ typedef NS_ENUM(NSInteger,ZCSatisfactionCellType){
             }
         }
         [ZCUICore getUICore].inviteSatisfactionCheckLabels = [_satisfactionView getSeletedTitle];
-        [self.delegate cellItemClick:type IsResolved:self.isResolved Rating:self.rating problem:[_satisfactionView getSeletedTitle]];
+        [self.delegate cellItemClick:type IsResolved:self.isResolved Rating:self.rating problem:[_satisfactionView getSeletedTitle] scoreFlag:_satisfaction.scoreFlag];
     }
 }
 

@@ -87,6 +87,11 @@ BOOL zcLibValidateDecimalDouble(NSString *str);
  */
 BOOL zcLibValidateRuleNotBlank(NSString *str);
 
+/*
+ 验证是否是正规的 url 如果含有中文则转码
+ */
+NSString *zcLibValidURLString(NSString *urlString);
+
 /**
  * extract the file name from path
  *

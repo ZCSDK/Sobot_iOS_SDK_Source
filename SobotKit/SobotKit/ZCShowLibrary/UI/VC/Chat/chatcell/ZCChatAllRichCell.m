@@ -669,6 +669,8 @@
         [label setText:model.displaySugestionattr];
 //        [label setText:[model getModelDisplaySugestionText]];
         CGSize s = [label preferredSizeWithMaxWidth:maxWidth];
+        // 添加行间距
+        h = h + [ZCUITools zcgetKitChatFont].lineHeight;
         h = h + s.height + lineSpace;
         if(contentWidth < s.width){
             contentWidth = s.width;
@@ -684,6 +686,9 @@
         if([model.richModel.richmoreurl isEqual:@"zc_refresh_newdata"]){
             
             if(superView){
+                // 有换一组的时候，需要最大宽度
+                contentWidth = maxWidth;
+                
                 // 添加线条
                 UIView *_lineView  = [[UIView alloc] init];
                 CGRect lineF = CGRectMake(0, h + 12, contentWidth , 1);

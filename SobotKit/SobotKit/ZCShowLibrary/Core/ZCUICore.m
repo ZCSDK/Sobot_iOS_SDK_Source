@@ -117,7 +117,7 @@ static dispatch_once_t onceToken;
 
 -(void)setKitInfo:(ZCKitInfo *)kitInfo{
     _kitInfo = kitInfo;
-    [self clearPropertyData];
+    colorThemeDict = nil;
 }
 
 
@@ -133,7 +133,6 @@ static dispatch_once_t onceToken;
     // 评价页面是否消失
     _isDismissSheetPage = YES;
     _isDismissRobotPage = YES;
-    [[ZCIMChat getZCIMChat] setChatPageState:ZCChatPageStateActive];
     _isSmartTurnServer = NO;
     _isTurnLoading = NO;
     // 判断是否需要重新初始化
@@ -1883,7 +1882,6 @@ static dispatch_once_t onceToken;
                 if ( libMassage.tipStyle == ZCReceivedMessageEvaluation) {
                     [indexs addObject:[NSString stringWithFormat:@"%d",i]];
                 }
-                
             }
             if(indexs.count>0){
                 for (NSString *index in indexs) {
@@ -2150,8 +2148,6 @@ static dispatch_once_t onceToken;
     self.isDoConnectedUser = NO;
 
     _isSayHello = NO;
-    _isSendToUser = NO;
-    _isSendToRobot = NO;
     
     if(_tipTimer){
         [_tipTimer invalidate];
@@ -2448,7 +2444,7 @@ static dispatch_once_t onceToken;
 }
 
 // 提交评价
-- (void)commitSatisfactionWithIsResolved:(int)isResolved Rating:(int)rating problem:(NSString *) problem{
+- (void)commitSatisfactionWithIsResolved:(int)isResolved Rating:(int)rating problem:(NSString *) problem scoreFlag:(float)scoreFlag {
     if(isComment){
         return;
     }
@@ -2469,7 +2465,7 @@ static dispatch_once_t onceToken;
     [dict setObject:[self getLibConfig].cid forKey:@"cid"];
     [dict setObject:[self getLibConfig].uid forKey:@"userId"];
     
-    
+    [dict setValue:[NSString stringWithFormat:@"%d",(int)scoreFlag] forKey:@"scoreFlag"];
     [dict setObject:@"1" forKey:@"type"];
     [dict setObject:[NSString stringWithFormat:@"%d",rating] forKey:@"source"];
     [dict setObject:@"" forKey:@"suggest"];

@@ -188,14 +188,14 @@ static const float gap = 15;
     }];
     
    self.cellType = ZCMultitemHorizontaRollCellType_text;
-   if (model.richModel.multiModel.msgType == 0) {
+   if (model.richModel.multiModel.templateIdType == 0) {
        self.cellType = ZCMultitemHorizontaRollCellType_card;
    }
-   else if (model.richModel.multiModel.msgType == 1){
+   else if (model.richModel.multiModel.templateIdType == 1){
        self.cellType = ZCMultitemHorizontaRollCellType_text;
        
    }
-   else if (model.richModel.multiModel.msgType == 2){
+   else if (model.richModel.multiModel.templateIdType == 2){
        self.cellType = ZCMultitemHorizontaRollCellType_address;
    }
    
@@ -386,14 +386,14 @@ static const float gap = 15;
     
     ZCMultitemHorizontaRollCellType cellType = ZCMultitemHorizontaRollCellType_text;
     
-    if (model.richModel.multiModel.msgType == 0) {
+    if (model.richModel.multiModel.templateIdType == 0) {
         cellType = ZCMultitemHorizontaRollCellType_card;
     }
-    else if (model.richModel.multiModel.msgType == 1){
+    else if (model.richModel.multiModel.templateIdType == 1){
         cellType = ZCMultitemHorizontaRollCellType_text;
         
     }
-    else if (model.richModel.multiModel.msgType == 2){
+    else if (model.richModel.multiModel.templateIdType == 2){
         cellType = ZCMultitemHorizontaRollCellType_address;
         
     }

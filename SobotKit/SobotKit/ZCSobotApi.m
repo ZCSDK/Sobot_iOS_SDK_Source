@@ -158,6 +158,22 @@
     
 }
 
++(void)getLeaveTemplateById:(NSString *) templateId result:(void(^)(NSDictionary *rdict,NSMutableArray * rtypeArr,int code)) resultBlcok{
+    ZCLibConfig *config = [[ZCPlatformTools sharedInstance] getPlatformInfo].config;
+    // 加载基础模板接口
+    [[ZCLibServer getLibServer] postMsgTemplateConfigWithUid:config.uid Templateld:templateId start:^{
+        
+    } success:^(NSDictionary *dict,NSMutableArray * typeArr, ZCNetWorkCode sendCode) {
+        if(resultBlcok){
+            resultBlcok(dict,typeArr,0);
+        }
+    } failed:^(NSString *errorMessage, ZCNetWorkCode errorCode) {
+        if(resultBlcok){
+            resultBlcok(@{},@[],1);
+        }
+    }];
+}
+
 // 打开留言页面
 + (void)openLeave:(int ) showRecored kitinfo:(ZCKitInfo *)kitInfo with:(UIViewController *)byController onItemClick:(void (^)(NSString *msg,int code))CloseBlock {
     
@@ -190,22 +206,67 @@
                 }
             }];
 
+            
             if(showRecored > 0){
                 // 直接跳转到 留言记录、
                 leaveMessageVC.selectedType = 2;
                 leaveMessageVC.ticketShowFlag  = (showRecored == 1)?0:1;
             }
+            
+            if(zcLibConvertToString(kitInfo.leaveTemplateId).length > 0){
+                leaveMessageVC.templateldIdDic = @{@"templateId":kitInfo.leaveTemplateId,@"templateName":@""};
+                [self getLeaveTemplateById:kitInfo.leaveTemplateId result:^(NSDictionary *dict, NSMutableArray *typeArr, int code) {
+                    if(code == 0){
+                        leaveMessageVC.tickeTypeFlag = [ zcLibConvertToString( dict[@"data"][@"item"][@"ticketTypeFlag"] )intValue];
+                        leaveMessageVC.ticketTypeId = zcLibConvertToString( dict[@"data"][@"item"][@"ticketTypeId"]);
+                        leaveMessageVC.telFlag = [zcLibConvertToString( dict[@"data"][@"item"][@"telFlag"]) boolValue];
+                        leaveMessageVC.telShowFlag = [zcLibConvertToString(dict[@"data"][@"item"][@"telShowFlag"]) boolValue];
+                        leaveMessageVC.emailFlag = [zcLibConvertToString(dict[@"data"][@"item"][@"emailFlag"]) boolValue];
+                        leaveMessageVC.emailShowFlag = [zcLibConvertToString(dict[@"data"][@"item"][@"emailShowFlag"]) boolValue];
+                        leaveMessageVC.enclosureFlag = [zcLibConvertToString(dict[@"data"][@"item"][@"enclosureFlag"]) boolValue];
+                        leaveMessageVC.enclosureShowFlag = [zcLibConvertToString(dict[@"data"][@"item"][@"enclosureShowFlag"]) boolValue];
+                //            leaveMessageVC.ticketShowFlag = [zcLibConvertToString(dict[@"data"][@"item"][@"ticketShowFlag"]) intValue];
+                        leaveMessageVC.ticketShowFlag = 1;
+                        leaveMessageVC.ticketTitleShowFlag = [zcLibConvertToString(dict[@"data"][@"item"][@"ticketTitleShowFlag"]) boolValue];
+                        
+                        leaveMessageVC.msgTmp = zcLibConvertToString(dict[@"data"][@"item"][@"msgTmp"]);
+                        leaveMessageVC.msgTxt = zcLibConvertToString(dict[@"data"][@"item"][@"msgTxt"]);
+                        if (typeArr.count) {
+                            if (leaveMessageVC.typeArr == nil) {
+                                leaveMessageVC.typeArr = [NSMutableArray arrayWithCapacity:0];
+                                leaveMessageVC.typeArr = typeArr;
+                            }
+                        }
+                        if(byController.navigationController==nil || byController.navigationController.viewControllers.count == 1){
+                            UINavigationController * navc = [[UINavigationController alloc]initWithRootViewController: leaveMessageVC];
+                            // 设置动画效果
+                            navc.modalPresentationStyle = UIModalPresentationOverFullScreen;
+                            [byController presentViewController:navc animated:YES completion:^{
 
-//            if(byController.navigationController==nil){
-                UINavigationController * navc = [[UINavigationController alloc]initWithRootViewController: leaveMessageVC];
-                // 设置动画效果
-                navc.modalPresentationStyle = UIModalPresentationOverFullScreen;
-                [byController presentViewController:navc animated:YES completion:^{
-
+                            }];
+                        }else{
+                            [byController.navigationController pushViewController:leaveMessageVC animated:YES];
+                        }
+                    } else {
+                        
+                        if (CloseBlock) {
+                            
+                            CloseBlock(@"获取留言模版失败",1);
+                        }
+                    }
                 }];
-//            }else{
-//                [byController.navigationController pushViewController:leaveMessageVC animated:YES];
-//            }
+            }else{
+                if(byController.navigationController==nil || byController.navigationController.viewControllers.count == 1){
+                    UINavigationController * navc = [[UINavigationController alloc]initWithRootViewController: leaveMessageVC];
+                    // 设置动画效果
+                    navc.modalPresentationStyle = UIModalPresentationOverFullScreen;
+                    [byController presentViewController:navc animated:YES completion:^{
+
+                    }];
+                }else{
+                    [byController.navigationController pushViewController:leaveMessageVC animated:YES];
+                }
+            }
         }else{
             if(CloseBlock){
                 CloseBlock(msg,code);
@@ -255,7 +316,7 @@
     [self sendMessageToUser:textMsg type:ZCMessageTypeText resultBlock:ResultBlock];
 }
 
-+ (void)sendMessageToUser:(NSString *)textMsg type:(NSInteger ) msgType resultBlock:(nonnull void (^)(NSString * _Nonnull, int))ResultBlock{
++ (void)sendMessageToUser:(NSString *)textMsg type:(NSInteger ) msgType resultBlock:(nonnull void (^)(NSString * _Nonnull, int))ResultBlock {
     if([[ZCUICore getUICore] getLibConfig].isArtificial){
         [[ZCUICore getUICore] sendMessage:textMsg questionId:@"" type:msgType duration:@"" dict:nil];
         if(ResultBlock){

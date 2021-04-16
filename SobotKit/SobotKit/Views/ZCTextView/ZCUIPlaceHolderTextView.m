@@ -22,7 +22,7 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     _placeHolderLabel = nil;
     placeholderColor = nil;
-   _placeholder = nil;
+    _placeholder = nil;
     
 }
 
@@ -76,7 +76,7 @@
     {
         if ( _placeHolderLabel == nil )
         {
-            _placeHolderLabel = [[ZCMLEmojiLabel alloc] initWithFrame:CGRectMake(5, 5, self.bounds.size.width - 10, 0)];
+            _placeHolderLabel = [[ZCMLEmojiLabel alloc] initWithFrame:CGRectMake(10, 10, self.bounds.size.width - 20, 0)];
             CGRect phlab = _placeHolderLabel.frame;
             _placeHolderLabel.lineBreakMode = NSLineBreakByWordWrapping;
             _placeHolderLabel.font = self.placeholederFont ? self.placeholederFont:ZCUIFont12;
@@ -84,30 +84,32 @@
             _placeHolderLabel.textColor = self.placeholderColor;
             _placeHolderLabel.alpha = 0;
             _placeHolderLabel.tag = 999;
+            if (self.placeholderLinkColor) {
+                [_placeHolderLabel setLinkColor:self.placeholderLinkColor];
+            }
             
             NSString *text =self.placeholder;
-//            text = [text stringByReplacingOccurrencesOfString:@"<br />" withString:@"\n"];
-//            text = [text stringByReplacingOccurrencesOfString:@"<br/>" withString:@"\n"];
-//            text = [text stringByReplacingOccurrencesOfString:@"<br>" withString:@"\n"];
-//            text = [text stringByReplacingOccurrencesOfString:@"<BR/>" withString:@"\n"];
-//            text = [text stringByReplacingOccurrencesOfString:@"<BR />" withString:@"\n"];
-//            text = [text stringByReplacingOccurrencesOfString:@"<p " withString:@"\n<p "];
-//            text = [text stringByReplacingOccurrencesOfString:@"&nbsp;" withString:@" "];
-//            while ([text hasPrefix:@"\n"]) {
-//                text=[text substringWithRange:NSMakeRange(1, text.length-1)];
-//            }
+            //            text = [text stringByReplacingOccurrencesOfString:@"<br />" withString:@"\n"];
+            //            text = [text stringByReplacingOccurrencesOfString:@"<br/>" withString:@"\n"];
+            //            text = [text stringByReplacingOccurrencesOfString:@"<br>" withString:@"\n"];
+            //            text = [text stringByReplacingOccurrencesOfString:@"<BR/>" withString:@"\n"];
+            //            text = [text stringByReplacingOccurrencesOfString:@"<BR />" withString:@"\n"];
+            //            text = [text stringByReplacingOccurrencesOfString:@"<p " withString:@"\n<p "];
+            //            text = [text stringByReplacingOccurrencesOfString:@"&nbsp;" withString:@" "];
+            //            while ([text hasPrefix:@"\n"]) {
+            //                text=[text substringWithRange:NSMakeRange(1, text.length-1)];
+            //            }
             if (_type == 1) {
                 _placeHolderLabel.text = text;
             }else{
-              _placeHolderLabel.text = text;
+                _placeHolderLabel.text = text;
             }
             
-            
-            CGSize optimalSize = [self.placeHolderLabel preferredSizeWithMaxWidth:self.bounds.size.width-18];
+            CGSize optimalSize = [self.placeHolderLabel preferredSizeWithMaxWidth:self.bounds.size.width-20];
+//
             phlab.size.height = optimalSize.height;
-           
             
-            _placeHolderLabel.frame = CGRectMake(10, 10, phlab.size.width- 20, phlab.size.height);
+            _placeHolderLabel.frame = CGRectMake(10, 10, self.bounds.size.width - 20, phlab.size.height);
             _placeHolderLabel.backgroundColor = [UIColor clearColor];
             UITapGestureRecognizer * tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(textViewBeginEditing:)];
             [_placeHolderLabel addGestureRecognizer:tap];
@@ -116,7 +118,7 @@
                 [_placeHolderLabel setTextAlignment:NSTextAlignmentRight];
             }
         }
-      
+        
         [self sendSubviewToBack:_placeHolderLabel];
     }
     
@@ -126,6 +128,23 @@
     }
     
     [super drawRect:rect];
+}
+
+- (CGSize )caculateFrame:(NSString *)text {
+    
+    ZCMLEmojiLabel *label = [ZCMLEmojiLabel new];
+    
+    label.numberOfLines = 0;
+    
+    label.font = self.placeholederFont ? self.placeholederFont:ZCUIFont12;
+    
+    label.text = text;
+    
+    label.textAlignment = self.placeHolderLabel.textAlignment;
+    
+    CGSize size = [label sizeThatFits:CGSizeMake(self.bounds.size.width-20, CGFLOAT_MAX)];
+    
+    return size;
 }
 - (void)setPlaceholederFont:(UIFont *)placeholederFont{
     _placeholederFont = placeholederFont;

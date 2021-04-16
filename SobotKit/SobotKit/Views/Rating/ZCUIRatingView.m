@@ -7,16 +7,22 @@
 //
 
 #import "ZCUIRatingView.h"
+#import "ZCUIColorsDefine.h"
+#import "ZCLibGlobalDefine.h"
+@interface ZCUIRatingView()
 
+//@property (nonatomic ,strong)
+@end
 @implementation ZCUIRatingView
 
-@synthesize s1, s2, s3, s4, s5;
-
+-(void)setImagesDeselected:(NSString *)unselectedImage partlySelected:(NSString *)partlySelectedImage fullSelected:(NSString *)fullSelectedImage andDelegate:(id<RatingViewDelegate>)d{
+    [self setImagesDeselected:unselectedImage partlySelected:partlySelectedImage fullSelected:fullSelectedImage count:5 andDelegate:d];
+}
 
 -(void)setImagesDeselected:(NSString *)deselectedImage
 			partlySelected:(NSString *)halfSelectedImage
 			  fullSelected:(NSString *)fullSelectedImage
-			   andDelegate:(id<RatingViewDelegate>)d {
+                     count:(int)count andDelegate:(id<RatingViewDelegate>)d{
     unselectedImage = [ZCUITools zcuiGetBundleImage:deselectedImage];// [UIImage imageNamed:deselectedImage];
     partlySelectedImage =  halfSelectedImage == nil ? unselectedImage : [ZCUITools zcuiGetBundleImage:halfSelectedImage]; //[UIImage imageNamed:halfSelectedImage];
     fullySelectedImage = [ZCUITools zcuiGetBundleImage:fullSelectedImage]; //[UIImage imageNamed:fullSelectedImage];
@@ -26,126 +32,93 @@
     if(height > self.frame.size.height){
         height = self.frame.size.height;
     }
-    width=  self.frame.size.width/5;
-//	if (height < [fullySelectedImage size].height) {
-//		height = [fullySelectedImage size].height;
-//	}
-//	if (height < [partlySelectedImage size].height) {
-//		height = [partlySelectedImage size].height;
-//	}
-//	if (height < [unselectedImage size].height) {
-//		height = [unselectedImage size].height;
-//	}
-//	if (width < [fullySelectedImage size].width) {
-//		width = [fullySelectedImage size].width;
-//	}
-//	if (width < [partlySelectedImage size].width) {
-//		width = [partlySelectedImage size].width;
-//	}
-//	if (width < [unselectedImage size].width) {
-//		width = [unselectedImage size].width;
-//	}
+    _starView = [[NSMutableArray alloc] init];
+    starRating = 0;
+    lastRating = 0;
+    CGFloat space = 0;
+    CGFloat y = 0;
+    if(count > 5){
+        // 增加0
+        count = count + 1;
+        UILabel *lab1 = [self createLabel:0 title:ZCSTLocalString(@"非常不满意")];
+        UILabel *lab2 = [self createLabel:self.frame.size.width/2 title:ZCSTLocalString(@"非常满意")];
+        [self addSubview:lab1];
+        [self addSubview:lab2];
+        [lab2 setTextAlignment:NSTextAlignmentRight];
+        y = 25;
+        space =  5;
+    }
+    
+    width=  self.frame.size.width/count;
+    for (int i=1; i<=count; i++) {
+        UIView *ss = nil;
+        if(count > 5){
+            ss = [self createLabel:(i-1)*width title:[NSString stringWithFormat:@"%d",i - 1]];
+            [ss setFrame:CGRectMake((i-1)*width, y, width-5, height)];
+            [ss setBackgroundColor:UIColorFromThemeColor(ZCBgSystemWhiteColor)];
+            [(UILabel *)ss setTextColor:[ZCUITools getNotifitionTopViewLabelColor]];
+            ((UILabel *)ss).layer.cornerRadius = 4;
+            ((UILabel *)ss).layer.borderColor = UIColorFromThemeColor(ZCBgLineColor).CGColor;
+            ((UILabel *)ss).layer.borderWidth = 1.0f;
+            ((UILabel *)ss).textAlignment = NSTextAlignmentCenter;
+            ((UILabel *)ss).layer.masksToBounds = YES;
+            ((UILabel *)ss).font = [ZCUITools zcgetKitChatFont];
+        }else{
+            ss = [[UIImageView alloc] initWithImage:unselectedImage];
+            [ss setContentMode:UIViewContentModeScaleAspectFit];
+            [ss setFrame:CGRectMake((i-1)*width,         y, width, height)];
+        }
+        
+        [ss setUserInteractionEnabled:YES];
+        ss.tag = 100+i;
+        
+        UITapGestureRecognizer * tap1 = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapAction:)];
+        
+        [ss addGestureRecognizer:tap1];
+        [self addSubview:ss];
+        [_starView addObject:ss];
+    }
     
     
-	starRating = 0;
-	lastRating = 0;
-    
-	s1 = [[UIImageView alloc] initWithImage:unselectedImage];
-	s2 = [[UIImageView alloc] initWithImage:unselectedImage];
-	s3 = [[UIImageView alloc] initWithImage:unselectedImage];
-	s4 = [[UIImageView alloc] initWithImage:unselectedImage];
-	s5 = [[UIImageView alloc] initWithImage:unselectedImage];
-	
-    [s1 setContentMode:UIViewContentModeScaleAspectFit];
-    [s2 setContentMode:UIViewContentModeScaleAspectFit];
-    [s3 setContentMode:UIViewContentModeScaleAspectFit];
-    [s4 setContentMode:UIViewContentModeScaleAspectFit];
-    [s5 setContentMode:UIViewContentModeScaleAspectFit];
-    
-    
-	[s1 setFrame:CGRectMake(0,         0, width, height)];
-	[s2 setFrame:CGRectMake(width,     0, width, height)];
-	[s3 setFrame:CGRectMake(2 * width, 0, width, height)];
-	[s4 setFrame:CGRectMake(3 * width, 0, width, height)];
-	[s5 setFrame:CGRectMake(4 * width, 0, width, height)];
-	
-	[s1 setUserInteractionEnabled:YES];
-	[s2 setUserInteractionEnabled:YES];
-	[s3 setUserInteractionEnabled:YES];
-	[s4 setUserInteractionEnabled:YES];
-	[s5 setUserInteractionEnabled:YES];
-	
-    
-    s1.tag = 1001;
-    s2.tag = 1002;
-    s3.tag = 1003;
-    s4.tag = 1004;
-    s5.tag = 1005;
-    
-    UITapGestureRecognizer * tap1 = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapAction:)];
-    UITapGestureRecognizer * tap2 = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapAction:)];
-    UITapGestureRecognizer * tap3 = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapAction:)];
-    UITapGestureRecognizer * tap4 = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapAction:)];
-    UITapGestureRecognizer * tap5 = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapAction:)];
-    
-    [s1 addGestureRecognizer:tap1];
-    [s2 addGestureRecognizer:tap2];
-    [s3 addGestureRecognizer:tap3];
-    [s4 addGestureRecognizer:tap4];
-    [s5 addGestureRecognizer:tap5];
-
-    
-	[self addSubview:s1];
-	[self addSubview:s2];
-	[self addSubview:s3];
-	[self addSubview:s4];
-	[self addSubview:s5];
-	
 	CGRect frame = [self frame];
-	frame.size.width = width * 5;
-	frame.size.height = height;
+	frame.size.width = width * count;
+	frame.size.height = height + y;
 	[self setFrame:frame];
 }
 
 -(void)displayRating:(float)rating {
-	[s1 setImage:unselectedImage];
-	[s2 setImage:unselectedImage];
-	[s3 setImage:unselectedImage];
-	[s4 setImage:unselectedImage];
-	[s5 setImage:unselectedImage];
+    for (UIView *ss in _starView) {
+        int index = (int)ss.tag - 100;
+        
+        if([ss isKindOfClass:[UIImageView class]]){
+            
+            if(index<=rating){
+                [(UIImageView *)ss setImage:fullySelectedImage];
+            }else{
+                [(UIImageView *)ss setImage:unselectedImage];
+            }
+        }else{
+            
+            if(index<=rating){
+                ((UILabel *)ss).layer.borderColor = [UIColor clearColor].CGColor;
+                ((UILabel *)ss).layer.borderWidth = 0;
+                [ss setBackgroundColor:UIColorFromThemeColor(ZCRatingBGColor)];
+                [(UILabel *)ss setTextColor:UIColorFromThemeColor(ZCBgSystemWhiteColor)];
+            }else{
+                
+                [(UILabel *)ss setTextColor:UIColorFromThemeColor(ZCTextMainColor)];
+                [ss setBackgroundColor:UIColorFromThemeColor(ZCBgSystemWhiteColor)];
+                ((UILabel *)ss).layer.borderColor = UIColorFromThemeColor(ZCBgLineColor).CGColor;;
+                ((UILabel *)ss).layer.borderWidth = 1;
+            }
+        }
+        
+        // 0.5分情况不考虑
+//        if((rating*10)%5){
+//[ss setImage:partlySelectedImage];
+//        }
+    }
 	
-	if (rating >= 0.5) {
-		[s1 setImage:partlySelectedImage];
-	}
-	if (rating >= 1) {
-		[s1 setImage:fullySelectedImage];
-	}
-	if (rating >= 1.5) {
-		[s2 setImage:partlySelectedImage];
-	}
-	if (rating >= 2) {
-		[s2 setImage:fullySelectedImage];
-	}
-	if (rating >= 2.5) {
-		[s3 setImage:partlySelectedImage];
-	}
-	if (rating >= 3) {
-		[s3 setImage:fullySelectedImage];
-	}
-	if (rating >= 3.5) {
-		[s4 setImage:partlySelectedImage];
-	}
-	if (rating >= 4) {
-		[s4 setImage:fullySelectedImage];
-	}
-	if (rating >= 4.5) {
-		[s5 setImage:partlySelectedImage];
-	}
-	if (rating >= 5) {
-		[s5 setImage:fullySelectedImage];
-	}
-    
-    
 	
 	starRating = rating;
 	lastRating = rating;
@@ -181,9 +154,9 @@
 //}
 
 - (void)tapAction:(UITapGestureRecognizer*)tap{
-    [self displayRating:tap.view.tag-1000];
+    [self displayRating:tap.view.tag-100];
     if(viewDelegate && [viewDelegate respondsToSelector:@selector(ratingChangedWithTap:)]){
-        [viewDelegate ratingChangedWithTap:tap.view.tag-1000];
+        [viewDelegate ratingChangedWithTap:tap.view.tag-100];
     }
     
 }
@@ -193,4 +166,12 @@
 	return starRating;
 }
 
+
+-(UILabel *)createLabel:(CGFloat ) x title:(NSString *) text{
+    UILabel *lab = [[UILabel alloc] initWithFrame:CGRectMake(x, 0, self.frame.size.width/2, 20)];
+    [lab setTextColor:UIColorFromThemeColor(ZCTextSubColor)];
+    [lab setText:text];
+    [lab setFont:[ZCUITools zcgetListKitDetailFont]];
+    return lab;
+}
 @end

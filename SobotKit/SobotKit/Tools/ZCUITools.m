@@ -832,6 +832,32 @@
     return UIColorFromThemeColor(ZCThemeColor); // UIColorFromRGB(BgTitleColor);
 }
 
+/**
+ *   评价弹出页面，按钮背景颜色
+ *
+ *   @return
+ */
++(UIColor *)zcgetCommentItemButtonBgColor{
+    ZCKitInfo *configModel=[self getZCKitInfo];
+    if(configModel!=nil && configModel.commentItemButtonBgColor!=nil && ![self useDefaultThemeColor]){
+        return configModel.commentItemButtonBgColor;
+    }
+    return UIColorFromThemeColor(ZCBgLeftChatColor); // UIColorFromRGB(BgTitleColor);
+}
+
+/**
+ *   评价弹出页面，按钮背景颜色
+ *
+ *   @return
+ */
++(UIColor *)zcgetCommentItemSelButtonBgColor{
+    ZCKitInfo *configModel=[self getZCKitInfo];
+    if(configModel!=nil && configModel.commentItemButtonSelBgColor!=nil && ![self useDefaultThemeColor]){
+        return configModel.commentItemButtonSelBgColor;
+    }
+    return UIColorFromThemeColor(ZCThemeColor); // UIColorFromRGB(BgTitleColor);
+}
+
 +(UIColor *)zcgetBgTipAirBubblesColor{
     ZCKitInfo *configModel=[self getZCKitInfo];
     if(configModel!=nil && configModel.BgTipAirBubblesColor!=nil && ![self useDefaultThemeColor]){

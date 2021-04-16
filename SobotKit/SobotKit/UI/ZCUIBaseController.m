@@ -313,7 +313,7 @@
             }
         }
     }else{
-        if(self.topView!=nil){
+        if(self.topView){
             if(self.topView.frame.size.height != NavBarHeight){
                 self.topView.frame = CGRectMake(0, 0, self.view.frame.size.width, NavBarHeight);
             }
@@ -414,8 +414,8 @@
 -(UIBarButtonItem *) createItemButtonWith:(ZCButtonClickTag) tag{
     //12 * 19
     UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [btn.titleLabel setFont:[ZCUITools zcgetTitleFont]];
-    btn.frame = CGRectMake(0, 0, 44,44) ;
+    [btn.titleLabel setFont:[ZCUITools zcgetSubTitleFont]];
+    btn.frame = CGRectMake(0, 0, 40,44) ;
     btn.tag = tag;
     [btn addTarget:self action:@selector(buttonClick:) forControlEvents:UIControlEventTouchUpInside];
     [btn setTitleColor:[ZCUITools zcgetTopViewTextColor] forState:UIControlStateNormal];
@@ -480,7 +480,6 @@
         [btn setFrame:lf];
         [btn setTitle:ZCSTLocalString(@"发送") forState:UIControlStateNormal];
     }
-        
     UIBarButtonItem *item = [[UIBarButtonItem alloc]initWithCustomView:btn];
     return item;
 }

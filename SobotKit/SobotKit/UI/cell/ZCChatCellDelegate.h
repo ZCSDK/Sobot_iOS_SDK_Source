@@ -92,6 +92,6 @@ typedef NS_ENUM(NSInteger,ZCChatCellClickType) {
 
 @optional
 // 评价cell使用
-- (void)cellItemClick:(int)satifactionType IsResolved:(int)isResolved Rating:(int)rating problem:(NSString *) problem;
+- (void)cellItemClick:(int)satifactionType IsResolved:(int)isResolved Rating:(int)rating problem:(NSString *) problem scoreFlag:(int)scoreFlag;
 
 @end

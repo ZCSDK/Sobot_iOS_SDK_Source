@@ -383,6 +383,21 @@ typedef NS_ENUM(NSUInteger,ZCThemeStyle){
  */
 +(UIColor *)zcgetCommentPageButtonBgColor;
 
+
+/**
+ *   评价弹出选项颜色
+ *
+ *   @return
+ */
++(UIColor *)zcgetCommentItemButtonBgColor;
+
+/**
+ *   评价弹出选项颜色
+ *
+ *   @return
+ */
++(UIColor *)zcgetCommentItemSelButtonBgColor;
+
 /**
  *   提示气泡的背景颜色
  *

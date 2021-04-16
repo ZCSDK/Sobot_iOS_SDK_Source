@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXAggregateTarget section */
@@ -21,7 +21,7 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
-		59E4A0C423B4532000680CD7 /* libSobotLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 59E4A0A423B4532000680CD7 /* libSobotLib.a */; };
+		59E4A0C423B4532000680CD7 /* libSobotLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 59E4A0A423B4532000680CD7 /* libSobotLib.a */; platformFilter = ios; };
 		59E4A0C623B4532000680CD7 /* ZCLIbGlobalDefine.h in Headers */ = {isa = PBXBuildFile; fileRef = 59E4A0A723B4532000680CD7 /* ZCLIbGlobalDefine.h */; };
 		59E4A0C723B4532000680CD7 /* ZCLibCommon.h in Headers */ = {isa = PBXBuildFile; fileRef = 59E4A0A823B4532000680CD7 /* ZCLibCommon.h */; };
 		59E4A0C823B4532000680CD7 /* ZCLibHttpConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = 59E4A0A923B4532000680CD7 /* ZCLibHttpConstants.h */; };
@@ -1649,7 +1649,11 @@
 				INFOPLIST_FILE = SobotKit/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/SobotKit/SobotLib",
@@ -1693,7 +1697,11 @@
 				INFOPLIST_FILE = SobotKit/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/SobotKit/SobotLib",

@@ -44,7 +44,8 @@
     }else{
         titleColor = UIColorFromThemeColor(ZCTextSubColor);
     }
-    
+
+    fileUrlStr = zcLibValidURLString(fileUrlStr);
     
     NSURL *fileUrl = [NSURL URLWithString:fileUrlStr];
     

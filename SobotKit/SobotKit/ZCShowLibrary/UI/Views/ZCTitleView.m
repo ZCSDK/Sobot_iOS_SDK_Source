@@ -18,6 +18,7 @@
 @interface ZCTitleView(){
     CGFloat lastSize;
     CGFloat maxWidth;
+    CGRect selfFrame;
 }
 
 
@@ -33,6 +34,8 @@
     self = [super initWithFrame:frame];
     if (self) {
         self.frame = frame;
+        
+        selfFrame  = frame;
         self.userInteractionEnabled = YES;
         self.backgroundColor = UIColor.clearColor;
         [self layoutTitleUI];
@@ -160,15 +163,15 @@
 
 -(void)layoutSubviews{
     [super layoutSubviews];
-    if(lastSize != self.frame.size.width){
-        maxWidth = self.frame.size.width;
-        lastSize = maxWidth;
-        
-        CGRect f = self.frame;
-        f.size.width = maxWidth;
-        
-        self.frame = f;
+//    if(lastSize != self.frame.size.width){
+////        maxWidth = selfFrame.size.width;
+//        lastSize = maxWidth;
+//
+//        CGRect f = self.frame;
+//        f.size.width = maxWidth;
+//
+//        self.frame = f;
         [self centerTitleView];
-    }
+//    }
 }
 @end

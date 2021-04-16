@@ -36,7 +36,6 @@
  *  评级打分页面
  */
 @interface ZCUIRatingView : UIView {
-	UIImageView *s1, *s2, *s3, *s4, *s5;
     /**
      *  unselectedImage     没有选择时的图片
      *  partlySelectedImage 部分选择时的图片
@@ -53,30 +52,8 @@
 	float height, width; // of each image of the star!
 }
 
-/**
- *  1颗星
- */
-@property (nonatomic, strong) UIImageView *s1;
-
-/**
- *  2颗星
- */
-@property (nonatomic, strong) UIImageView *s2;
-
-/**
- *  3颗星
- */
-@property (nonatomic, strong) UIImageView *s3;
-
-/**
- *  4颗星
- */
-@property (nonatomic, strong) UIImageView *s4;
-
-/**
- *  5颗星
- */
-@property (nonatomic, strong) UIImageView *s5;
+// 存储星星或分数
+@property (nonatomic, strong) NSMutableArray *starView;
 
 /**
  *  设置图片
@@ -88,6 +65,8 @@
  */
 -(void)setImagesDeselected:(NSString *)unselectedImage partlySelected:(NSString *)partlySelectedImage 
 			  fullSelected:(NSString *)fullSelectedImage andDelegate:(id<RatingViewDelegate>)d;
+-(void)setImagesDeselected:(NSString *)unselectedImage partlySelected:(NSString *)partlySelectedImage
+              fullSelected:(NSString *)fullSelectedImage count:(int) count  andDelegate:(id<RatingViewDelegate>)d;
 
 /**
  *  显示等级

@@ -217,7 +217,6 @@
     _listTable.autoresizesSubviews = YES;
     _listTable.delegate = self;
     _listTable.dataSource = self;
-    
     [_listTable registerClass:[ZCRichTextChatCell class] forCellReuseIdentifier:cellRichTextIdentifier];
     [_listTable registerClass:[ZCChatAllRichCell class] forCellReuseIdentifier:cellRichAllTextIdentifier];
     
@@ -259,7 +258,10 @@
     // 关闭安全区域，否则UITableViewCell横屏时会是全屏的宽
     NSString *version = [UIDevice currentDevice].systemVersion;
     if (version.doubleValue >= 11.0) {
-        [_listTable setInsetsContentViewsToSafeArea:NO];
+        if (@available(iOS 11.0, *)) {
+            [_listTable setInsetsContentViewsToSafeArea:NO];
+        } else {
+        }
     }
 
     _netWorkTools = [ZCLibNetworkTools shareNetworkTools];
@@ -284,8 +286,7 @@
         [[ZCIMChat getZCIMChat] checkConnected:NO];
     }
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(netWorkChanged:) name:ZCNotification_NetworkChange object:nil];
-    [[ZCIMChat getZCIMChat] setChatPageState:ZCChatPageStateActive];
-
+   
 
     // TODO 需要初始化接口返回的数据
     [self changeRobotBtn];
@@ -324,10 +325,19 @@
         if(code == ZCInitStatusLoadSuc){
             // 初始化完成
 
-            
             // 智齿loading消失
             [[ZCUILoading shareZCUILoading] dismiss];
             [safeSelf configShowNotifion];
+        
+            [[ZCIMChat getZCIMChat] setChatPageState:ZCChatPageStateActive];
+            
+            [[ZCUICore getUICore] loadSatisfactionDictlock:^(int code) {
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 ), dispatch_get_main_queue(), ^{
+                    [self.listTable reloadData];
+                });
+                
+            }];
+            
         }
        
     }];
@@ -625,27 +635,11 @@
             [self.delegate onPageStatusChange:YES];
         }
         self.closeButton.hidden = NO;
-        if([ZCUICore getUICore].kitInfo.isShowEvaluation || [ZCUICore getUICore].kitInfo.isShowTelIcon){
-            if ([ZCUICore getUICore].kitInfo.isShowClose) {
-                self.moreButton.frame = CGRectMake(self.frame.size.width-44*3, navHeight-44, 44, 44);
-
-                self.zcTitleView.frame = CGRectMake(44*3, NavBarHeight-44, self.frame.size.width- 44*4, 44);
-            }else{
-                self.moreButton.frame = CGRectMake(self.frame.size.width-44, navHeight-44, 44, 44);
-            }
-        }else {
-            if ([ZCUICore getUICore].kitInfo.isShowClose) {
-                self.moreButton.frame = CGRectMake(self.frame.size.width-44*2, navHeight-44, 44, 44);
-            }else{
-                self.moreButton.frame = CGRectMake(self.frame.size.width-44, navHeight-44, 44, 44);
-            }
-        }
     }else {
         if (self.delegate && [self.delegate respondsToSelector:@selector(onPageStatusChange:)]) {
             [self.delegate onPageStatusChange:NO];
         }
         self.closeButton.hidden = YES;
-        self.moreButton.frame = CGRectMake(self.frame.size.width-44, navHeight-44, 44, 44);
     }
     [self setTitleViewRTL];
 }
@@ -850,36 +844,7 @@
             [[ZCUIToastTools shareToast] showToast:ZCSTLocalString(@"网络错误，请检查网络后重试") duration:1.0f view:self position:ZCToastPositionCenter];
 
         });
-    }];
-    
-    dispatch_group_enter(group);
-    // 加载自定义字段接口
-    [[ZCLibServer getLibServer] postTemplateFieldInfoWithUid:[self getZCIMConfig].uid Templateld:templateId start:^{
-     
-    } success:^(NSDictionary *dict,NSMutableArray * cusFieldArray, ZCNetWorkCode sendCode) {
-        @try{
-            if (cusFieldArray.count) {
-                if (leaveMessageVC.coustomArr == nil) {
-                    leaveMessageVC.coustomArr = [NSMutableArray arrayWithCapacity:0];
-                    leaveMessageVC.coustomArr = cusFieldArray;
-                }
-                //                        [selfVC refreshViewData];
-            }
-            if ([dict[@"data"][@"retCode"] isEqualToString:@"000000"]) {
-                isJump = YES;
-            }else{
-                isJump = NO;
-            }
-            dispatch_group_leave(group);
-        } @catch (NSException *exception) {
-            
-        } @finally {
-            
-        }
-    } failed:^(NSString *errorMessage, ZCNetWorkCode errorCode) {
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [[ZCUIToastTools shareToast] showToast:ZCSTLocalString(@"网络错误，请检查网络后重试") duration:1.0f view:self position:ZCToastPositionCenter];
-        });
+        dispatch_group_leave(group);
     }];
 
 
@@ -1049,6 +1014,7 @@
     self.backButton = nil;
     self.moreButton = nil;
     self.evaluationBtn = nil;
+    self.telBtn = nil;
     self.zcTitleView = nil;
     self.superController = nil;
     self.refreshControl = nil;
@@ -1220,38 +1186,32 @@
             cell = [[ZCNoticeCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellNoticeCellIdentifier];
         }
         model.isOpenNotice = isOpenNotice;
-    }else if(model.richModel.msgType==1  || model.richModel.msgType == ZCMessageTypeVideo){
+    }else if(model.richModel.msgType == ZCMessageTypePhoto  || model.richModel.msgType == ZCMessageTypeVideo){
         cell = (ZCImageChatCell*)[tableView dequeueReusableCellWithIdentifier:cellImageIdentifier];
         if (cell == nil) {
             cell = [[ZCImageChatCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellImageIdentifier];
         }
-    }else if(model.richModel.msgType == 0 && model.richModel.answerType != 15){
-        // TODO 测试添加消息展示样式 && model.richModel.answerType != 1
-//        cell = (ZCRichTextChatCell*)[tableView dequeueReusableCellWithIdentifier:cellRichTextIdentifier];
-//        if (cell == nil) {
-//            cell = [[ZCRichTextChatCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellRichTextIdentifier];
-//        }
-//
+    }else if(model.richModel.msgType == ZCMessageTypeText){
         cell = (ZCChatAllRichCell *)[tableView dequeueReusableCellWithIdentifier:cellRichAllTextIdentifier];
         if (cell == nil) {
             cell = [[ZCChatAllRichCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellRichAllTextIdentifier];
         }
-    }else if(model.richModel.msgType==2){
+    }else if(model.richModel.msgType== ZCMessageTypeSound){
         cell = (ZCVoiceChatCell*)[tableView dequeueReusableCellWithIdentifier:cellVoiceIdentifier];
         if (cell == nil) {
             cell = [[ZCVoiceChatCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellVoiceIdentifier];
         }
-    }else if (model.richModel.msgType == 7){
+    }else if (model.richModel.msgType == ZCMessageTypeHotGuide){
         cell = (ZCHotGuideCell*)[tableView dequeueReusableCellWithIdentifier:cellHotGuideIdentifier];
         if (cell == nil) {
             cell = [[ZCHotGuideCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellHotGuideIdentifier];
         }
-    }else if (model.richModel.msgType == 24){
+    }else if (model.richModel.msgType == ZCMessageTypeCard){
         cell = (ZCInfoCardCell*)[tableView dequeueReusableCellWithIdentifier:cellCardCellIdentifier];
         if (cell == nil) {
             cell = [[ZCInfoCardCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellCardCellIdentifier];
         }
-    }else if (model.richModel.msgType == 25){
+    }else if (model.richModel.msgType == ZCMessageTypeOrder){
         cell = (ZCOrderGoodsCell*)[tableView dequeueReusableCellWithIdentifier:cellOrderGoodsIndentifier];
         if (cell == nil) {
             cell = [[ZCOrderGoodsCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellOrderGoodsIndentifier];
@@ -1267,47 +1227,28 @@
         if (cell == nil) {
             cell = [[ZCLocationCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellLocationIndentifier];
         }
-    }
-
-
-    else if(model.richModel.msgType == 15 && model.richModel.multiModel.msgType != 3 && model.richModel.multiModel.msgType != 5){
-        if (model.richModel.multiModel.msgType == 0 || model.richModel.multiModel.msgType== 1|| model.richModel.multiModel.msgType== 2){
+    }else if(model.richModel.msgType == ZCMessageTypeRichTextJson){
+        if (model.richModel.multiModel.templateIdType == 0 || model.richModel.multiModel.templateIdType== 1|| model.richModel.multiModel.templateIdType== 2){
             // 横向的collection
             cell = (ZCMultitemHorizontaRollCell*)[tableView dequeueReusableCellWithIdentifier:cellMultitemHorizontaRollIndentifier];
             if (cell == nil) {
                 cell =  [[ZCMultitemHorizontaRollCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellMultitemHorizontaRollIndentifier];
             }
-        }
-//        else if (model.richModel.multiModel.msgType== 1 ){
-//            cell = (ZCMultiItemCell*)[tableView dequeueReusableCellWithIdentifier:cellMultilItemIndentifier];
-//            if (cell) {
-//                cell =  [[ZCMultiItemCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellMultilItemIndentifier];
-//            }
-//        }
-//        else if (model.richModel.multiModel.msgType == 2){
-//            cell = (ZCVerticalRollCell*)[tableView dequeueReusableCellWithIdentifier:cellVerticalRollIndentifier];
-//            if (cell) {
-//                cell = [[ZCVerticalRollCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellVerticalRollIndentifier];
-//            }
-//        }
-        else if (model.richModel.multiModel.msgType == 3){
+        }else if (model.richModel.multiModel.templateIdType == 3){
             cell = (ZCMultiRichCell*)[tableView dequeueReusableCellWithIdentifier:cellMultiRichIdentifier];
             if (cell) {
                 cell = [[ZCMultiRichCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellMultiRichIdentifier];
             }
-        }else if (model.richModel.multiModel.msgType == 5){
-            cell = (ZCTextGuideCell*)[tableView dequeueReusableCellWithIdentifier:cellTextCellIdentifier];
-            if (cell) {
-                cell = [[ZCTextGuideCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellTextCellIdentifier];
-            }
         }
+//        else if (model.richModel.multiModel.templateIdType == 5){
+//            // 不会发生
+//            cell = (ZCTextGuideCell*)[tableView dequeueReusableCellWithIdentifier:cellTextCellIdentifier];
+//            if (cell) {
+//                cell = [[ZCTextGuideCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellTextCellIdentifier];
+//            }
+//        }
     }
     if(cell == nil){
-//        cell = (ZCRichTextChatCell*)[tableView dequeueReusableCellWithIdentifier:cellRichTextIdentifier];
-//        if (cell == nil) {
-//            cell = [[ZCRichTextChatCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellRichTextIdentifier];
-//        }
-        
         cell = (ZCChatAllRichCell *)[tableView dequeueReusableCellWithIdentifier:cellRichAllTextIdentifier];
         if (cell == nil) {
             cell = [[ZCChatAllRichCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellRichAllTextIdentifier];
@@ -1415,32 +1356,26 @@
         cellheight = [ZCFileCell getCellHeight:model time:time viewWith:viewWidth];
     }else if(model.richModel.msgType==ZCMessageTypeLocation){// 位置
         cellheight = [ZCLocationCell getCellHeight:model time:time viewWith:viewWidth];
-    }else if(model.richModel.msgType==2){
+    }else if(model.richModel.msgType==ZCMessageTypeSound){
         cellheight = [ZCVoiceChatCell getCellHeight:model time:time viewWith:viewWidth];
-    }else if (model.richModel.msgType == 7){
+    }else if (model.richModel.msgType == ZCMessageTypeHotGuide){
         cellheight = [ZCHotGuideCell getCellHeight:model time:time viewWith:viewWidth];
-    }else if (model.richModel.msgType == 24){
+    }else if (model.richModel.msgType == ZCMessageTypeCard){
         cellheight = [ZCInfoCardCell getCellHeight:model time:time viewWith:viewWidth];
-    }else if (model.richModel.msgType == 25){
+    }else if (model.richModel.msgType == ZCMessageTypeOrder){
         cellheight = [ZCOrderGoodsCell getCellHeight:model time:time viewWith:viewWidth];
-    }else if(model.richModel.msgType==15 && model.richModel.multiModel.msgType != 3 && model.richModel.multiModel.msgType != 5){
-        if (model.richModel.multiModel.msgType == 0 || model.richModel.multiModel.msgType == 1|| model.richModel.multiModel.msgType == 2){
+    }else if(model.richModel.msgType==ZCMessageTypeRichTextJson){
+        if (model.richModel.multiModel.templateIdType == 0 || model.richModel.multiModel.templateIdType == 1|| model.richModel.multiModel.templateIdType == 2){
             cellheight = [ZCMultitemHorizontaRollCell getCellHeight:model time:time viewWith:viewWidth];
         }
-//        else if (model.richModel.multiModel.msgType == 1){
-//            cellheight = [ZCMultiItemCell getCellHeight:model time:time viewWith:viewWidth];
-//        }
-//        else if (model.richModel.multiModel.msgType == 2){
-//            cellheight = [ZCVerticalRollCell getCellHeight:model time:time viewWith:viewWidth];
-//        }
-        else if (model.richModel.multiModel.msgType == 3){
+        else if (model.richModel.multiModel.templateIdType == 3){
             cellheight = [ZCMultiRichCell getCellHeight:model time:time viewWith:viewWidth];
-        }else if(model.richModel.multiModel.msgType == 5){
-            cellheight = [ZCTextGuideCell getCellHeight:model time:time viewWith:viewWidth];
         }
-    }else{
-//        cellheight = [ZCRichTextChatCell getCellHeight:model time:time viewWith:viewWidth];
-        
+//        else if(model.richModel.multiModel.templateIdType == 5){
+//            cellheight = [ZCTextGuideCell getCellHeight:model time:time viewWith:viewWidth];
+//        }
+    }
+    if(cellheight == 0){
         cellheight = [ZCChatAllRichCell getCellHeight:model time:time viewWith:viewWidth];
     }
     return cellheight;
@@ -2193,8 +2128,7 @@
             
         }
             break;
-        case ZCChatViewGoBackType_close:
-        {
+        case ZCChatViewGoBackType_close: {
             isClickCloseBtn = YES;
             
             if ([ZCUICore getUICore].kitInfo.isShowCloseSatisfaction) {
@@ -2328,30 +2262,30 @@
     navTableY = f.origin.y;
     [_listTable setFrame:f];
     [_keyboardTools setTableStartY:navTableY];
-    
+
 }
 #pragma mark -- 滚动到最底部
 -(void)keyboardscrollTableToBottom{
     [ZCLogUtils logHeader:LogHeader debug:@"滚动到底部"];
     CGFloat ch=_listTable.contentSize.height;
     CGFloat h=_listTable.bounds.size.height;
-    
+
     if(ch > h){
-        
+
         CGRect tf = _listTable.frame;
 
         CGFloat defaultHeight = BottomHeight;
         if([_keyboardTools getKeyBoardViewStatus] == ZCKeyboardStatusNewSession){
             defaultHeight = ZCConnectBottomHeight;
         }
-        
+
         if([_keyboardTools getKeyboardHeight] == 0){
             tf.origin.y   = navTableY - [_keyboardTools getKeyboardHeight] - (_keyboardTools.zc_bottomView.frame.size.height - defaultHeight);
         }else{
             tf.origin.y   = navTableY - [_keyboardTools getKeyboardHeight] - (_keyboardTools.zc_bottomView.frame.size.height - defaultHeight) + XBottomBarHeight;
         }
         _listTable.frame  = tf;
-        
+
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             [_listTable setContentOffset:CGPointMake(0, ch-h) animated:NO];
         });
@@ -2363,7 +2297,7 @@
             tf.origin.y   = navTableY - [_keyboardTools getKeyboardHeight] - (_keyboardTools.zc_bottomView.frame.size.height-BottomHeight) + XBottomBarHeight + (h - ch);
         }
         _listTable.frame  = tf;
-        
+
         [_listTable setContentOffset:CGPointMake(0, 0) animated:NO];
     }
 }
@@ -2547,24 +2481,9 @@
             [_topView setFrame:CGRectMake(0, 0, viewWidth, navHeight)];
             
             if([self getZCIMConfig].isArtificial){
-                
                 self.closeButton.hidden = NO;
-                if([ZCUICore getUICore].kitInfo.isShowEvaluation || [ZCUICore getUICore].kitInfo.isShowTelIcon){
-                    if ([ZCUICore getUICore].kitInfo.isShowClose) {
-                        self.moreButton.frame = CGRectMake(self.frame.size.width-44*3, NavBarHeight-44, 44, 44);
-                    }else{
-                        self.moreButton.frame = CGRectMake(self.frame.size.width-44, NavBarHeight-44, 44, 44);
-                    }
-                }else {
-                    if ([ZCUICore getUICore].kitInfo.isShowClose) {
-                        self.moreButton.frame = CGRectMake(self.frame.size.width-44*2, NavBarHeight-44, 44, 44);
-                    }else{
-                        self.moreButton.frame = CGRectMake(self.frame.size.width-44, NavBarHeight-44, 44, 44);
-                    }
-                }
             }else {
                 self.closeButton.hidden = YES;
-                self.moreButton.frame = CGRectMake(self.frame.size.width-74, NavBarHeight-44, 74, 44);
             }
         }
         if (self.sheet !=nil) {
@@ -2581,23 +2500,6 @@
         if(self.topView != nil){
 
             [self.backButton setFrame:CGRectMake(0, NavBarHeight-44, 64, 44)];
-            if(!self.closeButton.hidden){
-                if([ZCUICore getUICore].kitInfo.isShowEvaluation || [ZCUICore getUICore].kitInfo.isShowTelIcon){
-                    if ([ZCUICore getUICore].kitInfo.isShowClose) {
-                        self.moreButton.frame = CGRectMake(self.frame.size.width-44*3, NavBarHeight-44, 44, 44);
-                    }else{
-                        self.moreButton.frame = CGRectMake(self.frame.size.width-44, NavBarHeight-44, 44, 44);
-                    }
-                }else {
-                    if ([ZCUICore getUICore].kitInfo.isShowClose) {
-                        self.moreButton.frame = CGRectMake(self.frame.size.width-44*2, NavBarHeight-44, 44, 44);
-                    }else{
-                        self.moreButton.frame = CGRectMake(self.frame.size.width-44, NavBarHeight-44, 44, 44);
-                    }
-                }
-                [self.closeButton setFrame:CGRectMake(self.frame.size.width-44, NavBarHeight-44, 44, 44)];
-            }
-            
             [self.backButton setContentHorizontalAlignment:UIControlContentHorizontalAlignmentRight];
             [self.moreButton setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
     
@@ -2607,6 +2509,9 @@
             }
             if(self.evaluationBtn){
                 [[ZCToolsCore getToolsCore] setRTLFrame:self.evaluationBtn];
+            }
+            if(self.telBtn){
+                [[ZCToolsCore getToolsCore] setRTLFrame:self.telBtn];
             }
             [[ZCToolsCore getToolsCore] setRTLFrame:self.backButton];
         }
@@ -2634,6 +2539,8 @@
                        // 点击关闭，离线用户
                        [self confimGoBackWithType:ZCChatViewGoBackType_close];
                    }else{
+//                       isClickCloseBtn = false;
+                       [self setIsCloseNo];
                        [self goBackIsKeep];
                    }
                }];
@@ -2840,7 +2747,7 @@
 }
 
 
-- (void)cellItemClick:(int)satifactionType IsResolved:(int)isResolved Rating:(int)rating problem:(NSString *) problem{
+- (void)cellItemClick:(int)satifactionType IsResolved:(int)isResolved Rating:(int)rating problem:(NSString *) problem scoreFlag:(int)scoreFlag{
     if (satifactionType == 1) {
         // 弹评价页面
         
@@ -2849,7 +2756,7 @@
         
     }else{
         // 提交评价
-        [[ZCUICore getUICore] commitSatisfactionWithIsResolved:isResolved Rating:rating problem:problem];
+        [[ZCUICore getUICore] commitSatisfactionWithIsResolved:isResolved Rating:rating problem:problem scoreFlag:scoreFlag];
     }
 }
 
@@ -3136,18 +3043,21 @@
     if (zcLibConvertToString([ZCUICore getUICore].kitInfo.moreBtnSelImg).length >0) {
         [self.moreButton setImage:[ZCUITools zcuiGetBundleImage:zcLibConvertToString([ZCUICore getUICore].kitInfo.moreBtnSelImg)]  forState:UIControlStateHighlighted];
     }
-    [self.topView addSubview:self.moreButton];
-    self.moreButton.tag = BUTTON_MORE;
-    [self.moreButton addTarget:self action:@selector(buttonClick:) forControlEvents:UIControlEventTouchUpInside];
+    CGFloat btnItemWidth = 0;
+    if(![ZCUICore getUICore].kitInfo.hideNavBtnMore){
+        btnItemWidth = 44;
+        [self.moreButton setFrame:CGRectMake(self.frame.size.width-btnItemWidth, NavBarHeight-44, 44, 44)];
+        [self.topView addSubview:self.moreButton];
+        self.moreButton.tag = BUTTON_MORE;
+        [self.moreButton addTarget:self action:@selector(buttonClick:) forControlEvents:UIControlEventTouchUpInside];
+    }
     
-    
-    if ([ZCUICore getUICore].kitInfo.isShowEvaluation || [ZCUICore getUICore].kitInfo.isShowTelIcon ) {
+    if ([ZCUICore getUICore].kitInfo.isShowEvaluation) {
         
-        [self.moreButton setFrame:CGRectMake(self.frame.size.width-44, NavBarHeight-44, 44, 44)];
+        self.zcTitleView.frame = CGRectMake(100, NavBarHeight-44, self.frame.size.width- btnItemWidth*2.5 - 44*2.5, 44);
         
-        self.zcTitleView.frame = CGRectMake(100, NavBarHeight-44, self.frame.size.width- 80*2.5, 44);
         self.evaluationBtn=[UIButton buttonWithType:UIButtonTypeCustom];
-        [self.evaluationBtn setFrame:CGRectMake(self.frame.size.width-44*2, NavBarHeight-44, 44, 44)];
+        [self.evaluationBtn setFrame:CGRectMake(self.frame.size.width-44 - btnItemWidth, NavBarHeight-44, 44, 44)];
         [self.evaluationBtn.imageView setContentMode:UIViewContentModeScaleAspectFit];
         [self.evaluationBtn setContentEdgeInsets:UIEdgeInsetsZero];
         [self.evaluationBtn setContentHorizontalAlignment:UIControlContentHorizontalAlignmentRight];
@@ -3155,28 +3065,45 @@
         [self.evaluationBtn setAutoresizesSubviews:YES];
 //        [self.evaluationBtn setTitleEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 15)];
         [self.evaluationBtn setImageEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 15)];
-     if ([ZCUICore getUICore].kitInfo.isShowEvaluation) {
+     
             [self.evaluationBtn setImage:[ZCUITools zcuiGetBundleImage:@"zcicon_evaluate"] forState:UIControlStateNormal];
             [self.evaluationBtn setImage:[ZCUITools zcuiGetBundleImage:@"zcicon_evaluate"] forState:UIControlStateHighlighted];
             self.evaluationBtn.tag = BUTTON_EVALUATION;
-        }
-        if([ZCUICore getUICore].kitInfo.isShowTelIcon){
-            [self.evaluationBtn setImage:[ZCUITools zcuiGetBundleImage:@"zccion_call_icon"] forState:UIControlStateNormal];
-            [self.evaluationBtn setImage:[ZCUITools zcuiGetBundleImage:@"zccion_call_icon"] forState:UIControlStateHighlighted];
-            self.evaluationBtn.tag = BUTTON_TEL;
-        }
         
         [self.topView addSubview:self.evaluationBtn];
         [self.evaluationBtn addTarget:self action:@selector(buttonClick:) forControlEvents:UIControlEventTouchUpInside];
-        
+        btnItemWidth = btnItemWidth + 44;
     }
     
-    if ([ZCUICore getUICore].kitInfo.isShowClose || [ZCUICore getUICore].kitInfo.isShowClose ) {
-       
-        [self.moreButton setFrame:CGRectMake(self.frame.size.width-44*2, NavBarHeight-44, 44, 44)];
+    if ([ZCUICore getUICore].kitInfo.isShowTelIcon ) {
+        
+        self.zcTitleView.frame = CGRectMake(100, NavBarHeight-44, self.frame.size.width- btnItemWidth*2.5 - 44*2.5, 44);
+        
+        self.telBtn=[UIButton buttonWithType:UIButtonTypeCustom];
+        [self.telBtn setFrame:CGRectMake(self.frame.size.width-44 - btnItemWidth, NavBarHeight-44, 44, 44)];
+        [self.telBtn.imageView setContentMode:UIViewContentModeScaleAspectFit];
+        [self.telBtn setContentEdgeInsets:UIEdgeInsetsZero];
+        [self.telBtn setContentHorizontalAlignment:UIControlContentHorizontalAlignmentRight];
+        [self.telBtn setAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleTopMargin];
+        [self.telBtn setAutoresizesSubviews:YES];
+        [self.telBtn setImageEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 15)];
+     
+            [self.telBtn setImage:[ZCUITools zcuiGetBundleImage:@"zccion_call_icon"] forState:UIControlStateNormal];
+            [self.telBtn setImage:[ZCUITools zcuiGetBundleImage:@"zccion_call_icon"] forState:UIControlStateHighlighted];
+            self.telBtn.tag = BUTTON_TEL;
+        
+        
+        [self.topView addSubview:self.telBtn];
+        [self.telBtn addTarget:self action:@selector(buttonClick:) forControlEvents:UIControlEventTouchUpInside];
+        btnItemWidth = btnItemWidth + 44;
+    }
+    
+    if ([ZCUICore getUICore].kitInfo.isShowClose) {
+        
+        self.zcTitleView.frame = CGRectMake(btnItemWidth+44, NavBarHeight-44, self.frame.size.width-(btnItemWidth+44)*2, 44);
         
         self.closeButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        [self.closeButton setFrame:CGRectMake(self.frame.size.width-44, NavBarHeight-44, 44, 44)];
+        [self.closeButton setFrame:CGRectMake(self.frame.size.width-btnItemWidth - 44, NavBarHeight-44, 44, 44)];
         [self.closeButton.imageView setContentMode:UIViewContentModeScaleAspectFit];
         [self.closeButton setAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleTopMargin];
         [self.closeButton setContentEdgeInsets:UIEdgeInsetsZero];
@@ -3185,7 +3112,7 @@
 //        [self.closeButton setTitleEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 15)];
 //        [self.closeButton setImageEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 15)];
         //        [self.evaluationBtn setTitle:@"评价" forState:UIControlStateNormal];
-        [self.closeButton.titleLabel setFont:[ZCUITools zcgetListKitTitleFont]];
+        [self.closeButton.titleLabel setFont:[ZCUITools zcgetSubTitleFont]];
         [self.closeButton setTitleColor:[ZCUITools zcgetTopViewTextColor] forState:UIControlStateNormal];
         [self.closeButton setTitle:ZCSTLocalString(@"关闭") forState:0];
         self.closeButton.tag = BUTTON_CLOSE;
@@ -3193,7 +3120,9 @@
         
         [self.topView addSubview:self.closeButton];
         [self.closeButton addTarget:self action:@selector(buttonClick:) forControlEvents:UIControlEventTouchUpInside];
-        
+        if(![self getZCIMConfig].isArtificial){
+            self.closeButton.hidden = YES;
+        }
     }
     
     [self setTitleViewRTL];
@@ -3203,7 +3132,7 @@
 -(void)dealloc{
     NSLog(@"chatView页面销毁");
     
-    
+    [[ZCIMChat getZCIMChat] setChatPageState:ZCChatPageStateBack];
 }
          
          
@@ -3334,6 +3263,11 @@
     }];
     
 }
-
-
+/*
+  设置 成员变量 isClickCloseBtn 为false
+  在isShowReturnTips 为true 切点击了暂时离开 去调用
+ */
+- (void)setIsCloseNo {
+    isClickCloseBtn = false;
+}
 @end

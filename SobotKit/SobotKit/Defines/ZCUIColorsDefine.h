@@ -126,7 +126,7 @@
 //<!-- 第二级别转浅聊天第三级别灰色 -->
 #define ZCBgSystemWhiteThirdGrayColor @"ZCBgSystemWhiteThirdGrayColor" // 0x353538
 
-
+#define ZCRatingBGColor @"ZCRatingBGColor" // #F0AC0E
 
 
 

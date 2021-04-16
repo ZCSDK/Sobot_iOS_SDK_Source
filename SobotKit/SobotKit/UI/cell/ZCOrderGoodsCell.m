@@ -196,8 +196,10 @@
         if(goods && [goods isKindOfClass:[NSArray class]] && goods.count>0){
             NSDictionary *good = goods[0];
             goodsDesc = good[@"name"];
-            [_imgPhoto loadWithURL:[NSURL URLWithString:zcUrlEncodedString(good[@"pictureUrl"])] placeholer:[ZCUITools zcuiGetBundleImage:@"zcicon_default_goods"] showActivityIndicatorView:YES];
-            _imgPhoto.hidden = NO;
+            if(zcUrlEncodedString(good[@"pictureUrl"]).length > 0){
+                [_imgPhoto loadWithURL:[NSURL URLWithString:zcUrlEncodedString(good[@"pictureUrl"])] placeholer:[ZCUITools zcuiGetBundleImage:@"zcicon_default_goods"] showActivityIndicatorView:YES];
+                _imgPhoto.hidden = NO;
+            }
         }
         NSString *orderStatus = [ZCOrderGoodsModel getOrderStatusMsg:[zcLibConvertToString(dict[@"orderStatus"]) intValue]];
         NSString *orderCode = zcLibConvertToString(dict[@"orderCode"]);
@@ -239,7 +241,6 @@
              
         }
 
-        _lblStatus.hidden = NO;
         
         NSString *orderStr = ZCSTLocalString(@"订单");
         NSString *statusStr = ZCSTLocalString(@"状态");
@@ -248,7 +249,12 @@
         NSString *giveOrderStr = ZCSTLocalString(@"下单");
         NSString *timeStr = ZCSTLocalString(@"时间");
         
-        _lblStatus.attributedText = [self getOtherColorString:orderStatus Color:UIColorFromThemeColor(ZCTextNoticeLinkColor) withString:[NSString stringWithFormat:@"%@%@：%@",orderStr,statusStr,orderStatus]];
+        if(zcLibConvertToString(orderStatus).length > 0){
+            _lblStatus.hidden = NO;
+            _lblStatus.attributedText = [self getOtherColorString:orderStatus Color:UIColorFromThemeColor(ZCTextNoticeLinkColor) withString:[NSString stringWithFormat:@"%@%@：%@",orderStr,statusStr,orderStatus]];
+        }else{
+            [_lblStatus setText:@""];
+        }
         
         if(orderCode.length > 0 ){
            _lblOrderNo.hidden = NO;

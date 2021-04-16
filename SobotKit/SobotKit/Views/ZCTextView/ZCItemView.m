@@ -36,21 +36,8 @@
 +(CGFloat)getHeightWithArray:(NSArray *)titles{
     
     CGFloat btHeight = 36;
-    
-    CGFloat margin = 0;
-    
-    if (titles.count == 3 || titles.count == 4) {
-        margin = 20;
-        btHeight = 36*2 + margin;
-    }else if(titles.count == 5 || titles.count == 6 || titles.count >6){
-        margin = 40;
-        btHeight = 36*3 + margin;
-    }else if(titles.count == 1 || titles.count == 2){
-        btHeight = 36 ;
-    }else{
-        btHeight = 0;
-    }
-    return    btHeight;
+    int rows = (int)(titles.count/2 + ((titles.count%2==0)?0:1));
+    return    btHeight*rows + (rows - 1) * 20;
 
 }
 
@@ -86,9 +73,9 @@
         [titleBT.titleLabel setFont:ZCUIFont14];
         
 //        [titleBT setBackgroundImage:[ZCUIImageTools zcimageWithColor:UIColorFromThemeColor(ZCBgLeftChatColor)] forState:UIControlStateNormal];
-        [titleBT setBackgroundImage:[ZCUIImageTools zcimageWithColor:UIColorFromThemeColor(ZCBgLeftChatColor)] forState:UIControlStateNormal];
-        [titleBT setBackgroundImage:[ZCUIImageTools zcimageWithColor:[ZCUITools zcgetCommentPageButtonBgColor]] forState:UIControlStateSelected];
-        [titleBT setBackgroundImage:[ZCUIImageTools zcimageWithColor:[ZCUITools zcgetCommentPageButtonBgColor]] forState:UIControlStateHighlighted];
+        [titleBT setBackgroundImage:[ZCUIImageTools zcimageWithColor:[ZCUITools zcgetCommentItemButtonBgColor]] forState:UIControlStateNormal];
+        [titleBT setBackgroundImage:[ZCUIImageTools zcimageWithColor:[ZCUITools zcgetCommentItemSelButtonBgColor]] forState:UIControlStateSelected];
+        [titleBT setBackgroundImage:[ZCUIImageTools zcimageWithColor:[ZCUITools zcgetCommentItemSelButtonBgColor]] forState:UIControlStateHighlighted];
         tagI = tagI + 1;
         titleBT.tag = tagI;
         [self  addSubview:titleBT];

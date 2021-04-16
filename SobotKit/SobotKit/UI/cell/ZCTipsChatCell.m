@@ -27,11 +27,11 @@
 @end
 
 @implementation ZCTipsChatCell{
-
+    
     ZCMLEmojiLabel *_lblTextMsg;
     UIImageView     *_lineView;
     CGPoint centerX;
-
+    
 }
 
 
@@ -71,8 +71,8 @@
         _lblTextMsg.disableEmoji = NO;
         _lblTextMsg.lineSpacing = 3.0f;
         _lblTextMsg.verticalAlignment = ZCTTTAttributedLabelVerticalAlignmentCenter;
-//        _lblTextMsg.textAlignment = NSTextAlignmentCenter;
-//        [_lblTextMsg setLinkColor:[ZCUITools zcgetChatLeftLinkColor]];
+        //        _lblTextMsg.textAlignment = NSTextAlignmentCenter;
+        //        [_lblTextMsg setLinkColor:[ZCUITools zcgetChatLeftLinkColor]];
         [self.contentView addSubview:_lblTextMsg];
     }
     return _lblTextMsg;
@@ -92,8 +92,8 @@
     // 调整提示cell的行间距
     CGFloat cellHeight = timeHeight;
     
-//    self.ivBgView.layer.cornerRadius = 12;
-//    self.ivBgView.layer.masksToBounds = YES;
+    //    self.ivBgView.layer.cornerRadius = 12;
+    //    self.ivBgView.layer.masksToBounds = YES;
     
     // 设置提示气泡的背景颜色
     if(model.tipStyle == 2){
@@ -103,9 +103,9 @@
     }else{
         _lineView.hidden = YES;
         [self.emojiLabel setTextColor:UIColorFromThemeColor(ZCTextSubColor)];
-//        [self.emojiLabel setTextColor:[UIColor blueColor]];
+        //        [self.emojiLabel setTextColor:[UIColor blueColor]];
         [self.ivBgView setBackgroundColor:[ZCUITools zcgetBgTipAirBubblesColor]];
-//        self.ivBgView.backgroundColor = UIColorFromRGB(0xFFF8F9FA); FFACB5C4
+        //        self.ivBgView.backgroundColor = UIColorFromRGB(0xFFF8F9FA); FFACB5C4
     }
     
     if(model){
@@ -115,37 +115,37 @@
         if(
            (zcLibConvertToString(model.sysTips).length >0) &&
            ([zcLibConvertToString(model.sysTips) hasSuffix:ZCSTLocalString(@"您已完成评价")] ||
-           [zcLibConvertToString(model.sysTips) hasSuffix:ZCSTLocalString(@"咨询后才能评价服务质量")] ||
+            [zcLibConvertToString(model.sysTips) hasSuffix:ZCSTLocalString(@"咨询后才能评价服务质量")] ||
             [zcLibConvertToString(model.sysTips) hasPrefix:ZCSTLocalString(@"您好,本次会话已结束")] ||
             [zcLibConvertToString(model.sysTips) hasPrefix:temp]||
             [zcLibConvertToString(model.sysTips) hasPrefix:ZCSTLocalString(@"暂无客服在线")]) ){
             // 处理动画样式
             [self setTipCellAnimateTransformWith:model];
-//
-//
-//            // 留言标签的处理
-//            NSString *tempStr = model.sysTips;
-//            tempStr = [tempStr stringByReplacingOccurrencesOfString:@"[" withString:@""];
-//            tempStr = [tempStr stringByReplacingOccurrencesOfString:@"]" withString:@""];
-//
-//            [_lblTextMsg setLinkColor:[ZCUITools zcgetRightChatColor]];
-//            _lblTextMsg.text = tempStr;
-//
-//
-//            if ([tempStr hasSuffix:ZCSTLocalString(@"留言")]) {
-//
-//
-//                [_lblTextMsg addLinkToURL:[NSURL URLWithString:ZCSTLocalString(@"留言")] withRange:NSMakeRange(tempStr.length-ZCSTLocalString(@"留言").length, ZCSTLocalString(@"留言").length)];
-//
-            }
-//
-//
-//        }else{
-            [self HandleHTMLTagsWith:model];
-//        }
+            //
+            //
+            //            // 留言标签的处理
+            //            NSString *tempStr = model.sysTips;
+            //            tempStr = [tempStr stringByReplacingOccurrencesOfString:@"[" withString:@""];
+            //            tempStr = [tempStr stringByReplacingOccurrencesOfString:@"]" withString:@""];
+            //
+            //            [_lblTextMsg setLinkColor:[ZCUITools zcgetRightChatColor]];
+            //            _lblTextMsg.text = tempStr;
+            //
+            //
+            //            if ([tempStr hasSuffix:ZCSTLocalString(@"留言")]) {
+            //
+            //
+            //                [_lblTextMsg addLinkToURL:[NSURL URLWithString:ZCSTLocalString(@"留言")] withRange:NSMakeRange(tempStr.length-ZCSTLocalString(@"留言").length, ZCSTLocalString(@"留言").length)];
+            //
+        }
+        //
+        //
+        //        }else{
+        [self HandleHTMLTagsWith:model];
+        //        }
         
         CGSize optimalSize = [[self emojiLabel] preferredSizeWithMaxWidth:self.viewWidth - 40];
-//        NSLog(@"一次计算文本的高度%f",optimalSize.height);
+        //        NSLog(@"一次计算文本的高度%f",optimalSize.height);
         msgF.size.height = optimalSize.height;
         msgF.size.width  = optimalSize.width;
         [_lblTextMsg setFrame:msgF];
@@ -155,7 +155,7 @@
         lf.origin.x    = self.viewWidth/2-lf.size.width/2;
         
         [_lblTextMsg setFrame:lf];
-       
+        
         lf.origin.x=lf.origin.x-15;
         lf.origin.y=lf.origin.y - 3;
         lf.size.width=lf.size.width+30;
@@ -173,12 +173,12 @@
         self.ivBgView.layer.masksToBounds=YES;
         
         cellHeight=lf.size.height + lf.origin.y ;
-//        NSLog(@"第一次计算之后的cell 搞%f",cellHeight);
+        //        NSLog(@"第一次计算之后的cell 搞%f",cellHeight);
         self.frame=CGRectMake(0, 0, self.viewWidth, cellHeight + 10 +3);
-    
+        
     }
     
-//    NSLog(@"再加上15%f",cellHeight);
+    //    NSLog(@"再加上15%f",cellHeight);
     return cellHeight +3;
 }
 
@@ -206,10 +206,7 @@
             }];
             
         }];
-        
-        
     }
-
 }
 
 
@@ -236,13 +233,13 @@
 #pragma mark EmojiLabel链接点击事件
 // 链接点击
 -(void)attributedLabel:(ZCTTTAttributedLabel *)label didSelectLinkWithURL:(NSURL *)url{
-
-    if ([zcLibConvertToString(label.text) hasSuffix:ZCSTLocalString(@"留言")] && (url.absoluteString.length ==0 || [ZCSTLocalString(@"留言") isEqual:url.absoluteString] )) {
+    
+    if ([zcLibConvertToString(label.text) hasSuffix:ZCSTLocalString(@"留言")] && (url.absoluteString.length ==0 || [@"sobot://leavemessage" isEqual:url.absoluteString] )) {
         [self turnLeverMessageVC];
     }else if ([zcLibConvertToString(label.text) hasSuffix:ZCSTLocalString(@"您的留言状态有 更新")] && (url.absoluteString.length ==0 || [ZCSTLocalString(@"您的留言状态有 更新") isEqual:url.absoluteString] || [ZCSTLocalString(@"更新") isEqual:url.absoluteString])){
         [self turnLeverMsgRecordVC];
     }else{
-         [self doClickURL:url.absoluteString text:@""];
+        [self doClickURL:url.absoluteString text:@""];
     }
     
 }
@@ -287,7 +284,7 @@
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
     [super setSelected:selected animated:animated];
-
+    
     // Configure the view for the selected state
 }
 
@@ -320,10 +317,10 @@
         tempLabel.text = text;
         
         CGSize optimalSize = [tempLabel preferredSizeWithMaxWidth:viewWidth - 40];
-//        NSLog(@"计算后文本的高度%f",optimalSize.height);
+        //        NSLog(@"计算后文本的高度%f",optimalSize.height);
         timeHeight = timeHeight + optimalSize.height + 10;
     }
-
+    
     return timeHeight +3;
 }
 
@@ -331,27 +328,27 @@
 // 处理标签
 - (void)HandleHTMLTagsWith:(ZCLibMessage *) model{
     NSString  *text = [ZCTipsChatCell getSysTipsText:model];
-  
+    
     text = [text stringByReplacingOccurrencesOfString:@"\n" withString:@""];
     
-//    [_lblTextMsg setLinkColor:[ZCUITools zcgetChatLeftLinkColor]];
-//    [_lblTextMsg setLinkColor:[UIColor redColor]];
+    //    [_lblTextMsg setLinkColor:[ZCUITools zcgetChatLeftLinkColor]];
+    //    [_lblTextMsg setLinkColor:[UIColor redColor]];
     
     
     [ZCHtmlCore filterHtml:text result:^(NSString * _Nonnull text1, NSMutableArray * _Nonnull arr, NSMutableArray * _Nonnull links) {
         // zcgetTipLayerTextColor  zcgetLeftChatTextColor
         if (text1 != nil && text1.length > 0) {
             if ([text1 hasPrefix:[NSString stringWithFormat:@"%@",ZCSTLocalString(@"您好，客服")]]) {
-               [_lblTextMsg setLinkColor:UIColorFromThemeColor(ZCTextSubColor)];
+                [_lblTextMsg setLinkColor:UIColorFromThemeColor(ZCTextSubColor)];
             }
-//             _lblTextMsg.attributedText = [ZCHtmlFilter setHtml:text1 attrs:arr view:_lblTextMsg textColor:[ZCUITools zcgetTipLayerTextColor] textFont:[ZCUITools zcgetListKitDetailFont] linkColor:[ZCUITools zcgetChatLeftLinkColor]];FFACB5C4
-//            _lblTextMsg.attributedText =
+            //             _lblTextMsg.attributedText = [ZCHtmlFilter setHtml:text1 attrs:arr view:_lblTextMsg textColor:[ZCUITools zcgetTipLayerTextColor] textFont:[ZCUITools zcgetListKitDetailFont] linkColor:[ZCUITools zcgetChatLeftLinkColor]];FFACB5C4
+            //            _lblTextMsg.attributedText =
             [ZCHtmlFilter setHtml:text1 attrs:arr view:_lblTextMsg textColor:[ZCUITools zcgetTipLayerTextColor] textFont:ZCUIFont12 linkColor:[ZCUITools zcgetChatLeftLinkColor]];
             
         }else{
-             _lblTextMsg.attributedText = [[NSAttributedString alloc] initWithString:@""];
+            _lblTextMsg.attributedText = [[NSAttributedString alloc] initWithString:@""];
         }
-       
+        
     }];
     
     if ([zcLibConvertToString( model.sysTips) hasPrefix:zcLibConvertToString([self getZCLibConfig].userOutWord)] || [zcLibConvertToString( model.sysTips) hasPrefix:zcLibConvertToString([self getZCLibConfig].adminNonelineTitle)]) {
@@ -364,7 +361,7 @@
         
         [self.ivBgView setBackgroundColor:[ZCUITools zcgetLeftChatColor]];
     }
-
+    
 }
 
 
@@ -377,14 +374,14 @@
     
     if ([zcLibConvertToString(text) hasPrefix:[NSString stringWithFormat:@"%@",ZCSTLocalString(@"您好，客服")]]) {
         // 留言标签的处理
-//        NSString nikeNameStr = ZCSTLocalString(@"昵称");
+        //        NSString nikeNameStr = ZCSTLocalString(@"昵称");
         text = [text stringByReplacingOccurrencesOfString:@"[" withString:@"<a href='昵称'>"];
         text = [text stringByReplacingOccurrencesOfString:@"]" withString:@"</a>"];
     }
     
     if ([zcLibConvertToString(text) hasSuffix:ZCSTLocalString(@"留言")]) {
         // 留言标签的处理
-        text = [text stringByReplacingOccurrencesOfString:ZCSTLocalString(@"留言") withString:[NSString stringWithFormat:@"<a href='%@'>%@</a>",ZCSTLocalString(@"留言"),ZCSTLocalString(@"留言")]];
+        text = [text stringByReplacingOccurrencesOfString:ZCSTLocalString(@"留言") withString:[NSString stringWithFormat:@"<a href='sobot://leavemessage'>%@</a>",ZCSTLocalString(@"留言")]];
     }
     
     if ([zcLibConvertToString(text) hasSuffix:ZCSTLocalString(@"重建会话")]) {

@@ -51,11 +51,11 @@
 
 普通版：
 
-下载链接：[iOS_SDK_2.9.4](https://img.sobot.com/mobile/sdk/iOS_SDK_2.9.4.zip)
+下载链接：[iOS_SDK_2.9.6](https://img.sobot.com/mobile/sdk/iOS_SDK_2.9.6.zip)
 
 电商版：
 
-下载链接：[iOS_SDK_2.9.4_电商版](https://img.sobot.com/mobile/sdk/iOS_SDK_2.9.4_MALL.zip)
+下载链接：[iOS_SDK_2.9.6_电商版](https://img.sobot.com/mobile/sdk/iOS_SDK_2.9.6_MALL.zip)
 
 解压[iOS_SDK]，添加必要文件SobotKit.framework和SobotKit.bundle到你的工程里。智齿iOS_SDK 的实现，依赖了一些系统的框架，在开发应用时需要在工程里加入这些框架。开发者首先点击工程右边的工程名，然后在工程名右边依次选择TARGETS -> BuiLd Phases -> Link Binary With Libraries，展开 LinkBinary With Libraries后点击展开后下面的 + 来添加下面的依赖项:
 
@@ -740,6 +740,8 @@ menu1.imgName = @"zcicon_sendpictures";
 kitInfo.cusMoreArray = arr;
 ```
 模拟自定义“+”点击发送事件:  
+返回YES表示事件拦截，交由用户手动处理
+返回NO表示事件不拦截 由智齿SDK内部处理
 
 ```js
 
@@ -757,10 +759,10 @@ kitInfo.cusMoreArray = arr;
                 model.totalFee = @"4890";
                 [ZCSobotApi sendOrderGoodsInfo:model resultBlock:nil];
                 
-                return NO;
+                return YES;
             }
         
-        return YES;
+        return NO;
     }];
 ```
 ZCOrderGoodsModel 类说明：
@@ -1763,7 +1765,8 @@ _kitInfo.hideManualEvaluationLabels = YES;
 | helpCenterTel   | NSString   | 帮助中心可跳转电话号码   |  默认不显示 |
 | helpCenterTelTitle   | NSString   | 帮助中心电话号码显示内容  |  默认不显示 |
 | showPhotoPreview   | BOOL   | 选择图片时，不直接发送，预览发送【注意：预览方框仅为放大镜效果，不是裁切图片，发送的还是原图】  |  默认NO，关闭 |
-
+| leaveTemplateId   | NSString   |  留言模板 id【注意 配合ZCChatControllerDelegate 使用 】  |    |
+| hideNavBtnMore   | BOOL   |  是否隐藏导航右上角“...”更多按钮  |  默认NO，默认不隐藏 |
 
 ### 字体相关：
 | 属性名称 | 数据类型 | 说明 | 备注 |
@@ -1798,6 +1801,9 @@ _kitInfo.hideManualEvaluationLabels = YES;
 | trunServerBtnColor   | UIColor   | 机器人的问答中 提示转人工按钮的文字颜色   |    |
 | bottomLineColor   | UIColor   | 底部bottom框边框线颜色(输入框、录音按钮、分割线)   |    |
 | notificationTopViewBgColor   | UIColor   | 通告栏的背景色   |    |
+| commentButtonBgColor   | UIColor   | 评价弹出页面 按钮选中颜色(默认跟随主题色)  |    |
+| commentItemButtonBgColor   | UIColor   | 评价选项按钮选中颜色(默认跟随主题色)   |    |
+| commentItemButtonSelBgColor   | UIColor   | 评价选项按钮选中颜色(默认跟随主题色)   |    |
 
 ### 文字颜色相关：
 | 属性名称 | 数据类型 | 说明 | 备注 |
@@ -1818,7 +1824,7 @@ _kitInfo.hideManualEvaluationLabels = YES;
 | chatTextViewColor   | UIColor   | 输入框文本颜色   |    |
 | notificationTopViewLabelColor   | UIColor   | 通告栏的文字颜色   |    |
 | emojiSendBgColor   | UIColor   | 表情键盘发送按钮背景颜色,2.8.5新增   |    |
-| emojiSendTextColor   | UIColor   | 表情键盘发送按钮文字颜色,2.8.5新增   |    |
+
 
 ### 图片相关：
 | 属性名称 | 数据类型 | 说明 | 备注 |

@@ -96,7 +96,7 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
 @property (nonatomic,strong) UIImagePickerController *zc_imagepicker;
 
 /** 聊天页中UITableView 用于界面键盘高度处理 */
-@property (nonatomic,strong) UITableView *zc_listTable;
+@property (nonatomic,weak) UITableView *zc_listTable;
 
 /** 键盘高度 */
 @property (nonatomic,assign) CGFloat zc_keyBoardHeight;
@@ -595,6 +595,9 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
 
 #pragma mark -- 创建满意度、留言、相册、评价等按钮
 - (void)creatButtonForArray:(NSArray *)titles{
+    if(titles.count == 0){
+        return;
+    }
     CGFloat itemH = 109;
     
     int columns         = 4;
@@ -842,7 +845,12 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
             NSString *aleartMsg = @"";
             aleartMsg = ZCSTLocalString(@"请在《设置 - 隐私 - 相机》选项中，允许访问您的相机");
             [[ZCToolsCore getToolsCore] showAlert:nil message:aleartMsg cancelTitle:ZCSTLocalString(@"好的") titleArray:nil viewController:[self getCurrentVC] confirm:^(NSInteger buttonTag) {
-                
+                if(buttonTag == 0){
+                    NSURL *url = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
+                    if ([[UIApplication sharedApplication] canOpenURL:url]) {
+                       [[UIApplication sharedApplication] openURL:url];
+                    }
+                }
             }];
             
             
@@ -860,7 +868,12 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
 
                     
                     [[ZCToolsCore getToolsCore] showAlert:nil message:aleartMsg cancelTitle:ZCSTLocalString(@"好的") titleArray:nil viewController:[self getCurrentVC] confirm:^(NSInteger buttonTag) {
-                        
+                        if(buttonTag == 0){
+                            NSURL *url = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
+                            if ([[UIApplication sharedApplication] canOpenURL:url]) {
+                               [[UIApplication sharedApplication] openURL:url];
+                            }
+                        }
                     }];
                 });
             }
@@ -1525,14 +1538,20 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
         return NO;
     }
     
+    
     if([text length]==0){
         if(range.length<1){
             return YES;
         }else{
+            
             [self textChanged:_zc_chatTextView];
         }
+    }else{
+        // 大于1000不让继续输入
+        if([textView.text length] >= 1000){
+            return NO;
+        }
     }
-    
     return YES;
 }
 
@@ -1782,12 +1801,12 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
         
         
         _zc_bottomView.frame = bf;
-        
+        // TODO:  暂时修改 
         CGRect tf         = _zc_listTable.frame;
 //        tf.origin.y = startTableY;
-        tf.origin.y = startTableY - (_zc_bottomView.frame.size.height-BottomHeight);
+//        tf.origin.y = startTableY - (_zc_bottomView.frame.size.height-BottomHeight);
         _zc_listTable.frame  = tf;
-        
+//        NSLog(@"startTableY === %lf  frame ===== %@    _zc_bottomView.frame.size.height === %f   BottomHeight =====%d" ,startTableY,NSStringFromCGRect(_zc_listTable.frame) ,_zc_bottomView.frame.size.height ,BottomHeight);
         if (!_vioceTipLabel.hidden) {
             CGRect TF = _vioceTipLabel.frame;
             TF.origin.y =  _zc_bottomView.frame.origin.y - _vioceTipLabel.frame.size.height;
@@ -2147,7 +2166,12 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
              aleartMsg = ZCSTLocalString(@"请在iPhone的《设置-隐私-麦克风》选项中，允许访问你的麦克风");
              
              [[ZCToolsCore getToolsCore] showAlert:nil message:aleartMsg cancelTitle:ZCSTLocalString(@"好的") titleArray:nil viewController:[self getCurrentVC] confirm:^(NSInteger buttonTag) {
-                 
+                 if(buttonTag == 0){
+                     NSURL *url = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
+                     if ([[UIApplication sharedApplication] canOpenURL:url]) {
+                        [[UIApplication sharedApplication] openURL:url];
+                     }
+                 }
              }];
          });
          return;
@@ -2348,6 +2372,11 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
     
     if(_isConnectioning){
         return;
+    }
+    
+    // 最多发送1000字符
+    if(text.length > 1000){
+        text = [text substringToIndex:1000];
     }
     
     [_zc_chatTextView setText:@""];

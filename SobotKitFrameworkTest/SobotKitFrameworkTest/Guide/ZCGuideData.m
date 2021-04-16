@@ -41,45 +41,44 @@
 }
 
 -(void)setDefaultValue{
-
-//            NSString *appkey = @"e851c8ec5826445fbf4e63ac49ce257e";  // xinyao  测试
-            NSString *appkey = @"e550c6e4250c4ab490f290c6d7cb5ac2";  // xinyao  正式
-    appkey = @"6ab2f5150bf2415cbbabac589731d52a";
-    #pragma mark - 环境
-            NSString *apiHost = @"https://api.sobot.com";
-//            apiHost = @"http://test.sobot.com";
-//            apiHost = @"https://ten.sobot.com";
-//            apiHost = @"http://172.16.4.208:8082";
-//    apiHost = @"http://kefu.popmart.com";
+    
+    //            NSString *appkey = @"e851c8ec5826445fbf4e63ac49ce257e";  // xinyao  测试
+    NSString *appkey = @"3c9bf8e7992d465f9573c6407b9999f5";  // xinyao  正式
+    appkey = @"b9d6173075a54e48afcc6a2244c9f4ce";
+#pragma mark - 环境
+    NSString *apiHost = @"http://kefu.popmart.com/";
+    apiHost = @"http://test.sobot.com";
+    apiHost = @"https://www.sobot.com";
+    //            apiHost = @"http://172.16.4.208:8082";
+    //    apiHost = @"http://kefu.popmart.com";
     
     
-
+    
     _apiHost = apiHost;
     _libInitInfo.app_key = appkey;
-    _libInitInfo.partnerid = @"xinyao1234567";
-//    _libInitInfo.robotid = @"2";
+    _libInitInfo.partnerid = @"104-544618727661113344";
+    //    _libInitInfo.robotid = @"2";
     
-//    _libInitInfo.absolute_language = @"tr_lproj";
-//    _libInitInfo.absolute_language = @"it_lproj";
+    //    _libInitInfo.absolute_language = @"tr_lproj";
+    //    _libInitInfo.absolute_language = @"it_lproj";
     
     
     /**
      *  链接地址正则表达式
      *  默认为：
-        @"((http[s]{0,1}|ftp)://[a-zA-Z0-9\\.\\-]+\\.([a-zA-Z0-9]{1,4})(:\\d+)?(/[a-zA-Z0-9\\.\\-~!@#$%^&*+?:_/=<>]*)?)|(([a-zA-Z0-9]{2,4}).[a-zA-Z0-9\\.\\-]+\\.([a-zA-Z]{2,4})(:\\d+)?(/[a-zA-Z0-9\\.\\-~!@#$%^&*+?:_/=<>]*)?)"
+     @"((http[s]{0,1}|ftp)://[a-zA-Z0-9\\.\\-]+\\.([a-zA-Z0-9]{1,4})(:\\d+)?(/[a-zA-Z0-9\\.\\-~!@#$%^&*+?:_/=<>]*)?)|(([a-zA-Z0-9]{2,4}).[a-zA-Z0-9\\.\\-]+\\.([a-zA-Z]{2,4})(:\\d+)?(/[a-zA-Z0-9\\.\\-~!@#$%^&*+?:_/=<>]*)?)"
      */
-//    _kitInfo.urlRegular = @"((http[s]{0,1}|ftp)://[a-zA-Z0-9\\.\\-]+\\.([a-zA-Z0-9]{1,4})(:\\d+)?(/[a-zA-Z0-9\\.\\-~!@#$%^&*+?:_/=<>]*)?)";
-
-    _kitInfo.isShowPortrait = YES;
-    _kitInfo.showPhotoPreview = YES;
-//    _kitInfo.isShowReturnTips = YES;
-//    _kitInfo.isOpenEvaluation = YES;
-//    _kitInfo.isShowCloseSatisfaction = YES;
-//    _kitInfo.navcBarHidden = YES;
-//    _kitInfo.isCloseInquiryForm = YES;
-//    _kitInfo.topViewBgColor = UIColor.redColor;
-//    _kitInfo.hideRototEvaluationLabels = YES;
-//    _kitInfo.hideManualEvaluationLabels = YES;
+    //    _kitInfo.urlRegular = @"((http[s]{0,1}|ftp)://[a-zA-Z0-9\\.\\-]+\\.([a-zA-Z0-9]{1,4})(:\\d+)?(/[a-zA-Z0-9\\.\\-~!@#$%^&*+?:_/=<>]*)?)";
+    
+    
+    //    _kitInfo.isShowReturnTips = YES;
+    //    _kitInfo.isOpenEvaluation = YES;
+    //    _kitInfo.isShowCloseSatisfaction = YES;
+    //    _kitInfo.navcBarHidden = YES;
+    //    _kitInfo.isCloseInquiryForm = YES;
+    //    _kitInfo.topViewBgColor = UIColor.redColor;
+    //    _kitInfo.hideRototEvaluationLabels = YES;
+    //    _kitInfo.hideManualEvaluationLabels = YES;
     
     
     ZCProductInfo *productInfo = [ZCProductInfo new];
@@ -89,26 +88,26 @@
     productInfo.desc = @"描述描述描述描述描述描述111描述描述描述描述描述描述2222描述描述描述描述描述描述333描述描述描述描述描述描述";
     productInfo.label = @"标签1111";
     productInfo.link = @"www.baidu.com";
-//    _kitInfo.productInfo = productInfo;
+    //    _kitInfo.productInfo = productInfo;
     
     
-//    _kitInfo.leaveParamsExtends = @[@{@"id":@"23c0019171d74c73b8dde5045766db8a",@"value":@"sdfsdfssdf",@"params":@"zhangxy"}];
-
+    //    _kitInfo.leaveParamsExtends = @[@{@"id":@"23c0019171d74c73b8dde5045766db8a",@"value":@"sdfsdfssdf",@"params":@"zhangxy"}];
     
     
-        NSMutableArray * leaveParamsExtends = [NSMutableArray new];
-        [leaveParamsExtends addObject:@{@"id":@"5212011cae9f4f22b0e792d5f68c8b00",@"value":@"device1111111",@"params":@"device"}];
-        [leaveParamsExtends addObject:@{@"id":@"31c65e32b5584f62971e73a647fe114e",@"value":@"IOS",@"params":@"system"}];
-        [leaveParamsExtends addObject:@{@"id":@"a71db61b65cd4216bb19098bdf48026c",@"value":@"33333systemVersion",@"params":@"systemVersion"}];
-        [leaveParamsExtends addObject:@{@"id":@"8caa1be6dea74074b214109ad30a89f1",@"value":@"wifi",@"params":@"netWork"}];
-        [leaveParamsExtends addObject:@{@"id":@"ce97e63e2f0e4c26beb6e41ac17d081d",@"value":@"44444carrier",@"params":@"carrier"}];
-        [leaveParamsExtends addObject:@{@"id":@"47f0a3a922b342c4bb5feaff2764e20d",@"value":@"xvalue",@"params":@"screenPix"}];
-        [leaveParamsExtends addObject:@{@"id":@"2d2e3c0aca1744738b299672c82c356c",@"value":@"versionsssssss",@"params":@"appVersion"}];
-        [leaveParamsExtends addObject:@{@"id":@"68b86f5674b1470193069fa4ee04ea40",@"value":@"轻听英语",@"params":@"appName"}];
-        [leaveParamsExtends addObject:@{@"id":@"53778393357f429e954a2560e2ee62b9",@"value":@"userIdvalue",@"params":@"userId"}];
-//        _kitInfo.leaveParamsExtends = leaveParamsExtends;
     
-NSMutableArray *arr = [[NSMutableArray alloc] init];
+    NSMutableArray * leaveParamsExtends = [NSMutableArray new];
+    [leaveParamsExtends addObject:@{@"id":@"5212011cae9f4f22b0e792d5f68c8b00",@"value":@"device1111111",@"params":@"device"}];
+    [leaveParamsExtends addObject:@{@"id":@"31c65e32b5584f62971e73a647fe114e",@"value":@"IOS",@"params":@"system"}];
+    [leaveParamsExtends addObject:@{@"id":@"a71db61b65cd4216bb19098bdf48026c",@"value":@"33333systemVersion",@"params":@"systemVersion"}];
+    [leaveParamsExtends addObject:@{@"id":@"8caa1be6dea74074b214109ad30a89f1",@"value":@"wifi",@"params":@"netWork"}];
+    [leaveParamsExtends addObject:@{@"id":@"ce97e63e2f0e4c26beb6e41ac17d081d",@"value":@"44444carrier",@"params":@"carrier"}];
+    [leaveParamsExtends addObject:@{@"id":@"47f0a3a922b342c4bb5feaff2764e20d",@"value":@"xvalue",@"params":@"screenPix"}];
+    [leaveParamsExtends addObject:@{@"id":@"2d2e3c0aca1744738b299672c82c356c",@"value":@"versionsssssss",@"params":@"appVersion"}];
+    [leaveParamsExtends addObject:@{@"id":@"68b86f5674b1470193069fa4ee04ea40",@"value":@"轻听英语",@"params":@"appName"}];
+    [leaveParamsExtends addObject:@{@"id":@"53778393357f429e954a2560e2ee62b9",@"value":@"userIdvalue",@"params":@"userId"}];
+    //        _kitInfo.leaveParamsExtends = leaveParamsExtends;
+    
+    NSMutableArray *arr = [[NSMutableArray alloc] init];
     for (int i = 0; i<1; i++) {
         ZCLibCusMenu *menu1 = [[ZCLibCusMenu alloc] init];
         menu1.title = [NSString stringWithFormat:@"订单"];
@@ -139,8 +138,8 @@ NSMutableArray *arr = [[NSMutableArray alloc] init];
         [arr addObject:menu4];
     }
     
-//    _kitInfo.cusMoreArray = arr;
-//    _kitInfo.cusRobotMoreArray = arr;
+    //    _kitInfo.cusMoreArray = arr;
+    //    _kitInfo.cusRobotMoreArray = arr;
     
     
     ZCOrderGoodsModel *model = [ZCOrderGoodsModel new];
@@ -154,16 +153,16 @@ NSMutableArray *arr = [[NSMutableArray alloc] init];
     model.orderCode = @"1000234242342345";
     model.goods =@[@{@"name":@"商品名称",@"pictureUrl":@"http://pic25.nipic.com/20121112/9252150_150552938000_2.jpg"},@{@"name":@"商品名称",@"pictureUrl":@"http://pic31.nipic.com/20130801/11604791_100539834000_2.jpg"}];
     
-//    _kitInfo.orderGoodsInfo = model;
-//    NSString *skey = [[NSUserDefaults standardUserDefaults] objectForKey:@"ZC_APPKEY"];
-//    if(skey!=nil && skey.length > 10){
-//        _libInitInfo.app_key = skey;
-//    }
-//    
-//    NSString *sHost = [[NSUserDefaults standardUserDefaults] objectForKey:@"ZC_Host"];
-//    if(sHost!=nil && sHost.length > 5){
-//        _apiHost = sHost;
-//    }
+    //    _kitInfo.orderGoodsInfo = model;
+    //    NSString *skey = [[NSUserDefaults standardUserDefaults] objectForKey:@"ZC_APPKEY"];
+    //    if(skey!=nil && skey.length > 10){
+    //        _libInitInfo.app_key = skey;
+    //    }
+    //    
+    //    NSString *sHost = [[NSUserDefaults standardUserDefaults] objectForKey:@"ZC_Host"];
+    //    if(sHost!=nil && sHost.length > 5){
+    //        _apiHost = sHost;
+    //    }
     
     [ZCSobotApi setShowDebug:YES];
     
@@ -172,7 +171,7 @@ NSMutableArray *arr = [[NSMutableArray alloc] init];
 -(id)initPrivate{
     self=[super init];
     if(self){
-
+        
         _kitInfo = [ZCKitInfo new];
         _libInitInfo = [ZCLibInitInfo new];
         
@@ -187,25 +186,25 @@ NSMutableArray *arr = [[NSMutableArray alloc] init];
             @{@"index":@(ZCSectionIndex342),@"code":@"3.4.2",@"name":@"启动商家列表",@"desc":@"仅电商版支持",@"extends":@""},
             @{@"index":@(ZCSectionIndex343),@"code":@"3.4.3",@"name":@"启动客户服务中心",@"desc":@"帮助中心列表",@"extends":@""},
             @{@"index":@(ZCSectionIndex351),@"code":@"3.5",@"name":@"结束会话",@"desc":@"离线用户，断开消息链接",@"extends":@""}
-//            ,
-//            @{@"index":@(ZCSectionIndex353),@"code":@"3.5.3",@"name":@"读取日志",@"desc":@"本地日志查询",@"extends":@""}
+            //            ,
+            //            @{@"index":@(ZCSectionIndex353),@"code":@"3.5.3",@"name":@"读取日志",@"desc":@"本地日志查询",@"extends":@""}
         ]];
         
         [_sectionItems addObject:@[
-                   @{@"index":@(ZCSectionIndex41),@"code":@"4.1",@"name":@"机器人客服",@"desc":@"指定机器人",@"extends":@""},
-                   @{@"index":@(ZCSectionIndex42),@"code":@"4.2",@"name":@"人工客服",@"desc":@"设置客服相关配置",@"extends":@""},
-                   @{@"index":@(ZCSectionIndex43),@"code":@"4.3",@"name":@"留言工单相关",@"desc":@"",@"extends":@""},
-                   @{@"index":@(ZCSectionIndex44),@"code":@"4.4",@"name":@"评价",@"desc":@"评价相关的开关、提醒等",@"extends":@""},
-                   @{@"index":@(ZCSectionIndex45),@"code":@"4.5",@"name":@"消息相关",@"desc":@"消息监听、离线、拦截等说明",@"extends":@""},
-                   @{@"index":@(ZCSectionIndex46),@"code":@"4.6",@"name":@"自定义UI设置",@"desc":@"",@"extends":@""},
-                   @{@"index":@(ZCSectionIndex47),@"code":@"4.7",@"name":@"其它配置",@"desc":@"",@"extends":@""}
-               ]];
+            @{@"index":@(ZCSectionIndex41),@"code":@"4.1",@"name":@"机器人客服",@"desc":@"指定机器人",@"extends":@""},
+            @{@"index":@(ZCSectionIndex42),@"code":@"4.2",@"name":@"人工客服",@"desc":@"设置客服相关配置",@"extends":@""},
+            @{@"index":@(ZCSectionIndex43),@"code":@"4.3",@"name":@"留言工单相关",@"desc":@"",@"extends":@""},
+            @{@"index":@(ZCSectionIndex44),@"code":@"4.4",@"name":@"评价",@"desc":@"评价相关的开关、提醒等",@"extends":@""},
+            @{@"index":@(ZCSectionIndex45),@"code":@"4.5",@"name":@"消息相关",@"desc":@"消息监听、离线、拦截等说明",@"extends":@""},
+            @{@"index":@(ZCSectionIndex46),@"code":@"4.6",@"name":@"自定义UI设置",@"desc":@"",@"extends":@""},
+            @{@"index":@(ZCSectionIndex47),@"code":@"4.7",@"name":@"其它配置",@"desc":@"",@"extends":@""}
+        ]];
         
         
         [_sectionItems addObject:@[
-                   @{@"index":@(ZCSectionIndex51),@"code":@"5.1",@"name":@"UI(ZCKitInfo)类配置说明",@"desc":@"主要字体、颜色、显/隐配置",@"extends":@""},
-                   @{@"index":@(ZCSectionIndex52),@"code":@"5.2",@"name":@"(ZCLibInitInfo)类说明",@"desc":@"主要功能性配置",@"extends":@""}
-               ]];
+            @{@"index":@(ZCSectionIndex51),@"code":@"5.1",@"name":@"UI(ZCKitInfo)类配置说明",@"desc":@"主要字体、颜色、显/隐配置",@"extends":@""},
+            @{@"index":@(ZCSectionIndex52),@"code":@"5.2",@"name":@"(ZCLibInitInfo)类说明",@"desc":@"主要功能性配置",@"extends":@""}
+        ]];
         
         
         _configItems = [[NSMutableDictionary alloc] init];
@@ -220,10 +219,10 @@ NSMutableArray *arr = [[NSMutableArray alloc] init];
             @{@"index":@(ZCConfigIndex411),@"code":@"4.1.1",@"name":@"机器人id",@"desc":@"指定机器人编号",@"extends":@"",@"key":@"robotid",@"type":@"NSString",@"from":@(ZCConfigFromLibInit)},
             @{@"index":@(ZCConfigIndex412),@"code":@"4.1.2",@"name":@"机器人别名",@"desc":@"指定机器人别名",@"extends":@"",@"key":@"robot_alias",@"type":@"NSString",@"from":@(ZCConfigFromLibInit)}, @{@"index":@(ZCConfigIndex413),@"code":@"4.1.3",@"name":@"接待模式",@"desc":@"0：跟随系统设置（默认） 1：只有机器人, 2：仅人工,3：机器人优先 ,4：人工优先 默认跟随服务端配置，如果本地配置，本地优先",@"extends":@"",@"key":@"service_mode",@"type":@"NSString",@"from":@(ZCConfigFromLibInit)},
             @{@"index":@(ZCConfigIndex414),@"code":@"4.1.4",@"name":@"转人工溢出",@"desc":@"转人工溢出组设置，详情参考文档",@"extends":@"",@"key":@"transferaction",@"type":@"MNSString",@"from":@(ZCConfigFromLibInit)},
-         @{@"index":@(ZCConfigIndex414),@"code":@"4.1.5",@"name":@"隐藏评价按钮",@"desc":@"隐藏“+”评价按钮",@"extends":@"",@"key":@"hideMenuSatisfaction",@"type":@"BOOL",@"from":@(ZCConfigFromKit)},
-         @{@"index":@(ZCConfigIndex414),@"code":@"4.1.5",@"name":@"隐藏留言按钮",@"desc":@"隐藏“+”留言按钮",@"extends":@"",@"key":@"hideMenuLeave",@"type":@"BOOL",@"from":@(ZCConfigFromKit)},
-         @{@"index":@(ZCConfigIndex414),@"code":@"4.1.5",@"name":@"给机器人发送一条消息类型",@"desc":@" 0 不发 1 给机器人发送 2 给人工发送  3 机器人和人工都发送",@"extends":@"",@"key":@"good_msg_type",@"type":@"NSString",@"from":@(ZCConfigFromLibInit)},
-         @{@"index":@(ZCConfigIndex414),@"code":@"4.1.5",@"name":@"给机器人发送一条消息",@"desc":@"消息类型",@"extends":@"",@"key":@"content",@"type":@"NSString",@"from":@(ZCConfigFromLibInit)}
+            @{@"index":@(ZCConfigIndex414),@"code":@"4.1.5",@"name":@"隐藏评价按钮",@"desc":@"隐藏“+”评价按钮",@"extends":@"",@"key":@"hideMenuSatisfaction",@"type":@"BOOL",@"from":@(ZCConfigFromKit)},
+            @{@"index":@(ZCConfigIndex414),@"code":@"4.1.5",@"name":@"隐藏留言按钮",@"desc":@"隐藏“+”留言按钮",@"extends":@"",@"key":@"hideMenuLeave",@"type":@"BOOL",@"from":@(ZCConfigFromKit)},
+            @{@"index":@(ZCConfigIndex414),@"code":@"4.1.5",@"name":@"给机器人发送一条消息类型",@"desc":@" 0 不发 1 给机器人发送 2 给人工发送  3 机器人和人工都发送",@"extends":@"",@"key":@"good_msg_type",@"type":@"NSString",@"from":@(ZCConfigFromLibInit)},
+            @{@"index":@(ZCConfigIndex414),@"code":@"4.1.5",@"name":@"给机器人发送一条消息",@"desc":@"消息类型",@"extends":@"",@"key":@"content",@"type":@"NSString",@"from":@(ZCConfigFromLibInit)}
         ] forKey:@"4.1"];
         
         [_configItems setObject:@[
@@ -325,68 +324,68 @@ NSMutableArray *arr = [[NSMutableArray alloc] init];
         _codeItems = [[NSMutableDictionary alloc] init];
         [_codeItems setObject:@[
             @"https://www.sobot.com/developerdocs/app_sdk/ios.html#_3-1-域名设置",
-           @"https://www.sobot.com/developerdocs/app_sdk/ios.html#_3-2-获取appkey"]
-          forKey:@"3.1"];
+            @"https://www.sobot.com/developerdocs/app_sdk/ios.html#_3-2-获取appkey"]
+                       forKey:@"3.1"];
         [_codeItems setObject:@[
-          @"https://www.sobot.com/developerdocs/app_sdk/ios.html#_3-3-1-普通版："]
-        forKey:@"3.3.1"];
+            @"https://www.sobot.com/developerdocs/app_sdk/ios.html#_3-3-1-普通版："]
+                       forKey:@"3.3.1"];
         [_codeItems setObject:@[
-          @"https://www.sobot.com/developerdocs/app_sdk/ios.html#_3-3-2-电商版"]
-        forKey:@"3.3.2"];
+            @"https://www.sobot.com/developerdocs/app_sdk/ios.html#_3-3-2-电商版"]
+                       forKey:@"3.3.2"];
         
         [_codeItems setObject:@[
-          @"https://www.sobot.com/developerdocs/app_sdk/ios.html#_3-4-1-启动客服页面"]
-        forKey:@"3.4.1"];
+            @"https://www.sobot.com/developerdocs/app_sdk/ios.html#_3-4-1-启动客服页面"]
+                       forKey:@"3.4.1"];
         [_codeItems setObject:@[
-          @"https://www.sobot.com/developerdocs/app_sdk/ios.html#_3-1-域名设置",
-         @"https://www.sobot.com/developerdocs/app_sdk/ios.html#_3-2-获取appkey"]
-        forKey:@"3.4.2"];
+            @"https://www.sobot.com/developerdocs/app_sdk/ios.html#_3-1-域名设置",
+            @"https://www.sobot.com/developerdocs/app_sdk/ios.html#_3-2-获取appkey"]
+                       forKey:@"3.4.2"];
         [_codeItems setObject:@[
-          @"https://www.sobot.com/developerdocs/app_sdk/ios.html#_3-1-域名设置",
-         @"https://www.sobot.com/developerdocs/app_sdk/ios.html#_3-2-获取appkey"]
-        forKey:@"3.4.3"];
+            @"https://www.sobot.com/developerdocs/app_sdk/ios.html#_3-1-域名设置",
+            @"https://www.sobot.com/developerdocs/app_sdk/ios.html#_3-2-获取appkey"]
+                       forKey:@"3.4.3"];
         [_codeItems setObject:@[
-         @"https://www.sobot.com/developerdocs/app_sdk/ios.html#_3-5-结束会话"]
-        forKey:@"3.5"];
+            @"https://www.sobot.com/developerdocs/app_sdk/ios.html#_3-5-结束会话"]
+                       forKey:@"3.5"];
         
         [_codeItems setObject:@[
             @"https://www.sobot.com/developerdocs/app_sdk/ios.html#_4-1-机器人客服",
-        @"https://www.sobot.com/developerdocs/app_sdk/ios.html#_4-1-4-设置转人工溢出"]
-          forKey:@"4.1"];
+            @"https://www.sobot.com/developerdocs/app_sdk/ios.html#_4-1-4-设置转人工溢出"]
+                       forKey:@"4.1"];
         
         [_codeItems setObject:@[
             @"https://www.sobot.com/developerdocs/app_sdk/ios.html#_4-2-人工客服",
-        @"https://www.sobot.com/developerdocs/app_sdk/ios.html#_4-2-8-商品卡片"]
-          forKey:@"4.2"];
+            @"https://www.sobot.com/developerdocs/app_sdk/ios.html#_4-2-8-商品卡片"]
+                       forKey:@"4.2"];
         
         [_codeItems setObject:@[
             @"https://www.sobot.com/developerdocs/app_sdk/ios.html#_4-3-留言工单相关"]
-          forKey:@"4.3"];
+                       forKey:@"4.3"];
         
         
         [_codeItems setObject:@[
             @"https://www.sobot.com/developerdocs/app_sdk/ios.html#_4-4-评价"]
-          forKey:@"4.4"];
+                       forKey:@"4.4"];
         
         
         [_codeItems setObject:@[
             @"https://www.sobot.com/developerdocs/app_sdk/ios.html#_4-5-1-消息推送",
             @"https://www.sobot.com/developerdocs/app_sdk/ios.html#_4-5-5-链接拦截"]
-          forKey:@"4.5"];
+                       forKey:@"4.5"];
         
         
         [_codeItems setObject:@[
-          @"https://www.sobot.com/developerdocs/app_sdk/ios.html#_4-6-自定义ui设置"]
-        forKey:@"4.6"];
+            @"https://www.sobot.com/developerdocs/app_sdk/ios.html#_4-6-自定义ui设置"]
+                       forKey:@"4.6"];
         [_codeItems setObject:@[
             @"https://www.sobot.com/developerdocs/app_sdk/ios.html#_4-7-2-自定义聊天记录显示时间范围"]
-          forKey:@"4.7"];
-          [_codeItems setObject:@[
-              @"https://www.sobot.com/developerdocs/app_sdk/ios.html#_5-1-zckitinfo类说明（ui相关配置）"]
-            forKey:@"5.1"];
+                       forKey:@"4.7"];
         [_codeItems setObject:@[
-                @"https://www.sobot.com/developerdocs/app_sdk/ios.html#_5-2-zclibinitinfo类说明"]
-              forKey:@"5.2"];
+            @"https://www.sobot.com/developerdocs/app_sdk/ios.html#_5-1-zckitinfo类说明（ui相关配置）"]
+                       forKey:@"5.1"];
+        [_codeItems setObject:@[
+            @"https://www.sobot.com/developerdocs/app_sdk/ios.html#_5-2-zclibinitinfo类说明"]
+                       forKey:@"5.2"];
     }
     return self;
 }
@@ -400,8 +399,8 @@ NSMutableArray *arr = [[NSMutableArray alloc] init];
 }
 -(NSArray *)getSectionListArray:(NSInteger )section{
     if(_sectionItems.count < section){
-           return @[];
-       }
+        return @[];
+    }
     return _sectionItems[section];
 }
 
@@ -427,7 +426,7 @@ NSMutableArray *arr = [[NSMutableArray alloc] init];
         }
     }];
     [vc addAction:cancelAction];
-
+    
     vc.popoverPresentationController.sourceView = pvc.view;
     vc.popoverPresentationController.sourceRect = CGRectMake(0,0,1.0,1.0);
     [pvc presentViewController:vc animated:YES completion:nil];
