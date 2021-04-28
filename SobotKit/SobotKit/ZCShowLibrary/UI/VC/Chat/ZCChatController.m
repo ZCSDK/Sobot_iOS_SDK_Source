@@ -236,6 +236,9 @@
         // 去评价
         [self.chatView goEvaluation];
     }else if (sender.tag == BUTTON_TEL){
+        if([ZCUICore getUICore].ZCViewControllerCloseBlock != nil){
+            [ZCUICore getUICore].ZCViewControllerCloseBlock(self,ZC_PhoneCustomerService);
+        }
         // 去打电话
         NSString *phoneNumber = [NSString stringWithFormat:@"tel:%@",zcLibConvertToString([ZCUICore getUICore].kitInfo.customTel)];
         [[UIApplication sharedApplication] openURL:[NSURL URLWithString:phoneNumber]];
@@ -248,7 +251,9 @@
     if(self.chatView !=nil){
        [self.chatView dismissZCChatView];
     }
-    
+    if([ZCUICore getUICore].ZCViewControllerCloseBlock != nil){
+        [ZCUICore getUICore].ZCViewControllerCloseBlock(self,ZC_CloseChat);
+    }
     if([ZCUICore getUICore].kitInfo.isShowPortrait){
        [[NSNotificationCenter defaultCenter] removeObserver:self];
 //        重新设置原来的方向
@@ -261,7 +266,7 @@
 -(void)didMoveToParentViewController:(UIViewController *)parent{
     
     [super didMoveToParentViewController:parent];
-    NSLog(@"页面侧滑返回：%@",parent);
+//    NSLog(@"页面侧滑返回：%@",parent);
     if(!parent){
         [self goBack];
     }
@@ -286,9 +291,6 @@
  */
 -(void)topViewBtnClick:(ZCButtonClickTag)Tag{
     if (Tag == BUTTON_BACK) {
-        if([ZCUICore getUICore].ZCViewControllerCloseBlock != nil){
-            [ZCUICore getUICore].ZCViewControllerCloseBlock(self,ZC_CloseChat);
-        }
         // 延迟返回，解决"Unable to insert COPY_SEND" 警告
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             if (self.navigationController && _isPush) {

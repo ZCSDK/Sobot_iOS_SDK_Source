@@ -1301,7 +1301,7 @@
 // table 行的高度
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if ( indexPath.row > [ZCUICore getUICore].chatMessages.count -1) {
+    if ([ZCUICore getUICore].chatMessages == nil || indexPath.row > [ZCUICore getUICore].chatMessages.count -1) {
         return 0;
     }
     
@@ -2558,6 +2558,10 @@
         }
         
         if (sender.tag == BUTTON_TEL) {
+            if([ZCUICore getUICore].ZCViewControllerCloseBlock != nil){
+                [ZCUICore getUICore].ZCViewControllerCloseBlock(self,ZC_PhoneCustomerService);
+            }
+            
             NSString *phoneNumber = [NSString stringWithFormat:@"tel:%@",zcLibConvertToString([ZCUICore getUICore].kitInfo.customTel)];
             [[UIApplication sharedApplication] openURL:[NSURL URLWithString:phoneNumber]];
 

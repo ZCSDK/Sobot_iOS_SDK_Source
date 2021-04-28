@@ -748,7 +748,8 @@ kitInfo.cusMoreArray = arr;
     [ZCSobotApi setMessageLinkClick:^BOOL(NSString *linkUrl) {
         if ([linkUrl hasPrefix:@"sobot://sendOrderMsg"]){
                 ZCOrderGoodsModel *model = [ZCOrderGoodsModel new];
-                model.orderStatus = 1;
+                model.orderStatus = 0; // 新增0为自定义状态，显示statusCustom内容
+                model.statusCustom = @"自定义状态";
                 model.createTime = [NSString stringWithFormat:@"%.0f",[[NSDate date] timeIntervalSince1970]*1000];
                 model.goodsCount = @"3";
                 model.orderUrl  = @"https://www.sobot.com";
@@ -780,6 +781,7 @@ ZCOrderGoodsModel 类说明：
  总金额: totalFee，单位为分，显示时会默认格式化为元，例如，传入4890，显示效果为48.90元
 */
 /*
+自定义：0,显示statusCustom的内容
 待付款: 1,
 待发货: 2,
 运输中: 3,
@@ -790,6 +792,10 @@ ZCOrderGoodsModel 类说明：
 其它: 不在编码中的
  */
 @property (nonatomic,assign) int orderStatus;
+
+// 自定义订单状态显示内容，仅当orderStatus=0时生效
+@property (nonatomic,strong) NSString *statusCustom;
+
 ```
 效果图：
 ![图片](https://img.sobot.com/mobile/sdk/images/i_4_2_8_1.jpeg)
@@ -1713,6 +1719,17 @@ _kitInfo.hideManualEvaluationLabels = YES;
 
 ```
 
+### 4.7.9 智齿部分功能页面点击返回和事件的监听（只记录不拦截），可自己添加逻辑（例如埋点）
+
+```js
+
+    [ZCSobotApi setFunctionClickListener:^(id _Nonnull obj, ZCPageCloseType type) {
+    	 //1:留言返回,2:会话页面返回,3:帮助中心返回,4:电商消息中心页面返回,5:电话打电话按钮
+        NSLog(@"点击返回了%@，%zd",obj,type);
+    }];
+
+```
+
 
 ## 5 配置类属性说明
 ## 5.1 ZCKitInfo类说明（UI相关配置）
@@ -1824,7 +1841,8 @@ _kitInfo.hideManualEvaluationLabels = YES;
 | chatTextViewColor   | UIColor   | 输入框文本颜色   |    |
 | notificationTopViewLabelColor   | UIColor   | 通告栏的文字颜色   |    |
 | emojiSendBgColor   | UIColor   | 表情键盘发送按钮背景颜色,2.8.5新增   |    |
-
+| commentItemButtonBgColor   | UIColor   |  评价选项按钮选中颜色(默认跟随主题色)  |    |
+| commentItemButtonSelBgColor   | UIColor   |  评价选项按钮选中颜色(默认跟随主题色)   |    |
 
 ### 图片相关：
 | 属性名称 | 数据类型 | 说明 | 备注 |

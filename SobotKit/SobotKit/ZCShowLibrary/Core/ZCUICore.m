@@ -3086,6 +3086,7 @@ static dispatch_once_t onceToken;
         NSMutableDictionary * contentDic = [NSMutableDictionary dictionaryWithCapacity:5];
         NSString *contextStr = @"";
         [contentDic setObject:[NSString stringWithFormat:@"%d",_kitInfo.orderGoodsInfo.orderStatus] forKey:@"orderStatus"];
+        [contentDic setObject:zcLibConvertToString(_kitInfo.orderGoodsInfo.statusCustom) forKey:@"statusCustom"];
         [contentDic setObject:zcLibConvertToString(_kitInfo.orderGoodsInfo.createTime) forKey:@"createTime"];
         [contentDic setObject:zcLibConvertToString(_kitInfo.orderGoodsInfo.orderCode) forKey:@"orderCode"];
         [contentDic setObject:zcLibConvertToString(_kitInfo.orderGoodsInfo.createTime) forKey:@"createTime"];
@@ -3214,7 +3215,15 @@ static dispatch_once_t onceToken;
 -(void)changeRobotBtnClickAddRobotHelloWolrd{
     // 添加机器人欢迎语
     _isSayHello = NO;
-//    ZCLibMessage *msg = [self createMessageToArrayByAction:ZCTipMessageRobotHelloWord type:0 name:[self getPlatfromInfo].config.robotName face:[self getPlatfromInfo].config.robotLogo tips:0 content:nil];
+    // 如果都不允许显示，直接返回
+    if ([self getPlatfromInfo].config.robotHelloWordFlag == 1) {
+        // 机器人欢迎语的开关是关闭的，但是机器人引导也是关闭的
+        
+        // 添加机器人欢迎语
+        ZCLibMessage *msg = [self createMessageToArrayByAction:ZCTipMessageRobotHelloWord type:0 name:[self getPlatfromInfo].config.robotName face:[self getPlatfromInfo].config.robotLogo tips:0 content:nil];
+        [ZCUITools zcModelStringToAttributeString:msg];
+    }
+    
     
     _receivedName = [self getPlatfromInfo].config.robotName;
     [self setTitleName:_receivedName];

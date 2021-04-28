@@ -49,11 +49,11 @@ ZCUIBackActionSheetDelegate,
 RatingViewDelegate,
 ZCReplyLeaveViewDelegate,
 UIImagePickerControllerDelegate,
-UINavigationControllerDelegate>
+UINavigationControllerDelegate,ZCMLEmojiLabelDelegate>
 {
     
     BOOL     isShowHeard;
-    BOOL     isAddShowBtn;// 添加展开按钮
+    CGSize contSize;
     
 }
 @property(nonatomic,strong)UITableView      *listTable;
@@ -63,6 +63,15 @@ UINavigationControllerDelegate>
 @property (nonatomic,strong) ZCButton * showBtn;
 
 @property (nonatomic,strong) UIView * headerView;
+@property (nonatomic,strong) UIView * headerMoreFileView;
+
+@property (nonatomic,strong) ZCMLEmojiLabel * conlab;
+// 线条
+@property (nonatomic,strong) UIView *headerlineView1;
+// 线条
+@property (nonatomic,strong) UILabel *headerTitleLab;
+@property (nonatomic,strong) UILabel *headerStateLab;
+
 @property (nonatomic,strong) UIView * footView;
 
 @property (nonatomic,strong) UIView * commitFootView;
@@ -219,6 +228,17 @@ UINavigationControllerDelegate>
                 [self reloadReplyButton];
                     
             }
+            
+            
+            ZCRecordListModel * model = [_listArray lastObject];
+            [ZCHtmlCore filterHtml:[self filterHtmlImage:model.content] result:^(NSString * _Nonnull text1, NSMutableArray * _Nonnull arr, NSMutableArray * _Nonnull links) {
+                if (text1.length > 0 && text1 != nil) {
+                    model.contentAttr =   [ZCHtmlFilter setHtml:text1 attrs:arr view:nil textColor:UIColorFromThemeColor(ZCTextSubColor) textFont:ZCUIFont14 linkColor:[ZCUITools zcgetChatLeftLinkColor]];
+                }else{
+                    model.contentAttr =   [[NSMutableAttributedString alloc] initWithString:model.content];
+                }
+            }];
+            
     
         }
         
@@ -360,6 +380,7 @@ UINavigationControllerDelegate>
     [self.replyButton setTitleColor:[ZCUITools zcgetLeaveSubmitImgColor] forState:UIControlStateNormal];
     [self.replyButton setTitle:ZCSTLocalString(@"回复") forState:UIControlStateNormal];
     [self.replyButton setImage:[ZCUITools zcuiGetBundleImage:@"zcicon_reply_button_icon"] forState:UIControlStateNormal];
+    [self.replyButton setImage:[ZCUITools zcuiGetBundleImage:@"zcicon_reply_button_icon"] forState:UIControlStateHighlighted];
 //    [self.replyButton setTitleEdgeInsets:UIEdgeInsetsMake(0, -self.replyButton.imageView.image.size.width, 0, self.replyButton.imageView.image.size.width)];
 //    [self.replyButton setImageEdgeInsets:UIEdgeInsetsMake(0, self.replyButton.titleLabel.bounds.size.width, 0, -self.replyButton.titleLabel.bounds.size.width)];
 //    [self.replyButton setTitleEdgeInsets:UIEdgeInsetsMake(0, -6, 0, 6)];
@@ -527,8 +548,16 @@ UINavigationControllerDelegate>
 // 返回section高度
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
     if(section == 0){
-        UIView *bgView = [self getHeaderViewHeight];
-        return bgView.frame.size.height;
+        if(_listArray.count > 0){
+            if(_headerView){
+                [self changeHeaderStyle];
+                return CGRectGetHeight(_headerView.frame);
+            }else{
+                [self getHeaderViewHeight];
+                return CGRectGetHeight(_headerView.frame);
+            }
+        }
+        return 0;
     }else{
         return 114;
     }
@@ -598,6 +627,10 @@ UINavigationControllerDelegate>
             
             str = zcLibConvertToString(model.content);
         }
+        if(_headerView){
+            [self changeHeaderStyle];
+            return _headerView;
+        }
         return [self getHeaderViewHeight];
     }else{
         UIView *view=[[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 1)];
@@ -633,6 +666,7 @@ UINavigationControllerDelegate>
     }else{
         isShowHeard = NO;
     }
+    
     [self.listTable reloadData];
 }
 
@@ -677,9 +711,7 @@ UINavigationControllerDelegate>
     
     __weak ZCMsgDetailsVC * saveSelf = self;
     
-    [cell initWithData:model IndexPath:indexPath.row count:(int)self.listArray.count btnClick:^(ZCRecordListModel * _Nonnull model) {
-        
-    }];
+    [cell initWithData:model IndexPath:indexPath.row count:(int)self.listArray.count];
 
     [cell setShowDetailClickCallback:^(ZCRecordListModel * _Nonnull model,NSString *urlStr) {
         if (urlStr) {
@@ -809,251 +841,194 @@ UINavigationControllerDelegate>
     _headerView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
     _headerView.autoresizesSubviews = YES;
     
-    UILabel *titleLab = [[UILabel alloc] initWithFrame:CGRectMake(20,27, 170, ZCNumber(22))];
-    [titleLab setFont:ZCUIFontBold17];
-    [titleLab setTextAlignment:NSTextAlignmentLeft];
-    [titleLab setTextColor:UIColorFromThemeColor(ZCTextMainColor)];
-    titleLab.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-    titleLab.autoresizesSubviews =  YES;
-    [_headerView addSubview:titleLab];
+    _headerTitleLab = [[UILabel alloc] initWithFrame:CGRectMake(20,27, 170, ZCNumber(22))];
+    [_headerTitleLab setFont:ZCUIFontBold17];
+    [_headerTitleLab setTextAlignment:NSTextAlignmentLeft];
+    [_headerTitleLab setTextColor:UIColorFromThemeColor(ZCTextMainColor)];
+    _headerTitleLab.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    _headerTitleLab.autoresizesSubviews =  YES;
+    [_headerView addSubview:_headerTitleLab];
     
-    UILabel *labState = [[UILabel alloc] initWithFrame:CGRectMake(tableWidth - 70, 30,50, 20)];
-    [labState setBackgroundColor:UIColorFromThemeColor(ZCThemeColor)];
-    [labState setFont:ZCUIFont12];
-    labState.layer.cornerRadius = 10.0f;
-    [labState setTextColor:UIColorFromThemeColor(ZCKeepWhiteColor)];
-    [labState setTextAlignment:NSTextAlignmentCenter];
-    labState.layer.masksToBounds = YES;
-    labState.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-    labState.autoresizesSubviews = YES;
-    [_headerView addSubview:labState];
+    _headerStateLab = [[UILabel alloc] initWithFrame:CGRectMake(tableWidth - 70, 30,50, 20)];
+    [_headerStateLab setBackgroundColor:UIColorFromThemeColor(ZCThemeColor)];
+    [_headerStateLab setFont:ZCUIFont12];
+    _headerStateLab.layer.cornerRadius = 10.0f;
+    [_headerStateLab setTextColor:UIColorFromThemeColor(ZCKeepWhiteColor)];
+    [_headerStateLab setTextAlignment:NSTextAlignmentCenter];
+    _headerStateLab.layer.masksToBounds = YES;
+    _headerStateLab.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+    _headerStateLab.autoresizesSubviews = YES;
+    [_headerView addSubview:_headerStateLab];
     
-    
-    NSString * str = @"";
+
+    ZCRecordListModel * model = nil;
     if(_listArray.count > 0){
-        ZCRecordListModel * model = [_listArray lastObject];
-        titleLab.text = zcLibConvertToString(zcLibDateTransformString(@"yyyy-MM-dd HH:mm:ss", zcLibStringFormateDate(model.timeStr)));
-        str = zcLibConvertToString(model.content);
+        model = [_listArray lastObject];
+        _headerTitleLab.text = zcLibConvertToString(zcLibDateTransformString(@"yyyy-MM-dd HH:mm:ss", zcLibStringFormateDate(model.timeStr)));
         
         ZCRecordListModel *firstFlag = [_listArray firstObject];
         
         
         switch (firstFlag.flag) {
             case 1:
-                labState.text =  ZCSTLocalString(@"已创建");
-                labState.backgroundColor = UIColorFromThemeColor(ZCTextPlaceHolderColor);
+                _headerStateLab.text =  ZCSTLocalString(@"已创建");
+                _headerStateLab.backgroundColor = UIColorFromThemeColor(ZCTextPlaceHolderColor);
                 break;
             case 2:
-                labState.text =  ZCSTLocalString(@"受理中");
-                labState.backgroundColor = UIColorFromThemeColor(ZCTextNoticeLinkColor);
+                _headerStateLab.text =  ZCSTLocalString(@"受理中");
+                _headerStateLab.backgroundColor = UIColorFromThemeColor(ZCTextNoticeLinkColor);
                 break;
             case 3:
-                labState.text =  ZCSTLocalString(@"已完成");
-                labState.backgroundColor = UIColorFromThemeColor(ZCThemeColor);
+                _headerStateLab.text =  ZCSTLocalString(@"已完成");
+                _headerStateLab.backgroundColor = UIColorFromThemeColor(ZCThemeColor);
                 break;
             default:
                 break;
         }
     }
-//    str = @"jkdlfj按时间拉开点附近绿卡交了多少客服建立刺啦地方呢个电动阀SDK静安寺老地方金额卢卡斯";
-   
-    CGSize s = [labState.text sizeWithAttributes:@{NSFontAttributeName:labState.font}];
-    if(s.width > 50){
-        labState.frame = CGRectMake(tableWidth - 20 - s.width-10, 30, s.width+10, ZCNumber(20));
+    
+    _conlab = [[ZCMLEmojiLabel alloc]initWithFrame:CGRectMake(ZCNumber(20), CGRectGetMaxY(_headerTitleLab.frame) + ZCNumber(8), tableWidth - ZCNumber(40), ZCNumber(50))];
+    _conlab.numberOfLines = 0;
+    [_conlab setTextColor:UIColorFromThemeColor(ZCTextSubColor)];
+    [_conlab setLinkColor:[ZCUITools zcgetChatLeftLinkColor]];
+    _conlab.font = ZCUIFont14;
+    _conlab.lineSpacing = 4.0f;
+    _conlab.delegate = self;
+    if(model){
+        // 优化卡顿问题，此处希望使用setText，暂未优化
+//        _conlab.attributedText = model.contentAttr;
+        [_conlab setText:model.content];
+        [_conlab setLinkColor:[ZCUITools zcgetChatLeftLinkColor]];
+        
+        CGRect labelF = _conlab.frame;
+    //    conlab.text = text1;
+        CGSize size = [self autoHeightOfLabel:_conlab with:CGRectGetWidth(_conlab.frame) IsSetFrame:YES];
+        
+        labelF.size.height = size.height;
+        _conlab.frame = labelF;
+    //    conlab.text = ;
+        [_headerView addSubview:_conlab];
+        
+        
+        contSize = [self autoHeightOfLabel:_conlab with:tableWidth - ZCNumber(30) IsSetFrame:NO];
     }
     
-    UILabel * conlab = [[UILabel alloc]initWithFrame:CGRectMake(ZCNumber(20), CGRectGetMaxY(titleLab.frame) + ZCNumber(8), tableWidth - ZCNumber(40), ZCNumber(50))];
-    conlab.numberOfLines = 0;
-    conlab.textColor = UIColorFromThemeColor(ZCTextSubColor);
-    conlab.font = ZCUIFont14;
-    [self getTextRectWith:str WithMaxWidth:ScreenWidth - ZCNumber(40) WithlineSpacing:6 AddLabel:conlab];
-//    conlab.text = ;
-    [_headerView addSubview:conlab];
     
-    CGSize conlabSize = [self autoHeightOfLabel:conlab with:tableWidth - ZCNumber(30) IsSetFrame:NO];
     
+    float h = _conlab.frame.origin.y + contSize.height + 10;
     
 //    2.8.2 增加客户回复：
-    float pics_height = 0;
-    float h = conlab.frame.origin.y + conlabSize.height + 10;
-       if(self.creatRecordListModel.fileList.count > 0) {
-            
-            float fileBgView_margin_left = 20;
-            float fileBgView_margin_top = 10;
-            float fileBgView_margin_right = 20;
-            float fileBgView_margin = 10;
-            
-    //      宽度固定为  （屏幕宽度 - 60)/3
-//            CGSize fileViewRect = CGSizeMake((self.view.frame.size.width - 60)/3, 85);
-            
-    //      算一下每行多少个 ，
-           float nums = 3;//(self.view.frame.size.width - fileBgView_margin_left - fileBgView_margin_right)/(fileViewRect.width + fileBgView_margin);
-            NSInteger numInt = floor(nums);
-
-           CGSize fileViewRect = CGSizeMake((self.view.frame.size.width - fileBgView_margin_left - fileBgView_margin_right - fileBgView_margin*2)/3, 85);
-            
-    //      行数：
-            NSInteger rows = ceil(self.creatRecordListModel.fileList.count/(float)numInt);
-            
-            
-            for (int i = 0 ; i < self.creatRecordListModel.fileList.count;i++) {
-                NSDictionary *modelDic = self.creatRecordListModel.fileList[i];
-                
-                //           当前列数
-                NSInteger currentColumn = i%numInt;
-    //           当前行数
-                NSInteger currentRow = i/numInt;
-                
-                float x = fileBgView_margin_left + (fileViewRect.width + fileBgView_margin)*currentColumn;
-                float y = h + fileBgView_margin_top + (fileViewRect.height + fileBgView_margin)*currentRow;
-                float w = fileViewRect.width;
-                float h = fileViewRect.height;
-                
-                ZCReplyFileView *fileBgView = [[ZCReplyFileView alloc]initWithDic:modelDic withFrame:CGRectMake(x, y, w, h)];
-                fileBgView.layer.cornerRadius = 4;
-                fileBgView.layer.masksToBounds = YES;
-                
-                [fileBgView setClickBlock:^(NSDictionary * _Nonnull modelDic, UIImageView * _Nonnull imgView) {
-                   NSString *fileType = modelDic[@"fileType"];
-                   NSString *fileUrlStr = modelDic[@"fileUrl"];
-    //                NSArray *imgArray = [[NSArray alloc]initWithObjects:fileUrlStr, nil];
-                    if ([fileType isEqualToString:@"jpg"] ||
-                        [fileType isEqualToString:@"png"] ||
-                        [fileType isEqualToString:@"gif"] ) {
-                        
-                        //     图片预览
-                        
-                        UIImageView *picView = imgView;
-                        CALayer *calayer = picView.layer.mask;
-                        [picView.layer.mask removeFromSuperlayer];
-                        
-                        ZCUIXHImageViewer *xh=[[ZCUIXHImageViewer alloc] initWithImageViewerWillDismissWithSelectedViewBlock:^(ZCUIXHImageViewer *imageViewer, UIImageView *selectedView) {
-                            
-                        } didDismissWithSelectedViewBlock:^(ZCUIXHImageViewer *imageViewer, UIImageView *selectedView) {
-                            
-                            selectedView.layer.mask = calayer;
-                            [selectedView setNeedsDisplay];
-                        } didChangeToImageViewBlock:^(ZCUIXHImageViewer *imageViewer, UIImageView *selectedView) {
-                            
-                        }];
-                        
-                        NSMutableArray *photos = [[NSMutableArray alloc] init];
-                        [photos addObject:picView];
-                        xh.disableTouchDismiss = NO;
-                        [xh showWithImageViews:photos selectedView:picView];
-                        
-                        
-                    }
-                    else if ([fileType isEqualToString:@"mp4"]){
-                        NSURL *imgUrl = [NSURL URLWithString:fileUrlStr];
-                        
-                         UIWindow *window = [[ZCToolsCore getToolsCore] getCurWindow];
-                         ZCVideoPlayer *player = [[ZCVideoPlayer alloc] initWithFrame:window.bounds withShowInView:window url:imgUrl Image:nil];
-                         [player showControlsView];
-                        
-                    }
-                    
-                    else{
-                        ZCLibMessage *message = [[ZCLibMessage alloc]init];
-                        ZCLibRich *rich = [[ZCLibRich alloc]init];
-                        rich.richmoreurl = fileUrlStr;
-                        
-                        /**
-                        * 13 doc文件格式
-                        * 14 ppt文件格式
-                        * 15 xls文件格式
-                        * 16 pdf文件格式
-                        * 17 mp3文件格式
-                        * 18 mp4文件格式
-                        * 19 压缩文件格式
-                        * 20 txt文件格式
-                        * 21 其他文件格式
-                        */
-                        if ([fileType isEqualToString:@"doc"] || [fileType isEqualToString:@"docx"]) {
-                            rich.fileType = 13;
-                        }
-                        else if ([fileType isEqualToString:@"ppt"]){
-                            rich.fileType = 14;
-                        }
-                        else if ([fileType isEqualToString:@"xls"] || [fileType isEqualToString:@"xlsx"]){
-                            rich.fileType = 15;
-                        }
-                        else if ([fileType isEqualToString:@"pdf"]){
-                            rich.fileType = 16;
-                        }
-                        else if ([fileType isEqualToString:@"mp3"]){
-                            rich.fileType = 17;
-                        }
-    //                    else if ([fileType isEqualToString:@"mp4"]){
-    //                        rich.fileType = 18;
-    //                    }
-                        else if ([fileType isEqualToString:@"zip"]){
-                            rich.fileType = 19;
-                        }
-                        else if ([fileType isEqualToString:@"txt"]){
-                            rich.fileType = 20;
-                        }
-                        else{
-                            rich.fileType = 21;
-                        }
-                        
-                        
-                        message.richModel = rich;
-                        
-                        ZCDocumentLookController *docVc = [[ZCDocumentLookController alloc]init];
-                        docVc.message = message;
-                        [self.navigationController pushViewController:docVc animated:YES];
-                        
-                    }
-                    
-                    
-                }];
-                [_headerView addSubview:fileBgView];
-            }
-            
-            pics_height =  (fileViewRect.height + fileBgView_margin_top)*rows;
-        }
-    
+    float pics_height = [self addContentFileList:h];
     
     
     _showBtn = [ZCButton buttonWithType:UIButtonTypeCustom];
+    _showBtn.frame = CGRectMake([self getCurViewWidth]/2- ZCNumber(120/2), pics_height + contSize.height + ZCNumber(8), 120, ZCNumber(0));
     [_showBtn addTarget:self action:@selector(showMoreAction:) forControlEvents:UIControlEventTouchUpInside];
     _showBtn.tag = 1001;
     _showBtn.type = 2;
-    _showBtn.space = ZCNumber(18);
+    _showBtn.space = ZCNumber(0);
+    [_showBtn setContentHorizontalAlignment:UIControlContentHorizontalAlignmentCenter];
     _showBtn.titleLabel.font = ZCUIFont12;
-    [_showBtn setTitle: ZCSTLocalString(@"展开") forState:UIControlStateNormal];
+    [_showBtn setTitle:[NSString stringWithFormat:@"%@    ",ZCSTLocalString(@"展开")] forState:UIControlStateNormal];
     [_showBtn setImage:[ZCUITools zcuiGetBundleImage:@"zciocn_arrow_down"] forState:UIControlStateNormal];
 
 
 //    _showBtn.backgroundColor = [UIColor redColor];
     [_headerView addSubview: _showBtn];
-    _showBtn.frame = CGRectMake([self getCurViewWidth]/2- ZCNumber(120/2), pics_height + conlabSize.height + ZCNumber(8), 120, ZCNumber(0));
     _showBtn.hidden = YES;
     [_showBtn setTitleColor:UIColorFromThemeColor(ZCThemeColor) forState:UIControlStateNormal];
     
-    if (conlabSize.height > 35 || self.creatRecordListModel.fileList.count > 0) {
+    if (contSize.height > 35 || self.creatRecordListModel.fileList.count > 0) {
         // 添加 展开全文btn
         _showBtn.hidden = NO;
     }
     
+    // 线条
+    UIView *lineView = [[UIView alloc]initWithFrame:CGRectMake(0,0, tableWidth, 10)];
+    lineView.backgroundColor = [ZCUITools zcgetLightGrayDarkBackgroundColor];
+    [_headerView addSubview:lineView];
+    
+    CGFloat y = CGRectGetMaxY(_showBtn.frame)+17;
+    if(_showBtn.isHidden){
+        y = CGRectGetMaxY(_conlab.frame)+17;
+    }
+    
+    // 线条
+    _headerlineView1 = [[UIView alloc]initWithFrame:CGRectMake(0,y, tableWidth, 10)];
+    _headerlineView1.backgroundColor = [ZCUITools zcgetLightGrayDarkBackgroundColor];
+    UIView *lineView_1 = [[UIView alloc]initWithFrame:CGRectMake(0, 0, tableWidth, 0.5)];
+    lineView_1.backgroundColor = [ZCUITools zcgetBackgroundBottomLineColor];
+    [_headerlineView1 addSubview:lineView_1];
+    [_headerView addSubview:_headerlineView1];
+    
+    
+    UIView *lineView_0 = [[UIView alloc]initWithFrame:CGRectMake(0, 10, tableWidth, 0.5)];
+    lineView_0.backgroundColor =  [ZCUITools zcgetBackgroundBottomLineColor];
+    
+    [_headerView addSubview:lineView_0];
+    
+    
+    
+    [self changeHeaderStyle];
+    
+    return _headerView;
+}
+
+-(void)changeHeaderStyle{
+    CGFloat tableWidth = self.listTable.frame.size.width;
+    ZCRecordListModel * model = nil;
+    if(_listArray.count > 0){
+        model = [_listArray lastObject];
+        _headerTitleLab.text = zcLibConvertToString(zcLibDateTransformString(@"yyyy-MM-dd HH:mm:ss", zcLibStringFormateDate(model.timeStr)));
+        
+        ZCRecordListModel *firstFlag = [_listArray firstObject];
+        
+        
+        switch (firstFlag.flag) {
+            case 1:
+                _headerStateLab.text =  ZCSTLocalString(@"已创建");
+                _headerStateLab.backgroundColor = UIColorFromThemeColor(ZCTextPlaceHolderColor);
+                break;
+            case 2:
+                _headerStateLab.text =  ZCSTLocalString(@"受理中");
+                _headerStateLab.backgroundColor = UIColorFromThemeColor(ZCTextNoticeLinkColor);
+                break;
+            case 3:
+                _headerStateLab.text =  ZCSTLocalString(@"已完成");
+                _headerStateLab.backgroundColor = UIColorFromThemeColor(ZCThemeColor);
+                break;
+            default:
+                break;
+        }
+    }
+   
+    CGSize s = [_headerStateLab.text sizeWithAttributes:@{NSFontAttributeName:_headerStateLab.font}];
+    if(s.width > 50){
+        _headerStateLab.frame = CGRectMake(tableWidth - 20 - s.width-10, 30, s.width+10, ZCNumber(20));
+    }
+    
     if (!_showBtn.hidden) {
         if (isShowHeard) {
+            CGFloat pics_height = 0;
+            if(_headerMoreFileView!=nil){
+                pics_height =  CGRectGetHeight(_headerMoreFileView.frame);
+                _headerMoreFileView.hidden = NO;
+            }
+            NSString *clickText = [NSString stringWithFormat:@"%@    ",ZCSTLocalString(@"收起")];
+            CGSize s = [clickText sizeWithFont:ZCUIFont12];
+            CGFloat textwidth = s.width + 25;
             
-           NSString *clickText = ZCSTLocalString(@"收起");
-            // 防止英文过长，箭头被覆盖
-            CGSize s = [clickText sizeWithAttributes:@{NSFontAttributeName:_showBtn.titleLabel.font}];
             // 显示全部
-            _showBtn.frame = CGRectMake(tableWidth/2- ZCNumber((s.width + 50)/2), CGRectGetMaxY(conlab.frame) + ZCNumber(8) + pics_height, s.width + 50, ZCNumber(20));
+            _showBtn.frame = CGRectMake(tableWidth/2-textwidth/2, CGRectGetMaxY(_conlab.frame) + ZCNumber(8) + pics_height,textwidth, ZCNumber(20));
 //            [self getTextRectWith:str WithMaxWidth:tableWidth - ZCNumber(30) WithlineSpacing:6 AddLabel:conlab];
             //展开之后
-            conlab.frame = CGRectMake(ZCNumber(15), CGRectGetMaxY(titleLab.frame) + ZCNumber(10) , conlabSize.width, conlabSize.height);
+            _conlab.frame = CGRectMake(ZCNumber(15), CGRectGetMaxY(_headerTitleLab.frame) + ZCNumber(10) , contSize.width, contSize.height);
             _showBtn.tag = 1002;
-            _showBtn.space = ZCNumber(10);
+            _showBtn.space = ZCNumber(1);
             [_showBtn setTitle:clickText forState:UIControlStateNormal];
             [_showBtn setImage:[ZCUITools zcuiGetBundleImage:@"zciocn_arrow_up"] forState:UIControlStateNormal];
             CGRect sf = _showBtn.frame;
-            sf.origin.y = CGRectGetMaxY(conlab.frame) + ZCNumber(20) + pics_height;
+            sf.origin.y = CGRectGetMaxY(_conlab.frame) + ZCNumber(20) + pics_height;
             _showBtn.frame = sf;
             for (UIView *view in [_headerView subviews]) {
                  if ([view isKindOfClass:[ZCReplyFileView class]]) {
@@ -1061,13 +1036,18 @@ UINavigationControllerDelegate>
                  }
              }
         }else{
+            if(_headerMoreFileView!=nil){
+                _headerMoreFileView.hidden = YES;
+            }
             // 收起之后
-            conlab.frame = CGRectMake(ZCNumber(20), CGRectGetMaxY(titleLab.frame) + ZCNumber(8), tableWidth - ZCNumber(40), ZCNumber(40));
-            
-            _showBtn.frame = CGRectMake(tableWidth/2- ZCNumber(120/2), CGRectGetMaxY(conlab.frame) + ZCNumber(8), ZCNumber(120), ZCNumber(20));
+            _conlab.frame = CGRectMake(ZCNumber(20), CGRectGetMaxY(_headerTitleLab.frame) + ZCNumber(8), tableWidth - ZCNumber(40), ZCNumber(40));
+            NSString *clickText = [NSString stringWithFormat:@"%@    ",ZCSTLocalString(@"展开")];
+            CGSize s = [clickText sizeWithFont:ZCUIFont12];
+            CGFloat textwidth = s.width + 25;
+            _showBtn.frame = CGRectMake(tableWidth/2 - textwidth/2, CGRectGetMaxY(_conlab.frame) + ZCNumber(8), textwidth, ZCNumber(20));
             _showBtn.tag = 1001;
-            _showBtn.space = ZCNumber(18);
-            [_showBtn setTitle:ZCSTLocalString(@"展开") forState:UIControlStateNormal];
+            _showBtn.space = ZCNumber(1);
+            [_showBtn setTitle:[NSString stringWithFormat:@"%@    ",ZCSTLocalString(@"展开")] forState:UIControlStateNormal];
             [_showBtn setImage:[ZCUITools zcuiGetBundleImage:@"zciocn_arrow_down"] forState:UIControlStateNormal];
             
             for (UIView *view in [_headerView subviews]) {
@@ -1078,38 +1058,165 @@ UINavigationControllerDelegate>
             
         }
     }
-    
-    // 线条
-    UIView *lineView = [[UIView alloc]initWithFrame:CGRectMake(0,0, tableWidth, 10)];
-    lineView.backgroundColor = [ZCUITools zcgetLightGrayDarkBackgroundColor];
-    [_headerView addSubview:lineView];
-    
     CGFloat y = CGRectGetMaxY(_showBtn.frame)+17;
     if(_showBtn.isHidden){
-        y = CGRectGetMaxY(conlab.frame)+17;
+        y = CGRectGetMaxY(_conlab.frame)+17;
     }
-    
     // 线条
-    UIView *lineView1 = [[UIView alloc]initWithFrame:CGRectMake(0,y, tableWidth, 10)];
-    lineView1.backgroundColor = [ZCUITools zcgetLightGrayDarkBackgroundColor];
-    [_headerView addSubview:lineView1];
+    _headerlineView1.frame = CGRectMake(0,y, tableWidth, 10);
     
     CGRect hf = _headerView.frame;
     hf.size.height = y + 10;
     _headerView.frame = hf;
+}
+
+-(CGFloat)addContentFileList:(CGFloat) topY{
+    CGFloat  pics_height = 0;
+    if(self.creatRecordListModel.fileList.count > 0) {
+         
+         float fileBgView_margin_left = 20;
+         float fileBgView_margin_top = 10;
+         float fileBgView_margin_right = 20;
+         float fileBgView_margin = 10;
+         
+ //      宽度固定为  （屏幕宽度 - 60)/3
+//            CGSize fileViewRect = CGSizeMake((self.view.frame.size.width - 60)/3, 85);
+         
+ //      算一下每行多少个 ，
+        float nums = 3;//(self.view.frame.size.width - fileBgView_margin_left - fileBgView_margin_right)/(fileViewRect.width + fileBgView_margin);
+         NSInteger numInt = floor(nums);
+
+        CGSize fileViewRect = CGSizeMake((self.view.frame.size.width - fileBgView_margin_left - fileBgView_margin_right - fileBgView_margin*2)/3, 85);
+         
+ //      行数：
+         NSInteger rows = ceil(self.creatRecordListModel.fileList.count/(float)numInt);
+        _headerMoreFileView = [[UIView alloc] initWithFrame:CGRectMake(fileBgView_margin_left, topY+fileBgView_margin_top, self.view.frame.size.width - fileBgView_margin_left - fileBgView_margin_right, 0)];
+         
+         for (int i = 0 ; i < self.creatRecordListModel.fileList.count;i++) {
+             NSDictionary *modelDic = self.creatRecordListModel.fileList[i];
+             
+             //           当前列数
+             NSInteger currentColumn = i%numInt;
+ //           当前行数
+             NSInteger currentRow = i/numInt;
+             
+             float x = (fileViewRect.width + fileBgView_margin)*currentColumn;
+             float y = (fileViewRect.height + fileBgView_margin)*currentRow;
+             float w = fileViewRect.width;
+             float h = fileViewRect.height;
+             
+             ZCReplyFileView *fileBgView = [[ZCReplyFileView alloc]initWithDic:modelDic withFrame:CGRectMake(x, y, w, h)];
+             fileBgView.layer.cornerRadius = 4;
+             fileBgView.layer.masksToBounds = YES;
+             
+             [fileBgView setClickBlock:^(NSDictionary * _Nonnull modelDic, UIImageView * _Nonnull imgView) {
+                NSString *fileType = modelDic[@"fileType"];
+                NSString *fileUrlStr = modelDic[@"fileUrl"];
+ //                NSArray *imgArray = [[NSArray alloc]initWithObjects:fileUrlStr, nil];
+                 if ([fileType isEqualToString:@"jpg"] ||
+                     [fileType isEqualToString:@"png"] ||
+                     [fileType isEqualToString:@"gif"] ) {
+                     
+                     //     图片预览
+                     
+                     UIImageView *picView = imgView;
+                     CALayer *calayer = picView.layer.mask;
+                     [picView.layer.mask removeFromSuperlayer];
+                     
+                     ZCUIXHImageViewer *xh=[[ZCUIXHImageViewer alloc] initWithImageViewerWillDismissWithSelectedViewBlock:^(ZCUIXHImageViewer *imageViewer, UIImageView *selectedView) {
+                         
+                     } didDismissWithSelectedViewBlock:^(ZCUIXHImageViewer *imageViewer, UIImageView *selectedView) {
+                         
+                         selectedView.layer.mask = calayer;
+                         [selectedView setNeedsDisplay];
+                     } didChangeToImageViewBlock:^(ZCUIXHImageViewer *imageViewer, UIImageView *selectedView) {
+                         
+                     }];
+                     
+                     NSMutableArray *photos = [[NSMutableArray alloc] init];
+                     [photos addObject:picView];
+                     xh.disableTouchDismiss = NO;
+                     [xh showWithImageViews:photos selectedView:picView];
+                     
+                     
+                 }
+                 else if ([fileType isEqualToString:@"mp4"]){
+                     NSURL *imgUrl = [NSURL URLWithString:fileUrlStr];
+                     
+                      UIWindow *window = [[ZCToolsCore getToolsCore] getCurWindow];
+                      ZCVideoPlayer *player = [[ZCVideoPlayer alloc] initWithFrame:window.bounds withShowInView:window url:imgUrl Image:nil];
+                      [player showControlsView];
+                     
+                 }
+                 
+                 else{
+                     ZCLibMessage *message = [[ZCLibMessage alloc]init];
+                     ZCLibRich *rich = [[ZCLibRich alloc]init];
+                     rich.richmoreurl = fileUrlStr;
+                     
+                     /**
+                     * 13 doc文件格式
+                     * 14 ppt文件格式
+                     * 15 xls文件格式
+                     * 16 pdf文件格式
+                     * 17 mp3文件格式
+                     * 18 mp4文件格式
+                     * 19 压缩文件格式
+                     * 20 txt文件格式
+                     * 21 其他文件格式
+                     */
+                     if ([fileType isEqualToString:@"doc"] || [fileType isEqualToString:@"docx"]) {
+                         rich.fileType = 13;
+                     }
+                     else if ([fileType isEqualToString:@"ppt"]){
+                         rich.fileType = 14;
+                     }
+                     else if ([fileType isEqualToString:@"xls"] || [fileType isEqualToString:@"xlsx"]){
+                         rich.fileType = 15;
+                     }
+                     else if ([fileType isEqualToString:@"pdf"]){
+                         rich.fileType = 16;
+                     }
+                     else if ([fileType isEqualToString:@"mp3"]){
+                         rich.fileType = 17;
+                     }
+ //                    else if ([fileType isEqualToString:@"mp4"]){
+ //                        rich.fileType = 18;
+ //                    }
+                     else if ([fileType isEqualToString:@"zip"]){
+                         rich.fileType = 19;
+                     }
+                     else if ([fileType isEqualToString:@"txt"]){
+                         rich.fileType = 20;
+                     }
+                     else{
+                         rich.fileType = 21;
+                     }
+                     
+                     
+                     message.richModel = rich;
+                     
+                     ZCDocumentLookController *docVc = [[ZCDocumentLookController alloc]init];
+                     docVc.message = message;
+                     [self.navigationController pushViewController:docVc animated:YES];
+                     
+                 }
+                 
+                 
+             }];
+             [_headerMoreFileView addSubview:fileBgView];
+         }
+         
+         pics_height =  (fileViewRect.height + fileBgView_margin_top)*rows;
+        
+        CGRect hff = _headerMoreFileView.frame;
+        hff.size.height = pics_height;
+        _headerMoreFileView.frame = hff;
+        [_headerView addSubview:_headerMoreFileView];
+     }
     
-    UIView *lineView_0 = [[UIView alloc]initWithFrame:CGRectMake(0, 10, tableWidth, 0.5)];
-    lineView_0.backgroundColor =  [ZCUITools zcgetBackgroundBottomLineColor];
     
-    [_headerView addSubview:lineView_0];
-    
-    UIView *lineView_1 = [[UIView alloc]initWithFrame:CGRectMake(0, y, tableWidth, 0.5)];
-    lineView_1.backgroundColor = [ZCUITools zcgetBackgroundBottomLineColor];
-    
-    [_headerView addSubview:lineView_1];
-    
-    
-    return _headerView;
+    return pics_height;
 }
 
 
@@ -1522,5 +1629,13 @@ UINavigationControllerDelegate>
 }
 
 
+#pragma mark EmojiLabel链接点击事件
+// 链接点击
+-(void)attributedLabel:(ZCTTTAttributedLabel *)label didSelectLinkWithURL:(NSURL *)url{
+    //        链接处理：
+    [[ZCToolsCore getToolsCore] dealWithLinkClickWithLick:url.absoluteString viewController:self];
+    
+
+}
 
 @end

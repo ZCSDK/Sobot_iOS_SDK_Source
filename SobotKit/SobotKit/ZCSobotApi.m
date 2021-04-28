@@ -91,6 +91,9 @@
 }
 
 +(void)setZCViewControllerBackClick:(void (^)(id currentVC,ZCPageCloseType type))backBlock{
+    [self setFunctionClickListener:backBlock];
+}
++(void)setFunctionClickListener:(void (^)(id _Nonnull, ZCPageCloseType))backBlock{
     if (backBlock != nil) {
         [[ZCUICore getUICore] setZCViewControllerCloseBlock:backBlock];
     }
@@ -337,6 +340,7 @@
         NSMutableDictionary * contentDic = [NSMutableDictionary dictionaryWithCapacity:5];
         NSString *contextStr = @"";
         [contentDic setObject:[NSString stringWithFormat:@"%d",orderGoodsInfo.orderStatus] forKey:@"orderStatus"];
+        [contentDic setObject:zcLibConvertToString(orderGoodsInfo.statusCustom) forKey:@"statusCustom"];
         [contentDic setObject:zcLibConvertToString(orderGoodsInfo.createTime) forKey:@"createTime"];
         [contentDic setObject:zcLibConvertToString(orderGoodsInfo.orderCode) forKey:@"orderCode"];
         [contentDic setObject:zcLibConvertToString(orderGoodsInfo.createTime) forKey:@"createTime"];

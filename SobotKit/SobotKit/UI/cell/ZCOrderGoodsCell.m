@@ -202,6 +202,9 @@
             }
         }
         NSString *orderStatus = [ZCOrderGoodsModel getOrderStatusMsg:[zcLibConvertToString(dict[@"orderStatus"]) intValue]];
+        if(zcLibConvertToString(orderStatus).length == 0 && zcLibConvertToString(dict[@"statusCustom"]).length > 0){
+            orderStatus = zcLibConvertToString(dict[@"statusCustom"]);
+        }
         NSString *orderCode = zcLibConvertToString(dict[@"orderCode"]);
         NSString *createTime = (zcLibConvertToString(dict[@"createTime"]).length > 0) ? zcLibLongdateTransformString(FormateTime, [zcLibConvertToString(dict[@"createTime"]) longLongValue]):@"";
 //        NSString *orderUrl = zcLibConvertToString(dict[@"orderUrl"]);

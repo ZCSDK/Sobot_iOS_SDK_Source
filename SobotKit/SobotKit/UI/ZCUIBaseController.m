@@ -530,6 +530,9 @@
                 }
             } buttonTitles:ZCSTLocalString(@"呼叫"), nil];
         }else{
+            if([ZCUICore getUICore].ZCViewControllerCloseBlock != nil){
+                [ZCUICore getUICore].ZCViewControllerCloseBlock(self,ZC_PhoneCustomerService);
+            }
             // 打电话
             [[UIApplication sharedApplication] openURL:[NSURL URLWithString:link]];
         }

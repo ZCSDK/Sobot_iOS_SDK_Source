@@ -42,21 +42,16 @@
 
 -(void)setDefaultValue{
     
-    //            NSString *appkey = @"e851c8ec5826445fbf4e63ac49ce257e";  // xinyao  测试
-    NSString *appkey = @"3c9bf8e7992d465f9573c6407b9999f5";  // xinyao  正式
-    appkey = @"b9d6173075a54e48afcc6a2244c9f4ce";
+    NSString *appkey = @"e851c8ec5826445fbf4e63ac49ce257e";  // xinyao  测试
+     appkey = @"e550c6e4250c4ab490f290c6d7cb5ac2";  // xinyao  正式
 #pragma mark - 环境
-    NSString *apiHost = @"http://kefu.popmart.com/";
-    apiHost = @"http://test.sobot.com";
+    NSString *apiHost = @"http://test.sobot.com";
     apiHost = @"https://www.sobot.com";
-    //            apiHost = @"http://172.16.4.208:8082";
-    //    apiHost = @"http://kefu.popmart.com";
     
     
     
     _apiHost = apiHost;
     _libInitInfo.app_key = appkey;
-    _libInitInfo.partnerid = @"104-544618727661113344";
     //    _libInitInfo.robotid = @"2";
     
     //    _libInitInfo.absolute_language = @"tr_lproj";
@@ -143,7 +138,8 @@
     
     
     ZCOrderGoodsModel *model = [ZCOrderGoodsModel new];
-    model.orderStatus = 1;
+    model.orderStatus = 0;
+    model.statusCustom = @"不一样的烟火";
     model.totalFee = @"881";
     model.orderUrl = @"https://www.sobot.com";
     model.orderStatus = 1;

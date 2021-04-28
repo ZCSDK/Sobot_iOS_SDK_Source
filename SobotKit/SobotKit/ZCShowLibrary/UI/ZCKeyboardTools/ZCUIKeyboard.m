@@ -1804,7 +1804,7 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
         // TODO:  暂时修改 
         CGRect tf         = _zc_listTable.frame;
 //        tf.origin.y = startTableY;
-//        tf.origin.y = startTableY - (_zc_bottomView.frame.size.height-BottomHeight);
+        tf.origin.y = startTableY - (_zc_bottomView.frame.size.height-BottomHeight);
         _zc_listTable.frame  = tf;
 //        NSLog(@"startTableY === %lf  frame ===== %@    _zc_bottomView.frame.size.height === %f   BottomHeight =====%d" ,startTableY,NSStringFromCGRect(_zc_listTable.frame) ,_zc_bottomView.frame.size.height ,BottomHeight);
         if (!_vioceTipLabel.hidden) {
@@ -1812,6 +1812,7 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
             TF.origin.y =  _zc_bottomView.frame.origin.y - _vioceTipLabel.frame.size.height;
             _vioceTipLabel.frame = TF;
         }
+        
         
         [[ZCAutoListView getAutoListView] dissmiss];
         

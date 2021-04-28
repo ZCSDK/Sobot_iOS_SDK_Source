@@ -38,7 +38,8 @@
 
 @property (nonatomic,strong) UILabel * statusLab;
 
-@property (nonatomic,strong) ZCMLEmojiLabel * replycont;// 回复内容
+//@property (nonatomic,strong) ZCMLEmojiLabel * replycont;// 回复内容
+@property (nonatomic,strong) UILabel * replycont;// 回复内容
 
 @property (nonatomic,strong) UIView * lineView; // 竖线条
 
@@ -97,11 +98,14 @@
         _infoCardLineView.backgroundColor = [ZCUITools zcgetCommentButtonLineColor];
         [self.contentView addSubview:_infoCardLineView];
         
-        _replycont =  [[ZCMLEmojiLabel alloc] initWithFrame:CGRectMake(0, 0, self.bounds.size.width, 0)];
+//        _replycont =  [[ZCMLEmojiLabel alloc] initWithFrame:CGRectMake(0, 0, self.bounds.size.width, 0)];
+        _replycont =  [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.bounds.size.width, 0)];
 //        _replycont.textColor = UIColorFromRGB(TextRecordDetailColor);
         _replycont.font = ZCUIFont14;
         _replycont.numberOfLines = 0;
-        _replycont.delegate = self;
+//        _replycont.delegate = self;
+//        _replycont.lineSpacing = 4.0f;
+//        [_replycont setLinkColor:[ZCUITools zcgetChatLeftLinkColor]];
         [self.contentView addSubview:_replycont];
         
         _detailBtn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -160,7 +164,7 @@
     // Initialization code
 }
 
--(void)initWithData:(ZCRecordListModel *)model IndexPath:(NSUInteger)row count:(int)count btnClick:(nonnull void (^)(ZCRecordListModel * _Nonnull))btnClickBlock{
+-(void)initWithData:(ZCRecordListModel *)model IndexPath:(NSUInteger)row count:(int)count{
     
     
 
@@ -306,51 +310,23 @@
    }
     
     if(row == 0 ){
-        [self setString:tmp withlLabel:_replycont withColor:UIColorFromThemeColor(ZCTextMainColor)];
-        if ([timeText containsString:@" "]) {
-               NSArray *array = [timeText componentsSeparatedByString:@" "];
-               if (array.count >= 2) {
-                   NSString *timeText_0 = array[0];
-                   NSString *timeText_1 = array[1];
-                   
-                   NSMutableAttributedString *attributedStr = [[NSMutableAttributedString alloc] initWithString:timeText];
-                   
-                   [attributedStr addAttribute:NSFontAttributeName value:ZCUIFontBold12 range:NSMakeRange(0, timeText_0.length)];
-                   [attributedStr addAttribute:NSForegroundColorAttributeName value:UIColorFromThemeColor(ZCTextMainColor) range:NSMakeRange(0, timeText_0.length)];
-                   
-                   [attributedStr addAttribute:NSFontAttributeName value:ZCUIFontBold10 range:NSMakeRange(timeText.length - timeText_1.length, timeText_1.length)];
-                   [attributedStr addAttribute:NSForegroundColorAttributeName value:UIColorFromThemeColor(ZCTextMainColor) range:NSMakeRange(timeText.length - timeText_1.length, timeText_1.length)];
-
-                   _timeLab.attributedText = attributedStr;
-               }
-
-           }
+        [_replycont setTextColor:UIColorFromThemeColor(ZCTextMainColor)];
+        _timeLab.textColor = UIColorFromThemeColor(ZCTextMainColor);
     }
     else{
-        [self setString:tmp withlLabel:_replycont withColor:UIColorFromThemeColor(ZCTextSubColor)];
-        
-        if ([timeText containsString:@" "]) {
-           NSArray *array = [timeText componentsSeparatedByString:@" "];
-           if (array.count >= 2) {
-               NSString *timeText_0 = array[0];
-               NSString *timeText_1 = array[1];
-               
-               NSMutableAttributedString *attributedStr = [[NSMutableAttributedString alloc] initWithString:timeText];
-               
-               [attributedStr addAttribute:NSFontAttributeName value:ZCUIFont12 range:NSMakeRange(0, timeText_0.length)];
-               [attributedStr addAttribute:NSForegroundColorAttributeName value:UIColorFromThemeColor(ZCTextSubColor) range:NSMakeRange(0, timeText_0.length)];
-               
-               [attributedStr addAttribute:NSFontAttributeName value:ZCUIFont10 range:NSMakeRange(timeText.length - timeText_1.length, timeText_1.length)];
-               [attributedStr addAttribute:NSForegroundColorAttributeName value:UIColorFromThemeColor(ZCTextSubColor) range:NSMakeRange(timeText.length - timeText_1.length, timeText_1.length)];
-
-               _timeLab.attributedText = attributedStr;
-           }
-       }
+        [_replycont setTextColor:UIColorFromThemeColor(ZCTextSubColor)];
+        _timeLab.textColor = UIColorFromThemeColor(ZCTextSubColor);
     }
+    _replycont.text = tmp;
+    if ([timeText containsString:@" "]) {
+       if (model.replyTimeStrAttr) {
+           _timeLab.attributedText = model.replyTimeStrAttr;
+       }
+   }
     
     CGRect replyf = _replycont.frame;
     
-    CGRect rf = [self getTextRectWith:_replycont.attributedText WithMaxWidth:replyf.size.width WithlineSpacing:4 AddLabel:_replycont];
+    CGRect rf = [self getTextRectWith:replyf.size.width AddLabel:_replycont];
     
     CGFloat h = 0;
     if (isCardView) {
@@ -377,8 +353,8 @@
     
     
 //    2.8.2 如果 有附件：
-    
     for (UIView *view in [self.contentView subviews]) {
+        
         if ([view isKindOfClass:[ZCReplyFileView class]]) {
             [view removeFromSuperview];
         }
@@ -591,19 +567,19 @@
 }
 
 #pragma mark -- 计算文本高度
--(CGRect)getTextRectWith:(NSString *)str WithMaxWidth:(CGFloat)width  WithlineSpacing:(CGFloat)LineSpacing AddLabel:(UILabel *)label{
-    if ([str isKindOfClass:[NSAttributedString class]]) {
-        label.attributedText = (NSAttributedString *)str;
-    }else{
-        NSMutableAttributedString * attributedString = [[NSMutableAttributedString alloc]initWithString:str];
-        NSMutableParagraphStyle * parageraphStyle = [[NSMutableParagraphStyle alloc]init];
-        [parageraphStyle setLineSpacing:LineSpacing];
-        [attributedString addAttribute:NSParagraphStyleAttributeName value:parageraphStyle range:NSMakeRange(0, [str length])];
-        [attributedString addAttribute:NSFontAttributeName value:label.font range:NSMakeRange(0, str.length)];
-        
-        label.attributedText = attributedString;
-
-    }
+-(CGRect)getTextRectWith:(CGFloat)width  AddLabel:(UILabel *)label{
+//    if ([str isKindOfClass:[NSAttributedString class]]) {
+//        label.attributedText = (NSAttributedString *)str;
+//    }else{
+//        NSMutableAttributedString * attributedString = [[NSMutableAttributedString alloc]initWithString:str];
+//        NSMutableParagraphStyle * parageraphStyle = [[NSMutableParagraphStyle alloc]init];
+//        [parageraphStyle setLineSpacing:LineSpacing];
+//        [attributedString addAttribute:NSParagraphStyleAttributeName value:parageraphStyle range:NSMakeRange(0, [str length])];
+//        [attributedString addAttribute:NSFontAttributeName value:label.font range:NSMakeRange(0, str.length)];
+//
+//        label.attributedText = attributedString;
+//
+//    }
     
     CGSize size = [self autoHeightOfLabel:label with:width];
     

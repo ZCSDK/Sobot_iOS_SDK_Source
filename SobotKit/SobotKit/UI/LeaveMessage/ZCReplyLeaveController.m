@@ -274,7 +274,7 @@
 -(IBAction)buttonClick:(UIButton *) sender{
     if(sender.tag == BUTTON_MORE){
         // 提交留言内容
-        if (_model.ticketDesc.length<=0) {
+        if (zcLibTrimString(_model.ticketDesc).length<=0) {
             [[ZCUIToastTools shareToast] showToast:ZCSTLocalString(@"回复内容不能为空")  duration:1.0f view:self.view position:ZCToastPositionCenter];
             return;
         }

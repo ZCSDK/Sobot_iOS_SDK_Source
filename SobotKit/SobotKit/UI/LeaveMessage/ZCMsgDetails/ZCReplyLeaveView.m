@@ -21,6 +21,7 @@
 
 @interface ZCReplyLeaveView()<UITextViewDelegate,ZCActionSheetDelegate>{
     UIButton *delButton;
+    UIButton *submitButton;
 }
 
 @property (nonatomic, strong) UIView *backGroundView;
@@ -161,7 +162,7 @@
     
     
 //    提交按钮
-    UIButton *submitButton = [[UIButton alloc]init];
+    submitButton = [[UIButton alloc]init];
     submitButton.frame = CGRectMake(20, CGRectGetMaxY(topline_1.frame) + 10, self.viewWidth - 40, 44);
     submitButton.backgroundColor = [ZCUITools zcgetLeaveSubmitImgColor];
     submitButton.layer.cornerRadius = 22;
@@ -172,23 +173,9 @@
     
     [self.backGroundView addSubview:submitButton];
 
-    float bottomHeight = 0.0;
-    if (![ZCUICore getUICore].kitInfo.navcBarHidden) {
-        bottomHeight = 44 + 30;
-    }
     
     
-    [UIView animateWithDuration:0.25f animations:^{
     
-        float x = 0;
-        float h = CGRectGetMaxY(submitButton.frame) + XBottomBarHeight + bottomHeight;
-        float y = self.viewHeight - h;
-        float w = self.backGroundView.frame.size.width;
-        self.backGroundView.frame = CGRectMake(x,y,w,h);
-        
-    } completion:^(BOOL finished) {
-        
-    }];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyBoardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyBoardWillHide:) name:UIKeyboardWillHideNotification object:nil];
@@ -220,13 +207,28 @@
 - (void)showInView:(UIView *)view{
     
     [view addSubview:self];
+    
+    [UIView animateWithDuration:0.25f animations:^{
+        float bottomHeight = 0.0;
+        if (![ZCUICore getUICore].kitInfo.navcBarHidden) {
+            bottomHeight = 44 + 30;
+        }
+        float x = 0;
+        float h = CGRectGetMaxY(submitButton.frame) + XBottomBarHeight + bottomHeight;
+        float y = self.viewHeight - h;
+        float w = self.backGroundView.frame.size.width;
+        self.backGroundView.frame = CGRectMake(x,y,w,h);
+        
+    } completion:^(BOOL finished) {
+        
+    }];
 }
 
 #pragma mark - 点击
 - (void)submitButtonClick{
     
 //    判断输入框是否为空 请填写回复内容
-    if(self.textDesc.text.length == 0){
+    if(self.textDesc.text.length == 0 || zcLibTrimString(self.textDesc.text).length == 0){
     
         [[ZCUIToastTools shareToast] showToast:ZCSTLocalString(@"回复内容不能为空") duration:1.0 view:self position:ZCToastPositionCenter];
         

@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface ZCLeaveDetailCell : UITableViewCell
 
--(void)initWithData:(ZCRecordListModel *)model IndexPath:(NSUInteger)row count:(int) count btnClick:(void (^)(ZCRecordListModel *model ))btnClickBlock;
+-(void)initWithData:(ZCRecordListModel *)model IndexPath:(NSUInteger)row count:(int) count;
 
 -(void)setShowDetailClickCallback:(void (^)(ZCRecordListModel *model ,NSString *urlStr))detailClickBlock;
 

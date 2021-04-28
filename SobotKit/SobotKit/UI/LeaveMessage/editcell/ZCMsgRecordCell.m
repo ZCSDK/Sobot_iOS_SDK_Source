@@ -126,14 +126,7 @@
     _bgView.frame = CGRectMake(ZCNumber(0), 11, width - ZCNumber(0), ZCNumber(110));
     
     _timeLab.frame =  CGRectMake(ZCNumber(20), ZCNumber(16), ZCNumber(170), ZCNumber(20));
-//    _timeLab.backgroundColor = [UIColor blueColor];
-    NSMutableAttributedString *attributedStr = [[NSMutableAttributedString alloc] initWithString:zcLibConvertToString(model.content)];
-    NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
-    paragraphStyle.lineSpacing = 6.0; // 设置行间距
-    [attributedStr addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, attributedStr.length)];
     
-//    _titleLab.text = zcLibConvertToString(model.content);
-//    _titleLab.attributedText = attributedStr;
     
     //@"问题描述lsakl阿里速度快缴费拉卡掉了金风科技埃里克森的家乐福卡拉伸的开发";
     _titleLab.frame = CGRectMake(ZCNumber(20),ZCNumber(47), CGRectGetWidth(_bgView.frame) -ZCNumber(122), ZCNumber(20));

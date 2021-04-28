@@ -1146,9 +1146,6 @@
         // 评价过机器人了，下次不能再评价了
         [ZCUICore getUICore].isEvaluationRobot = YES;
     }
-    
-    NSMutableDictionary *dict=[[NSMutableDictionary alloc] init];
-    
     NSString *comment=_item!=nil ? [_item getSeletedTitle] : @"";
     
     if (currentServerType == 3 || currentServerType == 4 || currentServerType == 5) {
@@ -1167,6 +1164,7 @@
         }
     }
     
+    NSMutableDictionary *dict=[[NSMutableDictionary alloc] init];
     
     [dict setObject:comment forKey:@"problem"];
     
@@ -1179,8 +1177,15 @@
     }else{
         [dict setObject:[NSString stringWithFormat:@"%d",0] forKey:@"type"];
     }
-    [dict setObject:[NSString stringWithFormat:@"%.0f",_ratingView.rating] forKey:@"source"];
+    // 0:5星,1:10分
+    if (scoreFlag) {
+        [dict setObject:[NSString stringWithFormat:@"%.0f",_ratingView.rating - 1] forKey:@"source"];
+    } else {
+        [dict setObject:[NSString stringWithFormat:@"%.0f",_ratingView.rating] forKey:@"source"];
+    }
     [dict setObject:[NSString stringWithFormat:@"%d",scoreFlag] forKey:@"scoreFlag"];
+    
+    
     
     //    if (_ratingView.rating == 5) {
     //        _textView.text = @"";// 5星 置空之前的建议
