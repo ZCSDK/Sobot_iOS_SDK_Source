@@ -73,7 +73,7 @@ static const float gap = 15;
     self.bgView.layer.cornerRadius = 10;
     self.bgView.layer.masksToBounds = YES;
     
-    self.titleLab = [ZCMLEmojiLabel new];
+    self.titleLab = [[ZCMLEmojiLabel alloc] initWithFrame:CGRectZero];
     self.titleLab.numberOfLines = 0;
     self.titleLab.font = ZCUIFontBold14;
     self.titleLab.delegate = self;
@@ -344,7 +344,7 @@ static const float gap = 15;
     //    计算 title 的高度
     static ZCMLEmojiLabel *titleLab = nil;
     if (!titleLab) {
-        titleLab = [ZCMLEmojiLabel new];
+        titleLab = [[ZCMLEmojiLabel alloc] initWithFrame:CGRectZero];
         titleLab.numberOfLines = 0;
         titleLab.font = ZCUIFont14;
         titleLab.backgroundColor = [UIColor clearColor];

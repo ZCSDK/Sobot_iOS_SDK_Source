@@ -130,22 +130,6 @@
     [super drawRect:rect];
 }
 
-- (CGSize )caculateFrame:(NSString *)text {
-    
-    ZCMLEmojiLabel *label = [ZCMLEmojiLabel new];
-    
-    label.numberOfLines = 0;
-    
-    label.font = self.placeholederFont ? self.placeholederFont:ZCUIFont12;
-    
-    label.text = text;
-    
-    label.textAlignment = self.placeHolderLabel.textAlignment;
-    
-    CGSize size = [label sizeThatFits:CGSizeMake(self.bounds.size.width-20, CGFLOAT_MAX)];
-    
-    return size;
-}
 - (void)setPlaceholederFont:(UIFont *)placeholederFont{
     _placeholederFont = placeholederFont;
     [self setNeedsDisplay];

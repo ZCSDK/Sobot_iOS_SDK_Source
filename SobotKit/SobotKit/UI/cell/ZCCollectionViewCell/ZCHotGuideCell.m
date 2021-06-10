@@ -35,7 +35,7 @@
 
 -(ZCMLEmojiLabel *)titleLab{
     if(!_titleLab){
-        _titleLab = [ZCMLEmojiLabel new];
+        _titleLab = [[ZCMLEmojiLabel alloc] initWithFrame:CGRectZero];
         _titleLab.numberOfLines = 0;
         _titleLab.font = [ZCUITools zcgetKitChatFont];
         _titleLab.delegate = self;
@@ -211,7 +211,7 @@
     
     static ZCMLEmojiLabel *titleLab = nil;
     if (!titleLab) {
-        titleLab = [ZCMLEmojiLabel new];
+        titleLab = [[ZCMLEmojiLabel alloc] initWithFrame:CGRectZero];
         titleLab.numberOfLines = 0;
         titleLab.font = ZCUIFont14;
         titleLab.backgroundColor = [UIColor clearColor];

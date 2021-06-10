@@ -155,7 +155,7 @@ typedef NS_ENUM(NSInteger, PageClickTag) {
             NSURL *url=[[ NSURL alloc ] initWithString:pageURL];
             [_webView loadRequest:[ NSURLRequest requestWithURL:url]];
         }
-    }else if (zcLibIsUrl(pageURL)){
+    }else if (zcLibIsUrl(pageURL,@"")){
         NSURL *url=[[ NSURL alloc ] initWithString:pageURL];
         [_webView loadRequest:[ NSURLRequest requestWithURL:url]];
         
@@ -225,7 +225,7 @@ typedef NS_ENUM(NSInteger, PageClickTag) {
 -(id)initWithURL:(NSString *)url{
     self=[super init];
     if(self){
-        if (zcLibIsUrl(url)) {
+        if (zcLibIsUrl(url,@"")) {
             
             pageURL=url;
             

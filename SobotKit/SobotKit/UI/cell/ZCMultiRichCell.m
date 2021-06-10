@@ -20,7 +20,8 @@
 
 @interface ZCMultiRichCell()<ZCMLEmojiLabelDelegate,UIGestureRecognizerDelegate>{
     NSString    *callURL;
-    ZCMLEmojiLabel *_lblEmojiQuestion;// 标题
+    ZCMLEmojiLabel *_lblEmojiAnswerStrip;// 标题
+    ZCMLEmojiLabel *_lblEmojiQuestion;// 问题
     ZCMLEmojiLabel *_lblTextMsg; // 描述
     ZCUIImageView *_middleImageView; // 图片
     ZCMLEmojiLabel *_lookMoreLabel; // 展开
@@ -39,7 +40,7 @@
 - (ZCMLEmojiLabel *)lblTextMsg // 中间的消息体
 {
     if (!_lblTextMsg) {
-        _lblTextMsg = [ZCMLEmojiLabel new];
+        _lblTextMsg = [[ZCMLEmojiLabel alloc] initWithFrame:CGRectZero];
         _lblTextMsg.numberOfLines = 0;
         _lblTextMsg.font = [ZCUITools zcgetKitChatFont];
         _lblTextMsg.delegate = self;
@@ -55,9 +56,28 @@
     return _lblTextMsg;
 }
 
+-(ZCMLEmojiLabel *)lblEmojiAnswerStrip{
+    if(!_lblEmojiAnswerStrip){
+        _lblEmojiAnswerStrip = [[ZCMLEmojiLabel alloc] initWithFrame:CGRectZero];
+        _lblEmojiAnswerStrip.numberOfLines = 0;
+        _lblEmojiAnswerStrip.font = ZCUIFontBold14;
+        _lblEmojiAnswerStrip.delegate = self;
+        _lblEmojiAnswerStrip.lineBreakMode = NSLineBreakByTruncatingTail;
+        _lblEmojiAnswerStrip.textColor = [UIColor whiteColor];
+        _lblEmojiAnswerStrip.backgroundColor = [UIColor clearColor];
+        _lblEmojiAnswerStrip.isNeedAtAndPoundSign = NO;
+        _lblEmojiAnswerStrip.disableEmoji = NO;
+        _lblEmojiAnswerStrip.lineSpacing = 3.0f;
+        _lblEmojiAnswerStrip.verticalAlignment = ZCTTTAttributedLabelVerticalAlignmentCenter;
+        [self.contentView addSubview:_lblEmojiAnswerStrip];
+        
+    }
+    return _lblEmojiAnswerStrip;
+}
+
 -(ZCMLEmojiLabel *)lblEmojiQuestion{
     if(!_lblEmojiQuestion){
-        _lblEmojiQuestion = [ZCMLEmojiLabel new];
+        _lblEmojiQuestion = [[ZCMLEmojiLabel alloc] initWithFrame:CGRectZero];
         _lblEmojiQuestion.numberOfLines = 0;
         UIFontDescriptor *ctfFont = [ZCUITools zcgetKitChatFont].fontDescriptor;
         NSNumber *fontString = [ctfFont objectForKey:@"NSFontSizeAttribute"];
@@ -91,7 +111,7 @@
 - (ZCMLEmojiLabel *)lookMoreLabel // 展开
 {
     if (!_lookMoreLabel) {
-        _lookMoreLabel = [ZCMLEmojiLabel new];
+        _lookMoreLabel = [[ZCMLEmojiLabel alloc] initWithFrame:CGRectZero];
         _lookMoreLabel.numberOfLines = 0;
         _lookMoreLabel.font = [ZCUITools zcgetKitChatFont];
         _lookMoreLabel.delegate = self;
@@ -129,13 +149,28 @@
     NSMutableDictionary * detailDict = model.richModel.multiModel.interfaceRetList.firstObject; // 多个
 #pragma mark  -- 图片
     CGFloat height = 15;
+    
+    if(model.richModel.multiModel.endFlag && zcLibConvertToString(model.richModel.multiModel.msg).length > 0){
+        [self.lblEmojiAnswerStrip setTextColor:[ZCUITools zcgetLeftChatTextColor]];
+        [self.lblEmojiAnswerStrip setLinkColor:[ZCUITools zcgetChatLeftLinkColor]];
+        self.lblEmojiAnswerStrip.text = zcLibConvertToString(model.richModel.multiModel.msg);
+        CGSize size = [self.lblEmojiAnswerStrip preferredSizeWithMaxWidth:self.maxWidth-30];
+        CGFloat msgX = GetCellItemX(self.isRight)+15;
+        if(self.isRight){
+            msgX=self.viewWidth-self.maxWidth;
+        }
+        CGRect af = CGRectMake(msgX, height + bgY, size.width, size.height);
+        [[self lblEmojiAnswerStrip] setFrame:af];
+        
+        height = height + size.height + 10 + Spaceheight;
+    }
 
     // 处理图片  当前的图片高度固定110
     if(![@"" isEqualToString:zcLibConvertToString(detailDict[@"thumbnail"])]){
         [[self middleImageView] loadWithURL:[NSURL URLWithString:zcUrlEncodedString(detailDict[@"thumbnail"])] placeholer:nil showActivityIndicatorView:YES];
         [self middleImageView].hidden=NO;
         [self middleImageView].userInteractionEnabled=YES;
-        imgF = CGRectMake(GetCellItemX(self.isRight), height, self.viewWidth -160, MidImageHeight);
+        imgF = CGRectMake(GetCellItemX(self.isRight), height, self.maxWidth - SpaceLX*2, MidImageHeight);
         [self.middleImageView setFrame:imgF];
         height = height + MidImageHeight + 10 + Spaceheight;
     }
@@ -286,16 +321,16 @@
     [self.lblTextMsg setFrame:msgF];
     
     if(imgF.size.height>0){
-        imgF.origin.x = CGRectGetMaxX(self.ivBgView.frame) - CGRectGetWidth(self.ivBgView.frame) + 8;
+        imgF.origin.x = CGRectGetMaxX(self.ivBgView.frame) - CGRectGetWidth(self.ivBgView.frame) + 15;
         imgF.origin.y = imgF.origin.y + bgY;
-        imgF.size.width = CGRectGetWidth(self.ivBgView.frame) -8;
+        imgF.size.width = CGRectGetWidth(self.ivBgView.frame) - 30;
         [self.middleImageView setFrame:imgF];
     }
     
     if (linF.size.height >0) {
         linF.origin.x = self.ivBgView.frame.origin.x + 8;
         linF.origin.y = linF.origin.y + bgY;
-        linF.size.width = CGRectGetWidth(self.ivBgView.frame) -8;
+        linF.size.width = CGRectGetWidth(self.ivBgView.frame) - 16;
 
         [_lineView setFrame:linF];
         
@@ -413,6 +448,18 @@
     NSMutableDictionary * detailDict = model.richModel.multiModel.interfaceRetList.firstObject;
     
     static ZCMLEmojiLabel *tempLabel = nil;
+    if (!tempLabel) {
+        tempLabel = [[ZCMLEmojiLabel alloc] initWithFrame:CGRectZero];
+        tempLabel.numberOfLines = 0;
+        tempLabel.font = [ZCUITools zcgetKitChatFont];
+        tempLabel.backgroundColor = [UIColor clearColor];
+        tempLabel.lineBreakMode = NSLineBreakByTruncatingTail;
+        tempLabel.textColor = [UIColor whiteColor];
+        tempLabel.isNeedAtAndPoundSign = YES;
+        tempLabel.disableEmoji = NO;
+        tempLabel.lineSpacing = 3.0f;
+        tempLabel.verticalAlignment = ZCTTTAttributedLabelVerticalAlignmentCenter;
+    }
     
     if (![@"" isEqualToString:zcLibConvertToString(detailDict[@"thumbnail"])]) {
         cellheith = cellheith + MidImageHeight + 10 + Spaceheight;
@@ -420,7 +467,6 @@
     
     //判断显示标题
     if(![@"" isEqual:zcLibConvertToString(detailDict[@"title"])]){
-        
         UIFontDescriptor *ctfFont = [ZCUITools zcgetKitChatFont].fontDescriptor;
         NSNumber *fontString = [ctfFont objectForKey:@"NSFontSizeAttribute"];
         tempLabel.font = [UIFont boldSystemFontOfSize:[fontString floatValue]];
@@ -431,22 +477,19 @@
         cellheith = cellheith + size.height +10 + Spaceheight;
     }
     
+    //判断显示标题
+    if(model.richModel.multiModel.endFlag && zcLibConvertToString(model.richModel.multiModel.msg).length > 0){
+        tempLabel.font = ZCUIFontBold14;
+        
+        tempLabel.text = zcLibConvertToString(model.richModel.multiModel.msg);
+        CGSize size = [tempLabel preferredSizeWithMaxWidth:maxWidth];
+        
+        cellheith = cellheith + size.height +10 + Spaceheight;
+    }
+    
     
     // 摘要
     if (![@"" isEqualToString:zcLibConvertToString(detailDict[@"summary"])]) {
-        
-        if (!tempLabel) {
-            tempLabel = [ZCMLEmojiLabel new];
-            tempLabel.numberOfLines = 0;
-            tempLabel.font = [ZCUITools zcgetKitChatFont];
-            tempLabel.backgroundColor = [UIColor clearColor];
-            tempLabel.lineBreakMode = NSLineBreakByTruncatingTail;
-            tempLabel.textColor = [UIColor whiteColor];
-            tempLabel.isNeedAtAndPoundSign = YES;
-            tempLabel.disableEmoji = NO;
-            tempLabel.lineSpacing = 3.0f;
-            tempLabel.verticalAlignment = ZCTTTAttributedLabelVerticalAlignmentCenter;
-        }
         // 正在输入，需要放置加载动画图片
         NSString *text=model.richModel.msg;
         
@@ -457,34 +500,10 @@
             }else{
                 tempLabel.attributedText =  [[NSAttributedString alloc] initWithString:@""];
             }
-            
-//            }else{
-//                tempLabel.attributedText =    [ZCHtmlFilter setHtml:text1 attrs:arr view:tempLabel textColor:[ZCUITools zcgetLeftChatTextColor] textFont:[ZCUITools zcgetKitChatFont] linkColor:[ZCUITools zcgetChatLeftLinkColor]];
-//            }
         }];
         
-        // 处理换行
-//        text = [text stringByReplacingOccurrencesOfString:@"<br />" withString:@"\n"];
-//        text = [text stringByReplacingOccurrencesOfString:@"<br/>" withString:@"\n"];
-//        text = [text stringByReplacingOccurrencesOfString:@"<br>" withString:@"\n"];
-//        text = [text stringByReplacingOccurrencesOfString:@"<BR/>" withString:@"\n"];
-//        text = [text stringByReplacingOccurrencesOfString:@"<BR />" withString:@"\n"];
-//        text = [text stringByReplacingOccurrencesOfString:@"<p " withString:@"\n<p "];
-//        text = [text stringByReplacingOccurrencesOfString:@"&nbsp;" withString:@" "];
-//        while ([text hasPrefix:@"\n"]) {
-//            text=[text substringWithRange:NSMakeRange(1, text.length-1)];
-//        }
-//        NSMutableDictionary *dict = [tempLabel getTextADict:text];
-//        if(dict){
-//            text = dict[@"text"];
-//        }
-//
-//        tempLabel.font = [ZCUITools zcgetKitChatFont];
-//        tempLabel.text = text;
-        
         text = nil;
-//        dict = nil;
-
+        
         
         CGSize msgSize = [tempLabel preferredSizeWithMaxWidth:maxWidth];
         

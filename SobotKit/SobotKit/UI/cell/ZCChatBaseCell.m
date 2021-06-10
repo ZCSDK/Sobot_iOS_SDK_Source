@@ -175,7 +175,7 @@
 
 
 +(ZCMLEmojiLabel *) createRichLabel{
-    ZCMLEmojiLabel *tempRichLabel = [ZCMLEmojiLabel new];
+    ZCMLEmojiLabel *tempRichLabel = [[ZCMLEmojiLabel alloc] initWithFrame:CGRectZero];
     tempRichLabel.numberOfLines = 0;
     tempRichLabel.font = [ZCUITools zcgetKitChatFont];
     tempRichLabel.lineBreakMode = NSLineBreakByTruncatingTail;

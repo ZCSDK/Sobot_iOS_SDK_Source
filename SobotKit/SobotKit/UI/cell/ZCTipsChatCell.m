@@ -57,7 +57,7 @@
 - (ZCMLEmojiLabel *)emojiLabel
 {
     if (!_lblTextMsg) {
-        _lblTextMsg = [ZCMLEmojiLabel new];
+        _lblTextMsg = [[ZCMLEmojiLabel alloc] initWithFrame:CGRectZero];
         _lblTextMsg.numberOfLines = 0;
         _lblTextMsg.font = ZCUIFont12;
         _lblTextMsg.delegate = self;
@@ -299,7 +299,7 @@
         timeHeight = timeHeight + 10;
         static ZCMLEmojiLabel *tempLabel = nil;
         if (!tempLabel) {
-            tempLabel = [ZCMLEmojiLabel new];
+            tempLabel = [[ZCMLEmojiLabel alloc] initWithFrame:CGRectZero];
             tempLabel.numberOfLines = 0;
             tempLabel.font = ZCUIFont12;
             tempLabel.backgroundColor = [UIColor clearColor];

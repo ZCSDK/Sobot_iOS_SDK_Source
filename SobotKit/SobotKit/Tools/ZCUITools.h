@@ -26,7 +26,7 @@ typedef NS_ENUM(NSUInteger,ZCThemeStyle){
 
 
 // 获取资源的NSMutableAttributedString
-+(NSMutableAttributedString *) attributedStringByHTML:(NSString *)html textColor:(UIColor *) textColor linkColor:(UIColor *) linkColor;
++(void) attributedStringByHTML:(NSString *)html textColor:(UIColor *) textColor linkColor:(UIColor *) linkColor result:(void(^)(NSMutableAttributedString *attr)) attrBlock;
 
 
 +(NSString *)removeAllHTMLTag:(NSString *)html;
@@ -61,6 +61,11 @@ typedef NS_ENUM(NSUInteger,ZCThemeStyle){
 
 // 获取手机验证吗规则
 +(NSString *) zcgetTelRegular;
+
+
+// 获取url正则表达式
++(NSString *)zcgetUrlRegular;
+
 
 /**
  *  获取表情库

@@ -31,7 +31,7 @@ NSString *zcLibConvertToString(id object);
 NSString* zcLibMd5(NSString* input);
 NSString *MD5Hash(NSString * input);
 
-BOOL zcLibIsUrl(NSString *urlString);
+BOOL zcLibIsUrl(NSString *urlString,NSString *regexStr);
 
 
 NSString *zcUrlEncodedString(NSString *url);

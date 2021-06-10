@@ -96,7 +96,7 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
 @property (nonatomic,strong) UIImagePickerController *zc_imagepicker;
 
 /** 聊天页中UITableView 用于界面键盘高度处理 */
-@property (nonatomic,weak) UITableView *zc_listTable;
+@property (nonatomic,strong) UITableView *zc_listTable;
 
 /** 键盘高度 */
 @property (nonatomic,assign) CGFloat zc_keyBoardHeight;
@@ -337,7 +337,7 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
         _zc_sessionBgView = [[UIView alloc]initWithFrame:CGRectMake(0, 1, [self getSourceViewWidth], ZCConnectBottomHeight)];
         _zc_sessionBgView.backgroundColor = [ZCUITools zcgetBackgroundBottomColor];
 //        _zc_sessionBgView.backgroundColor = [UIColor redColor];
-        [_zc_sessionBgView setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleTopMargin |UIViewAutoresizingFlexibleLeftMargin |UIViewAutoresizingFlexibleHeight |UIViewAutoresizingFlexibleRightMargin |UIViewAutoresizingFlexibleBottomMargin];
+        [_zc_sessionBgView setAutoresizingMask:UIViewAutoresizingFlexibleWidth];
         [_zc_bottomView addSubview:_zc_sessionBgView];
         _zc_sessionBgView.hidden = YES;
     }
@@ -511,7 +511,7 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
     
     
     
-    if (![self getZCLibConfig].isArtificial && ![ZCUICore getUICore].isAfterConnectUser) {
+    if (![self getZCLibConfig].isArtificial || [ZCUICore getUICore].isAfterConnectUser) {
         if ([self getZCLibConfig].msgFlag == 0) {
             titles = [NSMutableArray arrayWithObjects:menu2,menu1, nil];
             
@@ -771,7 +771,7 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
             [ZCLibClient getZCLibClient].turnServiceBlock(nil, nil, ZCTurnType_BtnClick, @"", @"");
             return;
         }
-        [[ZCUICore getUICore] checkUserServiceWithObject:nil Msg:nil];
+        [[ZCUICore getUICore] checkUserServiceWithObject:nil Msg:@"keyboard"];
     }else if(btn.tag == ZCKeyboardClickTypeSatisfaction){
         [[ZCUICore getUICore] keyboardOnClick:ZCShowStatusSatisfaction];
         // 满意度
@@ -936,7 +936,7 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
             [ZCLibClient getZCLibClient].turnServiceBlock(nil, nil, ZCTurnType_BtnClick, @"", @"");
             return;
         }
-        [[ZCUICore getUICore] checkUserServiceWithObject:nil Msg:nil];
+        [[ZCUICore getUICore] checkUserServiceWithObject:nil Msg:@"keyboard"];
         
         // 此处回收键盘处理UI刷新
         [self hideKeyboard];
@@ -1335,7 +1335,7 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
     }
     
     // 如果是延迟转人工，设置键盘样式为仅机器人样式
-    if([ZCUICore getUICore].isAfterConnectUser){
+    if([ZCUICore getUICore].isAfterConnectUser && ![self getZCLibConfig].isArtificial){
         status = ZCKeyboardStatusRobot;
         if([self getZCLibConfig].type == 2){
             [self setServiceModeView:2];
@@ -1798,13 +1798,14 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
                 bf.size.height = BottomHeight;
         }
         bf.origin.y       = [self getSourceViewHeight]-bf.size.height- (iOS7?0:20)  - botttomHight;
-        
-        
         _zc_bottomView.frame = bf;
         // TODO:  暂时修改 
         CGRect tf         = _zc_listTable.frame;
-//        tf.origin.y = startTableY;
-        tf.origin.y = startTableY - (_zc_bottomView.frame.size.height-BottomHeight);
+        if(curKeyBoardStatus != ZCKeyboardStatusNewSession ){
+            tf.origin.y = startTableY - (_zc_bottomView.frame.size.height-BottomHeight);
+        }else{
+            tf.origin.y = startTableY;
+        }
         _zc_listTable.frame  = tf;
 //        NSLog(@"startTableY === %lf  frame ===== %@    _zc_bottomView.frame.size.height === %f   BottomHeight =====%d" ,startTableY,NSStringFromCGRect(_zc_listTable.frame) ,_zc_bottomView.frame.size.height ,BottomHeight);
         if (!_vioceTipLabel.hidden) {
@@ -1883,9 +1884,9 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
         
         _zc_listTable.frame  = tf;
         if(x>0 && !isLandspace){
-            if([ZCUICore getUICore].kitInfo.navcBarHidden){
+//            if([ZCUICore getUICore].kitInfo.navcBarHidden){
                 [_zc_listTable setContentOffset:CGPointMake(0, x) animated:NO];
-            }
+//            }
         }
         
 
@@ -2164,7 +2165,7 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
          
          dispatch_async(dispatch_get_main_queue(), ^{
              NSString *aleartMsg = @"";
-             aleartMsg = ZCSTLocalString(@"请在iPhone的《设置-隐私-麦克风》选项中，允许访问你的麦克风");
+             aleartMsg = ZCSTLocalString(@"请在《设置 - 隐私 - 麦克风》选项中，允许访问您的麦克风");
              
              [[ZCToolsCore getToolsCore] showAlert:nil message:aleartMsg cancelTitle:ZCSTLocalString(@"好的") titleArray:nil viewController:[self getCurrentVC] confirm:^(NSInteger buttonTag) {
                  if(buttonTag == 0){
@@ -2190,7 +2191,6 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
     [_zc_recordView didChangeState:RecordStart];
     
     [_zc_pressedButton setBackgroundColor:UIColorFromThemeColor(ZCTextPlaceHolderColor)];
-//    [_zc_pressedButton setBackgroundColor:[UIColor blueColor]];
     [_zc_pressedButton setTitle:ZCSTLocalString(@"松开 发送") forState:UIControlStateNormal];
     [_zc_pressedButton.layer setBorderWidth:0.0f];
     
@@ -2236,7 +2236,6 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
             [_zc_recordView didChangeState:RecordStart];
             
             [_zc_pressedButton setBackgroundColor:UIColorFromThemeColor(ZCTextPlaceHolderColor)];
-//            [_zc_pressedButton setBackgroundColor:[UIColor blueColor]];
             [_zc_pressedButton setTitle:ZCSTLocalString(@"松开 发送") forState:UIControlStateNormal];
         } else {
             // UIControlEventTouchDragInside
@@ -2528,7 +2527,12 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
  */
 -(void)showStatusView{
     [_zc_sessionBgView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
-    
+    CGFloat bh = CGRectGetHeight(_zc_sessionBgView.frame);
+    CGRect bf = _zc_bottomView.frame;
+    bf.origin.y       = [self getSourceViewHeight] - bh - _zc_keyBoardHeight;
+    bf.size.height    = bh;
+    _zc_bottomView.frame = bf;
+    _zc_sessionBgView.hidden  = NO;
     // 当前页面使用自己添加的数据，不从接口方法中获取，（预留接口，后期有变动在添加）
     // 标题和tag
     NSMutableArray * titleArray = [NSMutableArray arrayWithCapacity:0];

@@ -56,7 +56,7 @@ typedef NS_ENUM(NSUInteger,ZCNoticeStatus){
 
 -(ZCMLEmojiLabel *)lblTextMsg{ // 消息内容
     if (!_lblTextMsg) {
-        _lblTextMsg = [ZCMLEmojiLabel new];
+        _lblTextMsg = [[ZCMLEmojiLabel alloc] initWithFrame:CGRectZero];
         _lblTextMsg.numberOfLines = 0;
         _lblTextMsg.font = ZCUIFont14;
         _lblTextMsg.delegate = self;
@@ -239,7 +239,7 @@ typedef NS_ENUM(NSUInteger,ZCNoticeStatus){
     
     static ZCMLEmojiLabel *tempLabel = nil;
     if (!tempLabel) {
-        tempLabel = [ZCMLEmojiLabel new];
+        tempLabel = [[ZCMLEmojiLabel alloc] initWithFrame:CGRectZero];
         tempLabel.numberOfLines = 0;
         tempLabel.font = ZCUIFont14;
         tempLabel.lineBreakMode = NSLineBreakByTruncatingTail;

@@ -40,7 +40,6 @@
 | ZCSobotApi.h   | 该文件提供接入功能(替换原有ZCSobot.h)   |    |
 | ZCLibInitInfo.h   | 基础功能参数类(用户信息、接待模式、技能组等)   |    |
 | ZCKitInfo.h   | 基础UI参数类(颜色、控件显/隐等)   |    |
-| SobotKit.h   | 该文件引用关键SDK需要的文件   |    |
 | ZCUIBaseController   | UI界面父类，所有其它页面都继承此控制器   |    |
 | ZCChatController   | 聊天界面   |    |
 | SobotLocalizable.strings   | 国际化语言文件,默认根据系统语言自动匹配   |    |
@@ -51,11 +50,11 @@
 
 普通版：
 
-下载链接：[iOS_SDK_2.9.6](https://img.sobot.com/mobile/sdk/iOS_SDK_2.9.6.zip)
+下载链接：[iOS_SDK_2.9.8](https://img.sobot.com/mobile/sdk/iOS_SDK_2.9.8.zip)
 
 电商版：
 
-下载链接：[iOS_SDK_2.9.6_电商版](https://img.sobot.com/mobile/sdk/iOS_SDK_2.9.6_MALL.zip)
+下载链接：[iOS_SDK_2.9.8_电商版](https://img.sobot.com/mobile/sdk/iOS_SDK_2.9.8_MALL.zip)
 
 解压[iOS_SDK]，添加必要文件SobotKit.framework和SobotKit.bundle到你的工程里。智齿iOS_SDK 的实现，依赖了一些系统的框架，在开发应用时需要在工程里加入这些框架。开发者首先点击工程右边的工程名，然后在工程名右边依次选择TARGETS -> BuiLd Phases -> Link Binary With Libraries，展开 LinkBinary With Libraries后点击展开后下面的 + 来添加下面的依赖项:
 
@@ -151,11 +150,6 @@ pod cache clean SobotKit
  */
 -(void)initSobotSDK:(NSString *) app_key result:(void (^)(id object))resultBlock;
 
-
-/**
- *  初始化智齿客服 (2.7.1之前使用)，没有初始化结果
- **/
--(void)initSobotSDK:(NSString *) app_key;
 ```
 参数：  
 
@@ -265,14 +259,14 @@ pod cache clean SobotKit
 | byController   | UIViewController   | 执行跳转的vc|
 | delegate   | ZCChatControllerDelegate   | 聊天页面的代理，可以实现留言跳转到自定义页面|
 | pageClick   | void (^)(id object,ZCPageBlockType type)   | 点击返回时的回调   |
-| messagelinkBlock   | BOOL (^)(NSString *link)   | 点击消息连接回调，返回YES代表自己处理，返回NO代表不处理，可以设置为nil，使用setMessageLinkClick统一管理  |
+| messagelinkBlock   | BOOL (^)(NSString *link)   | 点击消息连接回调，返回YES代表自己处理，返回NO代表不处理，可以设置为nil，如果此处不为空会覆盖setMessageLinkClick的值，后设置的覆盖前一次设置的值  |
 
 示例代码：
 
 ```js
 //设置必传参数，ZCLibInitInfo中的参数，都可以重新设置
 ZCLibInitInfo *initInfo = [ZCLibClient getZCLibClient].libInitInfo;
-// 设置用户id，标识用户的唯一依据，（一定不要写如123456、0、000000等固定值，同一个id的聊天记录会一样），如果不设置，默认会根据手机证书生成一个唯一标
+// 设置用户id，标识用户的唯一依据，（一定不要写如123456、0、000000等固定值，同一个id的聊天记录会一样），如果不设置，默认会根据手机证书生成一个唯一标,最大支持300个字符，超过后会自动截取
 initInfo.partnerid = @"";
 
 // 如果是电商版本，需要重新指定商户app_key或商户编码customer_code
@@ -340,9 +334,6 @@ uiInfo.topViewBgColor = [UIColor redColor];
 // 2.8.5版本使用
 + (void)openZCChatListView:(ZCKitInfo *)info with:(UIViewController *)byController onItemClick:(void (^)(ZCUIChatListController *object,ZCPlatformInfo *info))itemClickBlock;
 
-
-// 2.8.4以前版本使用
-+(void)startZCChatListView:(ZCKitInfo *)info with:(UIViewController *)byController onItemClick:(void (^)(ZCUIChatListController *object,ZCPlatformInfo *info))itemClickBlock;
 ```
 参数
 
@@ -370,13 +361,10 @@ uiInfo.topViewBgColor = [UIColor redColor];
 // 启动商家列表，但是点击具体某一个商家可能需要重新配置参数，自己处理跳转情况，2.8.4以前方式，建议使用新方法
 [ZCSobotApi openZCChatListView:uiInfo with:self onItemClick:^(ZCUIChatListController *object, ZCPlatformInfo *info) {
    // 商家某一条点击事件触发，自行启动智齿聊天页面，可以修改必传参数，ZCLibInitInfo中的参数，都可以重新设置
-   [ZCSobotApi openZCChat:uiInfo with:object target:nil pageBlock:^(id object, ZCPageBlockType type) {
-
-        } messageLinkClick:^BOOL(NSString *link) {
-
-            return NO;
-
-        }];
+   [ZCLibClient getZCLibClient].libInitInfo.app_key = info.app_key;
+   [ZCSobotApi openZCChat:[ZCGuideData getZCGuideData].kitInfo with:self pageBlock:^(id  _Nonnull object, ZCPageBlockType type) {
+                
+   }];
 }];
 ```
 ### 3.4.3 启动客户服务中心
@@ -390,11 +378,7 @@ ZCKitInfo *kitInfo = [ZCKitInfo new];
 + (void)openZCServiceCenter:(ZCKitInfo *) info
                          with:(UIViewController *) byController
                   onItemClick:(void (^)(ZCUIBaseController *object))itemClickBlock;
-                  
-// 2.8.4以前版本方法
-[ZCSobot openZCServiceCentreVC:kitInfo with:self onItemClick:^(ZCUIBaseController *object, ZCOpenType type) {
-        
-    }];
+    
 ```
 效果如图：
 ![图片](https://img.sobot.com/mobile/sdk/images/i_3_4_3_1.jpeg)
@@ -1871,7 +1855,7 @@ _kitInfo.hideManualEvaluationLabels = YES;
 | app_key   | NSString   | 必须设置，不设置初始化不成功，初始化会自动赋值。   | 必填   |
 | choose_adminid   | NSString   | 指定客服ID   |    |
 | tran_flag   | int   | 定指客服 转接类型    |  0 可转入其他客服  1 必须转入指定客服   |
-| partnerid   | NSString   | 用户唯一标识   | 对接用户可靠身份，不能写死，不建议为null，如果为空会以设备区别   |
+| partnerid   | NSString   | 用户唯一标识   | 对接用户可靠身份，不能写死(写固定值会是同一个身份，后果很严重)，不建议为null，如果为空会以设备区别，最大支持300个字符，超过后会自动截取   |
 | robotid   | NSString   | 对接机器人ID   |    |
 | robot_alias   | NSString   | 对接机器人别名,如果设置此值每次都需要设置robotid为空   |    |
 | platform_userid   | NSString   | 平台通道参数，初始化成功后会自动赋值   |    |

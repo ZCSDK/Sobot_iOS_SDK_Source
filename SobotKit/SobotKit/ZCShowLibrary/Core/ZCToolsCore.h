@@ -24,9 +24,6 @@ typedef void(^AlertViewBlock)(NSInteger buttonTag);
 // 检测图片中的二维码,返回 一个URL 字符串，或者nil
 -(id )coderURLStrDetectorWith:(UIImage *)image;
 
-// 判断是不是 url
-- (BOOL)isUrl:(NSString *)urlString;
-
 - (void)setRTLFrame:(UIView *)view;
 
 -(void)clear;

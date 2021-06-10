@@ -46,18 +46,22 @@
         return;
     }
     
-    UIColor *textColor = [ZCUITools zcgetRightChatTextColor];
-    UIColor *linkColor = [ZCUITools zcgetChatRightlinkColor];
-    if(temModel.senderType > 0){
-        textColor = [ZCUITools zcgetLeftChatTextColor];
-        linkColor = [ZCUITools zcgetChatLeftLinkColor];
-    }
-    if(zcLibConvertToString([temModel getModelDisplayText]).length > 0){
-        temModel.displayAttr = [ZCUITools attributedStringByHTML:[temModel getModelDisplayText] textColor:textColor linkColor:linkColor];
-    }
+//    if(zcLibConvertToString([temModel getModelDisplayText]).length > 0){
+//        [ZCUITools attributedStringByHTML:[temModel getModelDisplayText] textColor:textColor linkColor:linkColor result:^(NSMutableAttributedString *attr) {
+//            temModel.displayAttr = attr;
+//        }];
+//    }
     
-    if(zcLibConvertToString([temModel getModelDisplaySugestionText]).length > 0){
-        temModel.displaySugestionattr = [ZCUITools attributedStringByHTML:[temModel getModelDisplaySugestionText] textColor:textColor linkColor:linkColor];
+    if(zcLibConvertToString([temModel getModelDisplaySugestionText]).length > 0  && temModel.displaySugestionattr==nil){
+        UIColor *textColor = [ZCUITools zcgetRightChatTextColor];
+        UIColor *linkColor = [ZCUITools zcgetChatRightlinkColor];
+        if(temModel.senderType > 0){
+            textColor = [ZCUITools zcgetLeftChatTextColor];
+            linkColor = [ZCUITools zcgetChatLeftLinkColor];
+        }
+        [ZCUITools attributedStringByHTML:[temModel getModelDisplaySugestionText] textColor:textColor linkColor:linkColor result:^(NSMutableAttributedString *attr) {
+            temModel.displaySugestionattr = attr;
+        }];
     }
 }
 
@@ -92,7 +96,7 @@
 }
 
 
-+(NSMutableAttributedString *) attributedStringByHTML:(NSString *)html textColor:(UIColor *) textColor linkColor:(UIColor *) linkColor
++(void) attributedStringByHTML:(NSString *)html textColor:(UIColor *) textColor linkColor:(UIColor *) linkColor result:(void (^)(NSMutableAttributedString *))attrBlock
 {
     if (!html || [html isKindOfClass:[NSString class]] == NO)
     {
@@ -106,66 +110,34 @@
     }
 
 
-    NSDictionary * documentAttributes = nil;
-    NSError      * error = nil;
 
     html = [html stringByReplacingOccurrencesOfString:@"\n" withString:@"<br/>"];
     if(linkColor && textColor){
         NSString *linkHexColor = [self getHexStringByColor:linkColor];
         NSString *textHexColor = [self getHexStringByColor:textColor];
         html = [NSString stringWithFormat:@"<html><head><style>body{ font-family:'%@'; font-size:%fpx;color:%@; margin:0px; padding:0px;}a{color:%@} a:hover{color:%@}</style></head><body>%@</body></html>", font.fontName, font.pointSize,textHexColor,linkHexColor,linkHexColor,html];
-        
-//        CGFloat r, g, b, a;
-//        [textColor getRed:&r green:&g blue:&b alpha:&a];
-//        
-//        
-//        CGFloat lr, lg, lb, la;
-//        [linkColor getRed:&lr green:&lg blue:&lb alpha:&la];
-//        NSString *linkHexColor = [NSString stringWithFormat:@"rgba(%.3f,%.3f,%.3f,%.1f)",lr,lg,lb,la];
-//        NSString *textHexColor = [NSString stringWithFormat:@"rgba(%.3f,%.3f,%.3f,%.1f)",r,g,b,a];
-//        html = [NSString stringWithFormat:@"<html><head><style>body{ font-family:'%@'; font-size:%fpx;color:%@; margin:0px; padding:0px;}a{color:%@} a:hover{color:%@}</style></head><body>%@</body></html>", font.fontName, font.pointSize,textHexColor,linkHexColor,linkHexColor,html];
-        
     }else{
         html = [NSString stringWithFormat:@"<html><head><style>body{ font-family:'%@'; font-size:%fpx; margin:0px; padding:0px;}</style></head><body>%@</body></html>", font.fontName, font.pointSize,html];
     }
-    NSMutableAttributedString * string = [[NSMutableAttributedString alloc] initWithData:[html dataUsingEncoding:NSUTF8StringEncoding]
-                                                                               options:@{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType, NSCharacterEncodingDocumentAttribute: @(NSUTF8StringEncoding) }
-                                                                    documentAttributes:&documentAttributes
-                                                                                 error:&error];
-//    NSLog(@"$$$$$$\n%@",html);
-//    [string addAttribute:NSBaselineOffsetAttributeName value:@(10) range:NSMakeRange(0, string.length)];
-    return (string && [string isKindOfClass:[NSMutableAttributedString class]]) ? string : nil;
+    
+//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+////        NSDictionary * documentAttributes = nil;
+        NSError      * error = nil;
+        NSMutableAttributedString * string = [[NSMutableAttributedString alloc] initWithData:[html dataUsingEncoding:NSUTF8StringEncoding] options:@{
+            NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType,
+            NSCharacterEncodingDocumentAttribute: @(NSUTF8StringEncoding)} documentAttributes:nil error:&error];
+//        dispatch_async(dispatch_get_main_queue(), ^{
+            attrBlock((string && [string isKindOfClass:[NSMutableAttributedString class]]) ? string : nil);
+//        });
+//    });
 }
 
 +(NSString *) getHexStringByColor:(UIColor *) color{
     CGFloat r, g, b, a;
     [color getRed:&r green:&g blue:&b alpha:&a];
     int rgb = (int)(r * 255.0f)<<16 | (int)(g * 255.0f)<<8 | (int)(b * 255.0f)<<0;
-    
-    
-//    NSInteger cpts = CGColorGetNumberOfComponents(color.CGColor);
-//    const CGFloat *components = CGColorGetComponents(color.CGColor);
-//    CGFloat r = components[0];//红色
-//    CGFloat g = components[1];//绿色
-//    CGFloat b = components[2];//蓝色
-//    if (cpts == 4 && a!=1) {
-//        rgb = (int)(a * 255.0f)<<24 | (int)(r * 255.0f)<<16 | (int)(g * 255.0f)<<8 | (int)(b * 255.0f)<<0;
-//    }
 
     return [NSString stringWithFormat:@"%06x", rgb];
-    
-    //颜色值个数，rgb和alpha
-//    NSInteger cpts = CGColorGetNumberOfComponents(color.CGColor);
-//    const CGFloat *components = CGColorGetComponents(color.CGColor);
-//    CGFloat r = components[0];//红色
-//    CGFloat g = components[1];//绿色
-//    CGFloat b = components[2];//蓝色
-//    if (cpts == 4) {
-//        CGFloat a = components[3];//透明度
-//        return [NSString stringWithFormat:@"#%02lX%02lX%02lX%02lX", lroundf(a * 255), lroundf(r * 255), lroundf(g * 255), lroundf(b * 255)];
-//    } else {
-//        return [NSString stringWithFormat:@"#%02lX%02lX%02lX", lroundf(r * 255), lroundf(g * 255), lroundf(b * 255)];
-//    }
 }
 
 
@@ -443,6 +415,13 @@
     }
     return @"0+\\d{2}-\\d{8}|0+\\d{2}-\\d{7}|0+\\d{3}-\\d{8}|0+\\d{3}-\\d{7}|1+[34578]+\\d{9}|\\+\\d{2}1+[34578]+\\d{9}|400\\d{7}|400-\\d{3}-\\d{4}|\\d{11}|\\d{10}|\\d{8}|\\d{7}";
 }
+
+
++(NSString *)zcgetUrlRegular{
+    NSString*urlRegex = ([ZCUICore getUICore].kitInfo!=nil && [ZCUICore getUICore].kitInfo.urlRegular!=nil && [ZCUICore getUICore].kitInfo.urlRegular.length>0) ? [ZCUICore getUICore].kitInfo.urlRegular:@"(https?|ftp|file)://[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]";
+    return urlRegex;
+}
+
 
 +(BOOL) zcgetPhotoLibraryBgImage{
     ZCKitInfo * configModel = [self getZCKitInfo];

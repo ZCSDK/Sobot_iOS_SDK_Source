@@ -84,7 +84,7 @@
 - (ZCMLEmojiLabel *)lblAnswerType // 中间的消息体
 {
     if (!_lblAnswerType) {
-        _lblAnswerType = [ZCMLEmojiLabel new];
+        _lblAnswerType = [[ZCMLEmojiLabel alloc] initWithFrame:CGRectZero];
         _lblAnswerType.numberOfLines = 0;
         _lblAnswerType.font = [ZCUITools zcgetKitChatFont];
         _lblAnswerType.delegate = self;
@@ -103,7 +103,7 @@
 - (ZCMLEmojiLabel *)emojiLabel // 中间的消息体
 {
     if (!_lblTextMsg) {
-        _lblTextMsg = [ZCMLEmojiLabel new];
+        _lblTextMsg = [[ZCMLEmojiLabel alloc] initWithFrame:CGRectZero];
         _lblTextMsg.numberOfLines = 0;
         _lblTextMsg.font = [ZCUITools zcgetKitChatFont];
         _lblTextMsg.delegate = self;
@@ -126,7 +126,7 @@
 
 -(ZCMLEmojiLabel *)lblEmojiQuestion{
     if(!_lblEmojiQuestion){
-        _lblEmojiQuestion = [ZCMLEmojiLabel new];
+        _lblEmojiQuestion = [[ZCMLEmojiLabel alloc] initWithFrame:CGRectZero];
         _lblEmojiQuestion.numberOfLines = 0;
         
         UIFontDescriptor *ctfFont = [ZCUITools zcgetKitChatFont].fontDescriptor;
@@ -165,7 +165,7 @@
 - (ZCMLEmojiLabel *)sugguestLabel
 {
     if (!_sugguestLabel) {
-        _sugguestLabel = [ZCMLEmojiLabel new];
+        _sugguestLabel = [[ZCMLEmojiLabel alloc] initWithFrame:CGRectZero];
         _sugguestLabel.numberOfLines = 0;
         _sugguestLabel.font = [ZCUITools zcgetKitChatFont];
         _sugguestLabel.delegate = self;
@@ -187,7 +187,7 @@
 - (ZCMLEmojiLabel *)lookMoreLabel
 {
     if (!_lookMoreLabel) {
-        _lookMoreLabel = [ZCMLEmojiLabel new];
+        _lookMoreLabel = [[ZCMLEmojiLabel alloc] initWithFrame:CGRectZero];
         _lookMoreLabel.numberOfLines = 0;
         _lookMoreLabel.font = [ZCUITools zcgetKitChatFont];
         _lookMoreLabel.delegate = self;
@@ -947,7 +947,7 @@
     
     static ZCMLEmojiLabel *tempLabe = nil;
     if (!tempLabe) {
-        tempLabe = [ZCMLEmojiLabel new];
+        tempLabe = [[ZCMLEmojiLabel alloc] initWithFrame:CGRectZero];
         tempLabe.numberOfLines = 0;
         tempLabe.font = [ZCUITools zcgetKitChatFont];
         tempLabe.backgroundColor = [UIColor clearColor];

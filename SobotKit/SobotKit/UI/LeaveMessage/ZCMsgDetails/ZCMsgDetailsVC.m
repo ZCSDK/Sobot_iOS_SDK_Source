@@ -235,7 +235,7 @@ UINavigationControllerDelegate,ZCMLEmojiLabelDelegate>
                 if (text1.length > 0 && text1 != nil) {
                     model.contentAttr =   [ZCHtmlFilter setHtml:text1 attrs:arr view:nil textColor:UIColorFromThemeColor(ZCTextSubColor) textFont:ZCUIFont14 linkColor:[ZCUITools zcgetChatLeftLinkColor]];
                 }else{
-                    model.contentAttr =   [[NSMutableAttributedString alloc] initWithString:model.content];
+                    model.contentAttr =   [[NSAttributedString alloc] initWithString:model.content];
                 }
             }];
             

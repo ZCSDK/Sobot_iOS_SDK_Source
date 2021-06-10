@@ -539,7 +539,7 @@
     return [[ZCLibClient getZCLibClient] getLastMessage];
 }
 
-+(void) getLastMessageInfo:(void (^)(ZCPlatformInfo * _Nonnull, ZCLibMessage * _Nonnull, int))resultBlock{
++(void) getLastMessageInfo:(void (^)(ZCPlatformInfo * _Nullable, ZCLibMessage * _Nullable, int))resultBlock{
     
     ZCPlatformInfo *info1 = [[ZCPlatformTools sharedInstance] getPlatformInfo];
     

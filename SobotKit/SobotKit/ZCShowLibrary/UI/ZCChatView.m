@@ -22,7 +22,6 @@
 
 #import "ZCUIColorsDefine.h"
 #import "ZCChatBaseCell.h"
-#import "ZCRichTextChatCell.h"
 #import "ZCChatAllRichCell.h"
 
 #import "ZCImageChatCell.h"
@@ -63,7 +62,6 @@
 #define cellMultitemHorizontaRollIndentifier @"ZCMultitemHorizontaRollCell"
 
 #define cellMultiRichIdentifier @"ZCMultiRichCell"
-#define cellRichTextIdentifier @"ZCRichTextChatCell"
 #define cellRichAllTextIdentifier @"ZCChatAllRichCell"
 
 #define cellImageIdentifier @"ZCImageChatCell"
@@ -80,6 +78,8 @@
 #define cellOrderGoodsIndentifier @"ZCOrderGoodsCell"
 
 
+//#import "ZCRichTextChatCell.h"
+//#define cellRichTextIdentifier @"ZCRichTextChatCell"
 
 
 #import "ZCIMChat.h"
@@ -217,7 +217,7 @@
     _listTable.autoresizesSubviews = YES;
     _listTable.delegate = self;
     _listTable.dataSource = self;
-    [_listTable registerClass:[ZCRichTextChatCell class] forCellReuseIdentifier:cellRichTextIdentifier];
+//    [_listTable registerClass:[ZCRichTextChatCell class] forCellReuseIdentifier:cellRichTextIdentifier];
     [_listTable registerClass:[ZCChatAllRichCell class] forCellReuseIdentifier:cellRichAllTextIdentifier];
     
     [_listTable registerClass:[ZCImageChatCell class] forCellReuseIdentifier:cellImageIdentifier];
@@ -258,10 +258,7 @@
     // 关闭安全区域，否则UITableViewCell横屏时会是全屏的宽
     NSString *version = [UIDevice currentDevice].systemVersion;
     if (version.doubleValue >= 11.0) {
-        if (@available(iOS 11.0, *)) {
-            [_listTable setInsetsContentViewsToSafeArea:NO];
-        } else {
-        }
+        [_listTable setInsetsContentViewsToSafeArea:NO];
     }
 
     _netWorkTools = [ZCLibNetworkTools shareNetworkTools];
@@ -332,9 +329,11 @@
             [[ZCIMChat getZCIMChat] setChatPageState:ZCChatPageStateActive];
             
             [[ZCUICore getUICore] loadSatisfactionDictlock:^(int code) {
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 ), dispatch_get_main_queue(), ^{
-                    [self.listTable reloadData];
-                });
+                if(code == 0 && [self getZCIMConfig].isArtificial){
+                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 ), dispatch_get_main_queue(), ^{
+                        [self.listTable reloadData];
+                    });
+                }
                 
             }];
             
@@ -1398,6 +1397,7 @@
         }else{
             model.richModel.guideGroupPage = 0;
         }
+        model.displaySugestionattr = nil;
         [ZCUITools zcModelStringToAttributeString:model];
         [self.listTable reloadData];
         return;
@@ -1955,7 +1955,6 @@
 //                [_notifitionTopView addSubview:arrawIcon];
                 
                 titleLab.textColor = UIColorFromThemeColor(ZCTextNoticeLinkColor);
-//                titleLab.textColor = [UIColor blueColor];
 
             }else{
                 titleLab.textColor = [ZCUITools getNotifitionTopViewLabelColor];
@@ -2697,6 +2696,9 @@
 
 -(void)dimissCustomActionSheetPage{
     _sheet = nil;
+    
+    //  在isShowReturnTips 为true 切点击了暂时离开，否则下次无法评价
+    isClickCloseBtn = false;
     [ZCUICore getUICore].isDismissSheetPage = YES;
     
     

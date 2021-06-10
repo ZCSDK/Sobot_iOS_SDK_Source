@@ -47,6 +47,9 @@
     
     BOOL        isComment;  // 正在调用提交评价接口
     BOOL        isShowRobotGuide;
+    
+    
+    BOOL isLoadingConfig; // 正在初始化
 }
 @property(nonatomic,strong) ZCUISkillSetView *skillSetView;
 
@@ -137,6 +140,10 @@ static dispatch_once_t onceToken;
     _isTurnLoading = NO;
     // 判断是否需要重新初始化
     if([ZCPlatformTools checkInitParameterChanged]){
+        if(isLoadingConfig){
+            return;
+        }
+        isLoadingConfig = YES;
         if (_listArray == nil) {
             _listArray = [NSMutableArray arrayWithCapacity:0];
         }
@@ -152,10 +159,6 @@ static dispatch_once_t onceToken;
         if (self.delegate && [self.delegate respondsToSelector:@selector(showSoketConentStatus:)]) {
             [self.delegate showSoketConentStatus:201];
         }
-        
-//        if (self.delegate && [self.delegate respondsToSelector:@selector(onPageStatusChanged:message:obj:)]) {
-//            [self.delegate onPageStatusChanged:ZCInitStatusConnecting message:@"201" obj:nil];
-//        }
         [ZCLogUtils logHeader:LogHeader debug:@"初始化方法调用"];
         self.isInitLoading = YES;
         // 清理数据
@@ -172,6 +175,7 @@ static dispatch_once_t onceToken;
         _isCidLoading = NO;
         __weak ZCUICore * safeCore = self;
         [_apiServer initSobotSDK:^(ZCLibConfig *config) {
+            isLoadingConfig = NO;
             [ZCLogUtils logHeader:LogHeader debug:@"%@",config];
             _isShowForm = NO;
             // 必须设置，不然收不到消息
@@ -217,6 +221,7 @@ static dispatch_once_t onceToken;
                 [safeCore getCids];
             }
         } error:^(ZCNetWorkCode status) {
+            isLoadingConfig = NO;
             
             if(safeCore.ResultBlock){
                 safeCore.ResultBlock(ZCInitStatusFail,safeCore.listArray,@"初始化失败");
@@ -228,6 +233,7 @@ static dispatch_once_t onceToken;
             });
             safeCore.isInitLoading = NO;
         } appIdIncorrect:^(NSString *appId) {
+            isLoadingConfig = NO;
             
             if(safeCore.ResultBlock){
                 safeCore.ResultBlock(ZCInitStatusFail,safeCore.listArray,@"请输入正确的appkey");
@@ -330,6 +336,9 @@ static dispatch_once_t onceToken;
         }
         
         changedMessage = [self checkAddGoodsAndOrderMessage];
+        
+        
+        [self addGoodMsg];
         
         
         if(self.delegate && [self.delegate respondsToSelector:@selector(onPageStatusChanged:message:obj:)]){
@@ -502,7 +511,7 @@ static dispatch_once_t onceToken;
 
 -(void)checkUserServiceWithObject:(id)obj Msg:(NSString *)msg{
     // 不直接转人工，等待发送消息
-    if([self checkAfterConnectUser]){
+    if(zcLibConvertToString(msg).length == 0 && [self checkAfterConnectUser]){
         return;
     }
     
@@ -656,7 +665,7 @@ static dispatch_once_t onceToken;
 //
 //        // 使用 _checkGroupId 替换一下选项
 ////        [ZCLibClient getZCLibClient].libInitInfo.groupid = setModel.groupId;
-////        [ZCLibClient getZCLibClient].libInitInfo.skillSetName = setModel.groupName;
+////        [ZCLibClient getZCLibClient].libInitInfo.group_name = setModel.groupName;
 //        _checkGroupId = setModel.groupId;
 //        _checkGroupName = setModel.groupName;
 //        [[ZCUICore getUICore] turnUserService:nil object:obj Msg:nil];
@@ -669,7 +678,7 @@ static dispatch_once_t onceToken;
 
     for(ZCLibSkillSet *set in groupArr) {
         if (set.isOnline) {
-//            [ZCLibClient getZCLibClient].libInitInfo.skillSetName = set.groupName;
+//            [ZCLibClient getZCLibClient].libInitInfo.group_name = set.groupName;
 //            [ZCLibClient getZCLibClient].libInitInfo.groupid = set.groupId;
             flagCount ++;
         }
@@ -678,7 +687,7 @@ static dispatch_once_t onceToken;
     if(flagCount==0 ){
         
         // 使用 _checkGroupId 替换一下选项,调用接口时会清空
-//        [ZCLibClient getZCLibClient].libInitInfo.skillSetName = @"";
+//        [ZCLibClient getZCLibClient].libInitInfo.group_name = @"";
 //        [ZCLibClient getZCLibClient].libInitInfo.groupid = @"";
         
         // 仅人工模式，直接留言
@@ -699,7 +708,7 @@ static dispatch_once_t onceToken;
         }
         
         // 使用 _checkGroupId 替换一下选项,调用接口时会清空
-//        [ZCLibClient getZCLibClient].libInitInfo.skillSetName = @"";
+//        [ZCLibClient getZCLibClient].libInitInfo.group_name = @"";
 //        [ZCLibClient getZCLibClient].libInitInfo.groupid = @"";
         
         __weak ZCUICore * keyboard = self;
@@ -749,7 +758,7 @@ static dispatch_once_t onceToken;
             }else{
 
             // 使用 _checkGroupId 替换一下选项,调用接口时会清空
-//                [ZCLibClient getZCLibClient].libInitInfo.skillSetName = itemModel.groupName;
+//                [ZCLibClient getZCLibClient].libInitInfo.group_name = itemModel.groupName;
 //                [ZCLibClient getZCLibClient].libInitInfo.groupid = itemModel.groupId;
             _checkGroupId = itemModel.groupId;
             _checkGroupName = itemModel.groupName;
@@ -886,7 +895,7 @@ static dispatch_once_t onceToken;
     _isTurnLoading = YES;
     __weak ZCUICore *safeVC = self;
     NSString *groupId = zcLibConvertToString([ZCLibClient getZCLibClient].libInitInfo.groupid);
-    NSString *groupName = zcLibConvertToString([ZCLibClient getZCLibClient].libInitInfo.skillSetName);
+    NSString *groupName = zcLibConvertToString([ZCLibClient getZCLibClient].libInitInfo.group_name);
     
     if(zcLibConvertToString(_checkGroupId).length > 0){
         groupId = _checkGroupId ;
@@ -986,7 +995,7 @@ static dispatch_once_t onceToken;
     
     if (zcLibConvertToString([ZCLibClient getZCLibClient].libInitInfo.groupid).length >0) {
        groupId = zcLibConvertToString([ZCLibClient getZCLibClient].libInitInfo.groupid);
-       groupName = zcLibConvertToString([ZCLibClient getZCLibClient].libInitInfo.skillSetName);
+       groupName = zcLibConvertToString([ZCLibClient getZCLibClient].libInitInfo.group_name);
     }
     
     
@@ -1060,13 +1069,23 @@ static dispatch_once_t onceToken;
         }
         
         // 添加欢迎语
-//        if([self showChatAdminHello]){
+        if([self getLibConfig].type == 4){
+            // 添加机器人欢迎语
+            [self keyboardOnClickAddRobotHelloWolrd];
+            
+            // 添加自动发送自定义消息，客户单独要求需要每次都发送
+            if ([ZCUICore getUICore].libInfo.good_msg_type >0 && zcLibConvertToString([ZCUICore getUICore].libInfo.content).length > 0) {
+                [self checkUserServiceWithObject:nil Msg:@"keyboard"];
+            }
+        }else{
             ZCLibMessage *message = [ZCLibServer setLocalDataToArr:ZCTipMessageAdminHelloWord type:0 duration:@"" style:0 send:NO name:self.receivedName content:nil config:[self getLibConfig]];
             message.senderFace = zcLibConvertToString([self getLibConfig].face);
             
             
             [self addReceivedNameMessageToList:message IsAdminHelloWord:NO];
-//        }
+        
+            [self addGoodMsg];
+        }
         
         return YES;
     }
@@ -1321,6 +1340,11 @@ static dispatch_once_t onceToken;
             
             
             [self addReceivedNameMessageToList:message IsAdminHelloWord:YES];
+        }else if(_afterModel!=nil){
+            [self checkAddGoodsAndOrderMessage];
+            
+            // 自动发送商品卡片信息
+            [self autoSendLastMessageToUser];
         }
     }else if(status==ZCConnectUserOfWaiting ){
         // queueFlag 关键字转人工未成功，是否排队 1-排队，0-不排队（决定页面端是否展示排队文案）
@@ -1949,6 +1973,8 @@ static dispatch_once_t onceToken;
     // 是否添加商品信息
     if(isAutoSendAdminMessage){
         [self checkAddGoodsAndOrderMessage];
+
+        [self addGoodMsg];
         
         // 自动发送商品卡片信息
         [self autoSendLastMessageToUser];
@@ -2111,7 +2137,7 @@ static dispatch_once_t onceToken;
     
     [[ZCPlatformTools sharedInstance] cleanCacheDataByAppkey:[ZCLibClient getZCLibClient].libInitInfo.app_key partnerid:[ZCLibClient getZCLibClient].libInitInfo.partnerid];
     [ZCLibClient getZCLibClient].libInitInfo.groupid = @"";
-    [ZCLibClient getZCLibClient].libInitInfo.skillSetName = @"";
+    [ZCLibClient getZCLibClient].libInitInfo.group_name = @"";
     
     _checkGroupId = @"";
     _checkGroupName = @"";
@@ -2129,7 +2155,7 @@ static dispatch_once_t onceToken;
     if (isNew) {
         // 重新赋值技能组ID和昵称（初始化传入字段）
         [ZCLibClient getZCLibClient].libInitInfo.groupid = zcLibConvertToString([[NSUserDefaults standardUserDefaults] valueForKey:@"UserDefaultGroupID"]);
-        [ZCLibClient getZCLibClient].libInitInfo.skillSetName = zcLibConvertToString([[NSUserDefaults standardUserDefaults] valueForKey:@"UserDefaultGroupName"]);
+        [ZCLibClient getZCLibClient].libInitInfo.group_name = zcLibConvertToString([[NSUserDefaults standardUserDefaults] valueForKey:@"UserDefaultGroupName"]);
         // 重新设置判定参数
         self.isSendToUser = NO;
         self.isSendToRobot = NO;
@@ -2195,10 +2221,14 @@ static dispatch_once_t onceToken;
 #pragma mark ---TODO   排队的model的存储
     self.isInitLoading = YES;
     [self getPlatfromInfo].waitintMessage = nil;
-
+    
+    if(isLoadingConfig){
+        return;
+    }
+    isLoadingConfig = YES;
     __weak ZCUICore *safeSelf = self;
     [_apiServer initSobotSDK:^(ZCLibConfig *config) {
-        
+        isLoadingConfig = NO;
 //        if (self.delegate && [self.delegate respondsToSelector:@selector(onPageStatusChanged:message:obj:)]) {
 //            [self.delegate onPageStatusChanged:ZCInitStatusConnecting message:@"200" obj:nil];
 //        }
@@ -2249,10 +2279,8 @@ static dispatch_once_t onceToken;
         }
         
     } error:^(ZCNetWorkCode status) {
-  
-//        if (self.delegate && [self.delegate respondsToSelector:@selector(onPageStatusChanged:message:obj:)]) {
-//            [self.delegate onPageStatusChanged:ZCInitStatusConnecting message:@"2000" obj:nil];
-//        }
+        isLoadingConfig = NO;
+        
         if (self.delegate && [self.delegate respondsToSelector:@selector(showSoketConentStatus:)]) {
             [self.delegate showSoketConentStatus:2000];
         }
@@ -2269,6 +2297,7 @@ static dispatch_once_t onceToken;
         }
         safeSelf.isInitLoading=NO;
     } appIdIncorrect:^(NSString *appId) {
+        isLoadingConfig = NO;
         if(!isFrist){
  
             if (self.delegate && [self.delegate respondsToSelector:@selector(onPageStatusChanged:message:obj:)]) {
@@ -3037,24 +3066,6 @@ static dispatch_once_t onceToken;
         changedMessage = YES;
     }
     
-
-        
-    // 添加自动发送自定义消息，客户单独要求需要每次都发送
-    if ([ZCUICore getUICore].libInfo.good_msg_type >0 && ![zcLibConvertToString([ZCUICore getUICore].libInfo.content) isEqualToString:@""]) {
-        // 机器人和人工都发送
-        if([ZCUICore getUICore].libInfo.good_msg_type > 1 && [self getPlatfromInfo].config.isArtificial){
-            // 默认ZCMessageTypeText
-            ZCMessageType type = [ZCUICore getUICore].libInfo.auto_send_msgtype;
-            [[ZCUICore getUICore] sendMessage:zcLibConvertToString([ZCUICore getUICore].libInfo.content) questionId:@"" type:type duration:@""];
-        }
-        // 仅机器人发送，特别客户需求
-//        if([ZCUICore getUICore].libInfo.good_msg_type == 1 && ![self getPlatfromInfo].config.isArtificial){
-//            // 默认ZCMessageTypeText
-//            ZCMessageType type = [ZCUICore getUICore].libInfo.auto_send_msgtype;
-//            [[ZCUICore getUICore] sendMessage:zcLibConvertToString([ZCUICore getUICore].libInfo.content) questionId:@"" type:type duration:@""];
-//        }
-    }
-    
     return changedMessage;
 }
 
@@ -3116,15 +3127,17 @@ static dispatch_once_t onceToken;
  *
  **/
 -(void)keyboardOnClickAddRobotHelloWolrd{
+    // 添加通告 不置顶,防止没有机器人时，直接结束了
+    ZCLibMessage *notMsg = [self createMessageToArrayByAction:ZCTipMessageNullMessage type:0 name:@"" face:@"" tips:ZCReceiVedMessageNotice content:nil];
+    [ZCUITools zcModelStringToAttributeString:notMsg];
+    
     // 如果都不允许显示，直接返回
     if ([self getPlatfromInfo].config.robotHelloWordFlag == 0 && [self getPlatfromInfo].config.guideFlag == 0) {
         // 机器人欢迎语的开关是关闭的，但是机器人引导也是关闭的
+        [self addGoodMsg];
         return ;
     }
     
-    // 添加通告 不置顶
-    ZCLibMessage *notMsg = [self createMessageToArrayByAction:ZCTipMessageNullMessage type:0 name:@"" face:@"" tips:ZCReceiVedMessageNotice content:nil];
-    [ZCUITools zcModelStringToAttributeString:notMsg];
     
     // 添加机器人欢迎语
     ZCLibMessage *msg = [self createMessageToArrayByAction:ZCTipMessageRobotHelloWord type:0 name:[self getPlatfromInfo].config.robotName face:[self getPlatfromInfo].config.robotLogo tips:0 content:nil];
@@ -3194,16 +3207,29 @@ static dispatch_once_t onceToken;
 }
 
 -(void)addGoodMsg{
-    // 自动给机器人发送文本信息
-    if (([ZCUICore getUICore].libInfo.good_msg_type == 1 || [ZCUICore getUICore].libInfo.good_msg_type == 3) && ![@"" isEqual:zcLibConvertToString([ZCUICore getUICore].libInfo.content)]) {
-        // 默认ZCMessageTypeText
-        ZCMessageType type = [ZCUICore getUICore].libInfo.auto_send_msgtype;
-        [[ZCUICore getUICore] sendMessage:zcLibConvertToString([ZCUICore getUICore].libInfo.content) questionId:@"" type:type duration:@""];
+    
+    
+    // 添加自动发送自定义消息，客户单独要求需要每次都发送
+    if ([ZCUICore getUICore].libInfo.good_msg_type >0 && ![zcLibConvertToString([ZCUICore getUICore].libInfo.content) isEqualToString:@""]) {
+        // 机器人和人工都发送
+        if([ZCUICore getUICore].libInfo.good_msg_type > 1 && [self getPlatfromInfo].config.isArtificial){
+            // 默认ZCMessageTypeText
+            ZCMessageType type = [ZCUICore getUICore].libInfo.auto_send_msgtype;
+            [[ZCUICore getUICore] sendMessage:zcLibConvertToString([ZCUICore getUICore].libInfo.content) questionId:@"" type:type duration:@""];
+        }
+        // 自动给机器人发送文本信息
+        if (([ZCUICore getUICore].libInfo.good_msg_type == 1 || [ZCUICore getUICore].libInfo.good_msg_type == 3) && ![self getPlatfromInfo].config.isArtificial) {
+            // 默认ZCMessageTypeText
+            ZCMessageType type = [ZCUICore getUICore].libInfo.auto_send_msgtype;
+            [[ZCUICore getUICore] sendMessage:zcLibConvertToString([ZCUICore getUICore].libInfo.content) questionId:@"" type:type duration:@""];
+        }
     }
     
 
     // 首次加载页面时 检查是否开启工单更新提醒
-    [self checkUserTicketinfo];
+    if(![self getLibConfig].isArtificial){
+        [self checkUserTicketinfo];
+    }
 }
 
 

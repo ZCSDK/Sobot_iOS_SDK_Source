@@ -67,7 +67,7 @@
 - (ZCMLEmojiLabel *)emojiLabel // 中间的消息体
 {
     if (!_lblTextMsg) {
-        _lblTextMsg = [ZCMLEmojiLabel new];
+        _lblTextMsg = [[ZCMLEmojiLabel alloc] initWithFrame:CGRectZero];
         _lblTextMsg.numberOfLines = 0;
         _lblTextMsg.font = [ZCUITools zcgetKitChatFont];
         _lblTextMsg.delegate = self;
@@ -90,7 +90,7 @@
 - (ZCMLEmojiLabel *)sugesstionLabel // 中间的消息体
 {
     if (!_sugesstionLabel) {
-        _sugesstionLabel = [ZCMLEmojiLabel new];
+        _sugesstionLabel = [[ZCMLEmojiLabel alloc] initWithFrame:CGRectZero];
         _sugesstionLabel.numberOfLines = 0;
         _sugesstionLabel.font = [ZCUITools zcgetKitChatFont];
         _sugesstionLabel.delegate = self;
@@ -125,7 +125,7 @@
 - (ZCMLEmojiLabel *)lookMoreLabel
 {
     if (!_lookMoreLabel) {
-        _lookMoreLabel = [ZCMLEmojiLabel new];
+        _lookMoreLabel = [[ZCMLEmojiLabel alloc] initWithFrame:CGRectZero];
         _lookMoreLabel.numberOfLines = 0;
         _lookMoreLabel.font = ZCUIFont12;
         _lookMoreLabel.delegate = self;
@@ -798,7 +798,7 @@
     
     static ZCMLEmojiLabel *tempLabel = nil;
     if (!tempLabel) {
-        tempLabel = [ZCMLEmojiLabel new];
+        tempLabel = [[ZCMLEmojiLabel alloc] initWithFrame:CGRectZero];
         tempLabel.numberOfLines = 0;
         tempLabel.font = [ZCUITools zcgetKitChatFont];
         tempLabel.backgroundColor = [UIColor clearColor];

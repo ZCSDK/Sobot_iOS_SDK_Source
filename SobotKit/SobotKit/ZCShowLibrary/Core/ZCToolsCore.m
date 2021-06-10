@@ -92,26 +92,6 @@ static dispatch_once_t onceToken;
     }
 }
 
-- (BOOL)isUrl:(NSString *)urlString{
-    if(urlString == nil)
-        return NO;
-    NSString *url;
-    if (urlString.length>4 && [[urlString substringToIndex:4] isEqualToString:@"www."]) {
-        url = [NSString stringWithFormat:@"http://%@",urlString];
-        
-    }else{
-        url = urlString;
-        
-    }
-    
-    NSString*urlRegex = ([ZCUICore getUICore].kitInfo!=nil && [ZCUICore getUICore].kitInfo.urlRegular!=nil && [ZCUICore getUICore].kitInfo.urlRegular.length>0) ? [ZCUICore getUICore].kitInfo.urlRegular:@"((http[s]{0,1}|ftp)://[a-zA-Z0-9\\.\\-]+\\.([a-zA-Z0-9]{1,4})(:\\d+)?(/[a-zA-Z0-9\\.\\-~!@#$%^&*+?:_/=<>]*)?)|(([a-zA-Z0-9]{2,4}).[a-zA-Z0-9\\.\\-]+\\.([a-zA-Z]{2,4})(:\\d+)?(/[a-zA-Z0-9\\.\\-~!@#$%^&*+?:_/=<>]*)?)";
-    
-    
-    
-    NSPredicate* urlTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", urlRegex];
-    return [urlTest evaluateWithObject:url];
-    
-}
 
 -(void)setRTLFrame:(UIView *)view{
     if (isRTLLayout() && view!=nil) {
@@ -301,7 +281,8 @@ static dispatch_once_t onceToken;
             [[UIApplication sharedApplication] openURL:[NSURL URLWithString:link]];
         }else{
             NSString *urlStr;
-            if ([[ZCToolsCore getToolsCore] isUrl:link]) {
+            
+            if (zcLibIsUrl(link,[ZCUITools zcgetUrlRegular])) {
                 if (![link hasPrefix:@"https"] && ![link hasPrefix:@"http"]) {
                     link = [@"https://" stringByAppendingString:link];
                 }

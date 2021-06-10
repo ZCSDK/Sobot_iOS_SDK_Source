@@ -433,17 +433,6 @@
     UIGraphicsEndImageContext();
     return theImage;
 }
-#pragma mark -- 邮箱格式
-// 正则表达式判断
-- (BOOL)match:(NSString *) email{
-    // 1.创建正则表达式
-    NSString *pattern = @"[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}";// 判断输入的数字是否是1~99
-    NSRegularExpression *regex = [[NSRegularExpression alloc] initWithPattern:pattern options:0 error:nil];
-    // 2.测试字符串
-    NSArray *results = [regex matchesInString:email options:0 range:NSMakeRange(0, email.length)];
-    return results.count > 0;
-}
-
 
 #pragma mark -- 返回到上一VC
 - (void)backAction{
