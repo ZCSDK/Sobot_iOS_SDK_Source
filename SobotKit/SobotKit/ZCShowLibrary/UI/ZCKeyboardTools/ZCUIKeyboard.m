@@ -63,7 +63,7 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
 
 
 
-@interface ZCUIKeyboard()<ZCUIRecordDelegate,UITextViewDelegate,UIActionSheetDelegate,UINavigationControllerDelegate, UIImagePickerControllerDelegate,EmojiBoardDelegate,UIGestureRecognizerDelegate,UIDocumentPickerDelegate>{
+@interface ZCUIKeyboard()<ZCUIRecordDelegate,UITextViewDelegate,UIActionSheetDelegate,UINavigationControllerDelegate, UIImagePickerControllerDelegate,EmojiBoardDelegate,UIGestureRecognizerDelegate,UIDocumentPickerDelegate,ZCAutoListViewDelegate>{
     CGFloat navHeight;
     
 }
@@ -162,8 +162,11 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
     if (!_zc_bottomView) {
         CGFloat BY = [self getSourceViewHeight]-BottomHeight;
         
+        // 横屏时，修改底部宽度
         _zc_bottomView = [[UIView alloc] initWithFrame:CGRectMake(0, BY, [self getSourceViewWidth], BottomHeight)];
-        [_zc_bottomView setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleTopMargin];
+        // 在ZCChatView中坐标，适配横竖屏切换时键盘位置
+//        [_zc_bottomView setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleTopMargin];
+        [_zc_bottomView setAutoresizingMask:UIViewAutoresizingFlexibleTopMargin];
         [_zc_bottomView setAutoresizesSubviews:YES];
         [_zc_bottomView setBackgroundColor:[ZCUITools zcgetBackgroundBottomColor]];
 
@@ -1582,21 +1585,27 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
         _zc_moreView.frame = CGRectMake(0, [self getSourceViewHeight], [self getSourceViewWidth], moreHeight);
         _zc_emojiView.frame = CGRectMake(0, [self getSourceViewHeight], [self getSourceViewWidth], emojiViewHeight);
         
-        if ([[NSUserDefaults standardUserDefaults] boolForKey:@"isEnableAutoTips"] && ![self getZCLibConfig].isArtificial && _zc_chatTextView.text.length>0) {
-            [UIView animateWithDuration:0.15 animations:^{
-                [[ZCAutoListView getAutoListView] showWithText:_zc_chatTextView.text view:_zc_bottomView];
-                [ZCAutoListView getAutoListView].CellClick = ^(NSString *text) {
-                    [self sendMessageOrFile:text type:ZCMessageTypeText duration:@""];
-                    [_zc_chatTextView setText:@""];
-                    [self textChanged:_zc_chatTextView];
-                };
-            }];
-        }
+        
+        [self addAutoListView];
         
     }];
     _zc_addMoreButton.tag = BUTTON_ADDPHOTO;
     _zc_faceButton.tag  = BUTTON_ADDFACEVIEW;
 }
+
+-(void)addAutoListView{
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"isEnableAutoTips"] && ![self getZCLibConfig].isArtificial) {
+        __block ZCUIKeyboard *safeSelf = self;
+        [ZCAutoListView getAutoListView].delegate = self;
+        [[ZCAutoListView getAutoListView] showWithText:_zc_chatTextView.text  view:_zc_bottomView];
+    }
+}
+-(void)autoViewCellItemClick:(NSString *)text{
+    [self sendMessageOrFile:text type:ZCMessageTypeText duration:@""];
+    [self.zc_chatTextView setText:@""];
+    [self textChanged:_zc_chatTextView];
+}
+
 -(void)textViewDidChange:(UITextView *)textView{
     
     CGFloat textContentSizeHeight = _zc_chatTextView.contentSize.height;
@@ -1616,15 +1625,7 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
         textContentSizeHeight=35;
     }
     
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"isEnableAutoTips"] && ![self getZCLibConfig].isArtificial) {
-        [[ZCAutoListView getAutoListView] showWithText:_zc_chatTextView.text  view:_zc_bottomView];
-        [ZCAutoListView getAutoListView].CellClick = ^(NSString *text) {
-            [self sendMessageOrFile:text type:ZCMessageTypeText duration:@""];
-            [_zc_chatTextView setText:@""];
-            [self textChanged:_zc_chatTextView];
-        };
-    }
-    
+    [self addAutoListView];
     
     // 已经最大行高了
     if (textContentSizeHeight > [self getTextMaxHeiht] && _zc_chatTextView.frame.size.height >= [self getTextMaxHeiht]) {
@@ -1695,14 +1696,8 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
         
         [[ZCUICore getUICore] keyboardOnClick:ZCShowTextHeightChanged];
         
-        if ([[NSUserDefaults standardUserDefaults] boolForKey:@"isEnableAutoTips"] && ![self getZCLibConfig].isArtificial) {
-            [[ZCAutoListView getAutoListView] showWithText:_zc_chatTextView.text view:_zc_bottomView];
-            [ZCAutoListView getAutoListView].CellClick = ^(NSString *text) {
-                [self sendMessageOrFile:text type:ZCMessageTypeText duration:@""];
-                [_zc_chatTextView setText:@""];
-                [self textChanged:_zc_chatTextView];
-            };
-        }
+        
+        [self addAutoListView];
     }];
 }
 
@@ -1746,11 +1741,11 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
 
 -(CGFloat) getSourceViewWidth{
     // 横屏时，修改底部宽度
-//        int direction = [[ZCToolsCore getToolsCore] getCurScreenDirection];
-//        // iphoneX 横屏需要单独处理
-//        if(direction > 0){
-//            return _zc_sourceView.frame.size.width - XBottomBarHeight;
-//        }
+    int direction = [[ZCToolsCore getToolsCore] getCurScreenDirection];
+    // iphoneX 横屏需要单独处理
+    if(direction > 0){
+        return _zc_sourceView.frame.size.width - XBottomBarHeight;
+    }
     return _zc_sourceView.frame.size.width;
 }
 
@@ -1900,14 +1895,7 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
         _zc_bottomView.frame = bf;
         
         // 2.8.5版本移到此处，以前写在键盘隐藏处，不符合逻辑
-        if ([[NSUserDefaults standardUserDefaults] boolForKey:@"isEnableAutoTips"] && ![self getZCLibConfig].isArtificial) {
-            [[ZCAutoListView getAutoListView] showWithText:_zc_chatTextView.text  view:_zc_bottomView];
-            [ZCAutoListView getAutoListView].CellClick = ^(NSString *text) {
-                [self sendMessageOrFile:text type:ZCMessageTypeText duration:@""];
-                [_zc_chatTextView setText:@""];
-                [self textChanged:_zc_chatTextView];
-            };
-        }
+        [self addAutoListView];
         
         
         if ([ZCUICore getUICore].delegate && [[ZCUICore getUICore].delegate respondsToSelector:@selector(onPageStatusChanged: message: obj:)]) {

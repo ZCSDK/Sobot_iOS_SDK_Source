@@ -59,7 +59,11 @@
             textColor = [ZCUITools zcgetLeftChatTextColor];
             linkColor = [ZCUITools zcgetChatLeftLinkColor];
         }
-        [ZCUITools attributedStringByHTML:[temModel getModelDisplaySugestionText] textColor:textColor linkColor:linkColor result:^(NSMutableAttributedString *attr) {
+        [ZCUITools attributedStringByHTML:[temModel getModelDisplaySugestionText] textColor:textColor linkColor:linkColor result:^(NSMutableAttributedString *attr,NSString *htmlText) {
+            NSMutableParagraphStyle * paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+            [paragraphStyle setLineSpacing:12.0];
+            [attr addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, [attr length])];
+                
             temModel.displaySugestionattr = attr;
         }];
     }
@@ -96,7 +100,7 @@
 }
 
 
-+(void) attributedStringByHTML:(NSString *)html textColor:(UIColor *) textColor linkColor:(UIColor *) linkColor result:(void (^)(NSMutableAttributedString *))attrBlock
++(void) attributedStringByHTML:(NSString *)html textColor:(UIColor *) textColor linkColor:(UIColor *) linkColor result:(void (^)(NSMutableAttributedString *,NSString *htmlText))attrBlock
 {
     if (!html || [html isKindOfClass:[NSString class]] == NO)
     {
@@ -127,7 +131,7 @@
             NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType,
             NSCharacterEncodingDocumentAttribute: @(NSUTF8StringEncoding)} documentAttributes:nil error:&error];
 //        dispatch_async(dispatch_get_main_queue(), ^{
-            attrBlock((string && [string isKindOfClass:[NSMutableAttributedString class]]) ? string : nil);
+            attrBlock((string && [string isKindOfClass:[NSMutableAttributedString class]]) ? string : nil,html);
 //        });
 //    });
 }

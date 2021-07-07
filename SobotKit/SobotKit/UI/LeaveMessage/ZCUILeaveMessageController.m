@@ -133,12 +133,6 @@ typedef NS_ENUM(NSInteger,ExitType) {
 
 @implementation ZCUILeaveMessageController
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-    return YES;
-}
-
-
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
@@ -464,16 +458,8 @@ typedef NS_ENUM(NSInteger,ExitType) {
     if (_msgTmp != nil) {
         tmp = _msgTmp;
     }
-    
     // 过滤标签
-    tmp = [tmp stringByReplacingOccurrencesOfString:@"<br />" withString:@"\n"];
-    tmp = [tmp stringByReplacingOccurrencesOfString:@"<br/>" withString:@"\n"];
-    tmp = [tmp stringByReplacingOccurrencesOfString:@"<br>" withString:@"\n"];
-    tmp = [tmp stringByReplacingOccurrencesOfString:@"<BR/>" withString:@"\n"];
-    tmp = [tmp stringByReplacingOccurrencesOfString:@"<BR />" withString:@"\n"];
-    tmp = [tmp stringByReplacingOccurrencesOfString:@"<p>" withString:@"\n"];
-    tmp = [tmp stringByReplacingOccurrencesOfString:@"</p>" withString:@" "];
-    tmp = [tmp stringByReplacingOccurrencesOfString:@"&nbsp;" withString:@" "];
+    tmp = [ZCHtmlCore filterHTMLTag:tmp];
     while ([tmp hasPrefix:@"\n"]) {
         tmp=[tmp substringWithRange:NSMakeRange(1, tmp.length-1)];
     }

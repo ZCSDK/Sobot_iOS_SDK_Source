@@ -26,6 +26,8 @@
 @property (nonatomic,strong) NSString * searchText;
 
 
+@property(nonatomic,copy) void(^BackCellClick)(NSString * text) ;
+
 @end
 
 @implementation ZCAutoListView
@@ -39,6 +41,12 @@
         }
     });
     return _instance;
+}
+
+-(void)setCellClick:(void (^)(NSString *))CellClick{
+//    if(_BackCellClick==nil){
+//        _BackCellClick = CellClick;
+//    }
 }
 
 -(id)initPrivate{
@@ -64,7 +72,7 @@
         _listArray  = [[NSMutableArray alloc] init];
         [self setTableSeparatorInset];
 
-        [[[ZCToolsCore getToolsCore] getCurWindow] addSubview:self];
+//        [[[ZCToolsCore getToolsCore] getCurWindow] addSubview:self];
         
         
     }
@@ -72,7 +80,7 @@
 }
 
 -(id)init{
-    return [[self class] getAutoListView];
+    return [self initPrivate];
 }
 
 
@@ -288,9 +296,11 @@
             text = [dic objectForKey:@"question"];
         }
     }
-    
-    if (_CellClick) {
-        _CellClick(text);
+    if(_delegate && [_delegate respondsToSelector:@selector(autoViewCellItemClick:)]){
+        [_delegate autoViewCellItemClick:text];
+    }
+    if (_BackCellClick) {
+        _BackCellClick(text);
     }
     
 }

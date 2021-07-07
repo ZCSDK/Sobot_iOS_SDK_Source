@@ -17,6 +17,9 @@
 @interface ZCUIBaseController ()<ZCActionSheetDelegate>{
     CGFloat viewWidth;
     CGFloat viewHeight;
+    
+    
+    UIInterfaceOrientation fromOrientation;
 }
 
 @end
@@ -33,6 +36,8 @@
 - (UIInterfaceOrientationMask)supportedInterfaceOrientations {
     if ([ZCUICore getUICore].kitInfo.isShowPortrait) {
         return UIInterfaceOrientationMaskPortrait;
+    }else if ([ZCUICore getUICore].kitInfo.isShowLandscape) {
+        return UIInterfaceOrientationMaskLandscapeRight;
     }else{
         // 如果topViewController是自己，
 //        if(self.navigationController && self.navigationController.topViewController && [self.navigationController.topViewController respondsToSelector:@selector(supportedInterfaceOrientations)]){
@@ -49,6 +54,8 @@
 //{
 //    if ([ZCUICore getUICore].kitInfo.isShowPortrait) {
 //        return UIInterfaceOrientationPortrait;
+//    }else if ([ZCUICore getUICore].kitInfo.isShowLandscape) {
+//        return UIInterfaceOrientationLandscapeRight;
 //    }else{
 //        if(self.navigationController && self.navigationController.topViewController && [self.navigationController.topViewController respondsToSelector:@selector(preferredInterfaceOrientationForPresentation)]){
 //            return [self.navigationController.topViewController preferredInterfaceOrientationForPresentation];
@@ -64,6 +71,17 @@
 
 // 横竖屏切换
 -(void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
+    if (toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft || toInterfaceOrientation == UIInterfaceOrientationLandscapeRight) {
+        if([ZCUICore getUICore].kitInfo.isShowPortrait){
+            [self forceChangeForward];
+            return;
+        }
+    }else{
+        if([ZCUICore getUICore].kitInfo.isShowLandscape){
+            [self forceChangeForward];
+            return;
+        }
+    }
     [self orientationChanged];
        
     // 切换的方法必须调用
@@ -91,12 +109,66 @@
     viewWidth = self.view.frame.size.width;
     
     viewHeight = self.view.frame.size.height;
+    if([ZCUICore getUICore].kitInfo.isShowPortrait || [ZCUICore getUICore].kitInfo.isShowLandscape){
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(applicationDidBecomeActiveNotification:)
+                                                 name:UIApplicationDidBecomeActiveNotification object:nil];
+    }
+    [self forceChangeForward];
 }
+
+-(void)forceChangeForward{
+    
+    if([ZCUICore getUICore].kitInfo.isShowPortrait){
+        
+        fromOrientation = [UIApplication sharedApplication].statusBarOrientation;
+        
+        if (fromOrientation != UIInterfaceOrientationPortrait) {
+            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(orientChange:) name:UIApplicationDidChangeStatusBarOrientationNotification object:nil];
+            [self interfaceOrientation:UIInterfaceOrientationPortrait];
+        }
+        
+    }else if([ZCUICore getUICore].kitInfo.isShowLandscape){
+        
+        fromOrientation = [UIApplication sharedApplication].statusBarOrientation;
+        
+        if (fromOrientation != UIInterfaceOrientationLandscapeRight && fromOrientation != UIInterfaceOrientationLandscapeLeft) {
+            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(orientChange:) name:UIApplicationDidChangeStatusBarOrientationNotification object:nil];
+            [self interfaceOrientation:UIInterfaceOrientationLandscapeRight];
+        }
+    }
+}
+
+-(void)applicationDidBecomeActiveNotification:(UIApplication *) application{
+    [self forceChangeForward];
+}
+
+- (void)orientChange:(NSNotification *)notification{
+    if([self orientationChanged]){
+        // 切换的方法必须调用
+        [self viewDidLayoutSubviews];
+    }
+}
+
+
+- (void)interfaceOrientation:(UIInterfaceOrientation)orientation {
+    if ([[UIDevice currentDevice] respondsToSelector:@selector(setOrientation:)]) {
+        SEL selector             = NSSelectorFromString(@"setOrientation:");
+        NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:[UIDevice instanceMethodSignatureForSelector:selector]];
+        [invocation setSelector:selector];
+        [invocation setTarget:[UIDevice currentDevice]];
+//        int val                  = orientation;
+        [invocation setArgument:&orientation atIndex:2];
+        [invocation invoke];
+    }
+}
+
 
 
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
 
+    [ZCLocalStore addObject:@"1" forKey:@"SOBOT_PAGE_APPEAR"];
     
     if ([ZCUICore getUICore].kitInfo.navcBarHidden) {
         if(self.navigationController!=nil){
@@ -108,6 +180,11 @@
     
     // 从其他页面返回时，重新布局
     [self orientationChanged];
+}
+
+-(void)viewDidDisappear:(BOOL)animated{
+    [super viewDidDisappear:animated];
+    [ZCLocalStore addObject:@"0" forKey:@"SOBOT_PAGE_APPEAR"];
 }
 
 -(BOOL)orientationChanged{
@@ -501,7 +578,12 @@
 //    return self;
 //}
 
-
+-(void)dealloc{
+    
+    if([ZCUICore getUICore].kitInfo.isShowPortrait || [ZCUICore getUICore].kitInfo.isShowLandscape){
+       [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidBecomeActiveNotification object:nil];
+    }
+}
 
 
 #pragma mark - click

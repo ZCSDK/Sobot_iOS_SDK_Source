@@ -26,8 +26,6 @@
     // 屏幕宽高
 //    CGFloat                     viewWidth;
 //    CGFloat                     viewHeigth;
-    
-    UIInterfaceOrientation fromOrientation;
 }
 
 @property (nonatomic,strong) ZCChatView * chatView;
@@ -76,14 +74,6 @@
 - (BOOL)shouldAutorotate {
     return YES;
 }
-
-//- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
-//    if ([ZCUICore getUICore].kitInfo.isShowPortrait) {
-//        return UIInterfaceOrientationMaskPortrait;
-//    }else{
-//        return UIInterfaceOrientationMaskAll;
-//    }
-//}
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
@@ -181,16 +171,6 @@
 
     [self.view addSubview:_chatView];
     [_chatView showZCChatView:[ZCUICore getUICore].kitInfo];
-
-    if([ZCUICore getUICore].kitInfo.isShowPortrait){
-        
-        fromOrientation = [UIApplication sharedApplication].statusBarOrientation;
-        
-        if (fromOrientation != UIInterfaceOrientationPortrait) {
-            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(orientChange:) name:UIApplicationDidChangeStatusBarOrientationNotification object:nil];
-            [self interfaceOrientation:UIInterfaceOrientationPortrait];
-        }
-    }
 }
 
 - (void)orientChange:(NSNotification *)notification{
@@ -254,13 +234,6 @@
     if([ZCUICore getUICore].ZCViewControllerCloseBlock != nil){
         [ZCUICore getUICore].ZCViewControllerCloseBlock(self,ZC_CloseChat);
     }
-    if([ZCUICore getUICore].kitInfo.isShowPortrait){
-       [[NSNotificationCenter defaultCenter] removeObserver:self];
-//        重新设置原来的方向
-       if (fromOrientation != UIInterfaceOrientationPortrait && fromOrientation != UIInterfaceOrientationPortraitUpsideDown) {
-           [self interfaceOrientation:fromOrientation];
-       }
-    }
 }
 
 -(void)didMoveToParentViewController:(UIViewController *)parent{
@@ -293,6 +266,7 @@
     if (Tag == BUTTON_BACK) {
         // 延迟返回，解决"Unable to insert COPY_SEND" 警告
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [self goBack];
             if (self.navigationController && _isPush) {
                 [self.navigationController popViewControllerAnimated:YES];
             }else{
@@ -302,7 +276,6 @@
         
         // 延迟清理数据，解决返回是白屏
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-
             if([ZCUICore getUICore].listArray!=nil){
                 [_chatView dismissZCChatView];
                 _chatView = nil;

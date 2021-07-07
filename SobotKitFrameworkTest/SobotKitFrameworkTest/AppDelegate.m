@@ -68,7 +68,7 @@
 //
 //    //调试时打开日志，方便调试
 //    [UMConfigure setLogEnabled:NO];
-    [ZCSobotApi setShowDebug:true];
+    
     
     [[ZCLibClient getZCLibClient] setAutoNotification:YES];
     
@@ -76,9 +76,7 @@
         NSLog(@"接收到消息：%@ -- %d",message,nleft);
     }];
     
-//    [ZCSobotApi getVersion];
-    
-    NSLog(@"%@",UIKeyboardBoundsUserInfoKey);
+
     
 //    ------------      -------------------
      [UIApplication sharedApplication].applicationIconBadgeNumber = 0;
@@ -144,7 +142,7 @@
         NSLog(@"ssss%@ -- %d",message,nleft);
     }];
 
-    NSLog(@"version ==== %@",[ZCSobotApi getVersion]);
+
     // 错误日志收集
 //    [ZCLibClient setZCLibUncaughtExceptionHandler];
     

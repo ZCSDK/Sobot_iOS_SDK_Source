@@ -39,15 +39,6 @@
 @implementation ZCServiceDetailVC
 
 
-#pragma mark -- 横竖屏切换问题
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-    return YES;
-}
-
-
-
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     if ([ZCUICore getUICore].kitInfo.navcBarHidden) {

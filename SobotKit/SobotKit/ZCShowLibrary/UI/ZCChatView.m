@@ -2490,8 +2490,17 @@
         }
         
         [self setTitleViewRTL];
+        
     }
-    
+    int direction = [[ZCToolsCore getToolsCore] getCurScreenDirection];
+    CGFloat spaceX = 0;
+    if(direction == 2){
+        spaceX = XBottomBarHeight;
+    }
+    CGRect f = _keyboardTools.zc_bottomView.frame;
+    f.origin.x = spaceX;
+    f.size.width = viewWidth - (direction>0?XBottomBarHeight:0);
+    _keyboardTools.zc_bottomView.frame = f;
 }
 
 -(void)setTitleViewRTL{

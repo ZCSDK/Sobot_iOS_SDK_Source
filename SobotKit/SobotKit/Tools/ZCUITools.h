@@ -26,7 +26,7 @@ typedef NS_ENUM(NSUInteger,ZCThemeStyle){
 
 
 // 获取资源的NSMutableAttributedString
-+(void) attributedStringByHTML:(NSString *)html textColor:(UIColor *) textColor linkColor:(UIColor *) linkColor result:(void(^)(NSMutableAttributedString *attr)) attrBlock;
++(void) attributedStringByHTML:(NSString *)html textColor:(UIColor *) textColor linkColor:(UIColor *) linkColor result:(void(^)(NSMutableAttributedString *attr,NSString *htmlText)) attrBlock;
 
 
 +(NSString *)removeAllHTMLTag:(NSString *)html;

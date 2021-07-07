@@ -8,6 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
+@protocol ZCAutoListViewDelegate <NSObject>
+
+@optional
+-(void)autoViewCellItemClick:(NSString *)resultString;
+
+@end
 
 @interface ZCAutoListView : UIView
 
@@ -18,7 +24,7 @@
 
 @property(nonatomic,strong) UIView *bottomView;
 
-@property(nonatomic,copy) void(^CellClick)(NSString * text) ;
+@property(nonatomic,weak) id<ZCAutoListViewDelegate> delegate;
 
 -(void)showWithText:(NSString *) searchText view:(UIView *) bottomView;
 

@@ -366,7 +366,7 @@ typedef NS_ENUM(NSInteger,ZCSatisfactionCellType){
     }
     
     if(!_submitBtn.hidden){
-        if(_satisfactionView.hidden){
+        if(_satisfactionView.hidden || _satisfactionView.frame.size.height == 0){
             _submitBtn.frame = CGRectMake((self.viewWidth - 200)/2, CGRectGetMaxY(_tiplab.frame) + 15, 200, 36);
         }else{
             _submitBtn.frame = CGRectMake((self.viewWidth - 200)/2, CGRectGetMaxY(_satisfactionView.frame) + 15, 200, 36);
@@ -503,7 +503,12 @@ typedef NS_ENUM(NSInteger,ZCSatisfactionCellType){
             }
         }
         [ZCUICore getUICore].inviteSatisfactionCheckLabels = [_satisfactionView getSeletedTitle];
-        [self.delegate cellItemClick:type IsResolved:self.isResolved Rating:self.rating problem:[_satisfactionView getSeletedTitle] scoreFlag:_satisfaction.scoreFlag];
+        // 0:5星,1:10分
+        if (_satisfaction.scoreFlag) {
+            [self.delegate cellItemClick:type IsResolved:self.isResolved Rating:self.rating-1 problem:[_satisfactionView getSeletedTitle] scoreFlag:_satisfaction.scoreFlag];
+        } else {
+            [self.delegate cellItemClick:type IsResolved:self.isResolved Rating:self.rating problem:[_satisfactionView getSeletedTitle] scoreFlag:_satisfaction.scoreFlag];
+        }
     }
 }
 

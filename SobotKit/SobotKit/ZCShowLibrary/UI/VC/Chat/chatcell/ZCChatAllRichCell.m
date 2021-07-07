@@ -188,7 +188,8 @@
     [self.ivBgView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
     [self.richContentView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
     
-    CGRect richFrame = CGRectMake(0, bgY + 10, rw, 0);
+    // 内容上下边距12
+    CGRect richFrame = CGRectMake(0, bgY + 12, rw, 0);
     _richContentView.frame = richFrame;
     CGSize s = [ZCChatAllRichCell addRichView:model width:rw with:self.richContentView msgLabel:_lblTextMsg];
     for (UIView *view in self.richContentView.subviews) {
@@ -206,7 +207,8 @@
     if(s.height < 21){
         height = 21;
     }
-    height = height + 20;
+    // 上下边距12，合起来 24
+    height = height + 24;
     rw = s.width + 30;
     
     CGFloat msgX = 0;
@@ -671,7 +673,6 @@
             [label setTextColor:[ZCUITools zcgetLeftChatTextColor]];
             [label setLinkColor:[ZCUITools zcgetChatLeftLinkColor]];
         }
-        
         [label setText:model.displaySugestionattr];
         CGSize s = [label preferredSizeWithMaxWidth:maxWidth];
         // 添加行间距

@@ -459,6 +459,10 @@
         self.isChangePostion =NO;
     
         if (_invitationType == 0) {
+            // 默认0星应该选择1
+            if(ratingCount == 0){
+                ratingCount = 1;
+            }
             [_ratingView displayRating:(float)ratingCount];
         }else{
             [_ratingView displayRating:defaultStar];

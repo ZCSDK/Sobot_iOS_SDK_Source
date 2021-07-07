@@ -52,13 +52,6 @@
 }
 
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-    return YES;
-}
-
-
-
 
 
 -(id)initWithImgUrlArr:(NSMutableArray*)array CurPage:(NSInteger)curpage

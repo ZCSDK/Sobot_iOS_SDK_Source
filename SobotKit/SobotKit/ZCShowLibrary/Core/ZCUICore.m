@@ -1128,21 +1128,54 @@ static dispatch_once_t onceToken;
     }
     [ZCUITools zcModelStringToAttributeString:model];
     
-#pragma mark 接口未处理，暂时屏蔽此操作
-//    // 指定技能组，并且不显示提醒，如果转人工失败，需要显示机器人回答
-//    if(message.transferFlag == 1 && message.queueFlag == 0){
-//        //不显示机器人回答
-//        _keyworkRobotReplyModel = model;
-//    }else if(message.queueFlag == 1){
+    
+    /**
+     // 仅当onlineFlag == 3时，显示机器人回复
+     transferFlag=1或3：
+                 queueFlag=1:展示提示语，不展示机器人回复，触发转人工逻辑
+                 queueFlag=0:
+                     onlineFlag:1 表示有客服在线可接入（展示提示语，不展示机器人回复，触发转人工逻辑）
+                     onlineFlag:2 表示需要弹出分组接待（不展示提示语，不展示机器人回复，触发转人工逻辑）
+                     onlineFlag:3 表示无客服在线 （不执行转人工，展示机器人回复）
+             transferFlag=2:
+                 不展示机器人回复，展示选择技能组文案
+     */
+    // 未触发关键字转人工，直接显示机器人回复
+    if(message.transferFlag == 0 || message.keywordId.length == 0){
+        // 普通回复消息
         [_listArray insertObject:model atIndex:index+1];
+        index = index + 1;
 
         if(self.delegate && [self.delegate respondsToSelector:@selector(onPageStatusChanged:message:obj:)]){
             [self.delegate onPageStatusChanged:ZCShowStatusMessageChanged message:@"" obj:safeVC.listArray];
         }
-//    }
-    
+    }else{
+        if((message.transferFlag == 1 || message.transferFlag == 3) && model.queueFlag == 0 && model.onlineFlag == 3){
+            // 触发机器人转人工
+            // 关键字转人工回复
+            [_listArray insertObject:model atIndex:index+1];
+            index = index + 1;
+
+            if(self.delegate && [self.delegate respondsToSelector:@selector(onPageStatusChanged:message:obj:)]){
+                [self.delegate onPageStatusChanged:ZCShowStatusMessageChanged message:@"" obj:safeVC.listArray];
+            }
+        }else{
+                //不显示机器人回答，去掉此需求，一开始就知道是否能成功
+        //        _keyworkRobotReplyModel = model;
+        }
+        
+    }
     
     if ([safeVC getPlatfromInfo].config.type != 1 && ![self getLibConfig].isArtificial  && message.keywordId.length >0 && !message.userOffline) {
+        // 仅机器人模式 不能触发转人工
+        int temptype = [self getPlatfromInfo].config.type;
+        if ([ZCLibClient getZCLibClient].libInitInfo.service_mode >0) {
+            temptype = [ZCLibClient getZCLibClient].libInitInfo.service_mode;
+        }
+        if (temptype == 1) {
+            return;
+        }
+        
         ZCLibMessage *trunModel =[ZCLibMessage new];
         [trunModel getNewMessageModel:message isShowGroup:YES];
         trunModel.commentType = message.commentType;
@@ -1156,33 +1189,54 @@ static dispatch_once_t onceToken;
         if (message.transferFlag == 2) {
             trunModel.richModel.msg = @"";
             [ZCUITools zcModelStringToAttributeString:trunModel];
-            [_listArray insertObject:trunModel atIndex:index+2];
+            [_listArray insertObject:trunModel atIndex:index+1];
+            index = index + 1;
             
             if(self.delegate && [self.delegate respondsToSelector:@selector(onPageStatusChanged:message:obj:)]){
                 [self.delegate onPageStatusChanged:ZCShowStatusMessageChanged message:@"" obj:safeVC.listArray];
             }
-        }
-        
-        // 仅机器人模式 不能触发转人工
-        int temptype = [self getPlatfromInfo].config.type;
-        if ([ZCLibClient getZCLibClient].libInitInfo.service_mode >0) {
-            temptype = [ZCLibClient getZCLibClient].libInitInfo.service_mode;
-        }
-        if (temptype == 1) {
-            return;
-        }
-        
-        // 关键字转人工，==3，和普通转人工一样，弹技能组
-        if(trunModel.transferFlag == 3){
-            [self checkUserServiceWithObject:nil Msg:nil];
-            return;
-        }
-        
-        // 关键字转人工，指定技能组
-        if (trunModel.transferFlag == 1) {
-            
-            //关键字转人工 直接转人工
-            [self toConnectUserService:trunModel GroupId:trunModel.groupId GroupName:@"" ZCTurnType:ZCTurnType_KeyWord];
+        }else if(message.transferFlag == 1 || message.transferFlag == 3){
+            // 1-指定技能组接入，2-选择技能组列表，3-直接转入;
+            if(message.queueFlag==1 || (message.queueFlag==0 && message.onlineFlag==1)){
+                if(zcLibConvertToString(message.transferTips).length > 0){
+                    // 提示语
+                    trunModel.richModel.msg = message.transferTips;
+                    trunModel.richModel.msgType = ZCMessageTypeText;
+//                    trunModel.tipStyle = 0;//ZCReceivedMessageTransferTips;
+                    trunModel.tipStyle = ZCReceivedMessageTransferTips;
+                    trunModel.sysTips = message.transferTips;
+                    [ZCUITools zcModelStringToAttributeString:trunModel];
+                    [_listArray insertObject:trunModel atIndex:index+1];
+                    index = index + 1;
+                    if(self.delegate && [self.delegate respondsToSelector:@selector(onPageStatusChanged:message:obj:)]){
+                        [self.delegate onPageStatusChanged:ZCShowStatusMessageChanged message:@"" obj:safeVC.listArray];
+                    }
+                }
+            }
+            if(message.transferFlag == 1){
+                // queueFlag=1:展示提示语，不展示机器人回复，触发转人工逻辑
+                if(message.queueFlag == 1){
+                    //关键字转人工 直接转人工
+                    [self toConnectUserService:trunModel GroupId:trunModel.groupId GroupName:@"" ZCTurnType:ZCTurnType_KeyWord];
+                }else{
+                    if(message.onlineFlag == 1 || message.onlineFlag == 2){
+                        //关键字转人工 直接转人工
+                        [self toConnectUserService:trunModel GroupId:trunModel.groupId GroupName:@"" ZCTurnType:ZCTurnType_KeyWord];
+                        
+                    }
+                }
+            }else{
+                // queueFlag=1:展示提示语，不展示机器人回复，触发转人工逻辑
+                if(message.queueFlag == 1){
+                    // 没有指定技能组
+                    [self checkUserServiceWithObject:nil Msg:nil];
+                }else{
+                    if(message.onlineFlag == 1 || message.onlineFlag == 2){
+                        // 没有指定技能组
+                        [self checkUserServiceWithObject:nil Msg:nil];
+                    }
+                }
+            }
         }
         return;
     }

@@ -39,12 +39,7 @@
 -(void)createTableView{
     _dataArray =  [NSMutableArray arrayWithArray:[ZCGuideData getZCGuideData].getSectionArray];
     CGFloat w = self.view.frame.size.width;
-    if (@available(iOS 11.0, *)) {
-        _listTable = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, w,ScreenHeight - NavBarHeight) style:UITableViewStylePlain];
-    } else {
-        _listTable = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, w,ScreenHeight - 64) style:UITableViewStylePlain];
-        // Fallback on earlier versions
-    }
+    _listTable = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, w,ScreenHeight - NavBarHeight) style:UITableViewStylePlain];
     _listTable.delegate = self;
     _listTable.dataSource = self;
     if (@available(iOS 13.0, *)) {

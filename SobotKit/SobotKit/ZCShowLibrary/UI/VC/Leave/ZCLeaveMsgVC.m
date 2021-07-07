@@ -209,6 +209,7 @@
      if(zcLibConvertToString([ZCUICore getUICore].kitInfo.leaveMsgGuideContent).length > 0){
         text = ZCSTLocalString(zcLibConvertToString([ZCUICore getUICore].kitInfo.leaveMsgGuideContent));
     }
+    text = [ZCHtmlCore filterHTMLTag:text];
     
     [ZCHtmlCore filterHtml:text result:^(NSString * _Nonnull text1, NSMutableArray * _Nonnull arr, NSMutableArray * _Nonnull links) {
     
@@ -243,6 +244,7 @@
     [_textView setBackgroundColor:[ZCUITools zcgetLeftChatColor]];
     [_textView setContentInset:UIEdgeInsetsMake( 7, 12, 15, 15)];
     NSString * tmp =   zcLibConvertToString(self.msgTmp);
+    tmp = [ZCHtmlCore filterHTMLTag:tmp];
     while ([tmp hasPrefix:@"\n"]) {
         tmp=[tmp substringWithRange:NSMakeRange(1, tmp.length-1)];
     }

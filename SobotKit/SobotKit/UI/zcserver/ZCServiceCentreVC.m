@@ -47,6 +47,7 @@ typedef void (^PageLoadBlock)(id object,ZCPageBlockType type);
     
     NSMutableArray   *_listArray;
     
+    UIView *serviceBtnBgView;
 }
 
 //当页面的list数据为空时，给它一个带提示的占位图。
@@ -58,13 +59,6 @@ typedef void (^PageLoadBlock)(id object,ZCPageBlockType type);
 @end
 
 @implementation ZCServiceCentreVC
-
-#pragma mark -- 横竖屏切换问题
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-    return YES;
-}
 
 
 -(void)buttonClick:(UIButton *)sender{
@@ -133,6 +127,8 @@ typedef void (^PageLoadBlock)(id object,ZCPageBlockType type);
     [scrollView setFrame:CGRectMake(spaceX, Y, LW, scrollHeight)];
     
     
+    serviceBtnBgView.frame = CGRectMake(0, viewHeigth - 80, viewWidth, ZCNumber(80));
+    
     if (_listArray.count > 0) {
         [self removePlaceholderView];
         [scrollView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
@@ -195,7 +191,7 @@ typedef void (^PageLoadBlock)(id object,ZCPageBlockType type);
 //    }
     
     
-    UIView *serviceBtnBgView = [[UIView alloc]initWithFrame:CGRectMake(0, ScreenHeight - 80, viewWidth, ZCNumber(80))];
+    serviceBtnBgView = [[UIView alloc]initWithFrame:CGRectMake(0, viewHeigth - 80, viewWidth, ZCNumber(80))];
     
     serviceBtnBgView.backgroundColor = UIColorFromThemeColor(ZCBgLightGrayDarkColor);
     [serviceBtnBgView setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleTopMargin];
