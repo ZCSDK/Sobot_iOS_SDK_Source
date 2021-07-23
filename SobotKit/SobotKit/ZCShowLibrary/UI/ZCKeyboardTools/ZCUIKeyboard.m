@@ -1179,13 +1179,15 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
         _zc_pressedButton.hidden = YES;
         _zc_addMoreButton.hidden   = NO;
         
+        // 关闭留言，还有zc_addMoreButton其它按钮
         if ([self getZCLibConfig].msgFlag == 0) {
-            [_zc_chatTextView setFrame:CGRectMake(topGap + 10, (BottomHeight-35)/2, [self getSourceViewWidth]-10 - topGap, 35)];
+            // 设置textview的frame 默认值
+            [_zc_chatTextView setFrame:CGRectMake(topGap + 10, (BottomHeight-35)/2, [self getSourceViewWidth]-48 - 10 - topGap, 35)];
             
             // 开启语音的功能   机器人开启语音识别
             if ([ZCUITools zcgetOpenRecord] && [ZCUICore getUICore].kitInfo.isOpenRobotVoice) {
                 
-                [_zc_chatTextView setFrame:CGRectMake(topGap + 48 , (BottomHeight-35)/2, [self getSourceViewWidth]-48-5 - topGap, 35)];
+                [_zc_chatTextView setFrame:CGRectMake(topGap + 48 , (BottomHeight-35)/2, [self getSourceViewWidth]-48*2 - 10 - topGap, 35)];
                 _zc_chatTextView.textContainerInset =  UIEdgeInsetsMake(10, 10, 10, 10 );
                 
                 // 显示语音按钮

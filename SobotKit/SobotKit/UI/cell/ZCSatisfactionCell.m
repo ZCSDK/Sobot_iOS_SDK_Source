@@ -7,18 +7,17 @@
 //
 
 #import "ZCSatisfactionCell.h"
-#import "ZCLibGlobalDefine.h"
+
 #import "ZCUIColorsDefine.h"
 
 #import "ZCUIRatingView.h"
 #import "ZCSatisfactionButton.h"
-
-#import "ZCStoreConfiguration.h"
-#import "ZCLibServer.h"
-#import "ZCIMChat.h"
-#import "ZCUICore.h"
+#import "ZCLibGlobalDefine.h"
 #import "ZCLibSatisfaction.h"
+#import "ZCStoreConfiguration.h"
+#import "ZCUICore.h"
 #import "ZCItemView.h"
+#import "ZCUIToastTools.h"
 
 
 @interface ZCSatisfactionCell ()<RatingViewDelegate>{
@@ -224,7 +223,7 @@ typedef NS_ENUM(NSInteger,ZCSatisfactionCellType){
         [_ratingView removeFromSuperview];
     }
     
-    self.isResolved = 2;
+    self.isResolved = -1;
     
     //    CGFloat cellHeight = [super InitDataToView:model time:showTime];
     
@@ -257,6 +256,7 @@ typedef NS_ENUM(NSInteger,ZCSatisfactionCellType){
             cellType = ZCSatisfactionCellType_notResolve;
         }
     }else{
+        self.isResolved = -1;
         cellType = ZCSatisfactionCellType_onlyStar;
     }
     NSDictionary *dict = [ZCUICore getUICore].satisfactionDict;

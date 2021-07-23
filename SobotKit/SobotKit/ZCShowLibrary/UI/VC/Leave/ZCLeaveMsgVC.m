@@ -103,7 +103,7 @@
     
     self.view.backgroundColor = [ZCUITools zcgetLightGrayDarkBackgroundColor];
     
-    [self layoutSubViews];
+    [self layoutSubViewsUI];
     
     
     UITapGestureRecognizer * tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapAction:)];
@@ -169,7 +169,7 @@
     }
 }
 
--(void)layoutSubViews{
+-(void)layoutSubViewsUI{
     CGFloat y = 0;
     if (self.navigationController.navigationBarHidden) {
         y = NavBarHeight;
@@ -180,7 +180,8 @@
     _scrollView.showsVerticalScrollIndicator = NO;
     _scrollView.showsHorizontalScrollIndicator = NO;
     _scrollView.bounces = NO;
-    _scrollView.backgroundColor = UIColorFromThemeColor(ZCBgLightGrayDarkColor);
+    _scrollView.backgroundColor = [UIColor clearColor];
+//    _scrollView.backgroundColor = UIColorFromThemeColor(ZCBgLightGrayDarkColor);
     [self.view addSubview:_scrollView];
     
     CGFloat Y = 0;

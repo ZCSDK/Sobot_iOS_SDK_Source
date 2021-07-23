@@ -13,14 +13,12 @@
 #import "ZCLibGlobalDefine.h"
 #import "ZCUIColorsDefine.h"
 #import "ZCUIImageTools.h"
-#import "ZCIMChat.h"
 #import "ZCStoreConfiguration.h"
-
+#import "ZCUIToastTools.h"
 
 
 #import "ZCSatisfactionButton.h"
 #import "ZCItemView.h"
-#import "ZCPlatformTools.h"
 #import "ZCUICore.h"
 #import "ZCToolsCore.h"
 
@@ -213,7 +211,11 @@
             
             if ([model.isQuestionFlag  intValue] == 1) {
                 isShowIsOrNoSolveProblemView = YES;
+            }else{
+                isShowIsOrNoSolveProblemView = NO;
             }
+            
+            self.isOpenProblemSolving = isShowIsOrNoSolveProblemView;
         }
     }
     
@@ -492,8 +494,11 @@
                     return (NSComparisonResult)NSOrderedSame;
                 };
                 NSArray *sorArray = [_ticketScoreInfooList sortedArrayUsingComparator:cmptr];
-                
-                ZCLibSatisfaction *item = sorArray[(int)_ratingView.rating -1];
+                int index = (int)_ratingView.rating -1;
+                if(index < 0){
+                    index = 0;
+                }
+                ZCLibSatisfaction *item = sorArray[index];
                 _tiplab.text =  item.scoreExplain;
             }
             
@@ -576,7 +581,7 @@
     CGRect sheetFrame = self.sheetView.frame;
     sheetFrame.size.height  = CGRectGetMaxY(self.backGroundView.frame) + _commitBtn.frame.size.height + 30 + XBottomBarHeight + 20;
     // 0 星评价时，不显示提交按钮,并且是5星的时候，不显示提交按钮
-    if(_ratingView!=nil && _ratingView.rating < 1 && !_ratingView.hidden && scoreFlag == 0){
+    if(type!=6 && _ratingView!=nil && _ratingView.rating < 1 && !_ratingView.hidden && scoreFlag == 0){
         _commitBtn.frame = CGRectMake(20 , CGRectGetMaxY(self.backGroundView.frame) + 10, viewWidth-40, 0);
         sheetFrame.size.height  = CGRectGetMaxY(self.backGroundView.frame) + XBottomBarHeight;
     }
@@ -1221,7 +1226,7 @@
     //    [dict setObject:[NSString stringWithFormat:@"%d",isresolve] forKey:@"isresolve"];
     // commentType  评价类型 主动评价 1 邀请评价0
     [dict setObject:[NSString stringWithFormat:@"%d",_invitationType] forKey:@"commentType"];
-    	
+        
     btn.enabled = false;
     [[[ZCUICore getUICore] getAPIServer] doComment:dict result:^(ZCNetWorkCode code, int status, NSString *msg) {
         
@@ -1315,20 +1320,6 @@
     
 }
 
-
-
-//#pragma mark -- 获取当前的语言
-//-(int)zcGetAppLanguages{
-//    //    NSLog(@"当前的语言为%@",[[[NSUserDefaults standardUserDefaults] objectForKey:@"AppleLanguages"] objectAtIndex:0]);
-//    NSString * lanStr  = [[[NSUserDefaults standardUserDefaults] objectForKey:@"AppleLanguages"] objectAtIndex:0];
-//    if ([lanStr hasPrefix:@"en"]) {
-//        return 1;
-//    }else if ([lanStr hasPrefix:@"zh-Hans"]){
-//        return 0;
-//    }
-//    return 0;
-//
-//}
 
 #pragma mark -- 手势冲突的代理
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {

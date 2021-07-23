@@ -1479,7 +1479,9 @@
     }
     
     if(type==ZCChatCellClickTypeTouchImageYES){
-        xhObj = object;
+        if(object!=nil && [object isKindOfClass:[ZCUIXHImageViewer class]]){
+            xhObj = object;
+        }
         [_keyboardTools hideKeyboard];
     }
     

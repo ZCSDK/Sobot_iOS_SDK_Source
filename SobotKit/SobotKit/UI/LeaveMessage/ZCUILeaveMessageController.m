@@ -760,7 +760,7 @@ typedef NS_ENUM(NSInteger,ExitType) {
       [dic setValue:zcLibConvertToString(_model.tel) forKey:@"customerPhone"];
     }
     
-    if([ZCUICore getUICore].kitInfo.leaveCusFieldArray!=nil && [ZCUICore getUICore].kitInfo.leaveCusFieldArray.count > 0){
+    if(!zcLibIs_null([ZCUICore getUICore].kitInfo.leaveCusFieldArray) && [ZCUICore getUICore].kitInfo.leaveCusFieldArray.count > 0){
         if(arr == nil){
             arr = [[NSMutableArray alloc] init];
         }
@@ -775,7 +775,7 @@ typedef NS_ENUM(NSInteger,ExitType) {
     }
     
     // 2.8.6新增对接字段，可以设置订单、城市等固定字段
-    if([ZCUICore getUICore].kitInfo.leaveParamsExtends!=nil && [ZCUICore getUICore].kitInfo.leaveParamsExtends.count > 0){
+    if(!zcLibIs_null([ZCUICore getUICore].kitInfo.leaveParamsExtends) && [ZCUICore getUICore].kitInfo.leaveParamsExtends.count > 0){
         [dic setValue:zcLibConvertToString([ZCLocalStore DataTOjsonString:[ZCUICore getUICore].kitInfo.leaveParamsExtends]) forKey:@"paramsExtends"];
     }
     

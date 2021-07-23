@@ -188,7 +188,10 @@
 
 
 -(void)playVideo:(UIButton *)btn{
-    
+    if(self.delegate && [self.delegate respondsToSelector:@selector(cellItemClick:type:obj:)]){
+        //        [self.delegate touchLagerImageView:xh with:YES];
+        [self.delegate cellItemClick:self.tempModel type:ZCChatCellClickTypeTouchImageYES obj:nil];
+    }
     UIWindow *window = [[ZCToolsCore getToolsCore] getCurWindow];
     ZCVideoPlayer *player = [[ZCVideoPlayer alloc] initWithFrame:window.bounds withShowInView:window url:[NSURL URLWithString:self.tempModel.richModel.richmoreurl] Image:nil];
     [player showControlsView];

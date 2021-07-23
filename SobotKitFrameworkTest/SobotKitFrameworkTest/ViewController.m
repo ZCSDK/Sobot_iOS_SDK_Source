@@ -53,6 +53,7 @@
     [self setUpUI];
     [self setTitleView];
     
+    NSLog(@"SDK:%@",[ZCSobotApi getVersion]);
     
 //    WSLSuspendingView * suspendingView = [WSLSuspendingView sharedSuspendingView];
 //

@@ -417,7 +417,11 @@ UINavigationControllerDelegate,ZCMLEmojiLabelDelegate>
     float evaluateButton_margin = 10;
     
     float replyButton_y = 10;
+    if(self.listArray==nil || self.listArray.count == 0){
+        return;
+    }
     ZCRecordListModel *first = self.listArray.firstObject;
+    
     if( (first.isOpen && first.isEvalution == 0) && !self.evaluateModelDic)
     {
         if (first.flag == 3 && ![ZCUICore getUICore].kitInfo.leaveCompleteCanReply) {

@@ -191,6 +191,10 @@ NSString *zcLibIntervalSinceNow(NSString *theDate);
 NSInteger zcLibGetDataYear(NSDate *date);
 
 
+// 以毫秒为单位
+NSString * zcLibGetCurrentTimes(void);
+
+
 /**
  *  获取sdk版本号
  *
