@@ -22,6 +22,8 @@
 #import "ZCUIAskTableController.h"
 #import "ZCUIKeyboard.h"
 
+#import "ZCToolsCore.h"
+
 #define VoiceLocalPath zcLibGetDocumentsFilePath(@"/sobot/")
 
 @interface ZCUICore()<ZCMessageDelegate>{
@@ -174,7 +176,7 @@ static dispatch_once_t onceToken;
         self.delegate = delegate;
         _isCidLoading = NO;
         __weak ZCUICore * safeCore = self;
-        [_apiServer initSobotSDK:^(ZCLibConfig *config) {
+        [_apiServer initSobotChat:^(ZCLibConfig *config) {
             isLoadingConfig = NO;
             [ZCLogUtils logHeader:LogHeader debug:@"%@",config];
             _isShowForm = NO;
@@ -220,11 +222,14 @@ static dispatch_once_t onceToken;
                 // 获取cid列表n
                 [safeCore getCids];
             }
-        } error:^(ZCNetWorkCode status) {
+        } error:^(ZCNetWorkCode status,NSString *errorMessage) {
             isLoadingConfig = NO;
             
+            if(zcLibConvertToString(errorMessage).length > 0 && self.delegate!=nil){
+                [[ZCUIToastTools shareToast] showToast:errorMessage duration:2.0f view:((UIView *)self.delegate).window position:ZCToastPositionCenter];
+            }
             if(safeCore.ResultBlock){
-                safeCore.ResultBlock(ZCInitStatusFail,safeCore.listArray,@"初始化失败");
+                safeCore.ResultBlock(ZCInitStatusFail,safeCore.listArray,zcLibConvertToString(errorMessage).length > 0 ? errorMessage : @"初始化失败");
             }
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 if (safeCore.delegate && [safeCore.delegate respondsToSelector:@selector(onPageStatusChanged:message:obj:)]) {
@@ -2288,11 +2293,9 @@ static dispatch_once_t onceToken;
     }
     isLoadingConfig = YES;
     __weak ZCUICore *safeSelf = self;
-    [_apiServer initSobotSDK:^(ZCLibConfig *config) {
+    [_apiServer initSobotChat:^(ZCLibConfig *config) {
         isLoadingConfig = NO;
-//        if (self.delegate && [self.delegate respondsToSelector:@selector(onPageStatusChanged:message:obj:)]) {
-//            [self.delegate onPageStatusChanged:ZCInitStatusConnecting message:@"200" obj:nil];
-//        }
+        
         if (self.delegate && [self.delegate respondsToSelector:@selector(showSoketConentStatus:)]) {
             [self.delegate showSoketConentStatus:200];
         }
@@ -2339,9 +2342,12 @@ static dispatch_once_t onceToken;
             });
         }
         
-    } error:^(ZCNetWorkCode status) {
+    } error:^(ZCNetWorkCode status,NSString *errorMessage) {
         isLoadingConfig = NO;
-        
+        if(zcLibConvertToString(errorMessage).length > 0 && self.delegate!=nil){
+            
+            [[ZCUIToastTools shareToast] showToast:errorMessage duration:2.0f view:((UIView *)self.delegate).window position:ZCToastPositionCenter];
+        }
         if (self.delegate && [self.delegate respondsToSelector:@selector(showSoketConentStatus:)]) {
             [self.delegate showSoketConentStatus:2000];
         }

@@ -811,5 +811,11 @@
     return v==nil ? key : v;
 }
 
++(NSString *)zcMd5Sign:(NSString *) sign{
+    return zcLibMd5(sign);
+}
 
++(NSString *)zcGetCurrentTimes{
+    return zcLibGetCurrentTimes();
+}
 @end

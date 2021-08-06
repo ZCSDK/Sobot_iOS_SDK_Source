@@ -111,7 +111,7 @@
 		7BDB6039243328F800D655C5 /* ZCServiceListCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5F3C243328F700D655C5 /* ZCServiceListCell.h */; };
 		7BDB603A243328F800D655C5 /* ZCServiceDetailVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5F3D243328F700D655C5 /* ZCServiceDetailVC.m */; };
 		7BDB603B243328F800D655C5 /* ZCServiceListVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5F3E243328F700D655C5 /* ZCServiceListVC.h */; };
-		7BDB603C243328F800D655C5 /* ZCServiceCentreVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5F3F243328F700D655C5 /* ZCServiceCentreVC.h */; };
+		7BDB603C243328F800D655C5 /* ZCServiceCentreVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5F3F243328F700D655C5 /* ZCServiceCentreVC.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7BDB603D243328F800D655C5 /* ZCServiceListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5F40243328F700D655C5 /* ZCServiceListCell.m */; };
 		7BDB603E243328F800D655C5 /* ZCServiceDetailVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB5F41243328F700D655C5 /* ZCServiceDetailVC.h */; };
 		7BDB603F243328F800D655C5 /* ZCServiceCentreVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB5F42243328F700D655C5 /* ZCServiceCentreVC.m */; };
@@ -1178,6 +1178,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7BDB603C243328F800D655C5 /* ZCServiceCentreVC.h in Headers */,
 				59E4A0D423B4532000680CD7 /* ZCLocalStore.h in Headers */,
 				7BDB6007243328F800D655C5 /* ZCUIWebController.h in Headers */,
 				7BDB6074243328F800D655C5 /* ZCTitleView.h in Headers */,
@@ -1254,7 +1255,6 @@
 				7BDB6060243328F800D655C5 /* ZCUIKeyboard.h in Headers */,
 				7BDB60C2243328F800D655C5 /* ZCAutoListView.h in Headers */,
 				7BDB600C243328F800D655C5 /* ZCChatCellDelegate.h in Headers */,
-				7BDB603C243328F800D655C5 /* ZCServiceCentreVC.h in Headers */,
 				7BDB6043243328F800D655C5 /* ZCXJAlbumController.h in Headers */,
 				7BDB6021243328F800D655C5 /* ZCGoodsCell.h in Headers */,
 				7BDB6024243328F800D655C5 /* ZCChatBaseCell.h in Headers */,
