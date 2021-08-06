@@ -335,6 +335,9 @@ typedef NS_ENUM(NSInteger,ZCSatisfactionCellType){
 
     if(_satisfaction!=nil && (_satisfaction.scoreFlag==1 || defaultStar > 0 )){
         [_tiplab setTextColor:UIColorFromThemeColor(ZCTextNoticeLinkColor)];
+        if(zcLibConvertToString(_satisfaction.scoreExplain).length > 0){
+            [_tiplab setText:zcLibConvertToString(_satisfaction.scoreExplain)];
+        }
         _satisfactionView.hidden = NO;
         [_satisfactionView setFrame:CGRectMake(30, CGRectGetMaxY(_tiplab.frame) + 15, self.viewWidth - 60, 0)];
         CGRect itemF = self.satisfactionView.frame ;
@@ -342,14 +345,14 @@ typedef NS_ENUM(NSInteger,ZCSatisfactionCellType){
             NSArray *items =  items = [zcLibConvertToString(_satisfaction.labelName) componentsSeparatedByString:@"," ];
             
             [_satisfactionView InitDataWithArray:items];
-            itemF.size.height =[ZCItemView getHeightWithArray:items];
+            itemF.size.height =[_satisfactionView getHeightWithArray:items];
             _satisfactionView.frame = itemF;
         }
         
-        bgViewHeight = bgViewHeight + itemF.size.height;
+        bgViewHeight = bgViewHeight + itemF.size.height + 15;
 
         CGRect bgf = _bglayerView.frame;
-        bgf.size.height =  bgf.size.height + itemF.size.height;
+        bgf.size.height =  bgf.size.height + itemF.size.height + 15;
         _bglayerView.frame = bgf;
         
         [_ratingView displayRating:defaultStar];
@@ -371,6 +374,7 @@ typedef NS_ENUM(NSInteger,ZCSatisfactionCellType){
         }else{
             _submitBtn.frame = CGRectMake((self.viewWidth - 200)/2, CGRectGetMaxY(_satisfactionView.frame) + 15, 200, 36);
         }
+        bgViewHeight = bgViewHeight;
     }
     
     _bgView.frame = CGRectMake(15, 10, self.viewWidth - 30, bgViewHeight);
@@ -399,6 +403,7 @@ typedef NS_ENUM(NSInteger,ZCSatisfactionCellType){
         if(model.satisfactionCommtType == 0){
             bgViewHeight = 373;
         }
+        bgViewHeight = 373 + 10;
     }
     
     NSDictionary *dict = [ZCUICore getUICore].satisfactionDict;
@@ -425,7 +430,7 @@ typedef NS_ENUM(NSInteger,ZCSatisfactionCellType){
                 NSArray *items = [zcLibConvertToString(satisfactionModel.labelName) componentsSeparatedByString:@"," ];
                 
                 [item InitDataWithArray:items];
-                sheight = [ZCItemView getHeightWithArray:items];
+                sheight = [item getHeightWithArray:items];
             }
             bgViewHeight = bgViewHeight + sheight + 15;
         }else{
@@ -504,11 +509,7 @@ typedef NS_ENUM(NSInteger,ZCSatisfactionCellType){
         }
         [ZCUICore getUICore].inviteSatisfactionCheckLabels = [_satisfactionView getSeletedTitle];
         // 0:5星,1:10分
-        if (_satisfaction.scoreFlag) {
-            [self.delegate cellItemClick:type IsResolved:self.isResolved Rating:self.rating-1 problem:[_satisfactionView getSeletedTitle] scoreFlag:_satisfaction.scoreFlag];
-        } else {
-            [self.delegate cellItemClick:type IsResolved:self.isResolved Rating:self.rating problem:[_satisfactionView getSeletedTitle] scoreFlag:_satisfaction.scoreFlag];
-        }
+        [self.delegate cellItemClick:type IsResolved:self.isResolved Rating:self.rating problem:[_satisfactionView getSeletedTitle] scoreFlag:_satisfaction.scoreFlag];
     }
 }
 

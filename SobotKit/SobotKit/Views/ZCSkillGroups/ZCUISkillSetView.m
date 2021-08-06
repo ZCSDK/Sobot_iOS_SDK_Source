@@ -17,6 +17,8 @@
 #import "ZCPlatformTools.h"
 #import "ZCUIKeyboard.h"
 #import "ZCToolsCore.h"
+#import "ZCUIImageView.h"
+
 @interface ZCUISkillSetView()
 
 @property(nonatomic,strong) UIView *backGroundView;
@@ -59,8 +61,9 @@
         self.userInteractionEnabled = YES;
         UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(shareViewDismiss:)];
         [self addGestureRecognizer:tapGesture];
-        
-        [self createSubviews];
+        if(!zcLibIs_null(listArray) && listArray.count > 0){
+            [self createSubviews];
+        }
     }
     return self;
 }
@@ -68,9 +71,16 @@
 
 - (void)createSubviews{
     CGFloat bw=viewWidth;
+    int direction = [[ZCToolsCore getToolsCore] getCurScreenDirection];
+    CGFloat bx = 0;
+    if(direction>0){
+        bw = bw - XBottomBarHeight;
+        if(direction == 2){
+            bx = XBottomBarHeight;
+        }
+    }
     
-    
-    self.backGroundView = [[UIView alloc] initWithFrame:CGRectMake((viewWidth - bw) / 2.0, viewHeight, bw, 0)];
+    self.backGroundView = [[UIView alloc] initWithFrame:CGRectMake(0, viewHeight, viewWidth, 0)];
     self.backGroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleTopMargin;
     self.backGroundView.autoresizesSubviews = YES;
     self.backGroundView.backgroundColor = UIColorFromThemeColor(ZCBgSystemWhiteLightDarkColor);
@@ -80,7 +90,7 @@
     [self addSubview:self.backGroundView];
     
     
-    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, bw, 60)];
+    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(bx+40, 0, bw-80, 60)];
     [titleLabel setText:ZCSTLocalString(@"请选择要咨询的内容")];
     [titleLabel setTextAlignment:NSTextAlignmentCenter];
     [titleLabel setBackgroundColor:UIColorFromThemeColor(ZCBgSystemWhiteLightDarkColor)];
@@ -103,7 +113,7 @@
     lineView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
      [self.backGroundView addSubview:lineView];
     
-    self.scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 60, bw, 0)];
+    self.scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(bx, 60, bw, 0)];
     self.scrollView.showsVerticalScrollIndicator=YES;
     self.scrollView.bounces = NO;
     self.scrollView.backgroundColor = UIColor.clearColor;
@@ -111,14 +121,33 @@
     
     [self.backGroundView addSubview:self.scrollView];
     
-    CGFloat x= 15;
+    CGFloat startX= 15;
     CGFloat y= 20;
     
     CGFloat itemH = 35;
-    CGFloat itemW = (bw - 30 - 10)/2.0f;
+    CGFloat spaceW = 10;
+    CGFloat spaceH = 20;
+    int column = 2;
     
-    int index = listArray.count%2==0?round(listArray.count/2):round(listArray.count/2)+1;
-    
+    //groupStyle:无值 或 0 文本样式， 1 图文样式        2 图文+描述样式
+    ZCLibSkillSet *firstModel = [listArray firstObject];
+    int style = firstModel.groupStyle;
+    if(zcLibConvertToString(firstModel.groupGuideDoc).length>0){
+        [titleLabel setText:zcLibConvertToString(firstModel.groupGuideDoc)];
+    }
+    if(style == 1){
+        startX = 30;
+        itemH = 87;
+        column = 4;
+    }
+    else if(style == 2){
+        startX = 20;
+        itemH = 40;
+        column = 1;
+    }
+    CGFloat itemW = (bw - startX*2 - spaceW*(column - 1))/column;
+    CGFloat x = startX;
+    int rows = listArray.count%column==0?round(listArray.count/column):round(listArray.count/column)+1;
     for (int i=0; i<listArray.count; i++) {
         UIButton *itemView = [self addItemView:listArray[i] withX:x withY:y withW:itemW withH:itemH];
         itemView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin |UIViewAutoresizingFlexibleWidth;
@@ -126,20 +155,20 @@
         itemView.userInteractionEnabled = YES;
         itemView.tag = i;
         [itemView addTarget:self action:@selector(itemClick:) forControlEvents:UIControlEventTouchUpInside];
-        if(i%2==1){
-            x = 15;
-            y = y + itemH + 20;
-        }else if(i%2==0){
-            x = itemW + 15 + 10;
+        if((i+1)%column==0 || column == 1){
+            x = startX;
+            y = y + itemH + spaceH;
+        }else{
+            x = x + itemW + spaceW;
         }
         [self.scrollView addSubview:itemView];
     }
-    CGFloat h = index*(itemH) + (index + 1) * 20;
+    CGFloat h = rows*(itemH) + (rows + 1) * spaceH;
     if(h > viewHeight*0.6){
         h = viewHeight*0.6;
     }
-    [self.scrollView setFrame:CGRectMake(0, 60, bw, h)];
-    [self.scrollView setContentSize:CGSizeMake(bw, index*itemH + (index+1)*20)];
+    [self.scrollView setFrame:CGRectMake(bx, 60, bw, h)];
+    [self.scrollView setContentSize:CGSizeMake(bw, rows*itemH + (rows+1)*spaceH)];
     
     
     
@@ -184,66 +213,109 @@
 -(UIButton *)addItemView:(ZCLibSkillSet *) model withX:(CGFloat )x withY:(CGFloat) y withW:(CGFloat) w withH:(CGFloat) h{
     UIButton *itemView = [[UIButton alloc] initWithFrame:CGRectMake(x, y, w,h)];
     [itemView setFrame:CGRectMake(x, y, w, h)];
-    itemView.layer.cornerRadius = 17.0f;
-    itemView.layer.masksToBounds = YES;
     
-    [itemView setBackgroundImage:[ZCUIImageTools zcimageWithColor:UIColorFromThemeColor(ZCBgLeftChatColor)] forState:UIControlStateNormal];
-    [itemView setBackgroundImage:[ZCUIImageTools zcimageWithColor:[ZCUITools zcgetCommentButtonLineColor]] forState:UIControlStateSelected];
-    [itemView setBackgroundImage:[ZCUIImageTools zcimageWithColor:[ZCUITools zcgetCommentButtonLineColor]] forState:UIControlStateHighlighted];
     
     UILabel *_itemName = [[UILabel alloc] initWithFrame:CGRectZero];
     [_itemName setBackgroundColor:[UIColor clearColor]];
-    [_itemName setTextAlignment:NSTextAlignmentCenter];
-    [_itemName setTextColor:[ZCUITools zcgetRightChatColor]];
 //    [_itemName setTextColor:UIColorFromThemeColor(ZCTextMainColor)];
     [_itemName setText:model.groupName];
     [_itemName setFont:ZCUIFont14];
     [itemView addSubview:_itemName];
-    if(!model.isOnline){
-        [_itemName setFont:ZCUIFont12];
+    
+    if(model.groupStyle <=0){
+        itemView.layer.cornerRadius = 17.0f;
+        itemView.layer.masksToBounds = YES;
+        [itemView setBackgroundImage:[ZCUIImageTools zcimageWithColor:UIColorFromThemeColor(ZCBgLeftChatColor)] forState:UIControlStateNormal];
+        [itemView setBackgroundImage:[ZCUIImageTools zcimageWithColor:[ZCUITools zcgetCommentButtonLineColor]] forState:UIControlStateSelected];
+        [itemView setBackgroundImage:[ZCUIImageTools zcimageWithColor:[ZCUITools zcgetCommentButtonLineColor]] forState:UIControlStateHighlighted];
+        
+        [_itemName setTextAlignment:NSTextAlignmentCenter];
+        [_itemName setTextColor:[ZCUITools zcgetRightChatColor]];
+        
+        if(!model.isOnline){
+            [_itemName setFont:ZCUIFont12];
 
-        [_itemName setFrame:CGRectMake(0, 5 , itemView.frame.size.width, 13)];
+            [_itemName setFrame:CGRectMake(0, 5 , itemView.frame.size.width, 13)];
 
-        UILabel *_itemStatus = [[UILabel alloc] initWithFrame:CGRectMake(0,5+13, itemView.frame.size.width, 16)];
-        [_itemStatus setBackgroundColor:[UIColor clearColor]];
-        [_itemStatus setTextAlignment:NSTextAlignmentCenter];
-        [_itemStatus setFont:ZCUIFont10];
+            UILabel *_itemStatus = [[UILabel alloc] initWithFrame:CGRectMake(0,5+13, itemView.frame.size.width, 16)];
+            [_itemStatus setBackgroundColor:[UIColor clearColor]];
+            [_itemStatus setTextAlignment:NSTextAlignmentCenter];
+            [_itemStatus setFont:ZCUIFont10];
 
-        // [ZCIMChat getZCIMChat].libConfig.msgFlag == 0
-        if ([[ZCPlatformTools sharedInstance] getPlatformInfo].config.msgFlag == 0) {
-//            [_itemStatus setText:ZCSTLocalString(@"暂无客服在线，可留言")];
-            [_itemName setTextColor:UIColorFromThemeColor(ZCTextSubColor)];
-            NSString *string = [NSString stringWithFormat:@"%@，%@%@",ZCSTLocalString(@"暂无客服在线"),ZCSTLocalString(@"您可以"),ZCSTLocalString(@"留言")];
-            NSMutableAttributedString *attribut = [[NSMutableAttributedString alloc]initWithString:string];
-            NSMutableDictionary *dic = [NSMutableDictionary dictionary];
-            dic[NSForegroundColorAttributeName] = UIColorFromThemeColor(ZCTextPlaceHolderColor);
-            [attribut addAttributes:dic range:NSMakeRange(0,string.length - 2)];
-            
-            NSMutableDictionary *dic_1 = [NSMutableDictionary dictionary];
-            dic_1[NSForegroundColorAttributeName] = [ZCUITools zcgetRightChatColor];
-            [attribut addAttributes:dic_1 range:NSMakeRange(string.length - 2,2)];
-            
-            _itemStatus.attributedText = attribut;
+            // [ZCIMChat getZCIMChat].libConfig.msgFlag == 0
+            if ([[ZCPlatformTools sharedInstance] getPlatformInfo].config.msgFlag == 0) {
+    //            [_itemStatus setText:ZCSTLocalString(@"暂无客服在线，可留言")];
+                [_itemName setTextColor:UIColorFromThemeColor(ZCTextSubColor)];
+                NSString *string = [NSString stringWithFormat:@"%@，%@%@",ZCSTLocalString(@"暂无客服在线"),ZCSTLocalString(@"您可以"),ZCSTLocalString(@"留言")];
+                NSMutableAttributedString *attribut = [[NSMutableAttributedString alloc]initWithString:string];
+                NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+                dic[NSForegroundColorAttributeName] = UIColorFromThemeColor(ZCTextPlaceHolderColor);
+                [attribut addAttributes:dic range:NSMakeRange(0,string.length - 2)];
+                
+                NSMutableDictionary *dic_1 = [NSMutableDictionary dictionary];
+                dic_1[NSForegroundColorAttributeName] = [ZCUITools zcgetRightChatColor];
+                [attribut addAttributes:dic_1 range:NSMakeRange(string.length - 2,2)];
+                
+                _itemStatus.attributedText = attribut;
+                itemView.enabled = YES;
+                
+            }else{
+                [_itemName setTextColor:UIColorFromThemeColor(ZCTextSubColor)];
+                [_itemStatus setText:ZCSTLocalString(@"暂无客服在线")];
+                
+                [_itemStatus setTextColor:UIColorFromThemeColor(ZCTextPlaceHolderColor)];
+                itemView.enabled = NO;
+            }
+
+            [itemView addSubview:_itemStatus];
+        }else{
+             [_itemName setTextColor:[ZCUITools zcgetRightChatColor]];
+            [_itemName setFrame:CGRectMake(0, 0 , itemView.frame.size.width, h)];
             itemView.enabled = YES;
             
-        }else{
-            [_itemName setTextColor:UIColorFromThemeColor(ZCTextSubColor)];
-            [_itemStatus setText:ZCSTLocalString(@"暂无客服在线")];
-            
-            [_itemStatus setTextColor:UIColorFromThemeColor(ZCTextPlaceHolderColor)];
-            itemView.enabled = NO;
         }
-
-        [itemView addSubview:_itemStatus];
     }else{
-         [_itemName setTextColor:[ZCUITools zcgetRightChatColor]];
-        [_itemName setFrame:CGRectMake(0, 0 , itemView.frame.size.width, h)];
-        itemView.enabled = YES;
+        [itemView setBackgroundColor:UIColor.clearColor];
+        
+        [_itemName setTextColor:UIColorFromThemeColor(ZCTextMainColor)];
+        ZCUIImageView *imgView = [ZCUIImageView imageViewWithURL:[NSURL URLWithString:zcLibConvertToString(model.groupPic)] autoLoading:YES];
+        [itemView addSubview:imgView];
+        
+        if(model.groupStyle == 1){
+            [imgView setFrame:CGRectMake(w/2-25, 0, 50, 50)];
+            _itemName.numberOfLines = 0;
+            _itemName.textAlignment = NSTextAlignmentCenter;
+            [_itemName setFrame:CGRectMake(0, 55, w, 36)];
+            
+            // 文字置顶显示
+            [_itemName sizeToFit];
+            CGRect f = _itemName.frame;
+            f.size.width = w;
+            _itemName.frame = f;
+        }else{
+            [imgView setFrame:CGRectMake(0, 0, 40, 40)];
+            imgView.layer.cornerRadius = 20.0f;
+            imgView.layer.masksToBounds = YES;
+            [_itemName setFrame:CGRectMake(48, 0, w-48, 20)];
+            _itemName.numberOfLines = 1;
+            _itemName.textAlignment = NSTextAlignmentLeft;
+            
+            
+            UILabel *_itemStatus = [[UILabel alloc] initWithFrame:CGRectMake(48,21, w-48, 18)];
+            [_itemStatus setBackgroundColor:[UIColor clearColor]];
+            [_itemStatus setTextAlignment:NSTextAlignmentLeft];
+            [_itemStatus setFont:ZCUIFont12];
+            _itemStatus.numberOfLines = 1;
+            [_itemStatus setTextColor:UIColorFromThemeColor(ZCTextSubColor)];
+            [_itemStatus setText:zcLibConvertToString(model.desc)];
+            [itemView addSubview:_itemStatus];
+        }
         
     }
     
     return itemView;
 }
+
 
 - (void)itemClick:(UIButton *) view{
     ZCLibSkillSet *model =  listArray[view.tag];

@@ -223,7 +223,9 @@ static dispatch_once_t onceToken;
         UIAlertAction  *confirmAction = [UIAlertAction actionWithTitle:ZCSTLocalString(@"确定")
                                                                  style:UIAlertActionStyleDefault
                                                                handler:^(UIAlertAction * _Nonnull action) {
-                                                                   if (confirm)confirm(0);
+            [alert dismissViewControllerAnimated:NO completion:^{
+                if (confirm)confirm(0);
+            }];
                                                                }];
 //        [confirmAction setValue:kL2TextFont forKey:@"titleFont"];
         //[confirmAction setValue:kSystemBaseColor forKey:@"titleTextColor"];
@@ -233,7 +235,9 @@ static dispatch_once_t onceToken;
             UIAlertAction  *action = [UIAlertAction actionWithTitle:titleArray[i]
                                                               style:UIAlertActionStyleDefault
                                                             handler:^(UIAlertAction * _Nonnull action) {
-                                                                if (confirm)confirm(i);
+                [alert dismissViewControllerAnimated:NO completion:^{
+                    if (confirm)confirm(i);
+                }];
                                                             }];
           //  [action setValue:kSystemBaseColor forKey:@"titleTextColor"];
             [alert addAction:action];

@@ -23,9 +23,7 @@
 #import "ZCLibClient.h"
 
 @interface ZCChatController ()<ZCChatViewDelegate>{
-    // 屏幕宽高
-//    CGFloat                     viewWidth;
-//    CGFloat                     viewHeigth;
+    
 }
 
 @property (nonatomic,strong) ZCChatView * chatView;
@@ -193,6 +191,7 @@
                }else{
                    [self.chatView setIsCloseNo];
                    if (self.navigationController && _isPush) {
+                       // 滑动返回会调用 goBack方法
                        [self.navigationController popViewControllerAnimated:YES];
                    }else{
                        [self goBack];
@@ -266,10 +265,10 @@
     if (Tag == BUTTON_BACK) {
         // 延迟返回，解决"Unable to insert COPY_SEND" 警告
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [self goBack];
             if (self.navigationController && _isPush) {
                 [self.navigationController popViewControllerAnimated:YES];
             }else{
+                [self goBack];
                 [self dismissViewControllerAnimated:YES completion:nil];
             }
         });

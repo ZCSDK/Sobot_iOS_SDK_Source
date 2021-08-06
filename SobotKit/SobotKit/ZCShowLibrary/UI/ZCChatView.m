@@ -146,6 +146,8 @@
     
     BOOL                        isStartConnectSockt;
     
+    BOOL isViewDidBack;
+    
     // 点击了关闭按钮
     BOOL                        isClickCloseBtn;
     BOOL                        isCompleteSatisfaction;  //  完成了评价
@@ -292,6 +294,10 @@
         // 通知外部可以更新UI
         [ZCUICore getUICore].PageLoadBlock(self,ZCPageBlockLoadFinish);
     }
+    
+    
+    // 转屏通知
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(didChangeRotate:) name:UIApplicationDidChangeStatusBarFrameNotification object:nil];
 }
 
 -(instancetype)initWithFrame:(CGRect)frame WithSuperController:(UIViewController *)superController customNav:(BOOL)isCreated{
@@ -2226,10 +2232,10 @@
     CGFloat spaceX = 0;
     CGFloat LW = viewWidth;
     // iphoneX 横屏需要单独处理
-    if(direction > 0){
+    if(direction > 0 && !isiPad){
         LW = viewWidth - 38;//XBottomBarHeight;
     }
-    if(direction == 2){
+    if(direction == 2 && !isiPad){
         spaceX = 38;//XBottomBarHeight;
     }
     f.origin.x = spaceX;
@@ -2455,7 +2461,7 @@
         [_listTable reloadData];
 
         if(self.topView!=nil){
-            if([[ZCToolsCore getToolsCore] getCurScreenDirection] > 0){
+            if([[ZCToolsCore getToolsCore] getCurScreenDirection] > 0 && !isiPad){
                 if(!self.backButton.hidden){
                     CGRect bf = self.backButton.frame;
                     bf.origin.x = 10;
@@ -2492,18 +2498,38 @@
         }
         
         [self setTitleViewRTL];
-        
     }
     int direction = [[ZCToolsCore getToolsCore] getCurScreenDirection];
     CGFloat spaceX = 0;
-    if(direction == 2){
+    if(direction == 2 && !isiPad){
         spaceX = XBottomBarHeight;
     }
     CGRect f = _keyboardTools.zc_bottomView.frame;
     f.origin.x = spaceX;
-    f.size.width = viewWidth - (direction>0?XBottomBarHeight:0);
+    f.size.width = viewWidth - ((direction>0 && !isiPad)?XBottomBarHeight:0);
     _keyboardTools.zc_bottomView.frame = f;
 }
+
+
+- (void)didChangeRotate:(NSNotification*)notice {
+    BOOL isShow = NO;
+    // 旋转时，隐藏技能组
+    if([[ZCUICore getUICore] getSkillView]!=nil){
+        isShow = YES;
+        [[ZCUICore getUICore] dismissSkillSetView];
+    }
+    
+    if(isShow){
+         [[ZCUICore getUICore] checkUserServiceWithObject:nil Msg:nil];
+    }
+    if ([[UIDevice currentDevice] orientation] == UIInterfaceOrientationPortrait
+        || [[UIDevice currentDevice] orientation] == UIInterfaceOrientationPortraitUpsideDown) {
+        //竖屏
+    } else {
+        //横屏
+    }
+}
+
 
 -(void)setTitleViewRTL{
     if(isRTLLayout()){
@@ -2541,6 +2567,9 @@
             
         }
         if (sender.tag == BUTTON_BACK) {
+            if(isViewDidBack){
+                return;
+            }
             // 返回提醒开关
             if ([ZCUICore getUICore].kitInfo.isShowReturnTips) {
                [[ZCToolsCore getToolsCore] showAlert:ZCSTLocalString(@"您是否要结束会话?") message:nil cancelTitle:ZCSTLocalString(@"暂时离开") titleArray:@[ZCSTLocalString(@"结束会话")] viewController:_superController 
@@ -2772,7 +2801,13 @@
         [self JumpCustomActionSheet:ServerSatisfcationInviteType andDoBack:NO isInvitation:0 Rating:rating IsResolved:isResolved];
         
     }else{
-        // 提交评价
+        // 提交评价,10分实际是11
+        if(scoreFlag == 1){
+            rating = rating - 1;
+            if(rating < 0){
+                rating = 0;
+            }
+        }
         [[ZCUICore getUICore] commitSatisfactionWithIsResolved:isResolved Rating:rating problem:problem scoreFlag:scoreFlag];
     }
 }
@@ -2977,6 +3012,7 @@
 -(void)goBackIsKeep{
     // 如果有返回的回调，不要直接调用，否则会在页面还没有返回时，清理数据
     if (self.delegate && [self.delegate respondsToSelector:@selector(topViewBtnClick:)]) {
+        isViewDidBack = YES;
         [self.delegate topViewBtnClick:BUTTON_BACK];
     }else{
         [self backChatView];

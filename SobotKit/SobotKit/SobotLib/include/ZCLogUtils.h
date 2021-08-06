@@ -8,11 +8,11 @@
 
 #import <Foundation/Foundation.h>
 
-#define Log_WS_Flag           1     // 输出日志开关【切记，上线时关闭】 0关闭 1 开启
+#define Log_WS_Flag           0     // 输出日志开关【切记，上线时关闭】 0关闭 1 开启
 #define Log_WS_Info_Flag      1     // 输出日志开关
 #define Log_WS_Error_Flag     1     // 输出日志开关
 #define Log_WS_Warning_Flag   1     // 输出日志开关
-#define Log_WS_Debug_Flag     1     // 输出日志开关【切记，上线时关闭】 0关闭 1 开启
+#define Log_WS_Debug_Flag     0     // 输出日志开关【切记，上线时关闭】 0关闭 1 开启
 
 #define Log_Cache_Flag        1     // 保存日志总开关
 #define Log_Cache_ErrorFlag   1     // 总开关下 错误日志保存

@@ -37,7 +37,7 @@
     if ([ZCUICore getUICore].kitInfo.isShowPortrait) {
         return UIInterfaceOrientationMaskPortrait;
     }else if ([ZCUICore getUICore].kitInfo.isShowLandscape) {
-        return UIInterfaceOrientationMaskLandscapeRight;
+        return UIInterfaceOrientationMaskLandscape;
     }else{
         // 如果topViewController是自己，
 //        if(self.navigationController && self.navigationController.topViewController && [self.navigationController.topViewController respondsToSelector:@selector(supportedInterfaceOrientations)]){
@@ -420,10 +420,10 @@
 
 
 -(BOOL)prefersStatusBarHidden{
-    if(isLandspace){
+    if(isLandspace && !isiPad){
         return YES;
     }
-    return NO;
+    return [super prefersStatusBarHidden];
 }
 
 #pragma mark -

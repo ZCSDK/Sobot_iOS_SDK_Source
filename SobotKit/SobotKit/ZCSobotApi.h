@@ -23,6 +23,7 @@
 #import "ZCPlatformTools.h"
 #import "ZCUIWebController.h"
 #import "ZCLocalStore.h"
+#import "ZCServiceCentreVC.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

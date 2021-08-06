@@ -742,7 +742,7 @@
         [self.item InitDataWithArray:items];
     }
     CGRect itemF = self.item.frame ;
-    itemF.size.height =[ZCItemView getHeightWithArray:items];
+    itemF.size.height =[self.item getHeightWithArray:items];
     self.item.frame = itemF;
     [self.backGroundView addSubview:self.item];
     

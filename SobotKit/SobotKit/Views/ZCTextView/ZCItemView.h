@@ -10,7 +10,7 @@
 
 @interface ZCItemView : UIView
 
-+(CGFloat)getHeightWithArray:(NSArray *)titles;
+-(CGFloat)getHeightWithArray:(NSArray *)titles;
 
 -(void)InitDataWithArray:(NSArray *)titles;
 -(void)InitDataWithArray:(NSArray *)titles withCheckLabels:(NSString *) labels;

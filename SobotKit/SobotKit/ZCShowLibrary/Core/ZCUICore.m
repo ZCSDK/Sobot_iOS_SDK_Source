@@ -719,6 +719,7 @@ static dispatch_once_t onceToken;
 
             // 点击之后就影藏
             [keyboard.skillSetView tappedCancel:NO];
+            keyboard.skillSetView = nil;
             
             // 客服不在线且开启了留言开关
             if(!itemModel.isOnline ){
@@ -790,6 +791,7 @@ static dispatch_once_t onceToken;
                 }
             }
             
+            keyboard.skillSetView = nil;
             
         }];
         
@@ -797,6 +799,7 @@ static dispatch_once_t onceToken;
         [_skillSetView closeSkillToRobotBlock:^{
             // 添加暂无客服在线提醒
             [self keyboardOnClickAddLeavemeg];
+            keyboard.skillSetView = nil;
         }];
         
         [_skillSetView showInView:(UIView *)_delegate];
@@ -812,7 +815,11 @@ static dispatch_once_t onceToken;
     if(_skillSetView){
         // 点击之后就影藏
         [_skillSetView tappedCancel:NO];
+        _skillSetView = nil;
     }
+}
+-(UIView *)getSkillView{
+    return _skillSetView;
 }
 
 // 用户自定义转人工事件

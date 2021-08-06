@@ -50,11 +50,11 @@
 
 普通版：
 
-下载链接：[iOS_SDK_3.0.0](https://img.sobot.com/mobile/sdk/iOS_SDK_3.0.0.zip)
+下载链接：[iOS_SDK_3.0.1](https://img.sobot.com/mobile/sdk/iOS_SDK_3.0.1.zip)
 
 电商版：
 
-下载链接：[iOS_SDK_3.0.0_电商版](https://img.sobot.com/mobile/sdk/iOS_SDK_3.0.0_MALL.zip)
+下载链接：[iOS_SDK_3.0.1_电商版](https://img.sobot.com/mobile/sdk/iOS_SDK_3.0.1_MALL.zip)
 
 解压[iOS_SDK]，添加必要文件SobotKit.framework和SobotKit.bundle到你的工程里。智齿iOS_SDK 的实现，依赖了一些系统的框架，在开发应用时需要在工程里加入这些框架。开发者首先点击工程右边的工程名，然后在工程名右边依次选择TARGETS -> BuiLd Phases -> Link Binary With Libraries，展开 LinkBinary With Libraries后点击展开后下面的 + 来添加下面的依赖项:
 
@@ -842,8 +842,10 @@ eg：
 ZCKitInfo *kitInfo=[ZCKitInfo new]; 
 //  聊天页面底部加号中功能：隐藏评价，默认NO(不隐藏)
 kitInfo.hideMenuSatisfaction = YES;
-// 聊天页面底部加号中功能：隐藏留言，默认NO(不隐藏)
+// 聊天页面底部加号中功能：隐藏留言(机器人和人工)，默认NO(不隐藏)
 kitInfo.hideMenuLeave = YES;
+// 聊天页面底部加号中功能：隐藏留言(仅人工)，默认NO(不隐藏)
+kitInfo.hideMenuManualLeave = YES;
 // 聊天页面底部加号中功能：隐藏图片，默认NO(不隐藏)
 kitInfo.hideMenuPicture = YES;
 // 隐藏拍摄，默认NO(不隐藏)
@@ -862,6 +864,16 @@ kitInfo.hideMenuFile = YES;
 
 ![图片](https://img.sobot.com/mobile/sdk/images/i_4_3_4_1.png)
 
+在SDK中隐藏留言功能  
+
+```js  
+
+// 聊天页面底部加号中功能：隐藏留言(机器人和人工)，默认NO(不隐藏)
+kitInfo.hideMenuLeave = YES;
+// 聊天页面底部加号中功能：隐藏留言(仅人工)，默认NO(不隐藏)
+kitInfo.hideMenuManualLeave = YES;
+
+```
 
 ### 4.3.2 留言页面用户信息自定义配置  
 留言中的邮箱、电话、附件这三个参数的校验和显示逻辑可在pc端console页面配置。
@@ -1750,7 +1762,8 @@ _kitInfo.hideManualEvaluationLabels = YES;
 | orderGoodsInfo   | ZCOrderGoodsModel   | 需要发送的订单信息 ，配合 autoSendOrderMessage 使用   |    |
 | leaveCompleteCanReply   | BOOL   | 留言完成后，是否 显示 回复按钮   | 默认为 yes  , 可以回复   |
 | hideMenuSatisfaction   | BOOL   | 聊天页面底部加号中功能：隐藏评价   | 默认NO(不隐藏) |
-| hideMenuLeave   | BOOL   | 聊天页面底部加号中功能隐藏留言   | 默认NO(不隐藏) |
+| hideMenuLeave   | BOOL   | 聊天页面底部加号留言(人工和机器人)   | 默认NO(不隐藏) |
+| hideMenuManualLeave   | BOOL   | 聊天页面底部加号中留言(仅人工)   | 默认NO(不隐藏) |
 | hideMenuPicture   | BOOL   | 聊天页面底部加号中功能：隐藏图片   | 默认NO(不隐藏)|
 | hideMenuCamera   | BOOL   | 聊天页面底部加号中功能：隐藏拍摄   | 默认NO(不隐藏) |
 | hideMenuFile   | BOOL   | 聊天页面底部加号中功能：隐藏文件   | 默认NO(不隐藏)  |
@@ -1860,6 +1873,8 @@ _kitInfo.hideManualEvaluationLabels = YES;
 | robot_alias   | NSString   | 对接机器人别名,如果设置此值每次都需要设置robotid为空   |    |
 | platform_userid   | NSString   | 平台通道参数，初始化成功后会自动赋值   |    |
 | platform_key   | NSString   | 私钥   |    |
+| sign   | NSString   | 签名 MD5（app_key+partnerid+secret+create_time）   | 需要自己签名时使用   |
+| create_time   | NSString   | 签名使用的时间戳   |    |
 
 电商版：
 
@@ -1928,9 +1943,9 @@ _kitInfo.hideManualEvaluationLabels = YES;
 | default_language   | NSString   | 默认语言,不指定不识别系统语言默认英语，en_lproj   | 不识别时才使用   |
 | absolute_language   | NSString   | 指定语言，不跟随系统语言自动切换   |    |
 
-## 6 资源库源码
+## 6 智齿SDK资源库源码和功能体验Demo
       智齿 iOS_SDK [UI源码](https://github.com/ZCSDK/sobotKit_UI_iOS);  
-      智齿SDK功能使用体验[APP下载](https://apps.apple.com/us/app/id1507872824) [使用视频引导](https://img.sobot.com/mobile/sdk/sobot_sdk_demo_android.mp4)
+      智齿SDK功能体验Demo[APP下载](https://apps.apple.com/us/app/id1507872824) [使用视频引导](https://img.sobot.com/mobile/sdk/sobot_sdk_demo_android.mp4)
 
 ## 7 常见问题
        常见问题解答：

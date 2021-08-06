@@ -556,7 +556,8 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
     if([ZCUICore getUICore].kitInfo.hideMenuSatisfaction){
         [titles removeObject:menu1];
     }
-    if([ZCUICore getUICore].kitInfo.hideMenuLeave){
+    // 隐藏所有留言，或人工状态隐藏留言
+    if([ZCUICore getUICore].kitInfo.hideMenuLeave || ([ZCUICore getUICore].kitInfo.hideMenuManualLeave && [self getZCLibConfig].isArtificial)){
         [titles removeObject:menu2];
     }
     if([ZCUICore getUICore].kitInfo.hideMenuPicture){
@@ -1210,9 +1211,9 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
     }else if(type == 2){
 //           不显示转人工按钮
         // 设置textview的frame
-        [_zc_chatTextView setFrame:CGRectMake(topGap + 10, (BottomHeight-35)/2, [self getSourceViewWidth]-68 - topGap, 35)];
+        [_zc_chatTextView setFrame:CGRectMake(topGap + 10, (BottomHeight-35)/2, [self getSourceViewWidth]-60 - topGap, 35)];
         // 开启语音的功能   机器人开启语音识别
-        if ([ZCUITools zcgetOpenRecord] && [ZCUICore getUICore].kitInfo.isOpenRobotVoice) {
+        if ([ZCUITools zcgetOpenRecord] && [ZCUICore getUICore].kitInfo.isOpenRobotVoice && [self getZCLibConfig].isArtificial) {
             
             [_zc_chatTextView setFrame:CGRectMake(topGap + 48 , (BottomHeight-35)/2, [self getSourceViewWidth]-48-5 - topGap, 35)];
             _zc_chatTextView.textContainerInset =  UIEdgeInsetsMake(10, 10, 10, 10 );
@@ -1342,11 +1343,8 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
     // 如果是延迟转人工，设置键盘样式为仅机器人样式
     if([ZCUICore getUICore].isAfterConnectUser && ![self getZCLibConfig].isArtificial){
         status = ZCKeyboardStatusRobot;
-        if([self getZCLibConfig].type == 2){
-            [self setServiceModeView:2];
-        }
     }
-//    status = NEWSESSION_KEYBOARD_STATUS;
+    
     switch (status) {
 #pragma mark -- 人工 ***************************************************************************************
         case ZCKeyboardStatusUser:
@@ -1426,6 +1424,15 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
             // 排队键盘样式
             _zc_addMoreButton.hidden    = NO;
             _zc_turnButton.hidden       = NO;
+            // 仅人工，不显示转人工按钮
+            if([self getZCLibConfig].type == 2){
+                _zc_turnButton.hidden       = YES;
+                
+                [_zc_chatTextView setFrame:CGRectMake(topGap + 10, (BottomHeight-35)/2, [self getSourceViewWidth]-60 - topGap, 35)];
+                
+                [_zc_waitLabel setFrame:CGRectMake(topGap + 10, (BottomHeight-35)/2, [self getSourceViewWidth]-60 - topGap, 35)];
+                
+            }
             _zc_waitLabel.hidden        = NO;
             
             if ([ZCUICore getUICore].delegate && [[ZCUICore getUICore].delegate respondsToSelector:@selector(onPageStatusChanged: message: obj:)]) {
@@ -1481,6 +1488,12 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
             });
 
             break;
+    }
+    // 如果是延迟转人工，设置键盘样式为仅机器人样式
+    if([ZCUICore getUICore].isAfterConnectUser && ![self getZCLibConfig].isArtificial){
+        if([self getZCLibConfig].type == 2){
+            [self setServiceModeView:2];
+        }
     }
     [self setKeyboardRTLFrame];
     
@@ -2115,7 +2128,7 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
         NSString * size =  [NSString stringWithFormat:@"%.2f",data.length*1.0/1024];
         if ([size intValue] > 1024*50) {
             // 弹提示
-            [[ZCUIToastTools shareToast] showToast:ZCSTLocalString(@"不能上传50M以上的文件") duration:2.0f view:_ppView position:ZCToastPositionCenter];
+            [[ZCUIToastTools shareToast] showToast:ZCSTLocalString(@"不能上传50M以上的文件") duration:2.0f view:_zc_sourceView position:ZCToastPositionCenter];
             return;
         }
         
@@ -2534,6 +2547,7 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
         if([self getZCLibConfig].isArtificial && [self getZCLibConfig].msgToTicketFlag == 2){
             // 2.8.9人工状态，留言转离线消息，不处理
         }else{
+            
             [titleArray addObject:ZCSTLocalString(@"留言")];
             [tagArr addObject:[NSString stringWithFormat:@"%zd",BUTTON_LEAVEMESSAGE]];
         }
