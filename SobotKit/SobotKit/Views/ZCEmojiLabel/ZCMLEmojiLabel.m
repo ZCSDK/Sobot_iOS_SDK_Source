@@ -540,6 +540,7 @@ static inline CGFloat TTTFlushFactorForTextAlignment(NSTextAlignment textAlignme
         //如果是String，必须通过setText:afterInheritingLabelAttributesAndConfiguringWithBlock:来添加一些默认属性，例如字体颜色。这是TTT的做法，不可避免
         if([text isKindOfClass:[NSString class]]){
             mutableAttributedString = [self mutableAttributeStringWithEmojiText:[[NSAttributedString alloc] initWithString:text]];
+//            mutableAttributedString = [self mutableAttributeStringWithEmojiText:[[NSAttributedString alloc] initWithData:[text dataUsingEncoding:NSUnicodeStringEncoding]  options:@{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType}  documentAttributes:nil error:nil]];
             //这里面会调用 self setText:，所以需要做个标记避免下无限循环
             self.ignoreSetText = YES;
             [super setText:mutableAttributedString afterInheritingLabelAttributesAndConfiguringWithBlock:nil];

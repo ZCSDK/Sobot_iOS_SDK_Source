@@ -298,57 +298,42 @@
     
 #pragma mark 标题+内容
     NSString *text = zcLibConvertToString([model getModelDisplayText]);
-    if (text.length == 0) {
-//        NSLog(@"xxx");
-    }
-    
-    [ZCHtmlCore filterHtml:text result:^(NSString * _Nonnull text1, NSMutableArray * _Nonnull arr, NSMutableArray * _Nonnull links) {
-
-//        if(arr.count > 0 || links.count > 0){
-            if (self.isRight) {
-                if (text1 != nil && text1.length > 0) {
-                    NSMutableAttributedString *attr;
-                    
-
-                        attr = [ZCHtmlFilter setHtml:text1 attrs:arr view:_lblTextMsg textColor:[ZCUITools zcgetRightChatTextColor] textFont:[ZCUITools zcgetKitChatFont] linkColor:[ZCUITools zcgetChatRightlinkColor]];
-                    
-                    
-                    if(zcLibConvertToString(model.richModel.question).length > 0){
-                        NSRange r = [text1 rangeOfString:zcLibConvertToString(model.richModel.question)];
-
-                        [attr addAttribute:NSForegroundColorAttributeName value:[ZCUITools zcgetRightChatTextColor] range:r];
-                        
-                    }
-                }else{
-                    _lblTextMsg.attributedText =   [[NSAttributedString alloc] initWithString:@""];
-                }
-            }else{
+    if(text.length == 0){
+        _lblTextMsg.text = @"";
+    }else{
+        UIColor *textColor = [ZCUITools zcgetLeftChatTextColor];
+        UIColor *linkColor = [ZCUITools zcgetChatLeftLinkColor];
+        if([ZCChatBaseCell isRightChat:model]){
+            textColor = [ZCUITools zcgetRightChatTextColor];
+            linkColor = [ZCUITools zcgetChatRightlinkColor];
+        }
+        if(model.displayMsgAttr!=nil){
+            [ZCChatBaseCell setDisplayAttributedString:model.displayMsgAttr label:_lblTextMsg isRight:[ZCChatBaseCell isRightChat:model]];
+            
+        }else{
+            [ZCHtmlCore filterHtml:text result:^(NSString * _Nonnull text1, NSMutableArray * _Nonnull arr, NSMutableArray * _Nonnull links) {
                 if (text1 != nil && text1.length > 0) {
                     NSMutableAttributedString *attr;
 //                    NSString *sugesstionText = zcLibConvertToString([model isRobotGuide]);
-                    
+                    UIFont *font = [ZCUITools zcgetKitChatFont];
                     if(model.isRobotGuide){
-                        attr   =  [ZCHtmlFilter setHtml:text1 attrs:arr view:_lblTextMsg textColor:[ZCUITools zcgetLeftChatTextColor] textFont:ZCUIFontBold14 linkColor:[ZCUITools zcgetChatLeftLinkColor]];
-                    }else{
-                        attr =  [ZCHtmlFilter setHtml:text1 attrs:arr view:_lblTextMsg textColor:[ZCUITools zcgetLeftChatTextColor] textFont:[ZCUITools zcgetKitChatFont] linkColor:[ZCUITools zcgetChatLeftLinkColor]];
+                        font = ZCUIFontBold14;
                     }
+                    attr   =  [ZCHtmlFilter setHtml:text1 attrs:arr view:_lblTextMsg textColor:textColor textFont:font linkColor:linkColor];
                     
                     if(zcLibConvertToString(model.richModel.question).length > 0){
                         NSRange r = [text1 rangeOfString:zcLibConvertToString(model.richModel.question)];
 
-                        [attr addAttribute:NSForegroundColorAttributeName value:[ZCUITools zcgetLeftChatTextColor] range:r];
+                        [attr addAttribute:NSForegroundColorAttributeName value:textColor range:r];
                         
                     }
                     _lblTextMsg.attributedText =   attr;
                 }else{
                     _lblTextMsg.attributedText =   [[NSAttributedString alloc] initWithString:@""];
                 }
-            }
-            
-//        }else{
-//            _lblTextMsg.text = text1;
-//        }
-    }];
+            }];
+        }
+    }
     CGSize msgSize = [self.emojiLabel preferredSizeWithMaxWidth:maxWidth];
     
 //    NSLog(@"...%f",size.height);
@@ -388,23 +373,25 @@
     NSString *sugesstionText = zcLibConvertToString([model getModelDisplaySugestionText]);
     if(zcLibConvertToString(sugesstionText).length > 0){
         [self sugesstionLabel].hidden = NO;
-        [ZCHtmlCore filterHtml:sugesstionText result:^(NSString * _Nonnull text1, NSMutableArray * _Nonnull arr, NSMutableArray * _Nonnull links) {
-            if (self.isRight) {
+        UIColor *textColor = [ZCUITools zcgetLeftChatTextColor];
+        UIColor *linkColor = [ZCUITools zcgetChatLeftLinkColor];
+        if([ZCChatBaseCell isRightChat:model]){
+            textColor = [ZCUITools zcgetRightChatTextColor];
+            linkColor = [ZCUITools zcgetChatRightlinkColor];
+        }
+        if(model.displaySugestionattr!=nil){
+//            NSMutableAttributedString* attributedString = [model.displaySugestionattr mutableCopy];
+            [ZCChatBaseCell setDisplayAttributedString:model.displaySugestionattr label:[self sugesstionLabel] isRight:[ZCChatBaseCell isRightChat:model]];
+            
+        }else{
+            [ZCHtmlCore filterHtml:[model getModelDisplaySugestionText] result:^(NSString * _Nonnull text1, NSMutableArray * _Nonnull arr, NSMutableArray * _Nonnull links) {
                 if (text1 != nil && text1.length > 0) {
-                    [ZCHtmlFilter setGuideHtml:text1 attrs:arr view:[self sugesstionLabel] textColor:[ZCUITools zcgetRightChatTextColor] textFont:[ZCUITools zcgetKitChatFont] linkColor:[ZCUITools zcgetChatRightlinkColor]];
+                    [self sugesstionLabel].attributedText =    [ZCHtmlFilter setGuideHtml:text1 attrs:arr view:[self sugesstionLabel] textColor:textColor textFont:[ZCUITools zcgetKitChatFont] linkColor:linkColor];
                 }else{
                     [self sugesstionLabel].attributedText =   [[NSAttributedString alloc] initWithString:@""];
                 }
-
-            }else{
-                if (text1 != nil && text1.length > 0) {
-                    [ZCHtmlFilter setGuideHtml:text1 attrs:arr view:[self sugesstionLabel] textColor:[ZCUITools zcgetLeftChatTextColor] textFont:[ZCUITools zcgetKitChatFont] linkColor:[ZCUITools zcgetChatLeftLinkColor]];
-                }else{
-                    [self sugesstionLabel].attributedText =   [[NSAttributedString alloc] initWithString:@""];
-                }
-
-            }
-        }];
+            }];
+        }
 
 
         CGSize sugesstionSize = [self.sugesstionLabel preferredSizeWithMaxWidth:maxWidth];
@@ -812,14 +799,24 @@
     }
     
     tempLabel.font = [ZCUITools zcgetKitChatFont];
-    
-    [ZCHtmlCore filterHtml:[model getModelDisplayText] result:^(NSString * _Nonnull text1, NSMutableArray * _Nonnull arr, NSMutableArray * _Nonnull links) {
-        if (text1 != nil && text1.length > 0) {
-            tempLabel.attributedText =    [ZCHtmlFilter setHtml:text1 attrs:arr view:tempLabel textColor:[ZCUITools zcgetLeftChatTextColor] textFont:[ZCUITools zcgetKitChatFont] linkColor:[ZCUITools zcgetChatLeftLinkColor]];
-        }else{
-            tempLabel.attributedText =   [[NSAttributedString alloc] initWithString:@""];
-        }
-    }];
+
+    if(model.displayMsgAttr!=nil){
+        [ZCChatBaseCell setDisplayAttributedString:model.displayMsgAttr label:tempLabel isRight:[ZCChatBaseCell isRightChat:model]];
+        
+    }else{
+        
+        [ZCHtmlCore filterHtml:[model getModelDisplayText] result:^(NSString * _Nonnull text1, NSMutableArray * _Nonnull arr, NSMutableArray * _Nonnull links) {
+            if (text1 != nil && text1.length > 0) {
+                UIFont *font = [ZCUITools zcgetKitChatFont];
+                if(model.isRobotGuide){
+                    font = ZCUIFontBold14;
+                }
+                tempLabel.attributedText =    [ZCHtmlFilter setHtml:text1 attrs:arr view:tempLabel textColor:[ZCUITools zcgetLeftChatTextColor] textFont:font linkColor:[ZCUITools zcgetChatLeftLinkColor]];
+            }else{
+                tempLabel.attributedText =   [[NSAttributedString alloc] initWithString:@""];
+            }
+        }];
+    }
     
     
 //    cellheith = cellheith + 12;
@@ -853,13 +850,27 @@
     cellheith = cellheith + msgSize.height + 10 + Spaceheight;
     if(zcLibConvertToString([model getModelDisplaySugestionText]).length > 0){
         tempLabel.text = nil;
-        [ZCHtmlCore filterHtml:[model getModelDisplaySugestionText] result:^(NSString * _Nonnull text1, NSMutableArray * _Nonnull arr, NSMutableArray * _Nonnull links) {
-            if (text1 != nil && text1.length > 0) {
-                tempLabel.attributedText =    [ZCHtmlFilter setGuideHtml:text1 attrs:arr view:tempLabel textColor:[ZCUITools zcgetLeftChatTextColor] textFont:[ZCUITools zcgetKitChatFont] linkColor:[ZCUITools zcgetChatLeftLinkColor]];
-            }else{
-                tempLabel.attributedText =   [[NSAttributedString alloc] initWithString:@""];
+        
+        if(model.displaySugestionattr!=nil){
+            
+            UIColor *textColor = [ZCUITools zcgetLeftChatTextColor];
+            UIColor *linkColor = [ZCUITools zcgetChatLeftLinkColor];
+            if([ZCChatBaseCell isRightChat:model]){
+                textColor = [ZCUITools zcgetRightChatTextColor];
+                linkColor = [ZCUITools zcgetChatRightlinkColor];
             }
-        }];
+//            NSMutableAttributedString* attributedString = [model.displaySugestionattr mutableCopy];
+            [ZCChatBaseCell setDisplayAttributedString:model.displaySugestionattr label:tempLabel isRight:[ZCChatBaseCell isRightChat:model]];
+            
+        }else{
+            [ZCHtmlCore filterHtml:[model getModelDisplaySugestionText] result:^(NSString * _Nonnull text1, NSMutableArray * _Nonnull arr, NSMutableArray * _Nonnull links) {
+                if (text1 != nil && text1.length > 0) {
+                    tempLabel.attributedText =    [ZCHtmlFilter setGuideHtml:text1 attrs:arr view:tempLabel textColor:[ZCUITools zcgetLeftChatTextColor] textFont:[ZCUITools zcgetKitChatFont] linkColor:[ZCUITools zcgetChatLeftLinkColor]];
+                }else{
+                    tempLabel.attributedText =   [[NSAttributedString alloc] initWithString:@""];
+                }
+            }];
+        }
         // 文本高度
         CGSize msgSize1 = [tempLabel preferredSizeWithMaxWidth:maxWidth];
         

@@ -190,4 +190,12 @@
  **/
 +(CGFloat )getStatusHeight:(ZCLibMessage *) messageModel;
 
+
+
+/// 设置字符串到UILabel中
+/// @param attr 要设置的字符串
+/// @param label ZCMLEmojiLabel
+/// @param isRight 方向，根据方向设置颜色
++(void)setDisplayAttributedString:(NSMutableAttributedString *) attr label:(UILabel *) label isRight:(BOOL) isRight;
+
 @end

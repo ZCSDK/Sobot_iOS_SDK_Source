@@ -50,11 +50,11 @@
 
 普通版：
 
-下载链接：[iOS_SDK_3.0.1](https://img.sobot.com/mobile/sdk/iOS_SDK_3.0.1.zip)
+下载链接：[iOS_SDK_3.0.2](https://img.sobot.com/mobile/sdk/iOS_SDK_3.0.2.zip)
 
 电商版：
 
-下载链接：[iOS_SDK_3.0.1_电商版](https://img.sobot.com/mobile/sdk/iOS_SDK_3.0.1_MALL.zip)
+下载链接：[iOS_SDK_3.0.2_电商版](https://img.sobot.com/mobile/sdk/iOS_SDK_3.0.2_MALL.zip)
 
 解压[iOS_SDK]，添加必要文件SobotKit.framework和SobotKit.bundle到你的工程里。智齿iOS_SDK 的实现，依赖了一些系统的框架，在开发应用时需要在工程里加入这些框架。开发者首先点击工程右边的工程名，然后在工程名右边依次选择TARGETS -> BuiLd Phases -> Link Binary With Libraries，展开 LinkBinary With Libraries后点击展开后下面的 + 来添加下面的依赖项:
 
@@ -1725,7 +1725,24 @@ _kitInfo.hideManualEvaluationLabels = YES;
     }];
 
 ```
+### 4.7.10 安全校验
 
+1.功能位置：在线渠道设置-渠道安全设置-安全秘钥设置-勾选“生效范围（APP)"。
+
+2、开启生效范围APP“安全密钥”功能后，sdk渠道必须传partnerid参数。且对接时传参增加参数“sign”和“createTime”，其中，sign=“MD5（app_key+partnerid+密钥+createTime）”，createTime是unix毫秒时间戳；secret长度为32的字符串，createTime是毫秒级时间戳。
+
+3、传入参数后智齿会对sign进行解密，验证传入的partnerid与sign中传入的partnerid是否一致，若一致则正常接入智齿系统，若不一致则接入失败。若客户没有传partnerid或sign，则视同非法用户，接入失败；若createTime与当前时间相差超过5分钟，则是为非法用户，接入失败。
+
+4、APP“安全密钥”的功能开启和关闭，生效范围的设置是实时生效的。
+
+```js
+  //启动智齿页面时传入下边两个参数
+  //毫秒级时间戳
+  _libInitInfo.create_time = @"毫秒时间戳";//[ZCSobotApi zcGetCurrentTimes];
+  //签名md5之后的字符串
+  _libInitInfo.sign = @"md5(xx.xx.xx.xx)";
+    
+```
 
 ## 5 配置类属性说明
 ## 5.1 ZCKitInfo类说明（UI相关配置）

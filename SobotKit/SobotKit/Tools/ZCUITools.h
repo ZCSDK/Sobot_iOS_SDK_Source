@@ -33,6 +33,7 @@ typedef NS_ENUM(NSUInteger,ZCThemeStyle){
 // 设置模型的显示内容
 +(void)zcModelStringToAttributeString:(id ) temModel;
 
++(NSString *) getHexStringByColor:(UIColor *) color;
 
 +(NSDictionary *) getZCThemeColors:(ZCThemeStyle) themeStyle;
 

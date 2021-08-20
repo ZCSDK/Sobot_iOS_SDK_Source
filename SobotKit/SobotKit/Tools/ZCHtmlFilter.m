@@ -299,4 +299,86 @@
 }
 
 
++(void) addChatTextToLabel:(UILabel *)label text:(NSString *)text chatLayout:(BOOL) isRight result:(nonnull void (^)(NSMutableAttributedString * _Nonnull))attrBlock{
+    UIFont *textFont = [ZCUITools zcgetKitChatFont];
+    UIColor *textColor = [ZCUITools zcgetLeftChatTextColor];
+    UIColor *linkColor = [ZCUITools zcgetChatLeftLinkColor];
+    if(isRight){
+        textColor = [ZCUITools zcgetRightChatTextColor];
+        linkColor = [ZCUITools zcgetChatRightlinkColor];
+    }
+    
+    return [self addTextToLabel:label text:text textColor:textColor textFont:textFont linkColor:linkColor result:attrBlock];
+}
+
++(void) addTextToLabel:(UILabel *)label text:(NSString *)text textColor:(UIColor *)textColor textFont:(UIFont *)textFont linkColor:(UIColor *)linkColor  result:(void(^)(NSMutableAttributedString *attr)) attrBlock{
+    
+    [label setTextColor:textColor];
+    if(zcLibConvertToString(text).length == 0){
+        return;
+    }
+    
+    NSString *html = [self getFormatHTML:text textColor:textColor textFont:textFont linkColor:linkColor];
+    // 先处理 ZCMLEmojiLabel 正则的匹配
+    if ([label isKindOfClass:[ZCMLEmojiLabel class]]) {
+        [((ZCMLEmojiLabel *)label) setLinkColor:linkColor];
+
+        [((ZCMLEmojiLabel *)label) setText:[[NSAttributedString alloc] initWithData:[html dataUsingEncoding:NSUnicodeStringEncoding]
+                                                                            options:@{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType,NSFontAttributeName:[UIFont systemFontOfSize:14], }
+                                                                 documentAttributes:nil
+                                                                              error:nil]];
+    }
+    else{
+        label.attributedText = [[NSAttributedString alloc] initWithData:[html dataUsingEncoding:NSUnicodeStringEncoding]
+                                                                       options:@{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType,NSFontAttributeName:[UIFont systemFontOfSize:10],NSForegroundColorAttributeName:UIColor.greenColor }
+                                                            documentAttributes:nil
+                                                                         error:nil];
+    }
+    if(attrBlock){
+        attrBlock([label.attributedText mutableCopy]);
+    }
+}
+
++(NSString *) getFormatHTML:(NSString *) text  textColor:(UIColor *)textColor textFont:(UIFont *)textFont linkColor:(UIColor *)linkColor{
+    text = [text stringByReplacingOccurrencesOfString:@"\n" withString:@"<br/>"];
+    
+    // 追加样式
+    NSString *html = @"<style>";
+    if(textColor && textFont){
+        html = [html stringByAppendingFormat:@"body{ font-family:'%@'; font-size:%fpx;color:%@; margin:0px; padding:0px;line-height:%fpx;}",textFont.fontName,textFont.pointSize,[ZCUITools getHexStringByColor:textColor],[ZCUITools zcgetChatLineSpacing]];
+    }
+    if(linkColor){
+        html = [html stringByAppendingFormat:@"a{color:%@}",[ZCUITools getHexStringByColor:linkColor]];
+    }
+    html = [html stringByAppendingString:@"</style>"];
+    
+    html = [html stringByAppendingString:text];
+    return html;
+}
+
++(NSMutableAttributedString *) createMutalText:(NSString *)text textColor:(UIColor *)textColor textFont:(UIFont *)textFont linkColor:(UIColor *)linkColor{
+    // 追加样式
+    NSString *html = [self getFormatHTML:text textColor:textColor textFont:textFont linkColor:linkColor];
+    
+    
+    NSMutableAttributedString* attributedString = [[NSMutableAttributedString alloc] initWithData:[html dataUsingEncoding:NSUnicodeStringEncoding] options:@{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType}  documentAttributes:nil error:nil];
+    
+    [attributedString beginEditing];
+    
+    // 文本段落排版格式
+    NSMutableParagraphStyle *textStyle = [[NSMutableParagraphStyle alloc] init];
+    textStyle.lineBreakMode = NSLineBreakByWordWrapping; // 结尾部分的内容以……方式省略
+    textStyle.lineSpacing = [ZCUITools zcgetChatLineSpacing]; // 字体的行间
+    
+    NSMutableDictionary *textAttributes = [[NSMutableDictionary alloc] init];
+    // NSParagraphStyleAttributeName 文本段落排版格式
+    [textAttributes setValue:textStyle forKey:NSParagraphStyleAttributeName];
+    // 设置段落样式
+    [attributedString addAttributes:textAttributes range:NSMakeRange(0, attributedString.length)];
+    
+    [attributedString endEditing];
+    return attributedString;
+}
+
+
 @end

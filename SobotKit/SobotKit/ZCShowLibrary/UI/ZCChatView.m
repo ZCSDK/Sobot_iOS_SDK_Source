@@ -403,6 +403,7 @@
         if(status == ZCInitStatusCompleteNoMore){
             _isNoMore = YES;
         }
+//        self.listTable.hidden = YES;
         [_listTable reloadData];
         
         if(self.refreshControl.refreshing){
@@ -410,6 +411,17 @@
             
             isScrollBtm = true;
         }else{
+//            isScrollBtm = true;
+//            // 解决频繁刷新白屏问题
+//            if ([ZCUICore getUICore].chatMessages.count > 1){
+//                // 动画之前先滚动到倒数第二个消息
+//                [self.listTable scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:[ZCUICore getUICore].chatMessages.count - 2 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:NO];
+//            }
+//            self.listTable.hidden = NO;
+//            // 添加向上顶出最后一个消息的动画
+//            [self.listTable scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:[ZCUICore getUICore].chatMessages.count - 1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+
+            // 上面代码替换
             [self scrollTableToBottom];
         }
         
@@ -2036,18 +2048,8 @@
 
 -(UIButton *)socketStatusButton{
     if(!_socketStatusButton){
-        CGFloat SSY = NavBarHeight-44;
-        if (!_hideTopViewNav) {
-         
-//            if (ZC_iPhoneX) {
-//                SSY = 44;
-//            } else {
-                SSY =20;
-//            }
-            
-        }
         _socketStatusButton=[UIButton buttonWithType:UIButtonTypeCustom];
-        [_socketStatusButton setFrame:CGRectMake(60, SSY, viewWidth-120, 44)];
+//        [_socketStatusButton setFrame:CGRectMake(60, SSY, CGRectGetWidth(self.frame)-120, 44)];
         [_socketStatusButton.imageView setContentMode:UIViewContentModeScaleAspectFit];
         [_socketStatusButton setBackgroundColor:[ZCUITools zcgetBgBannerColor]];
         if ([ZCUICore getUICore].kitInfo.topViewBgColor != nil) {
@@ -2058,16 +2060,20 @@
         [_socketStatusButton.titleLabel setFont:[ZCUITools zcgetTitleFont]];
         [_socketStatusButton setContentHorizontalAlignment:UIControlContentHorizontalAlignmentCenter];
         
-        if (_superController.navigationController.navigationBarHidden) {
-            [self addSubview:_socketStatusButton];
+        
+        CGFloat SSY = NavBarHeight;
+        if (!self.superController.navigationController.navigationBarHidden) {
+            SSY = 0;
         }
-             
+        [_socketStatusButton setFrame:CGRectMake(0, SSY, CGRectGetWidth(self.frame), 40)];
+        [self addSubview:_socketStatusButton];
+        
         _socketStatusButton.hidden=YES;
         
         UIActivityIndicatorView *_activityView=[[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
         _activityView.hidden=YES;
         _activityView.tag = 1;
-        _activityView.center = CGPointMake(_socketStatusButton.frame.size.width/2 - 50, 22);
+        _activityView.center = CGPointMake(_socketStatusButton.frame.size.width/2 - 50, 20);
         [_socketStatusButton addSubview:_activityView];
     }
     return _socketStatusButton;
@@ -2233,10 +2239,10 @@
     CGFloat LW = viewWidth;
     // iphoneX 横屏需要单独处理
     if(direction > 0 && !isiPad){
-        LW = viewWidth - 38;//XBottomBarHeight;
+        LW = viewWidth -  XBottomBarHeight;
     }
     if(direction == 2 && !isiPad){
-        spaceX = 38;//XBottomBarHeight;
+        spaceX = XBottomBarHeight;
     }
     f.origin.x = spaceX;
     // 还原默认的坐标,和默认高度
@@ -2291,8 +2297,9 @@
         }else{
             tf.origin.y   = navTableY - [_keyboardTools getKeyboardHeight] - (_keyboardTools.zc_bottomView.frame.size.height - defaultHeight) + XBottomBarHeight;
         }
-        _listTable.frame  = tf;
-
+        if(!CGRectEqualToRect(tf,_listTable.frame)){
+            _listTable.frame  = tf;
+        }
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             [_listTable setContentOffset:CGPointMake(0, ch-h) animated:NO];
         });
@@ -2303,7 +2310,9 @@
         }else{
             tf.origin.y   = navTableY - [_keyboardTools getKeyboardHeight] - (_keyboardTools.zc_bottomView.frame.size.height-BottomHeight) + XBottomBarHeight + (h - ch);
         }
-        _listTable.frame  = tf;
+        if(!CGRectEqualToRect(tf,_listTable.frame)){
+            _listTable.frame  = tf;
+        }
 
         [_listTable setContentOffset:CGPointMake(0, 0) animated:NO];
     }
@@ -2891,6 +2900,10 @@
         [activityView startAnimating];
         
         isStartConnectSockt = YES;
+        // 机器人时，不显示
+        if(![self getZCIMConfig].isArtificial){
+            btn.hidden = YES;
+        }
         
     }else{
         isStartConnectSockt = NO;
@@ -2903,7 +2916,13 @@
         if(status == ZC_CONNECT_SUCCESS){
             btn.hidden = YES;
         }else{
-            [btn setTitle:[NSString stringWithFormat:@"%@",ZCSTLocalString(@"未连接")] forState:UIControlStateNormal];
+            if([self getZCIMConfig].isArtificial){
+                btn.hidden = NO;
+                [self bringSubviewToFront:btn];
+                [btn setTitle:[NSString stringWithFormat:@"%@",ZCSTLocalString(@"未连接")] forState:UIControlStateNormal];
+            }else{
+                btn.hidden = YES;
+            }
         }
     }
 }

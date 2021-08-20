@@ -176,6 +176,7 @@ static dispatch_once_t onceToken;
         self.delegate = delegate;
         _isCidLoading = NO;
         __weak ZCUICore * safeCore = self;
+        [ZCLibClient getZCLibClient].libInitInfo.isFirstEntry = 1;
         [_apiServer initSobotChat:^(ZCLibConfig *config) {
             isLoadingConfig = NO;
             [ZCLogUtils logHeader:LogHeader debug:@"%@",config];
@@ -374,6 +375,9 @@ static dispatch_once_t onceToken;
         return;
     }
     
+    if([self getLibConfig]==nil || zcLibConvertToString([self getLibConfig].uid).length == 0){
+        return;
+    }
     if(zcLibIs_null(_curCid) && _isCidLoading){// 当前cid空  加载过cid数据
         if(_cids!=nil && _cids.count>0){
             _curCid = [_cids lastObject];
@@ -401,9 +405,9 @@ static dispatch_once_t onceToken;
         if(messages && messages.count>0){
             NSIndexSet *indexSet = [NSIndexSet indexSetWithIndexesInRange:
                                     NSMakeRange(0,[messages count])];
-            for(ZCLibMessage *msg in messages){
-                [ZCUITools zcModelStringToAttributeString:msg];
-            }
+//            for(ZCLibMessage *msg in messages){
+//                [ZCUITools zcModelStringToAttributeString:msg];
+//            }
             [weakSelf.listArray insertObjects:messages atIndexes:indexSet];
             
         }
@@ -471,6 +475,9 @@ static dispatch_once_t onceToken;
         return;
     }
     
+    if([self getLibConfig]==nil || zcLibConvertToString([self getLibConfig].uid).length == 0){
+        return;
+    }
     if(zcLibIs_null(_cids)){
         _cids  = [[NSMutableArray alloc] init];
     }else{
@@ -1687,7 +1694,6 @@ static dispatch_once_t onceToken;
 
 #pragma mark -- 网络状态监听
 -(void)onConnectStatusChanged:(ZCConnectStatusCode) status{
-    
     if(self.delegate && [self.delegate respondsToSelector:@selector(onPageStatusChanged:message:obj:)]){
         [self.delegate onPageStatusChanged:ZCInitStatusConnecting message:[NSString stringWithFormat:@"%d",(int)status] obj:nil];
     }
@@ -2146,10 +2152,6 @@ static dispatch_once_t onceToken;
         [_tipTimer invalidate];
     }
     
-    if(_delegate){
-        _delegate   = nil;
-    }
-    
     [self clearPropertyData];
     
     // 清理本地存储文件
@@ -2293,6 +2295,8 @@ static dispatch_once_t onceToken;
     }
     isLoadingConfig = YES;
     __weak ZCUICore *safeSelf = self;
+    // 0时不验证create_time超时时间
+    [ZCLibClient getZCLibClient].libInitInfo.isFirstEntry = 0;
     [_apiServer initSobotChat:^(ZCLibConfig *config) {
         isLoadingConfig = NO;
         
@@ -2344,10 +2348,21 @@ static dispatch_once_t onceToken;
         
     } error:^(ZCNetWorkCode status,NSString *errorMessage) {
         isLoadingConfig = NO;
+        
         if(zcLibConvertToString(errorMessage).length > 0 && self.delegate!=nil){
-            
             [[ZCUIToastTools shareToast] showToast:errorMessage duration:2.0f view:((UIView *)self.delegate).window position:ZCToastPositionCenter];
+            
+            
+            if(safeSelf.ResultBlock){
+                safeSelf.ResultBlock(ZCInitStatusFail,safeSelf.listArray,zcLibConvertToString(errorMessage).length > 0 ? errorMessage : @"初始化失败");
+            }
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                if (safeSelf.delegate && [safeSelf.delegate respondsToSelector:@selector(onPageStatusChanged:message:obj:)]) {
+                    [safeSelf.delegate onPageStatusChanged:ZCShowStatusGoBack message:nil obj:nil];
+                }
+            });
         }
+        
         if (self.delegate && [self.delegate respondsToSelector:@selector(showSoketConentStatus:)]) {
             [self.delegate showSoketConentStatus:2000];
         }

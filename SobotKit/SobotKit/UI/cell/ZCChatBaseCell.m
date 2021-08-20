@@ -181,7 +181,7 @@
     tempRichLabel.lineBreakMode = NSLineBreakByTruncatingTail;
     tempRichLabel.textColor = [UIColor whiteColor];
     tempRichLabel.backgroundColor = [UIColor clearColor];
-    
+    tempRichLabel.enabledTextCheckingTypes = NSTextCheckingTypeLink;
     //        _lblTextMsg.textInsets = UIEdgeInsetsMake(10, 10, 10, 10);
     
     tempRichLabel.isNeedAtAndPoundSign = NO;
@@ -744,4 +744,55 @@
 
 
 
+
++(void)setDisplayAttributedString:(NSMutableAttributedString *) attr label:(UILabel *) label isRight:(BOOL) isRight{
+    
+    UIColor *textColor = [ZCUITools zcgetLeftChatTextColor];
+    UIColor *linkColor = [ZCUITools zcgetChatLeftLinkColor];
+    if(isRight){
+        textColor = [ZCUITools zcgetRightChatTextColor];
+        linkColor = [ZCUITools zcgetChatRightlinkColor];
+    }
+    NSMutableAttributedString* attributedString = [attr mutableCopy];
+     
+    [attributedString beginEditing];
+    [attributedString enumerateAttribute:NSFontAttributeName inRange:NSMakeRange(0,attributedString.length) options:0 usingBlock:^(id value,NSRange range,BOOL *stop) {
+        UIFont *font = value;
+        // 替换固定默认文字大小
+        if(font.pointSize == 15){
+//            NSLog(@"----替换了字体");
+            [attributedString removeAttribute:NSFontAttributeName range:range];
+            [attributedString addAttribute:NSFontAttributeName value:label.font range:range];
+        }
+    }];
+    [attributedString enumerateAttribute:NSForegroundColorAttributeName inRange:NSMakeRange(0,attributedString.length) options:0 usingBlock:^(id value,NSRange range,BOOL *stop) {
+        UIColor *color = value;
+        NSString *hexColor = [ZCUITools getHexStringByColor:color];
+//                                NSLog(@"***\n%@",hexColor);
+        // 替换固定整体文字颜色
+        if([@"ff0001" isEqual:hexColor]){
+            [attributedString removeAttribute:NSForegroundColorAttributeName range:range];
+            [attributedString addAttribute:NSForegroundColorAttributeName value:textColor range:range];
+        }
+        // 替换固定连接颜色
+        if([@"ff0002" isEqual:hexColor]){
+            [attributedString removeAttribute:NSForegroundColorAttributeName range:range];
+            [attributedString addAttribute:NSForegroundColorAttributeName value:linkColor range:range];
+        }
+    }];
+    
+    // 文本段落排版格式
+    NSMutableParagraphStyle *textStyle = [[NSMutableParagraphStyle alloc] init];
+    textStyle.lineBreakMode = NSLineBreakByWordWrapping; // 结尾部分的内容以……方式省略
+    textStyle.lineSpacing = [ZCUITools zcgetChatLineSpacing]; // 字体的行间
+    
+    NSMutableDictionary *textAttributes = [[NSMutableDictionary alloc] init];
+    // NSParagraphStyleAttributeName 文本段落排版格式
+    [textAttributes setValue:textStyle forKey:NSParagraphStyleAttributeName];
+    // 设置段落样式
+    [attributedString addAttributes:textAttributes range:NSMakeRange(0, attributedString.length)];
+    [attributedString endEditing];
+    
+    label.text = [attributedString copy];
+}
 @end

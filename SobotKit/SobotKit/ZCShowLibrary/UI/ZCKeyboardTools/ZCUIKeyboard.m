@@ -2113,6 +2113,11 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
         NSURL *url = urls[0];
         //        NSString *mate = [self mimeWithString:url];
         //
+        NSString *urlStr = url.absoluteString;
+        if ([urlStr hasPrefix:@"file:///"]) {
+            urlStr = [urlStr stringByReplacingOccurrencesOfString:@"file://" withString:@""];
+        }
+        url = [NSURL URLWithString:urlStr];
         [ZCLogUtils logHeader:LogHeader info:@"%@\n%@\n",url.absoluteString,[self URLDecodedString:url.absoluteString]];
         
         //        [self hideKeyboard];

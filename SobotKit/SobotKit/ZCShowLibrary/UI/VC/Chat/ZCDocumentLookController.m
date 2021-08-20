@@ -298,8 +298,9 @@
 
 //获取文件的总大小(从服务器上获取)
 - (void)getServerFileSize{
+    // 文件的URL 从 richmodel“url”字段获取
     //1. url
-    NSURL *url = [NSURL URLWithString:zcUrlEncodedString(_message.richModel.richmoreurl)];
+    NSURL *url = [NSURL URLWithString:zcUrlEncodedString(_message.richModel.url)];
     //2.request
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     //设置HEAD请求方法
@@ -340,7 +341,7 @@
         
         //比较服务器文件的总大小和本地文件的总大小
         //1. url
-        NSURL *url = [NSURL URLWithString:zcUrlEncodedString(_message.richModel.richmoreurl)];
+        NSURL *url = [NSURL URLWithString:zcUrlEncodedString(_message.richModel.url)];
         //2.request
         NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
         //设置请求头 Range

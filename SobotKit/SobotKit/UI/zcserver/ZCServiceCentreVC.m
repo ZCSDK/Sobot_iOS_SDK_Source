@@ -17,7 +17,6 @@
 #import "ZCServiceListVC.h"
 #import "ZCSCListModel.h"
 #import "ZCToolsCore.h"
-#import "ZCMLEmojiLabel.h"
 
 
 typedef NS_ENUM(NSInteger,ZCLineType) {
@@ -36,7 +35,7 @@ typedef NS_ENUM(NSInteger,ZCLineType) {
 typedef BOOL(^LinkClickBlock)(NSString *linkUrl);
 typedef void (^PageLoadBlock)(id object,ZCPageBlockType type);
 
-@interface ZCServiceCentreVC ()<ZCMLEmojiLabelDelegate>{
+@interface ZCServiceCentreVC (){
     // 屏幕宽高
 //    CGFloat                     viewWidth;
 //    CGFloat                     viewHeigth;
@@ -160,117 +159,6 @@ typedef void (^PageLoadBlock)(id object,ZCPageBlockType type);
     
     
     [self loadData];
-    
-//    zcTestLocalString(@"关闭");
-    ZCMLEmojiLabel *label = [[ZCMLEmojiLabel alloc] initWithFrame:CGRectZero];
-    [label setFrame:CGRectMake(10, 88, ScreenWidth - 20, 500)];
-    [label setBackgroundColor:UIColor.lightGrayColor];
-    label.enabledTextCheckingTypes = NSTextCheckingTypeLink;
-    label.numberOfLines = 0;
-    // 颜色和字体无效
-    label.font = ZCUIFontBold18;
-    label.textColor = UIColor.greenColor;
-    [label setLinkColor:UIColor.redColor];
-//    [self.view addSubview:label];
-    label.delegate = self;
-    label.text = [[NSAttributedString alloc] initWithData:[[self getHtmlString]
-                                                           dataUsingEncoding:NSUnicodeStringEncoding]
-                                                  options:@{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType,NSFontAttributeName:ZCUIFont14 }
-                                       documentAttributes:nil
-                                                    error:nil];
-    
-    NSMutableAttributedString* attributedString = [label.attributedText mutableCopy];
-     
-    [attributedString beginEditing];
-    [attributedString enumerateAttribute:NSForegroundColorAttributeName inRange:NSMakeRange(0,attributedString.length) options:0 usingBlock:^(id value,NSRange range,BOOL *stop) {
-        UIColor *color = value;
-        NSLog(@"***\n%@\n%@",color,[self hexadecimalFromUIColor:color]);
-        if([@"000000" isEqual:[self hexadecimalFromUIColor:color]]){
-            
-//            [attributedString removeAttribute:NSFontAttributeName range:range];
-//            [attributedString addAttribute:NSForegroundColorAttributeName value:UIColor.greenColor range:range];
-        }
-//        [attributedString removeAttribute:NSFontAttributeName range:range];
-//        [attributedString addAttribute:NSFontAttributeName value:ZCUIFontBold18 range:range];
-//        [attributedString addAttribute:NSForegroundColorAttributeName value:UIColor.greenColor range:range];
-    }];
-    [attributedString endEditing];
-     
-    label.text = [attributedString copy];
-    
-    
-    //HTML文本 包含图片、文本
-    NSString *htmlString=@"<img src=\"http://upload-images.jianshu.io/upload_images/937405-50a8ad2d8866fc12.png\" />  花羊羊领取了你的<font color = \"red\"><a>红包</a></font>";
-    UILabel *labelTest=[[UILabel alloc] initWithFrame:CGRectMake(50, 600, 220, 20)];
-//    [self.view addSubview:labelTest];
-    UIFont *font=[UIFont systemFontOfSize:14];
-    labelTest.font=font;
-    NSDictionary *optoins=@{NSDocumentTypeDocumentAttribute:NSHTMLTextDocumentType,
-                                NSFontAttributeName:font};
-    NSData *data=[htmlString dataUsingEncoding:NSUnicodeStringEncoding];
-    NSAttributedString *attributeString=[[NSAttributedString alloc] initWithData:data
-                                                                         options:optoins
-                                                              documentAttributes:nil
-                                                                           error:nil];
-    labelTest.attributedText=attributeString;
-}
--(NSString *)hexadecimalFromUIColor: (UIColor*) color {
-      if(CGColorGetNumberOfComponents(color.CGColor) < 4) {
-          const CGFloat *components =CGColorGetComponents(color.CGColor);
-          color = [UIColor colorWithRed:components[0]
-          green:components[0]
-         blue:components[0]
-         alpha:components[1]];
-
-    }
-          if(CGColorSpaceGetModel(CGColorGetColorSpace(color.CGColor)) !=kCGColorSpaceModelRGB) {
-
-          return [NSString stringWithFormat:@"#FFFFFF"];
-
-    }
-      NSString *r,*g,*b;
-      (int)((CGColorGetComponents(color.CGColor))[0]*255.0) == 0?(r =[NSString stringWithFormat:@"0%x",(int)     ((CGColorGetComponents(color.CGColor))[0]*255.0)]):(r= [NSString stringWithFormat:@"%x",(int)((CGColorGetComponents(color.CGColor))[0]*255.0)]);
-
-      (int)((CGColorGetComponents(color.CGColor))[1]*255.0)== 0?(g = [NSString stringWithFormat:@"0%x",(int)((CGColorGetComponents(color.CGColor))[1]*255.0)]):(g= [NSString stringWithFormat:@"%x",(int)((CGColorGetComponents(color.CGColor))[1]*255.0)]);
-
-      (int)((CGColorGetComponents(color.CGColor))[2]*255.0)== 0?(b = [NSString stringWithFormat:@"0%x",(int)((CGColorGetComponents(color.CGColor))[2]*255.0)]):(b= [NSString stringWithFormat:@"%x",(int)((CGColorGetComponents(color.CGColor))[2]*255.0)]);
-       
-      return [NSString stringWithFormat:@"%@%@%@",r,g,b];
-}
-
--(NSString *)getHtmlString{
-    
-    //HTML文本 包含图片、文本
-//    return @"<img src=\"http://upload-images.jianshu.io/upload_images/937405-50a8ad2d8866fc12.png\" />  花羊羊领取了你的<font color = \"red\"><a>红包</a></font>";
-   
-    // <style>body{color:rgb(149, 155, 52);}a{color:red;}</style>
-    NSString *htmlString = @"<style>a{color:#FF9933;}</style><p>\
-    撒<span style=\"font-size: 24px;\">地方看见的看老</span>师；&nbsp;\
-</p>\
-<p>\
-    撒地<span style=\"color: rgb(149, 55, 52);\">方哭了；回家；阿克苏的</span>风景saf\
-</p>\
-<p>\
-    阿斯顿<span style=\"font-size: 36px;\">发哭了；就撒多了；看风</span>景\
-</p>\
-<p>\
-    阿斯顿发就哭了；<span style=\"background-color: rgb(227, 108, 9);\">阿斯顿九分裤asd发就哭了；</span>安静阿斯顿发\
-</p>\
-<p>\
-    阿<strong>斯顿发哭；阿苏勒打开</strong>肌肤；<img src=\"https://www.jb51.cc/qrcode.jpg\"/>asd玩儿ewr http://www.baidu.com weqrvc、\
-</p>\
-<p>\
-    233<span style=\"text-decoration: underline;\">432前5就流口水积分卡技术</span>发；&nbsp;\
-<img src=\"http://upload-images.jianshu.io/upload_images/937405-50a8ad2d8866fc12.png\" />  花羊羊领取了你的<font  color = \"red\"><a>红包</a></font>\
-</p><p>aabb<a href=\"https://www.google.com\">dddd</a>eeeefff18612345678ssss</p>";
-    return htmlString;
-}
--(void)ZCMLEmojiLabel:(ZCMLEmojiLabel *)emojiLabel didSelectLink:(NSString *)link withType:(ZCMLEmojiLabelLinkType)type{
-    NSLog(@"emoji:%@",link);
-}
-
--(void)attributedLabel:(ZCTTTAttributedLabel *)label didSelectLinkWithURL:(NSURL *)url{
-    NSLog(@"attr:%@",url);
 }
 
 

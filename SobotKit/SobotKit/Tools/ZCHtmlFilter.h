@@ -39,6 +39,31 @@ NS_ASSUME_NONNULL_BEGIN
 +(NSMutableAttributedString *)setGuideHtml:(NSString *)text attrs:(NSMutableArray *) attrs view:(UILabel *) label  textColor:(UIColor*)textColor textFont:(UIFont*)textFont linkColor:(UIColor*)linkColor;
 
 
+
+/// 设置聊天页信息
+/// @param label 要设置的Label
+/// @param text 要设置的text字符串
+/// @param isRight 是否为右侧显示，获取默认字体和颜色
++(void) addChatTextToLabel:(UILabel *)label text:(NSString *)text chatLayout:(BOOL) isRight result:(void(^)(NSMutableAttributedString *attr)) attrBlock;
+
+
+/// 设置label的富文本
+/// @param label 要设置的Label
+/// @param text 原始html字符串
+/// @param textColor 文字颜色
+/// @param textFont 字体
+/// @param linkColor 链接颜色
++(void) addTextToLabel:(UILabel *)label text:(NSString *)text textColor:(UIColor *)textColor textFont:(UIFont *)textFont linkColor:(UIColor *)linkColor result:(void(^)(NSMutableAttributedString *attr)) attrBlock;
+
+
+/// 获取格式化的富文本字符串，用于存储到基础数据中
+/// @param text 原始html字符串
+/// @param textColor 文字颜色
+/// @param textFont 字体
+/// @param linkColor 链接颜色
++(NSMutableAttributedString *)createMutalText:(NSString *)text textColor:(UIColor *)textColor textFont:(UIFont *)textFont linkColor:(UIColor *)linkColor;
+
+
 @end
 
 NS_ASSUME_NONNULL_END
