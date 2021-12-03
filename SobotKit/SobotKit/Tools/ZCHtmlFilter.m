@@ -282,13 +282,7 @@
         }
         
         NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
-        
-        NSInteger lineSpaceing = [ZCUICore getUICore].kitInfo.guideLineSpacing;
-        if (lineSpaceing > 0) {
-            paragraphStyle.lineSpacing = lineSpaceing; // 调整行间距
-        }else{
-            paragraphStyle.lineSpacing = 0; // 调整行间距
-        }
+        paragraphStyle.lineSpacing = [ZCUITools zcgetChatGuideLineSpacing]; // 调整行间距
         NSRange range = NSMakeRange(0, str.length);
         [str addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:range];
         

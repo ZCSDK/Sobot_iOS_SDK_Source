@@ -230,7 +230,7 @@ NSString *zcGetAppBunddleID();
  *
  *  @return 
  */
-BOOL isDebug();
+BOOL zcIsDebug();
 
 
 

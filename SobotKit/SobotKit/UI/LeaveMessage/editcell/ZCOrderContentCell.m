@@ -10,7 +10,7 @@
 //#import "ZCUploadImageModel.h"
 #import "ZCUIColorsDefine.h"
 #import "ZCLibGlobalDefine.h"
-#import "ZCUIImageView.h"
+#import "SobotImageView.h"
 #import "ZCLibConfig.h"
 #import "ZCIMChat.h"
 #import "ZCPlatformTools.h"
@@ -21,7 +21,7 @@
 #import "ZCActionSheet.h"
 
 @interface ZCOrderContentCell()<UITextViewDelegate,UITextFieldDelegate,ZCActionSheetDelegate>{
-    ZCUIImageView * imageView;
+    SobotImageView * imageView;
     UIButton *delButton;
 }
 @end
@@ -99,6 +99,7 @@
         _textDesc.placeholder = text1;
        CGRect labelF  = [self getTextRectWith:text1 WithMaxWidth:self.tableWidth WithlineSpacing:0 AddLabel:detailLab];
         DH = labelF.size.height;
+        _textDesc.placeholderLinkColor = UIColorFromThemeColor(ZCTextPlaceHolderColor);
     }];
     
     if (DH > 102) {

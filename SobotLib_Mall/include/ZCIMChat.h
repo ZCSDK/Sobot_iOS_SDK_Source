@@ -32,17 +32,6 @@ typedef NS_ENUM(NSInteger,ZCSendActionType) {
 };
 
 
-/** 上一次链接的userId */
-extern NSString * const KEY_ZCIMUSERIDKEY;
-/** 上一次链接的serverU */
-extern NSString * const KEY_ZCIMSERVERUKEY;
-/** 上一次链接的appkey */
-extern NSString * const KEY_ZCIMAPPKEY;
-/** 上一次链接的puid */
-extern NSString * const KEY_ZCIMPUID;
-/** 上一次链接的socket地址 */
-extern NSString * const KEY_ZCIMADDRESS;
-
 @interface ZCIMChat : NSObject
 
 // 初始化成功返回的对象
@@ -87,22 +76,6 @@ extern NSString * const KEY_ZCIMADDRESS;
  @return
  */
 -(BOOL) isConnected;
-
-/**
- *  发送消息
- *
- *  @param text 消息内容
- *  @param type 消息类型
- */
-//-(void)sendMessage:(NSString *)text type:(ZCSendMessageType)type action:(ZCSendActionType) actionType;
-
-
-/**
- *  消息确认
- *
- *  @param msgId 消息id
- */
-//-(void)confirmMsg:(NSString *)msgId;
 
 
 /**

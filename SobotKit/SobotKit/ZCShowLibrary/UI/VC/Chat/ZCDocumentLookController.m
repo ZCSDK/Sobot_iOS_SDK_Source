@@ -125,9 +125,9 @@
     NSString *dataPath = zcLibGetDocumentsFilePath(@"/sobot/");
     // 创建目录
     zcLibCheckPathAndCreate(dataPath);
-    
+#pragma Mark -- 文件路径问题修改  (_message.richModel.fileName  替换原_message.richModel.msg  历史记录中msg返回“数据错误”，本次会话返回“”导致文件路径有误)
     //拼接文件的路径
-    self.localFilePath = [dataPath stringByAppendingPathComponent:_message.richModel.msg];
+    self.localFilePath = [dataPath stringByAppendingPathComponent:_message.richModel.fileName];
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         //从服务器获取文件的总大小
         [self getServerFileSize];

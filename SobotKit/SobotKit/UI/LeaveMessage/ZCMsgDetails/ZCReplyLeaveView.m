@@ -10,7 +10,7 @@
 #import "ZCLibGlobalDefine.h"
 #import "ZCUIColorsDefine.h"
 #import "ZCUIPlaceHolderTextView.h"
-#import "ZCUIImageView.h"
+#import "SobotImageView.h"
 #import "ZCActionSheet.h"
 #import "ZCSobotCore.h"
 
@@ -30,7 +30,7 @@
 @property (nonatomic, assign) float viewHeight;
 
 @property (nonatomic, strong) UIScrollView *fileScrollView; // 放图片
-@property (nonatomic, strong) ZCUIImageView * imageView;
+@property (nonatomic, strong) SobotImageView * imageView;
 
 @property (nonatomic, strong) UIImagePickerController *zc_imagepicker;
 

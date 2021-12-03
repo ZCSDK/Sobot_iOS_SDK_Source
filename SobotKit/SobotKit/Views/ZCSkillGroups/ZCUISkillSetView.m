@@ -17,7 +17,8 @@
 #import "ZCPlatformTools.h"
 #import "ZCUIKeyboard.h"
 #import "ZCToolsCore.h"
-#import "ZCUIImageView.h"
+//#import "ZCUIImageView.h"
+#import "SobotImageView.h"
 
 @interface ZCUISkillSetView()
 
@@ -278,7 +279,7 @@
         [itemView setBackgroundColor:UIColor.clearColor];
         
         [_itemName setTextColor:UIColorFromThemeColor(ZCTextMainColor)];
-        ZCUIImageView *imgView = [ZCUIImageView imageViewWithURL:[NSURL URLWithString:zcLibConvertToString(model.groupPic)] autoLoading:YES];
+        SobotImageView *imgView = [SobotImageView imageViewWithURL:[NSURL URLWithString:zcLibConvertToString(model.groupPic)] autoLoading:YES];
         [itemView addSubview:imgView];
         
         if(model.groupStyle == 1){

@@ -63,6 +63,9 @@
    if (version.doubleValue >= 11.0) {
        [_listView setInsetsContentViewsToSafeArea:NO];
    }
+    if (version.doubleValue >= 15.0) {
+        _listView.sectionHeaderTopPadding = 0;
+    }
     _listView.separatorStyle = UITableViewCellSeparatorStyleNone;
     
    

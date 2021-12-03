@@ -35,7 +35,8 @@
 
 #import "ZCToolsCore.h"
 
-#import "ZCUIXHImageViewer.h"
+//#import "ZCUIXHImageViewer.h"
+#import "SobotXHImageViewer.h"
 #import "ZCVideoPlayer.h"
 
 #import "ZCReplyFileView.h"
@@ -346,7 +347,9 @@ UINavigationControllerDelegate,ZCMLEmojiLabelDelegate>
     if (version.doubleValue >= 11.0) {
         [_listTable setInsetsContentViewsToSafeArea:NO];
     }
-    
+    if (version.doubleValue >= 15.0) {
+        _listTable.sectionHeaderTopPadding = 0;
+    }
     if (iOS7) {
         _listTable.backgroundView = nil;
     }
@@ -1127,13 +1130,13 @@ UINavigationControllerDelegate,ZCMLEmojiLabelDelegate>
                      CALayer *calayer = picView.layer.mask;
                      [picView.layer.mask removeFromSuperlayer];
                      
-                     ZCUIXHImageViewer *xh=[[ZCUIXHImageViewer alloc] initWithImageViewerWillDismissWithSelectedViewBlock:^(ZCUIXHImageViewer *imageViewer, UIImageView *selectedView) {
+                     SobotXHImageViewer *xh=[[SobotXHImageViewer alloc] initWithImageViewerWillDismissWithSelectedViewBlock:^(SobotXHImageViewer *imageViewer, UIImageView *selectedView) {
                          
-                     } didDismissWithSelectedViewBlock:^(ZCUIXHImageViewer *imageViewer, UIImageView *selectedView) {
+                     } didDismissWithSelectedViewBlock:^(SobotXHImageViewer *imageViewer, UIImageView *selectedView) {
                          
                          selectedView.layer.mask = calayer;
                          [selectedView setNeedsDisplay];
-                     } didChangeToImageViewBlock:^(ZCUIXHImageViewer *imageViewer, UIImageView *selectedView) {
+                     } didChangeToImageViewBlock:^(SobotXHImageViewer *imageViewer, UIImageView *selectedView) {
                          
                      }];
                      
@@ -1440,13 +1443,13 @@ UINavigationControllerDelegate,ZCMLEmojiLabelDelegate>
         CALayer *calayer = picView.layer.mask;
         [picView.layer.mask removeFromSuperlayer];
         
-        ZCUIXHImageViewer *xh=[[ZCUIXHImageViewer alloc] initWithImageViewerWillDismissWithSelectedViewBlock:^(ZCUIXHImageViewer *imageViewer, UIImageView *selectedView) {
+        SobotXHImageViewer *xh=[[SobotXHImageViewer alloc] initWithImageViewerWillDismissWithSelectedViewBlock:^(SobotXHImageViewer *imageViewer, UIImageView *selectedView) {
             
-        } didDismissWithSelectedViewBlock:^(ZCUIXHImageViewer *imageViewer, UIImageView *selectedView) {
+        } didDismissWithSelectedViewBlock:^(SobotXHImageViewer *imageViewer, UIImageView *selectedView) {
             
             selectedView.layer.mask = calayer;
             [selectedView setNeedsDisplay];
-        } didChangeToImageViewBlock:^(ZCUIXHImageViewer *imageViewer, UIImageView *selectedView) {
+        } didChangeToImageViewBlock:^(SobotXHImageViewer *imageViewer, UIImageView *selectedView) {
             
         }];
         

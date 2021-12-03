@@ -107,7 +107,7 @@
         [self.ivBgView setBackgroundColor:[ZCUITools zcgetBgTipAirBubblesColor]];
         //        self.ivBgView.backgroundColor = UIColorFromRGB(0xFFF8F9FA); FFACB5C4
     }
-    
+//    NSLog(@"model.sysTips === %@",zcLibConvertToString(model.sysTips));
     if(model){
         CGRect msgF = CGRectMake(0, cellHeight+5, self.viewWidth-40, 0);
         [_lblTextMsg setFrame:msgF];
@@ -118,7 +118,8 @@
             [zcLibConvertToString(model.sysTips) hasSuffix:ZCSTLocalString(@"咨询后才能评价服务质量")] ||
             [zcLibConvertToString(model.sysTips) hasPrefix:ZCSTLocalString(@"您好,本次会话已结束")] ||
             [zcLibConvertToString(model.sysTips) hasPrefix:temp]||
-            [zcLibConvertToString(model.sysTips) hasPrefix:ZCSTLocalString(@"暂无客服在线")]) ){
+            [zcLibConvertToString(model.sysTips) hasPrefix:ZCSTLocalString(@"暂无客服在线")] ||
+            model.tipStyle == ZCReceivedMessageWaiting)){
             // 处理动画样式
             [self setTipCellAnimateTransformWith:model];
             //
@@ -257,6 +258,10 @@
             if(self.delegate && [self.delegate respondsToSelector:@selector(cellItemClick:type:obj:)]){
                 [self.delegate cellItemClick:self.tempModel type:ZCChatCellClickTypeNewSession obj:@""];
             }
+        }else if([url hasPrefix:@"sobot://insterTrunMsg"]){
+            if(self.delegate && [self.delegate respondsToSelector:@selector(cellItemClick:type:obj:)]){
+                [self.delegate cellItemClick:self.tempModel type:ZCChatCellClickTypeInsterTurn obj:@""];
+            }
         }else if([url hasPrefix:@"sobot:"]){
             int tag=[[url stringByReplacingOccurrencesOfString:@"sobot://" withString:@""] intValue];
             if(self.delegate && [self.delegate respondsToSelector:@selector(cellItemClick:type:obj:)]){
@@ -387,6 +392,13 @@
     if ([zcLibConvertToString(text) hasSuffix:ZCSTLocalString(@"重建会话")]) {
         // 如果有重建会话的时候，点击重新开始会话
         text = [text stringByReplacingOccurrencesOfString:ZCSTLocalString(@"重建会话") withString:[NSString stringWithFormat:@"<a href='sobot://newsessionchat'>%@</a>",ZCSTLocalString(@"重建会话")]];
+    }
+    
+    if ([zcLibConvertToString(text) hasPrefix:ZCSTLocalString(@"未解决问题？点击")]) {
+        if (!model.isHistory) {
+            // 转人工客服处理
+            text = [text stringByReplacingOccurrencesOfString:ZCSTLocalString(@"转人工服务") withString:[NSString stringWithFormat:@"<a href='sobot://insterTrunMsg'>%@</a>",ZCSTLocalString(@"转人工服务")]];
+        }
     }
     
     return text;

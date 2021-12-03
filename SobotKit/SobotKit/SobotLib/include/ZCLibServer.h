@@ -41,6 +41,17 @@
                  error:(void (^)(ZCNetWorkCode status,NSString *errorMessage))errorBlock
        appIdIncorrect:(void (^)(NSString *appId))appIdIncorrectBlock;
 
+/**
+ *  获取留言转离线消息配置接口
+ *
+ *  @param
+ *  @param successBlock         请求成功 返回  msgLeaveTxt、 msgLeaveContentTxt参数值
+ *  @param errorBlock           请求失败，返回失败状态
+ */
+- (void)initLeaveMsgConfig:(NSString *)groupId
+                       uid:(NSString *)uid
+                     error:(void (^)(ZCNetWorkCode status,NSString *errorMessage))errorBlock
+                   success:(void(^)(NSString *msgLeaveTxt,NSString *msgLeaveContentTxt,NSString *leaveExplain)) successBlock;
 
 /**
  *  转接人工
@@ -377,38 +388,6 @@ Integer status 反馈结果-顶/踩 1 顶 0 踩
 
 
 
-
-/**
- *  获取 客服是否上下班时间
- *  @param  appId      appkey
- *  @param  groupId      技能组的ID ,没有可传空
- *  @param  startBlock     开始请求的回调
- *  @param  successBlock   请求成功的回调
- *  @param  failedBlock    请求失败的回调
- */
--(void)getIsWorkWithAppId:(NSString *)appId
-                  GroupId:(NSString *)groupId
-                    start:(void (^)())startBlock
-                  success:(void(^)(NSDictionary *dict,ZCNetWorkCode sendCode)) successBlock
-                   failed:(void(^)(NSString *errorMessage,ZCNetWorkCode errorCode)) failedBlock;
-
-
-
-/**
- *   获取 留言 自定义字段和 工单类型的
- *  @param  uid          用户ID
- *  @param  startBlock     开始请求的回调
- *  @param  successBlock   请求成功的回调
- *  @param  failedBlock    请求失败的回调 
- *  @param  typeArray      工单类型
- *  @param  cusFieldArray  工单自定义字段
- */
--(void)getOrderMsgTypeWithUid:(NSString *)uid
-                    start:(void (^)())startBlock
-                  success:(void(^)(NSDictionary *dict, NSMutableArray *typeArray, NSMutableArray * cusFieldArray,ZCNetWorkCode sendCode)) successBlock
-                   failed:(void(^)(NSString *errorMessage,ZCNetWorkCode errorCode)) failedBlock;
-
-
 /**
  *  获取 询前表单自定义字段数据
  *   @param  uid   用户id
@@ -506,19 +485,16 @@ Integer status 反馈结果-顶/踩 1 顶 0 踩
                 success:(void(^)(NSDictionary *dict,ZCMessageSendCode sendCode)) successBlock
                    fail:(void(^)(NSString * errorMsg,ZCMessageSendCode errorCode)) failBlock;
 
-
 /**
  *
- *  获取留言模板 接口
+ *  获取留言模板  post  带技能组ID 接口
  *
  **/
 -(void)getWsTemplateList:(ZCLibConfig *)config
+                 groupId:(NSString *)groupId
                    start:(void (^)())startBlock
                  success:(void(^)(NSDictionary *dict,ZCMessageSendCode sendCode)) successBlock
                     fail:(void(^)(NSString *errorMsg,ZCMessageSendCode errorCode)) failBlock;
-
-
-
 
 
 /**
@@ -676,14 +652,14 @@ Integer status 反馈结果-顶/踩 1 顶 0 踩
  * 留言转离线消息接口
  * uid ：用户id
  * content： 留言内容
+ * groupId : 技能组ID
  **/
 -(void)getLeaveMsgWith:(NSString*)uid
-                       Content:(NSString *)content
-                       start:(void (^)())startBlock
-                     success:(void(^)(NSDictionary *dict,ZCNetWorkCode sendCode)) successBlock
-                      failed:(void(^)(NSString *errorMessage,ZCNetWorkCode errorCode)) failedBlock;
-
-
+               Content:(NSString *)content
+               groupId:(NSString *)groupId
+                 start:(void (^)())startBlock
+               success:(void(^)(NSDictionary *dict,ZCNetWorkCode sendCode)) successBlock
+                failed:(void(^)(NSString *errorMessage,ZCNetWorkCode errorCode)) failedBlock;
 
 /**
  *
@@ -698,5 +674,30 @@ Integer status 反馈结果-顶/踩 1 顶 0 踩
                                start:(void (^)())startBlock
                              success:(void(^)(NSDictionary *dict,ZCNetWorkCode sendCode)) successBlock
                               failed:(void(^)(NSString *errorMessage,ZCNetWorkCode errorCode)) failedBlock;
+/**
+ *
+ *   sdk保存发给用户的系统消息 (机器人点踩，触发转人工提示语 并发送给服务端保存)
+ *
+ **/
+-(void)insertSysMsg:(ZCLibConfig *) config
+                msg:(NSString*)msg
+             start:(void (^)())startBlock
+           success:(void(^)(NSDictionary *dict,ZCNetWorkCode sendCode)) successBlock
+             failed:(void(^)(NSString *errorMessage,ZCNetWorkCode errorCode)) failedBlock;
+
+
+
+
+/// sdk敏感词授权
+/// @param config  获取uid用
+/// @param type 0 拒绝 1同意
+/// @param startBlock 开始
+/// @param successBlock 成功，返回成功的dict
+/// @param failedBlock  失败
+-(void)authSendMessageSensitive:(ZCLibConfig *) config
+                           type:(NSInteger) type
+                          start:(void (^)())startBlock
+                        success:(void(^)(NSDictionary *dict,ZCNetWorkCode sendCode)) successBlock
+                         failed:(void(^)(NSString *errorMessage,ZCNetWorkCode errorCode)) failedBlock;
 
 @end

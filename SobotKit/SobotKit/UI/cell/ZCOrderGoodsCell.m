@@ -10,8 +10,10 @@
 
 #import "ZCLibGlobalDefine.h"
 #import "ZCUIColorsDefine.h"
-#import "ZCUIXHImageViewer.h"
-#import "ZCUIImageView.h"
+//#import "ZCUIXHImageViewer.h"
+#import "SobotXHImageViewer.h"
+//#import "ZCUIImageView.h"
+#import "SobotImageView.h"
 #import "ZCStoreConfiguration.h"
 #import "ZCLibStatusDefine.h"
 
@@ -21,7 +23,7 @@
 
 //@property (nonatomic,strong) UIView *cellBgView;
 
-@property (nonatomic,strong) ZCUIImageView   *imgPhoto;
+@property (nonatomic,strong) SobotImageView   *imgPhoto;
 
 @property (nonatomic,strong) UILabel * lblTextTitle;
 
@@ -49,7 +51,7 @@
 //        _cellBgView = [[UIView alloc]init];
 //        [self.contentView addSubview:_cellBgView];
         
-        _imgPhoto = [[ZCUIImageView alloc] init];
+        _imgPhoto = [[SobotImageView alloc] init];
         [_imgPhoto setBackgroundColor:[UIColor clearColor]];
         [_imgPhoto setContentMode:UIViewContentModeScaleAspectFill];
         _imgPhoto.layer.cornerRadius = 5;
@@ -455,7 +457,10 @@
         if (dict) {
             link = zcLibConvertToString(dict[@"orderUrl"]);
         }
-        [self.delegate cellItemLinkClick:@"" type:ZCChatCellClickTypeOpenURL obj:link];
+        if (link.length > 0) {
+            [self.delegate cellItemLinkClick:@"" type:ZCChatCellClickTypeOpenURL obj:link];
+        }
+        
     }
 }
 

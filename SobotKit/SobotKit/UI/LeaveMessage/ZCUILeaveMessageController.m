@@ -58,7 +58,8 @@
 #import <AVFoundation/AVFoundation.h>
 
 #import "ZCVideoPlayer.h"
-#import "ZCUIXHImageViewer.h"
+//#import "ZCUIXHImageViewer.h"
+#import "SobotXHImageViewer.h"
 #import "ZCToolsCore.h"
 
 typedef NS_ENUM(NSInteger,ExitType) {
@@ -273,6 +274,9 @@ typedef NS_ENUM(NSInteger,ExitType) {
 
 
 -(void)createBtnItem:(NSMutableArray *)titleArr withTags:(NSMutableArray *)tagArr Y:(CGFloat)Y{
+    if (btnBgView!= nil) {
+        [btnBgView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+    }
     CGFloat maxWidth = ScreenWidth - 64*2;
     btnBgView = [[UIView alloc]initWithFrame:CGRectMake(64, Y, maxWidth, 44)];
     [btnBgView setAutoresizingMask:UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleTopMargin];
@@ -356,9 +360,6 @@ typedef NS_ENUM(NSInteger,ExitType) {
     lineView.frame = LF;
     btnTag = (int)sender.tag;
     
-    
-    
-  
     
     // 1.获取当前的页面
     NSInteger index = (NSInteger)(sender.tag - 2001);
@@ -915,7 +916,9 @@ typedef NS_ENUM(NSInteger,ExitType) {
     if (version.doubleValue >= 11.0) {
         [_listTable setInsetsContentViewsToSafeArea:NO];
     }
-    
+    if (version.doubleValue >= 15.0) {
+        _listTable.sectionHeaderTopPadding = 0;
+    }
     UITapGestureRecognizer *gestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapHideKeyboard)];
     gestureRecognizer.numberOfTapsRequired = 1;
     gestureRecognizer.cancelsTouchesInView = NO;
@@ -1617,13 +1620,13 @@ return [UIView new];
                     CALayer *calayer = picView.layer.mask;
                     [picView.layer.mask removeFromSuperlayer];
                     
-                    ZCUIXHImageViewer *xh=[[ZCUIXHImageViewer alloc] initWithImageViewerWillDismissWithSelectedViewBlock:^(ZCUIXHImageViewer *imageViewer, UIImageView *selectedView) {
+                    SobotXHImageViewer *xh=[[SobotXHImageViewer alloc] initWithImageViewerWillDismissWithSelectedViewBlock:^(SobotXHImageViewer *imageViewer, UIImageView *selectedView) {
                         
-                    } didDismissWithSelectedViewBlock:^(ZCUIXHImageViewer *imageViewer, UIImageView *selectedView) {
+                    } didDismissWithSelectedViewBlock:^(SobotXHImageViewer *imageViewer, UIImageView *selectedView) {
                         
                         selectedView.layer.mask = calayer;
                         [selectedView setNeedsDisplay];
-                    } didChangeToImageViewBlock:^(ZCUIXHImageViewer *imageViewer, UIImageView *selectedView) {
+                    } didChangeToImageViewBlock:^(SobotXHImageViewer *imageViewer, UIImageView *selectedView) {
                         
                     }];
                     
@@ -1954,6 +1957,8 @@ return [UIView new];
         [_pickView setFrame:CGRectMake(0, 0, [self getCurViewWidth], [self getCurViewHeight])];
     }
   
+    // 横竖屏切换的时候重新布局 标题页面
+    [self createTabbarItemView];
 }
 
 

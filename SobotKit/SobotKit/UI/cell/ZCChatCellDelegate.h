@@ -61,9 +61,16 @@ typedef NS_ENUM(NSInteger,ZCChatCellClickType) {
     
     /**** 热点引导，点击换一组****/
     ZCChatCellClickTypeNewDataGroup      = 25,
-    
     /**** 热点引导，新会话 ****/
     ZCChatCellClickTypeNewSession        = 26,
+    /**** 机器人点踩，发送提示转人工消息 ****/
+    ZCChatCellClickTypeInsterTurn        = 27,
+    // 显示所有敏感信息
+    ZCChatCellClickTypeShowSensitive     = 28,
+    // 拒绝发送敏感信息
+    ZCChatCellClickTypeRefuseSend        = 29,
+    // 同意发送敏感信息
+    ZCChatCellClickTypeAgreeSend         = 30,
 };
 
 /**

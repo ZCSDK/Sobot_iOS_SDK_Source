@@ -108,6 +108,7 @@ typedef NS_ENUM(NSInteger,ZCPagesType) {
     ZC_AskTabelPage    = 2,
     ZC_LeaveRecordPage = 3,
     ZC_LeaveOffLine    = 4, //发送留言离线消息，提交留言后 服务端会将用户下线
+    ZC_UserClosePage   = 5,// 用户跳转到自己的页面后 关闭智齿页面
 };
 
 
@@ -182,6 +183,7 @@ typedef void(^initResultBlock)(ZCInitStatus code,NSMutableArray *arr,NSString *r
 
 @property(nonatomic,copy) void (^ZCViewControllerCloseBlock)(id object,ZCPageCloseType type); // 1129
 
+@property(nonatomic,copy) void (^ZCClosePageBlock)(ZCPagesType type);
 
 @property(nonatomic,strong) ZCKitInfo     *kitInfo;
 
@@ -439,16 +441,16 @@ typedef void(^initResultBlock)(ZCInitStatus code,NSMutableArray *arr,NSString *r
 /**
  *
  *  清除用户计数
- *
+ *   3.0.4 不在使用
  **/
--(void)cleanUserCount;
+//-(void)cleanUserCount;
 
 /**
  *
  *  清除客服计数
- *
+ *   3.0.4不在使用
  **/
--(void)cleanAdminCount;
+//-(void)cleanAdminCount;
 
 /**
  *
@@ -504,5 +506,18 @@ typedef void(^initResultBlock)(ZCInitStatus code,NSMutableArray *arr,NSString *r
                               name:(NSString *)user_nick
                            content:(NSString *)content
                             config:(ZCLibConfig *) _config;
+
+// 设置技能组ID 转人工时赋值，重新初始化的时候清空@”“ ，1.留言转离线消息页面使用 2.留言转工单模板接口使用
+-(void)saveGroupIdWith:(NSString*)groupId;
+
+// 获取技能组ID
+-(NSString*)getTempGroupId;
+
+/*
+ *  机器人点踩 触发转人工提示语
+ *
+ */
+-(void)addTipTurnToArtificialMsg;
+
 
 @end

@@ -9,11 +9,13 @@
 #import "ZCReplyFileView.h"
 #import "ZCUIColorsDefine.h"
 #import "ZCLibGlobalDefine.h"
-#import "ZCUIImageView.h"
+//#import "ZCUIImageView.h"
+#import "SobotImageView.h"
 
 @interface ZCReplyFileView ()
 @property (nonatomic, strong) NSDictionary *modelDic;
 @property (nonatomic, strong) UIImageView *currentImgView;
+@property (nonatomic, assign) BOOL isLoading;//是否是在加载中
 @end
 
 @implementation ZCReplyFileView
@@ -44,7 +46,7 @@
     }else{
         titleColor = UIColorFromThemeColor(ZCTextSubColor);
     }
-
+//    NSLog(@"fileurlstr ===%@",fileUrlStr);
     fileUrlStr = zcLibValidURLString(fileUrlStr);
     
     NSURL *fileUrl = [NSURL URLWithString:fileUrlStr];
@@ -89,11 +91,16 @@
 //        imgButton.frame = self.frame;
 //        [imgButton setImage:[UIImage imageWithData:imgData] forState:UIControlStateNormal];
         
-        ZCUIImageView *imgView = [[ZCUIImageView alloc]initWithFrame:CGRectMake(0, 0, self.bounds.size.width, self.bounds.size.height)];
+        SobotImageView *imgView = [[SobotImageView alloc]initWithFrame:CGRectMake(0, 0, self.bounds.size.width, self.bounds.size.height)];
         [imgView setContentMode:UIViewContentModeScaleAspectFill];
         imgView.clipsToBounds = YES;
-        [imgView loadWithURL:fileUrl placeholer:nil];
-        
+//        [imgView loadWithURL:fileUrl placeholer:nil];
+        self.isLoading = YES;
+        [imgView loadWithURL:fileUrl placeholer:nil showActivityIndicatorView:YES completionBlock:^(UIImage *image, NSURL *url, NSError *error) {
+            if (image !=nil) {
+                self.isLoading = NO;
+            }
+        }];
         [self addSubview:imgView];
         
         self.currentImgView = imgView;
@@ -179,8 +186,10 @@
 }
 
 - (void)buttonClick:(UIButton *)button{
-    
-    
+    if (self.isLoading) {
+//        [[ZCUIToastTools shareToast] showToast:ZCSTLocalString(@"加载中    ") duration:2.0f view: [UIApplication sharedApplication].keyWindow position:ZCToastPositionCenter];
+        return;
+    }
     if (self.clickBlock) {
         self.clickBlock(self.modelDic,self.currentImgView);
     }

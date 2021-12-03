@@ -68,38 +68,7 @@
     }
     
     
-    if(!self.navigationController.navigationBarHidden){
-        
-        if (self.navigationController.navigationBar.translucent) {
-         self.navigationController.navigationBar.translucent = NO;
-        }
-        
-        [self setNavigationBarStyle];
-        self.title = ZCSTLocalString(@"留言消息");
-       
-        [self.navigationController.navigationBar setTitleTextAttributes:@{NSFontAttributeName:[ZCUITools zcgetTitleFont],NSForegroundColorAttributeName:[ZCUITools zcgetTopViewTextColor]}];
-
-        //    2.8.0 增加导航栏下面 细线
-        UIView *lineView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 0.5)];
-        lineView.backgroundColor = [ZCUITools zcgetCommentButtonLineColor];
-        [self.view addSubview:lineView];
-    }else{
-        [self createTitleView];
-        self.titleLabel.text = ZCSTLocalString(@"留言消息");
-        
-        // 提交 的button 2.7.1 页面改版 位置改变
-        [self.moreButton setTitle:ZCSTLocalString(@"提交") forState:UIControlStateNormal];
-        [self.moreButton setTitle:ZCSTLocalString(@"提交") forState:UIControlStateHighlighted];
-        [self.moreButton setImage:[ZCUITools zcuiGetBundleImage:@""] forState:UIControlStateNormal];
-        [self.moreButton setImage:[ZCUITools zcuiGetBundleImage:@""] forState:UIControlStateHighlighted];
-        [self.moreButton addTarget:self action:@selector(buttonClick:) forControlEvents:UIControlEventTouchUpInside];
-//        self.moreButton.alpha = 0.4;
-//        self.moreButton.userInteractionEnabled = NO;
-        self.moreButton.hidden = YES;
-        
-        //back
-        [self.backButton addTarget:self action:@selector(buttonClick:) forControlEvents:UIControlEventTouchUpInside];
-    }
+    [self setHeaderConfig];
     
     self.view.backgroundColor = [ZCUITools zcgetLightGrayDarkBackgroundColor];
     
@@ -121,6 +90,29 @@
     }
 }
 
+// 设置页面头部导航相关View
+-(void)setHeaderConfig{
+    if(!self.navigationController.navigationBarHidden){
+        if (self.navigationController.navigationBar.translucent) {
+         self.navigationController.navigationBar.translucent = NO;
+        }
+        [self setNavigationBarStyle];
+        self.title = ZCSTLocalString(@"留言消息");
+        [self.navigationController.navigationBar setTitleTextAttributes:@{NSFontAttributeName:[ZCUITools zcgetTitleFont],NSForegroundColorAttributeName:[ZCUITools zcgetTopViewTextColor]}];
+
+        //    2.8.0 增加导航栏下面 细线
+        UIView *lineView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 0.5)];
+        lineView.backgroundColor = [ZCUITools zcgetCommentButtonLineColor];
+        [self.view addSubview:lineView];
+    }else{
+        [self createTitleView];
+        self.titleLabel.text = ZCSTLocalString(@"留言消息");
+        self.moreButton.hidden = YES;
+        //back
+        [self.backButton addTarget:self action:@selector(buttonClick:) forControlEvents:UIControlEventTouchUpInside];
+    }
+}
+
 -(void)tapAction:(UITapGestureRecognizer *)sender{
     [self hideKeyboard];
 }
@@ -135,12 +127,11 @@
         }
     }else if (sender.tag == BUTTON_MORE){
         if (_textView.text.length <=0) {
-            [[ZCUIToastTools shareToast] showToast:ZCSTLocalString(@"请填写问题描述") duration:2 view:self.view position:ZCToastPositionCenter];
+            [[ZCUIToastTools shareToast] showToast:ZCSTLocalString(@"请填写问题描述") duration:2 view:[UIApplication sharedApplication].keyWindow position:ZCToastPositionCenter];
             return;
         }
-        
         __weak ZCLeaveMsgVC * saveSelf = self;
-        [[ZCLibServer getLibServer] getLeaveMsgWith:[[ZCUICore getUICore] getLibConfig].uid Content:_textView.text start:^{
+        [[ZCLibServer getLibServer] getLeaveMsgWith:[[ZCUICore getUICore] getLibConfig].uid Content:_textView.text groupId:self.groupId start:^{
             
         } success:^(NSDictionary *dict, ZCNetWorkCode sendCode) {
             if (dict) {
@@ -165,11 +156,11 @@
             [[ZCUIToastTools shareToast] showToast:zcLibConvertToString(errorMessage) duration:1.0f view:saveSelf.view position:ZCToastPositionCenter];
             NSLog(@"%@",errorMessage);
         }];
-        
     }
 }
 
 -(void)layoutSubViewsUI{
+    [self.view.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
     CGFloat y = 0;
     if (self.navigationController.navigationBarHidden) {
         y = NavBarHeight;
@@ -229,7 +220,7 @@
     
    
     UIView * wbgView = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(_tipLab.frame) +ZCNumber(12),ScreenWidth , 30 + 154 + 20)];
-    wbgView.backgroundColor = UIColorFromThemeColor(ZCBgLightGrayColor);
+    wbgView.backgroundColor = UIColorFromThemeColor(ZCBgSystemWhiteLightGrayColor);
     [_scrollView addSubview:wbgView];
     
     _textView = [[ZCUIPlaceHolderTextView alloc]initWithFrame:CGRectMake(20, CGRectGetMaxY(_tipLab.frame) +ZCNumber(40), [self getCurViewWidth]-40, ZCNumber(154))];
@@ -256,6 +247,7 @@
     
     [ZCHtmlCore filterHtml:tmp result:^(NSString * _Nonnull text1, NSMutableArray * _Nonnull arr, NSMutableArray * _Nonnull links) {
         _textView.placeholder = text1;
+        _textView.placeholderLinkColor = UIColorFromThemeColor(ZCTextPlaceHolderColor);
     }];
     [_scrollView addSubview:_textView];
     
@@ -272,6 +264,23 @@
     [wbgView addSubview:lineView2];
     
     
+    
+    int th = CGRectGetMaxY(wbgView.frame);
+    if(zcLibConvertToString(_leaveExplain).length > 0){
+        UILabel *label=[[UILabel alloc] initWithFrame:CGRectMake(15, th + 10, [self getCurViewWidth]-30, 0)];
+        label.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+        [label setFont:ZCUIFont14];
+        [label setText:zcLibConvertToString(_leaveExplain)];
+        //    [label setText:_listArray[section][@"sectionName"]];
+        [label setBackgroundColor:[UIColor clearColor]];
+        [label setTextAlignment:NSTextAlignmentLeft];
+        [label setTextColor:UIColorFromThemeColor(ZCTextSubColor)];
+        label.numberOfLines = 0;
+        [label sizeToFit];
+        [_scrollView addSubview:label];
+        th = CGRectGetMaxY(label.frame);
+    }
+    
     // 区尾添加提交按钮 2.7.1改版
     UIButton * commitBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [commitBtn setTitle:ZCSTLocalString(@"提交") forState:UIControlStateNormal];
@@ -280,7 +289,7 @@
     [commitBtn setTitleColor:[ZCUITools zcgetLeaveSubmitTextColor] forState:UIControlStateNormal];
     [commitBtn setTitleColor:[ZCUITools zcgetLeaveSubmitTextColor] forState:UIControlStateHighlighted];
     [commitBtn setBackgroundColor:[ZCUITools zcgetLeaveSubmitImgColor]];
-    commitBtn.frame = CGRectMake(ZCNumber(15), CGRectGetMaxY(wbgView.frame) + ZCNumber(20), ScreenWidth- ZCNumber(30), ZCNumber(44));
+    commitBtn.frame = CGRectMake(ZCNumber(15), th + ZCNumber(20), ScreenWidth- ZCNumber(30), ZCNumber(44));
     commitBtn.tag = BUTTON_MORE;
     [commitBtn addTarget:self action:@selector(buttonClick:) forControlEvents:UIControlEventTouchUpInside];
     commitBtn.layer.masksToBounds = YES;
@@ -404,16 +413,11 @@
 }
 
 
-
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+-(void)viewDidLayoutSubviews{
+    [super viewDidLayoutSubviews];
+    [self layoutSubViewsUI];
+    [self setHeaderConfig];
 }
-*/
+
 
 @end

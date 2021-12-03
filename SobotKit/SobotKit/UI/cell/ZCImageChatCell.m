@@ -7,7 +7,8 @@
 //
 
 #import "ZCImageChatCell.h"
-#import "ZCUIXHImageViewer.h"
+//#import "ZCUIXHImageViewer.h"
+#import "SobotXHImageViewer.h"
 #import "ZCLibCommon.h"
 #import "ZCUIColorsDefine.h"
 #import "ZCUIToastTools.h"
@@ -19,11 +20,11 @@
 
 #import <AVFoundation/AVFoundation.h>
 
-@interface ZCImageChatCell()<ZCUIXHImageViewerDelegate,ZCActionSheetDelegate>{
+@interface ZCImageChatCell()<SobotXHImageViewerDelegate,ZCActionSheetDelegate>{
     
     UIButton *_playButton;
     NSString *_coderURLStr;
-    ZCUIXHImageViewer *_imageViewer;
+    SobotXHImageViewer *_imageViewer;
     
 //    2.8.0 渐变色，时间
     UIImageView *_gradientBgView;
@@ -39,7 +40,7 @@
 -(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier{
     self=[super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if(self){
-        _ivSingleImage = [[ZCUIImageView alloc] init];
+        _ivSingleImage = [[SobotImageView alloc] init];
         [_ivSingleImage setContentMode:UIViewContentModeScaleAspectFit];
         [_ivSingleImage.layer setMasksToBounds:YES];
         [_ivSingleImage setBackgroundColor:[UIColor whiteColor]];
@@ -172,9 +173,9 @@
     [_picView.layer.mask removeFromSuperlayer];
     
     
-    __block ZCUIXHImageViewer *xh = [[ZCUIXHImageViewer alloc] initWithImageViewerWillDismissWithSelectedViewBlock:^(ZCUIXHImageViewer *imageViewer, UIImageView *selectedView) {
+    __block SobotXHImageViewer *xh = [[SobotXHImageViewer alloc] initWithImageViewerWillDismissWithSelectedViewBlock:^(SobotXHImageViewer *imageViewer, UIImageView *selectedView) {
         
-    } didDismissWithSelectedViewBlock:^(ZCUIXHImageViewer *imageViewer, UIImageView *selectedView) {
+    } didDismissWithSelectedViewBlock:^(SobotXHImageViewer *imageViewer, UIImageView *selectedView) {
         
         selectedView.layer.mask = calayer;
         [selectedView setNeedsDisplay];
@@ -184,7 +185,7 @@
             [self.delegate cellItemClick:self.tempModel type:ZCChatCellClickTypeTouchImageNO obj:xh];
             //            [self.delegate touchLagerImageView:xh with:NO];
         }
-    } didChangeToImageViewBlock:^(ZCUIXHImageViewer *imageViewer, UIImageView *selectedView) {
+    } didChangeToImageViewBlock:^(SobotXHImageViewer *imageViewer, UIImageView *selectedView) {
     }];
     
     NSMutableArray *photos = [[NSMutableArray alloc] init];

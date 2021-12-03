@@ -38,7 +38,8 @@
 #import "ZCLibSkillSet.h"
 #import "ZCSobotCore.h"
 #import "ZCStoreConfiguration.h"
-#import "ZCUIImageView.h"
+//#import "ZCUIImageView.h"
+#import "SobotImageView.h"
 
 #import "ZCSatisfactionCell.h"
 
@@ -86,7 +87,7 @@
 #import "ZCUIKeyboard.h"
 #import "ZCUICustomActionSheet.h"
 #import "ZCUIWebController.h"
-#import "ZCUIXHImageViewer.h"
+#import "SobotXHImageViewer.h"
 #import "ZCLibServer.h"
 #import "ZCUIVoiceTools.h"
 #import "ZCLibGlobalDefine.h"
@@ -133,7 +134,7 @@
     // 呼叫的电话号码
     NSString                    *callURL;
     // 旋转时隐藏查看大图功能
-    ZCUIXHImageViewer           *xhObj;
+    SobotXHImageViewer           *xhObj;
     
     // 无网络提醒button
     UIButton                    *_newWorkStatusButton;
@@ -288,13 +289,7 @@
    
 
     // TODO 需要初始化接口返回的数据
-    [self changeRobotBtn];
-
-    if([[ZCUICore getUICore] PageLoadBlock]){
-        // 通知外部可以更新UI
-        [ZCUICore getUICore].PageLoadBlock(self,ZCPageBlockLoadFinish);
-    }
-    
+    [self changeRobotBtn];    
     
     // 转屏通知
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(didChangeRotate:) name:UIApplicationDidChangeStatusBarFrameNotification object:nil];
@@ -342,6 +337,12 @@
                 }
                 
             }];
+            
+            
+            if([[ZCUICore getUICore] PageLoadBlock]){
+                // 通知外部可以更新UI
+                [ZCUICore getUICore].PageLoadBlock(self,ZCPageBlockLoadFinish);
+            }
             
         }
        
@@ -1406,6 +1407,38 @@
 
 #pragma mark table cell delegate start  cell点击的代理事件
 -(void)cellItemClick:(ZCLibMessage *)model type:(ZCChatCellClickType)type obj:(id)object{
+    if(type == ZCChatCellClickTypeShowSensitive){
+        model.showAllMessage = YES;
+        [self.listTable reloadData];
+        return;
+    }
+    if(type == ZCChatCellClickTypeAgreeSend || type == ZCChatCellClickTypeRefuseSend){
+        int isAgree = 1;
+        if(type == ZCChatCellClickTypeRefuseSend){
+            isAgree = 0;
+            model.includeSensitive = 2;
+        }
+        [[ZCLibServer getLibServer] authSendMessageSensitive:[self getZCIMConfig] type:isAgree start:^{
+            
+        } success:^(NSDictionary *dict, ZCNetWorkCode sendCode) {
+            if(type == ZCChatCellClickTypeRefuseSend){
+                model.includeSensitive = 2;
+                [self.listTable reloadData];
+            }else{
+                [self cellItemClick:model type:ZCChatCellClickTypeReSend obj:nil];
+//                status 1 成功
+//                status 2 会话已结束
+//                status 3 已授权
+//                status 0 失败
+                if([dict[@"data"][@"status"] intValue] == 1){
+                    // 添加同意提示语
+                    [[ZCUICore getUICore] addTipsListenerMessage:ZCTipMessageChat_AUTH_AGREE];
+                }
+            }
+        } failed:^(NSString *errorMessage, ZCNetWorkCode errorCode) {
+            
+        }];
+    }
     if(type == ZCChatCellClickTypeNewDataGroup){
         int allSize         = (int)model.richModel.suggestionArr.count;
         int pageSize        =  model.richModel.guideGroupNum;
@@ -1497,7 +1530,7 @@
     }
     
     if(type==ZCChatCellClickTypeTouchImageYES){
-        if(object!=nil && [object isKindOfClass:[ZCUIXHImageViewer class]]){
+        if(object!=nil && [object isKindOfClass:[SobotXHImageViewer class]]){
             xhObj = object;
         }
         [_keyboardTools hideKeyboard];
@@ -1595,6 +1628,7 @@
             [_listTable reloadData];
         } success:^(ZCLibMessage *message, ZCMessageSendCode sendCode) {
             model.sendStatus = message.sendStatus;
+            model.includeSensitive = 0;
             
             if(![self getZCIMConfig].isArtificial && sendCode == ZC_SENDMessage_New){
                 NSInteger index = [[ZCUICore getUICore].listArray indexOfObject:model];
@@ -1628,6 +1662,7 @@
             [_listTable reloadData];
         } fail:^(ZCLibMessage *message, ZCMessageSendCode errorCode) {
             model.sendStatus = 2;
+            model.includeSensitive = 0;
             [_listTable reloadData];
             
         }];
@@ -1710,6 +1745,19 @@
         [[ZCUICore getUICore] checkUserServiceWithObject:obj Msg:nil];
     }
     
+    // 机器人 点踩 转人工
+    if (type == ZCChatCellClickTypeInsterTurn) {
+        if ([self getZCIMConfig].isArtificial) {
+            return;
+        }
+        if ([ZCLibClient getZCLibClient].turnServiceBlock) {
+            [ZCLibClient getZCLibClient].turnServiceBlock(nil, nil, ZCTurnType_BtnClick, @"", @"");
+            return;
+        }
+        NSDictionary *obj = nil;
+        [[ZCUICore getUICore] checkUserServiceWithObject:obj Msg:nil];
+    }
+    
     // 踩/顶   -1踩   1顶
     if(type == ZCChatCellClickTypeStepOn || type == ZCChatCellClickTypeTheTop){
         
@@ -1739,6 +1787,18 @@
         } fail:^(ZCNetWorkCode errorCode) {
             
         }];
+        if ([self getZCIMConfig].realuateTransferFlag && type == ZCChatCellClickTypeStepOn && [self getZCIMConfig].type != 1) {// 仅机器人模式不可以触发
+            //如果开启了
+            [[ZCLibServer getLibServer] insertSysMsg:[self getZCIMConfig] msg:[NSString stringWithFormat:@"%@ %@",ZCSTLocalString(@"未解决问题？点击"),ZCSTLocalString(@"转人工服务")]  start:^{
+                
+            } success:^(NSDictionary *dict, ZCNetWorkCode sendCode) {
+                if ([zcLibConvertToString(dict[@"code"]) intValue] == 1 && ![self getZCIMConfig].isArtificial) {
+                    [[ZCUICore getUICore] addTipTurnToArtificialMsg];
+                }
+            } failed:^(NSString *errorMessage, ZCNetWorkCode errorCode) {
+                
+            }];
+        }
     }
     
     // collectionView item 点击
@@ -1748,7 +1808,7 @@
         NSDictionary * dict = (NSDictionary*)object;
         
         // 发送完成再计数
-        [[ZCUICore getUICore] cleanUserCount];
+//        [[ZCUICore getUICore] cleanUserCount];
         
         //        * 正在发送的消息对象，方便更新状态
         __block ZCLibMessage    *sendMessage;
@@ -1836,8 +1896,8 @@
                      *   4.中断计时
                      *
                      **/
-                    [[ZCUICore getUICore] cleanUserCount];
-                    [[ZCUICore getUICore] cleanAdminCount];
+//                    [[ZCUICore getUICore] cleanUserCount];
+//                    [[ZCUICore getUICore] cleanAdminCount];
                     [_keyboardTools hideKeyboard];
                     [_keyboardTools setKeyBoardStatus:ZCKeyboardStatusNewSession];
                     [[ZCUICore getUICore] addTipsListenerMessage:ZCTipMessageOverWord];
@@ -1911,7 +1971,7 @@
             
             
             // icon
-            ZCUIImageView * icon = [[ZCUIImageView alloc]initWithFrame:CGRectMake(10, 10, 14,14)];
+            SobotImageView * icon = [[SobotImageView alloc]initWithFrame:CGRectMake(10, 10, 14,14)];
             if (![@"" isEqual:zcLibConvertToString(icoUrl)]) {
                 [icon loadWithURL:[NSURL URLWithString:zcUrlEncodedString(icoUrl)] placeholer:[ZCUITools zcuiGetBundleImage:@"zcicon_annunciate"] showActivityIndicatorView:NO];
             }else{
@@ -2537,6 +2597,7 @@
     } else {
         //横屏
     }
+    [_keyboardTools setLaySubViewUI];
 }
 
 
@@ -3100,24 +3161,25 @@
    
     
     self.moreButton=[UIButton buttonWithType:UIButtonTypeCustom];
-    [self.moreButton setFrame:CGRectMake(self.frame.size.width-44, NavBarHeight-44, 44, 44)];
-    [self.moreButton.imageView setContentMode:UIViewContentModeScaleAspectFit];
-    [self.moreButton setContentEdgeInsets:UIEdgeInsetsZero];
-    [self.moreButton setContentHorizontalAlignment:UIControlContentHorizontalAlignmentRight];
-    [self.moreButton setAutoresizesSubviews:YES];
-    [self.moreButton setAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleTopMargin];
-    [self.moreButton setImageEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 15)];
-    [self.moreButton setImage:[ZCUITools zcuiGetBundleImage:@"zcicon_btnmore"] forState:UIControlStateNormal];
-    [self.moreButton setImage:[ZCUITools zcuiGetBundleImage:@"zcicon_btnmore_press"] forState:UIControlStateHighlighted];
-    if (zcLibConvertToString([ZCUICore getUICore].kitInfo.moreBtnNolImg).length >0) {
-        [self.moreButton setImage:[ZCUITools zcuiGetBundleImage:zcLibConvertToString([ZCUICore getUICore].kitInfo.moreBtnNolImg)]  forState:UIControlStateNormal];
-    }
-    if (zcLibConvertToString([ZCUICore getUICore].kitInfo.moreBtnSelImg).length >0) {
-        [self.moreButton setImage:[ZCUITools zcuiGetBundleImage:zcLibConvertToString([ZCUICore getUICore].kitInfo.moreBtnSelImg)]  forState:UIControlStateHighlighted];
-    }
     CGFloat btnItemWidth = 0;
     if(![ZCUICore getUICore].kitInfo.hideNavBtnMore){
         btnItemWidth = 44;
+        
+        [self.moreButton setFrame:CGRectMake(self.frame.size.width-44, NavBarHeight-44, 44, 44)];
+        [self.moreButton.imageView setContentMode:UIViewContentModeScaleAspectFit];
+        [self.moreButton setContentEdgeInsets:UIEdgeInsetsZero];
+        [self.moreButton setContentHorizontalAlignment:UIControlContentHorizontalAlignmentRight];
+        [self.moreButton setAutoresizesSubviews:YES];
+        [self.moreButton setAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleTopMargin];
+        [self.moreButton setImageEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 15)];
+        [self.moreButton setImage:[ZCUITools zcuiGetBundleImage:@"zcicon_btnmore"] forState:UIControlStateNormal];
+        [self.moreButton setImage:[ZCUITools zcuiGetBundleImage:@"zcicon_btnmore_press"] forState:UIControlStateHighlighted];
+        if (zcLibConvertToString([ZCUICore getUICore].kitInfo.moreBtnNolImg).length >0) {
+            [self.moreButton setImage:[ZCUITools zcuiGetBundleImage:zcLibConvertToString([ZCUICore getUICore].kitInfo.moreBtnNolImg)]  forState:UIControlStateNormal];
+        }
+        if (zcLibConvertToString([ZCUICore getUICore].kitInfo.moreBtnSelImg).length >0) {
+            [self.moreButton setImage:[ZCUITools zcuiGetBundleImage:zcLibConvertToString([ZCUICore getUICore].kitInfo.moreBtnSelImg)]  forState:UIControlStateHighlighted];
+        }
         [self.moreButton setFrame:CGRectMake(self.frame.size.width-btnItemWidth, NavBarHeight-44, 44, 44)];
         [self.topView addSubview:self.moreButton];
         self.moreButton.tag = BUTTON_MORE;
@@ -3126,10 +3188,8 @@
     
     if ([ZCUICore getUICore].kitInfo.isShowEvaluation) {
         
-        self.zcTitleView.frame = CGRectMake(100, NavBarHeight-44, self.frame.size.width- btnItemWidth*2.5 - 44*2.5, 44);
-        
         self.evaluationBtn=[UIButton buttonWithType:UIButtonTypeCustom];
-        [self.evaluationBtn setFrame:CGRectMake(self.frame.size.width-44 - btnItemWidth, NavBarHeight-44, 44, 44)];
+        [self.evaluationBtn setFrame:CGRectMake(self.frame.size.width - 44 - btnItemWidth, NavBarHeight-44, 44, 44)];
         [self.evaluationBtn.imageView setContentMode:UIViewContentModeScaleAspectFit];
         [self.evaluationBtn setContentEdgeInsets:UIEdgeInsetsZero];
         [self.evaluationBtn setContentHorizontalAlignment:UIControlContentHorizontalAlignmentRight];
@@ -3148,11 +3208,8 @@
     }
     
     if ([ZCUICore getUICore].kitInfo.isShowTelIcon ) {
-        
-        self.zcTitleView.frame = CGRectMake(100, NavBarHeight-44, self.frame.size.width- btnItemWidth*2.5 - 44*2.5, 44);
-        
         self.telBtn=[UIButton buttonWithType:UIButtonTypeCustom];
-        [self.telBtn setFrame:CGRectMake(self.frame.size.width-44 - btnItemWidth, NavBarHeight-44, 44, 44)];
+        [self.telBtn setFrame:CGRectMake(self.frame.size.width- 44 - btnItemWidth, NavBarHeight-44, 44, 44)];
         [self.telBtn.imageView setContentMode:UIViewContentModeScaleAspectFit];
         [self.telBtn setContentEdgeInsets:UIEdgeInsetsZero];
         [self.telBtn setContentHorizontalAlignment:UIControlContentHorizontalAlignmentRight];
@@ -3171,11 +3228,8 @@
     }
     
     if ([ZCUICore getUICore].kitInfo.isShowClose) {
-        
-        self.zcTitleView.frame = CGRectMake(btnItemWidth+44, NavBarHeight-44, self.frame.size.width-(btnItemWidth+44)*2, 44);
-        
         self.closeButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        [self.closeButton setFrame:CGRectMake(self.frame.size.width-btnItemWidth - 44, NavBarHeight-44, 44, 44)];
+        [self.closeButton setFrame:CGRectMake(self.frame.size.width - btnItemWidth - 44, NavBarHeight-44, 44, 44)];
         [self.closeButton.imageView setContentMode:UIViewContentModeScaleAspectFit];
         [self.closeButton setAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleTopMargin];
         [self.closeButton setContentEdgeInsets:UIEdgeInsetsZero];
@@ -3194,9 +3248,17 @@
         [self.closeButton addTarget:self action:@selector(buttonClick:) forControlEvents:UIControlEventTouchUpInside];
         if(![self getZCIMConfig].isArtificial){
             self.closeButton.hidden = YES;
+            
+        }else{
+            btnItemWidth = btnItemWidth + 44;
         }
     }
     
+    if(btnItemWidth > 80){
+        self.zcTitleView.frame = CGRectMake(btnItemWidth, NavBarHeight-44, self.frame.size.width- btnItemWidth * 2, 44);
+    }else{
+        self.zcTitleView.frame = CGRectMake(80, NavBarHeight-44, self.frame.size.width- 80*2, 44);
+    }
     [self setTitleViewRTL];
 }
 
@@ -3229,55 +3291,53 @@
         if([self getZCIMConfig].isArtificial){
             return;
         }
+        NSString *groupId = [[ZCUICore getUICore] getTempGroupId];
+        NSString *uid = [[ZCUICore getUICore] getLibConfig].uid;
         
-        ZCLeaveMsgVC *vc = [[ZCLeaveMsgVC alloc]init];
-        vc.msgTxt = [self getZCIMConfig].msgLeaveTxt;
-        vc.msgTmp = [self getZCIMConfig].msgLeaveContentTxt;
-        
-        vc.passMsgBlock = ^(NSString *msg) {
-          // 发送离线消息 （只是本地数据的展示，不可发给机器人或者人工客服）
-
-            ZCLibMessage * libMessage =  [[ZCUICore getUICore] setLocalDataToArr:ZCTipMessageOrderLeave type:0 duration:0 style:0 send:YES name:@"" content:msg config:[self getZCIMConfig]];
-            libMessage.leaveMsgFlag = 1;
-            libMessage.sendStatus = 0;
-            [ZCUITools zcModelStringToAttributeString:libMessage];
-            [[ZCUICore getUICore].listArray addObject:libMessage];
+        __weak ZCChatView *weakSelf = self;
+        [[ZCLibServer getLibServer] initLeaveMsgConfig:groupId uid:uid error:^(ZCNetWorkCode status, NSString *errorMessage) {
+            [[ZCUIToastTools shareToast] showToast:errorMessage duration:2.0f view:self position:ZCToastPositionCenter];
+        } success:^(NSString *msgLeaveTxt, NSString *msgLeaveContentTxt,NSString *leaveExplain) {
+            ZCLeaveMsgVC *vc = [[ZCLeaveMsgVC alloc]init];
+            vc.msgTxt = msgLeaveTxt;
+            vc.leaveExplain =
+            vc.msgTmp = msgLeaveContentTxt;
+            vc.groupId = [[ZCUICore getUICore] getTempGroupId];
+            vc.leaveExplain = leaveExplain;
+            __strong ZCChatView *strongSelf = weakSelf;
+            vc.passMsgBlock = ^(NSString *msg) {
+              // 发送离线消息 （只是本地数据的展示，不可发给机器人或者人工客服）
+                ZCLibMessage * libMessage =  [[ZCUICore getUICore] setLocalDataToArr:ZCTipMessageOrderLeave type:0 duration:0 style:0 send:YES name:@"" content:msg config:[self getZCIMConfig]];
+                libMessage.leaveMsgFlag = 1;
+                libMessage.sendStatus = 0;
+                [ZCUITools zcModelStringToAttributeString:libMessage];
+                [[ZCUICore getUICore].listArray addObject:libMessage];
+                
+                ZCLibMessage *tipMsg2 = [[ZCUICore getUICore] setLocalDataToArr:ZCTipMessageChatCloseByLeaveMsg type:0 duration:0 style:ZCTipMessageLeaveSuccess send:NO name:@"" content:@"" config:[self getZCIMConfig]];
+                [ZCUITools zcModelStringToAttributeString:tipMsg2];
+                [[ZCUICore getUICore].listArray addObject:tipMsg2];
+                [strongSelf.listTable reloadData];
+                [strongSelf scrollTableToBottom];
+                
+                [_keyboardTools setKeyBoardStatus:ZCKeyboardStatusNewSession];
+                // 键盘状态发生变化了，需要重新设置table的高度，因为新会话的键盘高度变化了
+                [strongSelf setFrameForListTable];
+            };
             
-//            ZCLibMessage *tipMsg = [[ZCUICore getUICore] setLocalDataToArr:ZCTipMessageLeaveSuccess type:0 duration:0 style:ZCTipMessageLeaveSuccess send:NO name:@"" content:@"" config:[self getZCIMConfig]];
-//            [[ZCUICore getUICore].listArray addObject:tipMsg];
-            
-            ZCLibMessage *tipMsg2 = [[ZCUICore getUICore] setLocalDataToArr:ZCTipMessageChatCloseByLeaveMsg type:0 duration:0 style:ZCTipMessageLeaveSuccess send:NO name:@"" content:@"" config:[self getZCIMConfig]];
-            
-            [ZCUITools zcModelStringToAttributeString:tipMsg2];
-            [[ZCUICore getUICore].listArray addObject:tipMsg2];
-            
-            [self.listTable reloadData];
-            [self scrollTableToBottom];
-            
-            [_keyboardTools setKeyBoardStatus:ZCKeyboardStatusNewSession];
-
-            // 键盘状态发生变化了，需要重新设置table的高度，因为新会话的键盘高度变化了
-            [self setFrameForListTable];
-        };
-        
-        if (isShow) {
-
-            [[ZCUIToastTools shareToast] showToast:msg duration:2.0f view:self position:ZCToastPositionCenter];
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [self openNewPage:vc];
-            });
-        }else{
-
-            [self openNewPage:vc];
-        }
-        
-        
+            if (isShow) {
+                [[ZCUIToastTools shareToast] showToast:msg duration:2.0f view:self position:ZCToastPositionCenter];
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    [weakSelf openNewPage:vc];
+                });
+            }else{
+                [weakSelf openNewPage:vc];
+            }
+        }];
         return;
     }
     
-    
-// 1. 开关是否开启
-    [[ZCLibServer getLibServer] getWsTemplateList:[self getZCIMConfig] start:^{
+    // 留言转工单 先查看工单列表模板
+    [[ZCLibServer getLibServer] getWsTemplateList:[self getZCIMConfig] groupId:[[ZCUICore getUICore] getTempGroupId] start:^{
         [[ZCUIToastTools shareToast] showProgress:@"" with:self];
     } success:^(NSDictionary *dict, ZCMessageSendCode sendCode) {
         [[ZCUIToastTools shareToast] dismisProgress];
@@ -3296,12 +3356,9 @@
                 if (arr.count == 1) {
                     ZCWsTemplateModel * model = [array lastObject];
                     NSDictionary * Dic = @{@"templateId":zcLibConvertToString(model.templateId)};
-                    
+                    // 1个直接跳转
                     [saveSelf jumpNewPageVC:ZC_LeaveMsgPage IsExist:isExist isShowToat:NO tipMsg:@"" Dict:Dic];
                 }else{
-                    
-                    
-                    
                     // 2.掉接口 布局UI
                     ZCSelLeaveView * selMsgView = [[ZCSelLeaveView alloc]initActionSheet:array  WithView:self MsgID:[self getPlatformInfo].config.robotFlag IsExist:isExist];
                     
@@ -3315,26 +3372,22 @@
 
                         [selMsgView showInView:self];
                     }
-                        
                    
                     selMsgView.msgSetClickBlock = ^(ZCWsTemplateModel * _Nonnull itemModel) {
-                
                         NSDictionary * Dic = @{@"templateId":zcLibConvertToString(itemModel.templateId)};
                         [saveSelf jumpNewPageVC:ZC_LeaveMsgPage IsExist:isExist isShowToat:isShow tipMsg:msg Dict:Dic];
                     };
                 }
-                
             }else{
                 [self jumpNewPageVC:ZC_LeaveMsgPage IsExist:isExist isShowToat:isShow tipMsg:msg Dict:nil];
             }
 
          }
-      
-     } fail:^(NSString *errorMsg, ZCMessageSendCode errorCode) {
-          [[ZCUIToastTools shareToast] showToast:errorMsg duration:1.5 view:self position:ZCToastPositionCenter];
+    } fail:^(NSString *errorMsg, ZCMessageSendCode errorCode) {
+        [[ZCUIToastTools shareToast] showToast:errorMsg duration:1.5 view:self position:ZCToastPositionCenter];
     }];
-    
 }
+
 /*
   设置 成员变量 isClickCloseBtn 为false
   在isShowReturnTips 为true 切点击了暂时离开 去调用

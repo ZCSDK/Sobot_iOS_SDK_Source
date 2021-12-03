@@ -7,7 +7,8 @@
 //
 
 #import "ZCChatBaseCell.h"
-#import "ZCUIImageView.h"
+//#import "ZCUIImageView.h"
+#import "SobotImageView.h"
 
 /**
  *  聊天信息类型为单个图片的cell
@@ -17,7 +18,7 @@
 /**
  *  单个图片
  */
-@property (nonatomic,strong) ZCUIImageView             *ivSingleImage;
+@property (nonatomic,strong) SobotImageView             *ivSingleImage;
 
 
 -(void)setProgress:(CGFloat) progress;

@@ -8,7 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import "ZCMultiwheelModel.h"
-#import "ZCUIImageView.h"
+//#import "ZCUIImageView.h"
+#import "SobotImageView.h"
 
 //  用于垂直布局和水平布局时设置 item之间的边缘距离
 typedef NS_ENUM(NSInteger,CollectionCellType){
@@ -20,7 +21,7 @@ FOUNDATION_EXPORT NSString *const kZCCollectionViewCellID;
 
 @interface ZCCollectionViewCell : UICollectionViewCell
 
-@property (strong, nonatomic) ZCUIImageView *posterView;// 图片
+@property (strong, nonatomic) SobotImageView *posterView;// 图片
 @property (strong, nonatomic) UILabel *labTitle; //标题
 @property (strong, nonatomic) UILabel *labDesc; // 要素内容
 @property (strong, nonatomic) UILabel *labTag; // 标签 （eg 电影评分）

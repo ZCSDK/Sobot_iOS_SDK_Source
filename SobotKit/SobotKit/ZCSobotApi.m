@@ -43,7 +43,7 @@
         target:(id<ZCChatControllerDelegate>) delegate
        pageBlock:(void (^)(id object,ZCPageBlockType type))pageClick
     messageLinkClick:(BOOL (^)(NSString *link)) messagelinkBlock{
-     if(byController==nil){
+     if(byController==nil || ![byController isKindOfClass:[UIViewController class]]){
          return;
      }
      if(info == nil){
@@ -562,10 +562,21 @@
                     }
                     return;
                 }
-                NSArray *arr = dict[@"data"][@"cids"];
-                
-                if(arr !=nil && [arr isKindOfClass:[NSArray class]]  && arr.count > 0){
-                    [self getLastHistoryMessage:[NSMutableArray arrayWithArray:arr] info:info blcok:resultBlock];
+                NSMutableArray *arr = [NSMutableArray arrayWithArray:dict[@"data"][@"cids"]] ;
+                //先将当前正在会话的cid添加到cid列表中
+                BOOL isHave = NO;
+                if (arr !=nil && arr.count>0) {
+                    for (NSString *cid in arr) {
+                        if ([cid isEqualToString:info.config.cid] && zcLibConvertToString(info.config.cid).length > 0) {
+                            isHave = YES;
+                        }
+                    }
+                }
+                if (!isHave && arr !=nil ) {
+                    [arr addObject:info.config.cid];
+                }
+                if(arr !=nil && [arr isKindOfClass:[NSMutableArray class]]  && arr.count > 0){
+                    [self getLastHistoryMessage:arr info:info blcok:resultBlock];
                 }else if (!zcLibIs_null(arr) && arr.count == 0){
                     if(resultBlock){
                         resultBlock(info,nil,-3);
@@ -603,7 +614,7 @@
                         info.lastMsg = [NSString stringWithFormat:@"[%@]", ZCSTLocalString(@"视频")];
                     }
                     if(lastModel.richModel.msgType == ZCMessageTypeSound){
-                        info.lastMsg = [NSString stringWithFormat:@"[%@]", ZCSTLocalString(@"声音")];
+                        info.lastMsg = [NSString stringWithFormat:@"[%@]", ZCSTLocalString(@"语音")];
                     }
                     if(lastModel.richModel.msgType == ZCMessageTypePhoto){
                         info.lastMsg = [NSString stringWithFormat:@"[%@]", ZCSTLocalString(@"图片")];
@@ -736,7 +747,7 @@
     }
     
     NSString *serverUrl = [NSString stringWithFormat:@"https://img.sobot.com/mobile/multilingual/ios/ios_%@_%@.json",[zcGetSDKVersion() substringToIndex:5],language];
-    NSLog(@"%@",serverUrl);
+//    NSLog(@"%@",serverUrl);
     // 下载，播放网络声音
 //    https://img.sobot.com/mobile/multilingual/ios/ios_2.8.6_en_lproj.json
 //    https://img.sobot.com/mobile/multilingual/ios/ios_2.8.6_en_proj.json
@@ -817,5 +828,11 @@
 
 +(NSString *)zcGetCurrentTimes{
     return zcLibGetCurrentTimes();
+}
+
++(void)closeSobotPage{
+    if ([ZCUICore getUICore].ZCClosePageBlock) {
+        [ZCUICore getUICore].ZCClosePageBlock(ZC_UserClosePage);
+    }
 }
 @end

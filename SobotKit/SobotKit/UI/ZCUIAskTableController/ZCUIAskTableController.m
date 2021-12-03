@@ -139,6 +139,22 @@
     lineView_2.backgroundColor = UIColorFromThemeColor(ZCBgLineColor);
     [footView addSubview:lineView_2];
     
+    int th = 0;
+    if(zcLibConvertToString(_dict[@"formSafety"]).length > 0){
+        UILabel *label=[[UILabel alloc] initWithFrame:CGRectMake(15, 10, [self getCurViewWidth]-30, 0)];
+        label.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+        [label setFont:ZCUIFont14];
+        [label setText:zcLibConvertToString(_dict[@"formSafety"])];
+        //    [label setText:_listArray[section][@"sectionName"]];
+        [label setBackgroundColor:[UIColor clearColor]];
+        [label setTextAlignment:NSTextAlignmentLeft];
+        [label setTextColor:UIColorFromThemeColor(ZCTextSubColor)];
+        label.numberOfLines = 0;
+        [label sizeToFit];
+        [footView addSubview:label];
+        th = CGRectGetMaxY(label.frame);
+    }
+    
     // 区尾添加提交按钮 2.7.1改版
     UIButton * commitBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [commitBtn setTitle:ZCSTLocalString(@"提交并咨询") forState:UIControlStateNormal];
@@ -146,7 +162,7 @@
     [commitBtn setBackgroundColor:[ZCUITools zcgetLeaveSubmitImgColor]];
     [commitBtn setTitleColor:[ZCUITools zcgetLeaveSubmitTextColor] forState:UIControlStateNormal];
     [commitBtn setTitleColor:[ZCUITools zcgetLeaveSubmitTextColor] forState:UIControlStateHighlighted];
-    commitBtn.frame = CGRectMake(ZCNumber(15), ZCNumber(15), ScreenWidth- ZCNumber(30), ZCNumber(44));
+    commitBtn.frame = CGRectMake(ZCNumber(15),th + ZCNumber(15), ScreenWidth- ZCNumber(30), ZCNumber(44));
     commitBtn.tag = BUTTON_MORE;
     [commitBtn addTarget:self action:@selector(buttonClick:) forControlEvents:UIControlEventTouchUpInside];
     commitBtn.layer.masksToBounds = YES;
@@ -371,7 +387,9 @@
     if (version.doubleValue >= 11.0) {
         [_listTable setInsetsContentViewsToSafeArea:NO];
     }
-    
+    if (version.doubleValue >= 15.0) {
+        _listTable.sectionHeaderTopPadding = 0;
+    }
     _listTable.backgroundColor = UIColorFromThemeColor(ZCBgLightGrayDarkColor);
     
     UITapGestureRecognizer *gestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapHideKeyboard)];

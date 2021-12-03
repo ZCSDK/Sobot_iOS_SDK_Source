@@ -22,7 +22,8 @@
 #import "ZCLibMessage.h"
 
 //#import "ZCXJAlbumController.h"
-#import "ZCUIXHImageViewer.h"
+#import "SobotXHImageViewer.h"
+#import "SobotImageView.h"
 #import "ZCVideoPlayer.h"
 #import "ZCUIWebController.h"
 #import "ZCToolsCore.h"
@@ -414,13 +415,13 @@
                     CALayer *calayer = picView.layer.mask;
                     [picView.layer.mask removeFromSuperlayer];
                     
-                    ZCUIXHImageViewer *xh=[[ZCUIXHImageViewer alloc] initWithImageViewerWillDismissWithSelectedViewBlock:^(ZCUIXHImageViewer *imageViewer, UIImageView *selectedView) {
+                    SobotXHImageViewer *xh=[[SobotXHImageViewer alloc] initWithImageViewerWillDismissWithSelectedViewBlock:^(SobotXHImageViewer *imageViewer, UIImageView *selectedView) {
                         
-                    } didDismissWithSelectedViewBlock:^(ZCUIXHImageViewer *imageViewer, UIImageView *selectedView) {
+                    } didDismissWithSelectedViewBlock:^(SobotXHImageViewer *imageViewer, UIImageView *selectedView) {
                         
                         selectedView.layer.mask = calayer;
                         [selectedView setNeedsDisplay];
-                    } didChangeToImageViewBlock:^(ZCUIXHImageViewer *imageViewer, UIImageView *selectedView) {
+                    } didChangeToImageViewBlock:^(SobotXHImageViewer *imageViewer, UIImageView *selectedView) {
                         
                     }];
                     

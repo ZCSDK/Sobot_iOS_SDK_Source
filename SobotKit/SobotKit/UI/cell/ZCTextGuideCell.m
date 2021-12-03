@@ -7,8 +7,8 @@
 //
 
 #import "ZCTextGuideCell.h"
-#import "ZCUIXHImageViewer.h"
-#import "ZCUIImageView.h"
+#import "SobotXHImageViewer.h"
+#import "SobotImageView.h"
 #import "ZCLibGlobalDefine.h"
 #import "ZCActionSheet.h"
 #import "ZCUIToastTools.h"
@@ -22,11 +22,11 @@
 #import "ZCHtmlFilter.h"
 #import "ZCToolsCore.h"
 
-@interface ZCTextGuideCell()<ZCMLEmojiLabelDelegate,ZCUIXHImageViewerDelegate,ZCActionSheetDelegate>{
+@interface ZCTextGuideCell()<ZCMLEmojiLabelDelegate,SobotXHImageViewerDelegate,ZCActionSheetDelegate>{
     NSString    *callURL;
     ZCMLEmojiLabel *_lblEmojiQuestion;// 标题
     ZCMLEmojiLabel *_lblTextMsg;
-    ZCUIImageView *_middleImageView; // 图片
+    SobotImageView *_middleImageView; // 图片
     ZCMLEmojiLabel *_sugguestLabel;  // 引导建议
     ZCMLEmojiLabel *_lookMoreLabel; // 展开
     UIView       * _lineView; // 线条
@@ -34,7 +34,7 @@
     
     UILabel * _msgTextLab;// 多轮会话处理高亮标签
     NSString *_coderURLStr;
-    ZCUIXHImageViewer *_imageViewer;
+    SobotXHImageViewer *_imageViewer;
 }
 
 @end
@@ -151,9 +151,9 @@
     return _lblEmojiQuestion;
 }
 
--(ZCUIImageView *)middleImageView{
+-(SobotImageView *)middleImageView{
     if(!_middleImageView){
-        _middleImageView=[[ZCUIImageView alloc] init];
+        _middleImageView=[[SobotImageView alloc] init];
         [_middleImageView setBackgroundColor:[UIColor clearColor]];
         [_middleImageView setContentMode:UIViewContentModeScaleAspectFill];
         _middleImageView.layer.masksToBounds=YES;
@@ -834,9 +834,9 @@
     CALayer *calayer = _picView.layer.mask;
     [_picView.layer.mask removeFromSuperlayer];
     __weak ZCTextGuideCell *weakSelf = self;
-    ZCUIXHImageViewer *xh=[[ZCUIXHImageViewer alloc] initWithImageViewerWillDismissWithSelectedViewBlock:^(ZCUIXHImageViewer *imageViewer, UIImageView *selectedView) {
+    SobotXHImageViewer *xh=[[SobotXHImageViewer alloc] initWithImageViewerWillDismissWithSelectedViewBlock:^(SobotXHImageViewer *imageViewer, UIImageView *selectedView) {
         
-    } didDismissWithSelectedViewBlock:^(ZCUIXHImageViewer *imageViewer, UIImageView *selectedView) {
+    } didDismissWithSelectedViewBlock:^(SobotXHImageViewer *imageViewer, UIImageView *selectedView) {
         selectedView.layer.mask = calayer;
         [selectedView setNeedsDisplay];
         
@@ -844,7 +844,7 @@
             [weakSelf.delegate cellItemClick:weakSelf.tempModel type:ZCChatCellClickTypeTouchImageNO obj:self];
             //                        [self.delegate touchLagerImageView:xh with:NO];
         }
-    } didChangeToImageViewBlock:^(ZCUIXHImageViewer *imageViewer, UIImageView *selectedView) {
+    } didChangeToImageViewBlock:^(SobotXHImageViewer *imageViewer, UIImageView *selectedView) {
         
     }];
     

@@ -473,6 +473,15 @@
     }
     
     [self.navigationController.navigationBar setBarTintColor:[ZCUITools zcgetBgBannerColor]];
+    
+    // iOS15.0 导航栏适配
+    if (zcGetSystemDoubleVersion()>=15.0) {
+        UINavigationBarAppearance *appearance = [UINavigationBarAppearance new];
+        [appearance configureWithOpaqueBackground];
+        appearance.backgroundColor = [ZCUITools zcgetBgBannerColor];
+        self.navigationController.navigationBar.standardAppearance = appearance;
+        self.navigationController.navigationBar.scrollEdgeAppearance = appearance;
+    }
     if ([ZCUICore getUICore].kitInfo.topViewBgColor != nil) {
 //        [self.navigationController.navigationBar setBarTintColor:[ZCUICore getUICore].kitInfo.topViewBgColor];
 //        UINavigationBar *navigationBar = self.navigationController.navigationBar;

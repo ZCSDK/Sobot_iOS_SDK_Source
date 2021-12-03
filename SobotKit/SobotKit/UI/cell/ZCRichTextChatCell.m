@@ -7,8 +7,10 @@
 //
 
 #import "ZCRichTextChatCell.h"
-#import "ZCUIXHImageViewer.h"
-#import "ZCUIImageView.h"
+//#import "ZCUIXHImageViewer.h"
+#import "SobotXHImageViewer.h"
+//#import "ZCUIImageView.h"
+#import "SobotImageView.h"
 #import "ZCLibGlobalDefine.h"
 #import "ZCActionSheet.h"
 #import "ZCUIToastTools.h"
@@ -21,17 +23,17 @@
 
 
 #define MidImageHeight 110
-@interface ZCRichTextChatCell()<ZCMLEmojiLabelDelegate,ZCUIXHImageViewerDelegate,ZCActionSheetDelegate>{
+@interface ZCRichTextChatCell()<ZCMLEmojiLabelDelegate,SobotXHImageViewerDelegate,ZCActionSheetDelegate>{
     NSString    *callURL;
     ZCMLEmojiLabel *_lblTextMsg;
-    ZCUIImageView *_middleImageView; // 图片
+    SobotImageView *_middleImageView; // 图片
     ZCMLEmojiLabel *_sugesstionLabel; // 展开
     ZCMLEmojiLabel *_lookMoreLabel; // 展开
     UIView       * _lineView; // 线条
     
     UIMenuController *menuController;
     NSString *_coderURLStr;
-    ZCUIXHImageViewer *_imageViewer;
+    SobotXHImageViewer *_imageViewer;
 }
 
 @end
@@ -111,9 +113,9 @@
     return _sugesstionLabel;
 }
 
--(ZCUIImageView *)middleImageView{
+-(SobotImageView *)middleImageView{
     if(!_middleImageView){
-        _middleImageView=[[ZCUIImageView alloc] init];
+        _middleImageView=[[SobotImageView alloc] init];
         [_middleImageView setBackgroundColor:[UIColor clearColor]];
         [_middleImageView setContentMode:UIViewContentModeScaleAspectFill];
         _middleImageView.layer.masksToBounds=YES;
@@ -308,7 +310,7 @@
             linkColor = [ZCUITools zcgetChatRightlinkColor];
         }
         if(model.displayMsgAttr!=nil){
-            [ZCChatBaseCell setDisplayAttributedString:model.displayMsgAttr label:_lblTextMsg isRight:[ZCChatBaseCell isRightChat:model]];
+            [ZCChatBaseCell setDisplayAttributedString:model.displayMsgAttr label:_lblTextMsg  model:model guide:NO];
             
         }else{
             [ZCHtmlCore filterHtml:text result:^(NSString * _Nonnull text1, NSMutableArray * _Nonnull arr, NSMutableArray * _Nonnull links) {
@@ -381,7 +383,7 @@
         }
         if(model.displaySugestionattr!=nil){
 //            NSMutableAttributedString* attributedString = [model.displaySugestionattr mutableCopy];
-            [ZCChatBaseCell setDisplayAttributedString:model.displaySugestionattr label:[self sugesstionLabel] isRight:[ZCChatBaseCell isRightChat:model]];
+            [ZCChatBaseCell setDisplayAttributedString:model.displaySugestionattr label:[self sugesstionLabel]  model:model guide:YES];
             
         }else{
             [ZCHtmlCore filterHtml:[model getModelDisplaySugestionText] result:^(NSString * _Nonnull text1, NSMutableArray * _Nonnull arr, NSMutableArray * _Nonnull links) {
@@ -677,9 +679,9 @@
     CALayer *calayer = _picView.layer.mask;
     [_picView.layer.mask removeFromSuperlayer];
     __weak ZCRichTextChatCell *weakSelf = self;
-    ZCUIXHImageViewer *xh=[[ZCUIXHImageViewer alloc] initWithImageViewerWillDismissWithSelectedViewBlock:^(ZCUIXHImageViewer *imageViewer, UIImageView *selectedView) {
+    SobotXHImageViewer *xh=[[SobotXHImageViewer alloc] initWithImageViewerWillDismissWithSelectedViewBlock:^(SobotXHImageViewer *imageViewer, UIImageView *selectedView) {
         
-    } didDismissWithSelectedViewBlock:^(ZCUIXHImageViewer *imageViewer, UIImageView *selectedView) {
+    } didDismissWithSelectedViewBlock:^(SobotXHImageViewer *imageViewer, UIImageView *selectedView) {
         selectedView.layer.mask = calayer;
         [selectedView setNeedsDisplay];
         
@@ -687,7 +689,7 @@
             [weakSelf.delegate cellItemClick:weakSelf.tempModel type:ZCChatCellClickTypeTouchImageNO obj:self];
             //                        [self.delegate touchLagerImageView:xh with:NO];
         }
-    } didChangeToImageViewBlock:^(ZCUIXHImageViewer *imageViewer, UIImageView *selectedView) {
+    } didChangeToImageViewBlock:^(SobotXHImageViewer *imageViewer, UIImageView *selectedView) {
         
     }];
     
@@ -801,7 +803,7 @@
     tempLabel.font = [ZCUITools zcgetKitChatFont];
 
     if(model.displayMsgAttr!=nil){
-        [ZCChatBaseCell setDisplayAttributedString:model.displayMsgAttr label:tempLabel isRight:[ZCChatBaseCell isRightChat:model]];
+        [ZCChatBaseCell setDisplayAttributedString:model.displayMsgAttr label:tempLabel  model:model guide:NO];
         
     }else{
         
@@ -860,7 +862,7 @@
                 linkColor = [ZCUITools zcgetChatRightlinkColor];
             }
 //            NSMutableAttributedString* attributedString = [model.displaySugestionattr mutableCopy];
-            [ZCChatBaseCell setDisplayAttributedString:model.displaySugestionattr label:tempLabel isRight:[ZCChatBaseCell isRightChat:model]];
+            [ZCChatBaseCell setDisplayAttributedString:model.displaySugestionattr label:tempLabel  model:model guide:YES];
             
         }else{
             [ZCHtmlCore filterHtml:[model getModelDisplaySugestionText] result:^(NSString * _Nonnull text1, NSMutableArray * _Nonnull arr, NSMutableArray * _Nonnull links) {

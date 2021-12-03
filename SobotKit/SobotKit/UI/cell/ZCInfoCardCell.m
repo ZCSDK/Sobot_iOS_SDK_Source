@@ -9,8 +9,8 @@
 #import "ZCInfoCardCell.h"
 #import "ZCLibGlobalDefine.h"
 #import "ZCUIColorsDefine.h"
-#import "ZCUIXHImageViewer.h"
-#import "ZCUIImageView.h"
+#import "SobotXHImageViewer.h"
+#import "SobotImageView.h"
 #import "ZCStoreConfiguration.h"
 #import "ZCUICore.h"
 
@@ -26,7 +26,7 @@ typedef NS_ENUM(NSInteger,ZCGoodsCellType){
 };
 //@property (nonatomic,strong) UIView *cellBgView;
 
-@property (nonatomic,strong) ZCUIImageView   *imgPhoto;
+@property (nonatomic,strong) SobotImageView   *imgPhoto;
 
 @property (nonatomic,strong) UILabel * lblTextTitle;
 
@@ -64,7 +64,7 @@ typedef NS_ENUM(NSInteger,ZCGoodsCellType){
 
 //        [self.contentView addSubview:_cellBgView];
         
-        _imgPhoto = [[ZCUIImageView alloc] init];
+        _imgPhoto = [[SobotImageView alloc] init];
         [_imgPhoto setBackgroundColor:[UIColor clearColor]];
         [_imgPhoto setContentMode:UIViewContentModeScaleAspectFill];
         _imgPhoto.layer.cornerRadius = 5;

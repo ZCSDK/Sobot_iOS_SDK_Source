@@ -460,6 +460,9 @@ typedef NS_ENUM(NSUInteger,ZCThemeStyle){
 /// 聊天文本间距
 +(CGFloat )zcgetChatLineSpacing;
 
+/// 引导语行间距，3.0.3新增
++(CGFloat )zcgetChatGuideLineSpacing;
+
 /**
  *
  *  顶踩 按钮 默认文字颜色

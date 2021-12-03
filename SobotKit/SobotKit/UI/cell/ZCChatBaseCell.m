@@ -10,7 +10,8 @@
 #import "ZCLibCommon.h"
 #import "ZCUITools.h"
 #import "ZCLibGlobalDefine.h"
-#import "ZCUIXHImageViewer.h"
+//#import "ZCUIXHImageViewer.h"
+#import "SobotImageView.h"
 #import "ZCIMChat.h"
 #import "ZCStoreConfiguration.h"
 #import "ZCLibClient.h"
@@ -229,12 +230,15 @@
         bgImage=[bgImage resizableImageWithCapInsets:UIEdgeInsetsMake(21, 21, 21, 21)];
         
         [_ivBgView setBackgroundColor:[ZCUITools zcgetRightChatColor]];
+        
+        self.ivBgView.image = nil;
     }else{
         _isRight = NO;
         bgImage = [ZCUITools zcuiGetBundleImage:@"zcicon_pop_green_left_normal"];
         bgImage=[bgImage resizableImageWithCapInsets:UIEdgeInsetsMake(21, 21, 21, 21)];
         
         [_ivBgView setBackgroundColor:[ZCUITools zcgetLeftChatColor]];
+        self.ivBgView.image = nil;
     }
     //设置尖角
     [_ivLayerView setImage:bgImage];
@@ -680,10 +684,15 @@
     [_activityView stopAnimating];
     [_activityView setHidden:YES];
     
-    _ivBgView.hidden=NO;
-    [_ivBgView.layer.mask removeFromSuperlayer];
+//    if(_ivBgView){
+        _ivBgView.hidden=NO;
+        [_ivBgView.layer.mask removeFromSuperlayer];
+//    }
     
-    _ivHeader.image = nil;
+    if(_ivHeader){
+        _ivHeader.image = nil;
+    }
+    
 }
 
 
@@ -744,12 +753,10 @@
 
 
 
-
-+(void)setDisplayAttributedString:(NSMutableAttributedString *) attr label:(UILabel *) label isRight:(BOOL) isRight{
-    
++(void)setDisplayAttributedString:(NSMutableAttributedString *) attr label:(UILabel *) label model:(ZCLibMessage *)curModel guide:(BOOL)isGuide{
     UIColor *textColor = [ZCUITools zcgetLeftChatTextColor];
     UIColor *linkColor = [ZCUITools zcgetChatLeftLinkColor];
-    if(isRight){
+    if([self isRightChat:curModel]){
         textColor = [ZCUITools zcgetRightChatTextColor];
         linkColor = [ZCUITools zcgetChatRightlinkColor];
     }
@@ -784,8 +791,11 @@
     // 文本段落排版格式
     NSMutableParagraphStyle *textStyle = [[NSMutableParagraphStyle alloc] init];
     textStyle.lineBreakMode = NSLineBreakByWordWrapping; // 结尾部分的内容以……方式省略
-    textStyle.lineSpacing = [ZCUITools zcgetChatLineSpacing]; // 字体的行间
-    
+    if (isGuide) {
+        textStyle.lineSpacing = [ZCUITools zcgetChatGuideLineSpacing]; // 调整行间距
+    }else{
+        textStyle.lineSpacing = [ZCUITools zcgetChatLineSpacing]; // 调整行间距
+    }
     NSMutableDictionary *textAttributes = [[NSMutableDictionary alloc] init];
     // NSParagraphStyleAttributeName 文本段落排版格式
     [textAttributes setValue:textStyle forKey:NSParagraphStyleAttributeName];
@@ -795,4 +805,5 @@
     
     label.text = [attributedString copy];
 }
+
 @end

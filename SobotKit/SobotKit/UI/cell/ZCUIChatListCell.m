@@ -41,7 +41,7 @@
         [self.contentView addSubview:_lblNickName];
         _lblNickName.hidden=NO;
         
-        _ivHeader = [[ZCUIImageView alloc] initWithFrame:CGRectMake(5, 5, 50, 50)];
+        _ivHeader = [[SobotImageView alloc] initWithFrame:CGRectMake(5, 5, 50, 50)];
         [_ivHeader setContentMode:UIViewContentModeScaleAspectFill];
         [_ivHeader.layer setMasksToBounds:YES];
         [_ivHeader setBackgroundColor:[UIColor clearColor]];

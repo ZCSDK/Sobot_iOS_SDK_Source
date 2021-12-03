@@ -164,4 +164,6 @@ typedef NS_ENUM(NSUInteger,ZCKeyboardViewStatus){
 // 暗黑模式切换是，重新加载图片
 -(void)reloadImages;
 
+// chatview页面旋转切换时触发 重新布局键盘UIUI相关
+-(void)setLaySubViewUI;
 @end

@@ -41,34 +41,34 @@
 
 
 +(void)zcModelStringToAttributeString:(id) model{
-//    ZCLibMessage *temModel = model;
-//    if(![temModel isKindOfClass:[ZCLibMessage class]]){
-//        return;
-//    }
+    ZCLibMessage *temModel = model;
+    if(![temModel isKindOfClass:[ZCLibMessage class]]){
+        return;
+    }
     
     /*
-//    if(zcLibConvertToString([temModel getModelDisplayText]).length > 0){
-//        [ZCUITools attributedStringByHTML:[temModel getModelDisplayText] textColor:textColor linkColor:linkColor result:^(NSMutableAttributedString *attr) {
-//            temModel.displayAttr = attr;
-//        }];
-//    }
+    if(zcLibConvertToString([temModel getModelDisplayText]).length > 0){
+        [ZCUITools attributedStringByHTML:[temModel getModelDisplayText] textColor:textColor linkColor:linkColor result:^(NSMutableAttributedString *attr) {
+            temModel.displayAttr = attr;
+        }];
+    }
      */
     
-//    if(zcLibConvertToString([temModel getModelDisplaySugestionText]).length > 0  && temModel.displaySugestionattr==nil){
-//        UIColor *textColor = [ZCUITools zcgetRightChatTextColor];
-//        UIColor *linkColor = [ZCUITools zcgetChatRightlinkColor];
-//        if(temModel.senderType > 0){
-//            textColor = [ZCUITools zcgetLeftChatTextColor];
-//            linkColor = [ZCUITools zcgetChatLeftLinkColor];
-//        }
-//        [ZCUITools attributedStringByHTML:[temModel getModelDisplaySugestionText] textColor:textColor linkColor:linkColor result:^(NSMutableAttributedString *attr,NSString *htmlText) {
-//            NSMutableParagraphStyle * paragraphStyle = [[NSMutableParagraphStyle alloc] init];
-//            [paragraphStyle setLineSpacing:12.0];
-//            [attr addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, [attr length])];
-//
-//            temModel.displaySugestionattr = attr;
-//        }];
-//    }
+    if(zcLibConvertToString([temModel getModelDisplaySugestionText]).length > 0  && temModel.displaySugestionattr==nil){
+        UIColor *textColor = [ZCUITools zcgetRightChatTextColor];
+        UIColor *linkColor = [ZCUITools zcgetChatRightlinkColor];
+        if(temModel.senderType > 0){
+            textColor = [ZCUITools zcgetLeftChatTextColor];
+            linkColor = [ZCUITools zcgetChatLeftLinkColor];
+        }
+        [ZCUITools attributedStringByHTML:[temModel getModelDisplaySugestionText] textColor:textColor linkColor:linkColor result:^(NSMutableAttributedString *attr,NSString *htmlText) {
+            NSMutableParagraphStyle * paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+            [paragraphStyle setLineSpacing:12.0];
+            [attr addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, [attr length])];
+
+            temModel.displaySugestionattr = attr;
+        }];
+    }
 }
 
 
@@ -1074,6 +1074,14 @@
     return 3.0f;
 }
 
+
++(CGFloat )zcgetChatGuideLineSpacing{
+    ZCKitInfo *configModel = [self getZCKitInfo];
+    if (configModel != nil && configModel.guideLineSpacing>0) {
+        return configModel.guideLineSpacing;
+    }
+    return [self zcgetChatLineSpacing];
+}
 
 +(UIColor *)getNotifitionTopViewBgColor{
     ZCKitInfo *configModel = [self getZCKitInfo];

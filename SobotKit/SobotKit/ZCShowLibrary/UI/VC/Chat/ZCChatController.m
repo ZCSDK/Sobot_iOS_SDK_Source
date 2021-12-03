@@ -169,6 +169,13 @@
 
     [self.view addSubview:_chatView];
     [_chatView showZCChatView:[ZCUICore getUICore].kitInfo];
+    
+    // 用户在自己的页面关闭智齿页面
+    [ZCUICore getUICore].ZCClosePageBlock = ^(ZCPagesType type) {
+        if (type == ZC_UserClosePage) {
+            [self closePage];
+        }
+    };
 }
 
 - (void)orientChange:(NSNotification *)notification{
@@ -417,6 +424,18 @@
         [ZCUICore getUICore].kitInfo = info;
     }
     return self;
+}
+
+#pragma mark 用户在其他页面主动关闭页面
+-(void)closePage{
+    [self.chatView setIsCloseNo];
+    if (self.navigationController && _isPush) {
+        // 滑动返回会调用 goBack方法
+        [self.navigationController popViewControllerAnimated:YES];
+    }else{
+        [self goBack];
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }
 }
 
 

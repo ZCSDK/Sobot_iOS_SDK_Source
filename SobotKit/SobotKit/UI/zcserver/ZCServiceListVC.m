@@ -84,7 +84,7 @@
     
 
     self.view.backgroundColor = UIColorFromThemeColor(ZCBgLightGrayDarkColor);
-    NSLog(@"viewdidLoad：%@",NSStringFromCGRect(self.view.frame));
+//    NSLog(@"viewdidLoad：%@",NSStringFromCGRect(self.view.frame));
     _listArray = [NSMutableArray arrayWithCapacity:0];
     
     [self createSubviews];
@@ -115,7 +115,9 @@
        [_listView setInsetsContentViewsToSafeArea:NO];
     }
      _listView.backgroundColor = UIColorFromThemeColor(ZCBgLightGrayDarkColor);
-    
+    if (version.doubleValue >=15.0) {
+        _listView.sectionHeaderTopPadding = 0;
+    }
     
     UIView * footView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, [self getCurViewWidth], 15)];
     _listView.tableFooterView = footView;

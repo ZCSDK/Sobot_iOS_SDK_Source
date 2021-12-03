@@ -50,11 +50,11 @@
 
 普通版：
 
-下载链接：[iOS_SDK_3.0.2](https://img.sobot.com/mobile/sdk/iOS_SDK_3.0.2.zip)
+下载链接：[iOS_SDK_3.0.5](https://img.sobot.com/mobile/sdk/iOS_SDK_3.0.5.zip)
 
 电商版：
 
-下载链接：[iOS_SDK_3.0.2_电商版](https://img.sobot.com/mobile/sdk/iOS_SDK_3.0.2_MALL.zip)
+下载链接：[iOS_SDK_3.0.5_电商版](https://img.sobot.com/mobile/sdk/iOS_SDK_3.0.5_MALL.zip)
 
 解压[iOS_SDK]，添加必要文件SobotKit.framework和SobotKit.bundle到你的工程里。智齿iOS_SDK 的实现，依赖了一些系统的框架，在开发应用时需要在工程里加入这些框架。开发者首先点击工程右边的工程名，然后在工程名右边依次选择TARGETS -> BuiLd Phases -> Link Binary With Libraries，展开 LinkBinary With Libraries后点击展开后下面的 + 来添加下面的依赖项:
 
@@ -676,9 +676,16 @@ initInfo.multi_params = @{@"customField15619769556831":@"显示xxyyyzzz1032"};
 
 /**
  *   商品卡片信息是否自动发送（转人工成功时，自动发送商品卡片信息）
- *   默认不发送
+ *   默认关闭  开启后默认一次有效会话内只发送一次
  **/
-// @property (nonatomic,assign) BOOL isSendInfoCard;
+@property (nonatomic,assign) BOOL isSendInfoCard;
+
+/*
+   是否每次都自动发送商品信息 （转人工成功时，自动发送商品卡片信息）
+   需要先开启 isSendInfoCard = YES
+  （3.0.3版本新增）
+ */
+@property (nonatomic,assign) BOOL isEveryTimeSendCard;
 
 // 商品的自定义类 ZCProductInfo  如果选择添加商品信息，请添加以下信息，其中标题"title"和页面地址url"link"是必填字段，如果没有添加页面中是不会显示的。
 ZCProductInfo *productInfo = [ZCProductInfo new];
@@ -1725,24 +1732,7 @@ _kitInfo.hideManualEvaluationLabels = YES;
     }];
 
 ```
-### 4.7.10 安全校验
 
-1.功能位置：在线渠道设置-渠道安全设置-安全秘钥设置-勾选“生效范围（APP)"。
-
-2、开启生效范围APP“安全密钥”功能后，sdk渠道必须传partnerid参数。且对接时传参增加参数“sign”和“createTime”，其中，sign=“MD5（app_key+partnerid+密钥+createTime）”，createTime是unix毫秒时间戳；secret长度为32的字符串，createTime是毫秒级时间戳。
-
-3、传入参数后智齿会对sign进行解密，验证传入的partnerid与sign中传入的partnerid是否一致，若一致则正常接入智齿系统，若不一致则接入失败。若客户没有传partnerid或sign，则视同非法用户，接入失败；若createTime与当前时间相差超过5分钟，则是为非法用户，接入失败。
-
-4、APP“安全密钥”的功能开启和关闭，生效范围的设置是实时生效的。
-
-```js
-  //启动智齿页面时传入下边两个参数
-  //毫秒级时间戳
-  _libInitInfo.create_time = @"毫秒时间戳";//[ZCSobotApi zcGetCurrentTimes];
-  //签名md5之后的字符串
-  _libInitInfo.sign = @"md5(xx.xx.xx.xx)";
-    
-```
 
 ## 5 配置类属性说明
 ## 5.1 ZCKitInfo类说明（UI相关配置）
@@ -1765,6 +1755,7 @@ _kitInfo.hideManualEvaluationLabels = YES;
 | navcBarHidden   | BOOL   | SDK 页面中使用自定义的导航栏，不在使用系统的导航栏（隐藏）   |    |
 | canSendLocation   | BOOL   | 人工状态，是否可以发送位置   【 注意：   由于每个App定位插件选择不同，智齿没有实现选择位置功能，所以需要自行传递位置到SDK以及打开显示，步骤如下：   1、实现messageLinkClick事件（在ZCSobot startZCChatVC函数中）   2、当收到link = sobot://sendlocation 调用智齿接口发送位置信息   3、当收到link = sobot://openlocation?latitude=xx&longitude=xxx&address=xxx 可根据自己情况处理相关业务   |    |
 | isSendInfoCard   | BOOL   | 商品卡片信息是否自动发送（转人工成功时，自动发送商品卡片信息）   默认不自动发送   |    |
+| isEveryTimeSendCard   | BOOL   | 是否每次都自动发送商品信息 （转人工成功时，自动发送商品卡片信息） 需要先开启 isSendInfoCard = YES   |    |
 | productInfo   | ZCProductInfo   | 产品信息 ，配合 isSendInfoCard 使用   |    |
 | isShowCloseSatisfaction   | BOOL   | 关闭按钮时是否显示评价界面，默认不显示   |    |
 | isShowReturnTips   | BOOL   | 返回时是否开启提示，提示文案默认为：您是否要结束会话？，如需修改，请修改国际化配置文件   |    |
@@ -1776,6 +1767,7 @@ _kitInfo.hideManualEvaluationLabels = YES;
 | isOpenActiveUser   | BOOL   | 是否开启智能转人工,(如输入“转人工”，直接转接人工)，需要隐藏转人工按钮，请参见isShowTansfer和unWordsCount属性     |    |
 | activeKeywords   | BOOL   | 智能转人工关键字，关键字作为key{@"转人工",@"1",@"R":@"1"}   |    |
 | autoSendOrderMessage   | BOOL   | 人工后，是否主动发送一条信息   |    |
+| isEveryTimeAutoSend   | BOOL   | 是否每次都发送订单信息，需要先设置参数 autoSendOrderMessage = YES   |    |
 | orderGoodsInfo   | ZCOrderGoodsModel   | 需要发送的订单信息 ，配合 autoSendOrderMessage 使用   |    |
 | leaveCompleteCanReply   | BOOL   | 留言完成后，是否 显示 回复按钮   | 默认为 yes  , 可以回复   |
 | hideMenuSatisfaction   | BOOL   | 聊天页面底部加号中功能：隐藏评价   | 默认NO(不隐藏) |

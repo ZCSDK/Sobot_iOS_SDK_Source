@@ -10,8 +10,8 @@
 
 #import "ZCLibGlobalDefine.h"
 #import "ZCUIColorsDefine.h"
-#import "ZCUIXHImageViewer.h"
-#import "ZCUIImageView.h"
+#import "SobotXHImageViewer.h"
+#import "SobotImageView.h"
 #import "ZCStoreConfiguration.h"
 #import "ZCUICore.h"
 @implementation ZCGoodsCell{
@@ -23,7 +23,7 @@
     UIView *_cellBgView;
     
     // 商品图片
-    ZCUIImageView   *_imgPhoto;
+    SobotImageView   *_imgPhoto;
     
     // 标题
     UILabel         *_lblTextTitle;
@@ -72,7 +72,7 @@ typedef NS_ENUM(NSInteger,ZCGoodsCellType){
         
         [self.contentView addSubview:_cellBgView];
         
-        _imgPhoto = [[ZCUIImageView alloc] init];
+        _imgPhoto = [[SobotImageView alloc] init];
         [_imgPhoto setBackgroundColor:[UIColor clearColor]];
         [_imgPhoto setContentMode:UIViewContentModeScaleAspectFill];
         _imgPhoto.layer.cornerRadius = 5;

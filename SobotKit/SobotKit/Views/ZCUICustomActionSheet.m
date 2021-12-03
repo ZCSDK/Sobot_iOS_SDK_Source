@@ -1242,18 +1242,20 @@
     // 隐藏弹出层
     [self tappedCancel];
     // 客服主动邀请评价相关
-    if (_invitationType == 0 || (!_isBcakClose  && currentServerType>2 )) {
-        if (_delegate && [_delegate respondsToSelector:@selector(thankFeedBack:rating:IsResolve:)]) {
+    if(!_isBack){
+        if (_invitationType == 0 || (!_isBcakClose  && currentServerType>2)) {
             int resolve = 0;
             if (isresolve) {
                 resolve = 2;
             }else{
                 resolve = 1;
             }
-            [self.delegate thankFeedBack:_invitationType rating:_ratingView.rating IsResolve:resolve];
-            return;
+            
+            if (_delegate && [_delegate respondsToSelector:@selector(thankFeedBack:rating:IsResolve:)]) {
+                [self.delegate thankFeedBack:_invitationType rating:_ratingView.rating IsResolve:resolve];
+                return;
+            }
         }
-        
     }
     
     [ZCUICore getUICore].unknownWordsCount = 0;

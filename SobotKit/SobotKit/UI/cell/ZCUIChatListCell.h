@@ -8,7 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import "ZCPlatformInfo.h"
-#import "ZCUIImageView.h"
+//#import "ZCUIImageView.h"
+#import "SobotImageView.h"
 
 @interface ZCUIChatListCell : UITableViewCell
 
@@ -20,7 +21,7 @@
 /**
  *  头像
  */
-@property (nonatomic,strong) ZCUIImageView            *ivHeader;
+@property (nonatomic,strong) SobotImageView            *ivHeader;
 
 /**
  *  名称

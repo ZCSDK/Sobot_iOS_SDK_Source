@@ -7,13 +7,14 @@
 //
 
 #import "ZCLocationCell.h"
-#import "ZCUIImageView.h"
+//#import "ZCUIImageView.h"
 #import "ZCLibGlobalDefine.h"
 #import "ZCUIColorsDefine.h"
+#import "SobotImageView.h"
 
 #define LocationHeight 135
 @interface ZCLocationCell(){
-    ZCUIImageView *_imgLocation;
+    SobotImageView *_imgLocation;
     UILabel *_labFileName;
     UILabel *_labFileAddress;
     UIButton * cancelBtn;// 取消发送；
@@ -40,7 +41,7 @@
 //        [self.contentView addSubview:_cellBgView];
 
         
-        _imgLocation = [[ZCUIImageView alloc] init];
+        _imgLocation = [[SobotImageView alloc] init];
         [_imgLocation setContentMode:UIViewContentModeScaleAspectFill];
         [_imgLocation.layer setMasksToBounds:YES];
         [_imgLocation setBackgroundColor:[UIColor whiteColor]];

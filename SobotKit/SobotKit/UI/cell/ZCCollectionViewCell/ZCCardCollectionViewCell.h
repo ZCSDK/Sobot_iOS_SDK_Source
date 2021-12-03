@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "ZCUIImageView.h"
+//#import "ZCUIImageView.h"
+#import "SobotImageView.h"
 
 NS_ASSUME_NONNULL_BEGIN
 FOUNDATION_EXPORT NSString *const kZCCardCollectionViewCellID;
@@ -23,7 +24,7 @@ typedef NS_ENUM(NSInteger,ZCMultitemHorizontaRollCellType){
 @property (nonatomic,strong)  NSIndexPath *indexPath;
 
 @property (strong, nonatomic) UIView *bgView; //背景
-@property (strong, nonatomic) ZCUIImageView *posterView;// 图片
+@property (strong, nonatomic) SobotImageView *posterView;// 图片
 @property (strong, nonatomic) UILabel *labTitle; //标题
 @property (strong, nonatomic) UILabel *labDesc; // 要素内容
 @property (strong, nonatomic) UILabel *labTag; // 标签 （eg 电影评分）

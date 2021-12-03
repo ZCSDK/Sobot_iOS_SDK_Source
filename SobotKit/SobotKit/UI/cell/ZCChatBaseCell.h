@@ -10,11 +10,11 @@
 #import "ZCLibMessage.h"
 #import "ZCLibConfig.h"
 #import "ZCChatCellDelegate.h"
-#import "ZCUIImageView.h"
+//#import "ZCUIImageView.h"
 #import "ZCMLEmojiLabel.h"
 #import "ZCHtmlFilter.h"
 #import "ZCHtmlCore.h"
-
+#import "SobotImageView.h"
 
 #define ImageHeight 175
 #define Spaceheight 2
@@ -23,7 +23,7 @@
 #define GetCellItemX(isRight) isRight?SpaceRX:SpaceLX
 
 /**
- *  聊天消息cell
+ * 聊天消息cell
  */
 @interface ZCChatBaseCell : UITableViewCell
 
@@ -36,7 +36,7 @@
 /**
  *  头像
  */
-@property (nonatomic,strong) ZCUIImageView            *ivHeader; // 2.8.0 去掉
+@property (nonatomic,strong) SobotImageView            *ivHeader; // 2.8.0 去掉
 
 
 /**
@@ -195,7 +195,8 @@
 /// 设置字符串到UILabel中
 /// @param attr 要设置的字符串
 /// @param label ZCMLEmojiLabel
-/// @param isRight 方向，根据方向设置颜色
-+(void)setDisplayAttributedString:(NSMutableAttributedString *) attr label:(UILabel *) label isRight:(BOOL) isRight;
+/// @param curModel 获取方向，根据方向设置颜色
+/// @param isGuide 引导语
++(void)setDisplayAttributedString:(NSMutableAttributedString *) attr label:(UILabel *) label model:(ZCLibMessage *) curModel guide:(BOOL) isGuide;
 
 @end

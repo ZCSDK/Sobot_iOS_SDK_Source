@@ -7,8 +7,7 @@
 //
 
 #import "ZCChatAllRichCell.h"
-#import "ZCUIXHImageViewer.h"
-#import "ZCUIImageView.h"
+#import "SobotXHImageViewer.h"
 #import "ZCLibGlobalDefine.h"
 #import "ZCActionSheet.h"
 #import "ZCUIToastTools.h"
@@ -18,13 +17,13 @@
 #import "ZCHtmlCore.h"
 #import "ZCLocalStore.h"
 #import "ZCToolsCore.h"
-
+#import "SobotImageView.h"
 
 #define MidImageHeight 110
-@interface ZCChatAllRichCell()<ZCMLEmojiLabelDelegate,ZCUIXHImageViewerDelegate,ZCActionSheetDelegate>{
+@interface ZCChatAllRichCell()<ZCMLEmojiLabelDelegate,SobotXHImageViewerDelegate,ZCActionSheetDelegate>{
     NSString    *callURL;
     NSString *_coderURLStr;
-    ZCUIXHImageViewer *_imageViewer;
+    SobotXHImageViewer *_imageViewer;
 }
 
 @property(nonatomic,strong) ZCMLEmojiLabel *lblTextMsg;
@@ -199,10 +198,12 @@
     for (UIView *view in self.richContentView.subviews) {
         if([view isKindOfClass:[ZCMLEmojiLabel class]]){
             ((ZCMLEmojiLabel *)view).delegate = self;
-        }else if([view isKindOfClass:[ZCUIImageView class]]){
+        }else if([view isKindOfClass:[SobotImageView class]]){
             UIGestureRecognizer *tap=[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(imgTouchUpInside:)];
             [view addGestureRecognizer:tap];
             view.userInteractionEnabled = YES;
+        }else if([view isKindOfClass:[UIButton class]]){
+            [((UIButton *)view) addTarget:self action:@selector(authSensitive:) forControlEvents:UIControlEventTouchUpInside];
         }
     }
     richFrame = self.richContentView.frame;
@@ -254,6 +255,22 @@
     //    NSLog(@"self.contentView... %f",ScreenWidth);
     [self isAddBottomBgView:self.ivBgView.frame msgIsOneLine:msgTextisOneOrTwoLine];
     
+    if(model.includeSensitive > 0){
+        // 右边气泡背景图片
+        UIImage * bgImage = [ZCUITools zcuiGetBundleImage:@"zcicon_pop_green_normal_line"];
+        bgImage=[bgImage resizableImageWithCapInsets:UIEdgeInsetsMake(21, 21, 21, 21)];
+
+        self.ivBgView.image = bgImage;
+        self.ivBgView.backgroundColor = UIColorFromThemeColor(ZCBgSystemWhiteLightGrayColor);
+        //设置尖角
+        [self.ivLayerView setImage:bgImage];
+    }
+    if([ZCUITools getZCThemeStyle] == ZCThemeStyle_Dark){
+        self.ivBgView.backgroundColor = UIColorFromThemeColor(ZCBgSystemWhiteLightGrayColor);
+    }
+
+    self.ivBgView.contentMode = UIViewContentModeScaleToFill;
+
     
     // 设置尖角
     [self.ivLayerView setFrame:self.ivBgView.frame];
@@ -298,6 +315,12 @@
         url=[url stringByReplacingOccurrencesOfString:@"\"" withString:@""];
         // 用户引导说辞的分类的点击事件
         if([url hasPrefix:@"sobot:"]){
+            if([url hasPrefix:@"sobot://showallsensitive"]){
+                if(self.delegate && [self.delegate respondsToSelector:@selector(cellItemClick:type:obj:)]){
+                    [self.delegate cellItemClick:self.tempModel type:ZCChatCellClickTypeShowSensitive obj:nil];
+                }
+                return;
+            }
             int index = [[url stringByReplacingOccurrencesOfString:@"sobot://" withString:@""] intValue];
             
             if(index > 0 && self.tempModel.richModel.suggestionArr.count>=index){
@@ -361,9 +384,9 @@
     CALayer *calayer = _picView.layer.mask;
     [_picView.layer.mask removeFromSuperlayer];
     __weak ZCChatAllRichCell *weakSelf = self;
-    ZCUIXHImageViewer *xh=[[ZCUIXHImageViewer alloc] initWithImageViewerWillDismissWithSelectedViewBlock:^(ZCUIXHImageViewer *imageViewer, UIImageView *selectedView) {
+    SobotXHImageViewer *xh=[[SobotXHImageViewer alloc] initWithImageViewerWillDismissWithSelectedViewBlock:^(SobotXHImageViewer *imageViewer, UIImageView *selectedView) {
         
-    } didDismissWithSelectedViewBlock:^(ZCUIXHImageViewer *imageViewer, UIImageView *selectedView) {
+    } didDismissWithSelectedViewBlock:^(SobotXHImageViewer *imageViewer, UIImageView *selectedView) {
         selectedView.layer.mask = calayer;
         [selectedView setNeedsDisplay];
         
@@ -371,7 +394,7 @@
             [weakSelf.delegate cellItemClick:weakSelf.tempModel type:ZCChatCellClickTypeTouchImageNO obj:self];
             //                        [self.delegate touchLagerImageView:xh with:NO];
         }
-    } didChangeToImageViewBlock:^(ZCUIXHImageViewer *imageViewer, UIImageView *selectedView) {
+    } didChangeToImageViewBlock:^(SobotXHImageViewer *imageViewer, UIImageView *selectedView) {
         
     }];
     
@@ -465,6 +488,8 @@
     
     
     CGSize s = [ZCChatAllRichCell addRichView:model width:maxWidth with:nil msgLabel:nil];
+    
+    
     CGFloat height = s.height;
     if(s.height < 21){
         height = 21;
@@ -506,11 +531,22 @@
     CGFloat h = 0;
     CGFloat lineSpace = [ZCUITools zcgetChatLineSpacing];
     CGFloat imgHeight = MidImageHeight;
+    
+    // 自己发送的消息，当前认定为敏感信息
+    if(model.includeSensitive > 0 && model.senderType == 0){
+        return [self getAuthSensitiveView:model  width:maxWidth with:superView msgLabel:richLabel];
+    }
+    
     // 记录实际最大宽度
     CGFloat contentWidth = 0;
     if(model==nil || model.richModel.richMsgList==nil || [model.richModel.richMsgList isKindOfClass:[NSNull class]] || model.richModel.richMsgList.count == 0){
         #pragma mark 标题+内容
-        NSString *text = zcLibConvertToString([model getModelDisplayText]);
+        NSString *text = @"";
+        if (model.richModel.multiModel.templateIdType == 4 && model.displayMsgAttr==nil) {
+            text = zcLibConvertToString([model getModelDisplayText:YES]);
+        }else{
+            text = zcLibConvertToString([model getModelDisplayText]);
+        }
         if(text.length > 0){
             ZCMLEmojiLabel *label = nil;
             if(richLabel){
@@ -530,7 +566,7 @@
             if(model.displayMsgAttr == nil){
                 [label setText:text];
             }else{
-                [self setDisplayAttributedString:model.displayMsgAttr label:label isRight:[ZCChatBaseCell isRightChat:model]];
+                [self setDisplayAttributedString:model.displayMsgAttr label:label model:model guide:NO];
             }
             CGSize s = [label preferredSizeWithMaxWidth:maxWidth];
             h = h + s.height + lineSpace;
@@ -624,7 +660,7 @@
                     }else{
                         NSMutableAttributedString *attr = item[@"attr"];
                         if(attr){
-                            [self setDisplayAttributedString:attr label:label isRight:[ZCChatBaseCell isRightChat:model]];
+                            [self setDisplayAttributedString:attr label:label model:model guide:NO];
                         }else{
                             // 最后一行过滤所有换行，不是最后一行过滤一个换行
                             if(i == (model.richModel.richMsgList.count-1)){
@@ -665,7 +701,7 @@
                         contentWidth = maxWidth;
                     }
                     if(superView){
-                        ZCUIImageView *imgView = [[ZCUIImageView alloc] initWithFrame:CGRectMake(0, h -imgHeight - lineSpace, maxWidth, imgHeight)];
+                        SobotImageView *imgView = [[SobotImageView alloc] initWithFrame:CGRectMake(0, h -imgHeight - lineSpace, maxWidth, imgHeight)];
                         [imgView setContentMode:UIViewContentModeScaleAspectFill];
                         [imgView.layer setCornerRadius:4.0f];
                         [imgView.layer setMasksToBounds:YES];
@@ -688,9 +724,10 @@
             textColor = [ZCUITools zcgetRightChatTextColor];
             linkColor = [ZCUITools zcgetChatRightlinkColor];
         }
+        [label setLinkColor:linkColor];
+        [label setTextColor:textColor];
         if(model.displaySugestionattr!=nil){
-//            NSMutableAttributedString* attributedString = [model.displaySugestionattr mutableCopy];
-            [self setDisplayAttributedString:model.displaySugestionattr label:label isRight:[ZCChatBaseCell isRightChat:model]];
+            [self setDisplayAttributedString:model.displaySugestionattr label:label model:model guide:YES];
         }else{
             [ZCHtmlCore filterHtml:[model getModelDisplaySugestionText] result:^(NSString * _Nonnull text1, NSMutableArray * _Nonnull arr, NSMutableArray * _Nonnull links) {
                 if (text1 != nil && text1.length > 0) {
@@ -699,21 +736,18 @@
                     label.attributedText =   [[NSAttributedString alloc] initWithString:@""];
                 }
             }];
-//            [ZCHtmlFilter addChatTextToLabel:label text:zcLibConvertToString([model getModelDisplaySugestionText]) chatLayout:[ZCChatBaseCell isRightChat:model] result:^(NSMutableAttributedString * _Nonnull attr) {
-//
-//            }];
         }
+        
         
         CGSize s = [label preferredSizeWithMaxWidth:maxWidth];
         // 添加行间距
-        h = h + [ZCUITools zcgetKitChatFont].lineHeight;
         h = h + s.height + lineSpace;
         if(contentWidth < s.width){
             contentWidth = s.width;
         }
         
         if(superView){
-            CGRect f = CGRectMake(0, h - s.height, s.width, s.height);
+            CGRect f = CGRectMake(0, h - s.height - lineSpace, s.width, s.height);
             label.frame = f;
             [superView addSubview:label];
         }
@@ -727,7 +761,7 @@
                 
                 // 添加线条
                 UIView *_lineView  = [[UIView alloc] init];
-                CGRect lineF = CGRectMake(0, h + 12, contentWidth , 1);
+                CGRect lineF = CGRectMake(0, h + 12 - lineSpace, contentWidth , 1);
                 [_lineView setFrame:lineF];
                 _lineView.backgroundColor = [ZCUITools zcgetLineRichColor];
                 [superView addSubview:_lineView];
@@ -795,4 +829,183 @@
     return text;
 }
 
+
+
+/// 仅支持文本
+/// @param message  当前消息体
+/// @param maxWidth  最大宽度
+/// @param superView  要添加的父类
+/// @param richLabel  要展示的label
++(CGSize ) getAuthSensitiveView:(ZCLibMessage *) message width:(CGFloat ) maxWidth with:(UIView *) superView msgLabel:(ZCMLEmojiLabel *) richLabel{
+    CGFloat h = 10;
+    CGFloat lineSpace = [ZCUITools zcgetChatLineSpacing];
+    NSString *text = zcLibConvertToString([message getModelDisplayText]);
+//    text = @"阿伺服电机暗室逢灯时代峰峻卡算法发生客户水电费看哈世纪东方哈开个会电饭锅SDK啊就是导航饭卡是否打开拉黑速度快发货撒地方哈弗卡的很国风大赏咖啡馆哈第三方是否打开哈士大夫哈里斯的国风大赏时代峰峻奥克斯的附近啊是的发伺服电机是打发时间大法师打发";
+    CGFloat contentWidth = maxWidth - 20;
+    if(!richLabel){
+        richLabel = [ZCChatBaseCell createRichLabel];
+    }
+    [richLabel setTextColor:UIColorFromThemeColor(ZCTextSubColor)];
+    [richLabel setText:text];
+    CGSize s = [richLabel preferredSizeWithMaxWidth:contentWidth - 20];
+    BOOL isShowExport = NO;
+    if(s.height > 60 && !message.showAllMessage){
+        isShowExport = YES;
+        s.height = 60;
+    }
+    h = h + s.height + 10 + lineSpace;
+    if(contentWidth < s.width){
+        contentWidth = s.width;
+    }
+    
+//    NSString *warningTips = [ZCUITools removeAllHTMLTag:zcLibConvertToString(message.sentisiveExplain)];
+    NSString *warningTips = zcLibConvertToString(message.sentisiveExplain);
+    if(superView){
+        UIImageView *ivBg = [[UIImageView alloc] initWithFrame:CGRectMake(0, 10, contentWidth, s.height + 20)];
+        if(isShowExport){
+            ivBg.frame = CGRectMake(0, 10, contentWidth , h + 26);
+        }
+        ivBg.layer.cornerRadius = 2.0f;
+        ivBg.layer.masksToBounds = YES;
+        ivBg.backgroundColor = UIColorFromThemeColor(ZCBgLightGrayDarkColor);
+        [superView addSubview:ivBg];
+        
+        CGRect f = CGRectMake(10, h - s.height, s.width, s.height);
+        richLabel.frame = f;
+        [superView addSubview:richLabel];
+        
+        // 显示展示更多
+        if(isShowExport){
+            ZCMLEmojiLabel *tipLabel = [ZCChatBaseCell createRichLabel];
+            tipLabel.frame = CGRectMake(0, h - 20, contentWidth, 56);
+            tipLabel.textAlignment = NSTextAlignmentCenter;
+            [tipLabel setLinkColor:UIColorFromThemeColor(ZCThemeColor)];
+            [tipLabel setText:ZCSTLocalString(@"展开消息")];
+            [tipLabel addLinkToURL:[NSURL URLWithString:@"sobot://showallsensitive"] withRange:NSMakeRange(0, ZCSTLocalString(@"展开消息").length)];
+//            [tipLabel preferredSizeWithMaxWidth:contentWidth];
+            [self viewBeizerRect:tipLabel.bounds view:tipLabel corner:UIRectCornerBottomLeft|UIRectCornerBottomRight cornerRadii:CGSizeMake(2, 2)];
+
+            UIImageView *ivBg = [[UIImageView alloc] initWithFrame:tipLabel.frame];
+            [self viewBeizerRect:ivBg.bounds view:ivBg corner:UIRectCornerBottomLeft|UIRectCornerBottomRight cornerRadii:CGSizeMake(2, 2)];
+
+            CAGradientLayer *gradientLayer = [CAGradientLayer layer];
+            gradientLayer.frame = tipLabel.bounds;
+            // 设置渐变颜色数组
+             gradientLayer.colors = @[(__bridge id)UIColorFromThemeColorAlpha(ZCBgChatLightGrayColor,0.5).CGColor,(__bridge id)UIColorFromThemeColorAlpha(ZCBgChatLightGrayColor,0.75).CGColor,(__bridge id)UIColorFromThemeColor(ZCBgChatLightGrayColor).CGColor];
+            // 渐变颜色的区间分布
+             gradientLayer.locations = @[@0.25,@0.5,@1];
+            // 起始位置
+             gradientLayer.startPoint = CGPointMake(0, 0);
+            // 结束位置
+             gradientLayer.endPoint = CGPointMake(0, 1);
+            [ivBg.layer addSublayer:gradientLayer];
+            [superView addSubview:ivBg];
+            
+            [superView addSubview:tipLabel];
+            h = h + 26;
+        }
+        // 添加灰色气泡上下20间隔
+        h = h + 20;
+        
+        ZCMLEmojiLabel *tipLabel = [ZCChatBaseCell createRichLabel];
+        [tipLabel setTextColor:UIColorFromThemeColor(ZCTextMainColor)];
+        [tipLabel setText:warningTips];
+        CGSize s1 = [tipLabel preferredSizeWithMaxWidth:contentWidth];
+        h = h + s1.height + lineSpace;
+        CGRect f1 = CGRectMake(0, h - s1.height - lineSpace, s1.width, s1.height);
+        tipLabel.frame = f1;
+        [superView addSubview:tipLabel];
+        
+        // 按钮
+        if(message.includeSensitive == 2){
+            ZCMLEmojiLabel *tipLabel2 = [ZCChatBaseCell createRichLabel];
+            [tipLabel2 setTextColor:UIColorFromThemeColor(ZCTextWarnRedColor)];
+            [tipLabel2 setText:ZCSTLocalString(@"您已拒绝发送此消息")];
+            tipLabel2.textAlignment = NSTextAlignmentLeft;
+            CGSize s2 = [tipLabel2 preferredSizeWithMaxWidth:contentWidth];
+            if(s2.width > (contentWidth - 120)){
+                s2.width = contentWidth - 120;
+            }
+            CGRect f2 = CGRectMake(0, h - lineSpace, s2.width, 30);
+            tipLabel2.frame = f2;
+            [superView addSubview:tipLabel2];
+        }else{
+            UIButton *btn1 = [self createAuthButton:ZCSTLocalString(@"拒绝") type:1];
+            btn1.frame = CGRectMake(contentWidth - 120 - 60, h, 60, 30);
+            [superView addSubview:btn1];
+        }
+        UIButton *btn2 = [self createAuthButton:ZCSTLocalString(@"继续发送") type:2];
+        btn2.frame = CGRectMake(contentWidth - 90, h, 90, 30);
+        [superView addSubview:btn2];
+        h = h + 30 + lineSpace;
+        
+        CGRect sf = superView.frame;
+        sf.size.width = contentWidth;
+        sf.size.height = h - lineSpace;
+        [superView setFrame:sf];
+    }else{
+        // 显示展示更多
+        if(isShowExport){
+            h = h + 26;
+        }
+        h = h+20;
+        ZCMLEmojiLabel *tipLabel = [ZCChatBaseCell createRichLabel];
+        [tipLabel setText:warningTips];
+        CGSize s1 = [tipLabel preferredSizeWithMaxWidth:contentWidth];
+        h = h + s1.height + lineSpace;
+        
+        h = h + 30 + lineSpace;
+    }
+    return CGSizeMake(contentWidth, h - lineSpace);
+}
+
+
+/// 设置圆角
+/// @param rect
+/// @param view
+/// @param corner
+/// @param radii
++(void)viewBeizerRect:(CGRect)rect view:(UIView *)view corner:(UIRectCorner)corner cornerRadii:(CGSize)radii{
+    UIBezierPath *maskPath= [UIBezierPath bezierPathWithRoundedRect:rect byRoundingCorners:corner cornerRadii:radii];
+    CAShapeLayer *maskLayer = [CAShapeLayer layer];
+    maskLayer.frame =view.bounds;
+    maskLayer.path = maskPath.CGPath;
+    view.layer.mask = maskLayer;
+}
+
++(UIButton *)createAuthButton:(NSString *)title type:(NSInteger )type{
+    UIButton *_btnTurnUser =[UIButton buttonWithType:UIButtonTypeCustom];
+    [_btnTurnUser setTitle:title forState:UIControlStateNormal];
+    
+    _btnTurnUser.layer.cornerRadius = 15.0f;
+    _btnTurnUser.layer.borderWidth = 0.75f;
+    _btnTurnUser.layer.masksToBounds = YES;
+    [_btnTurnUser.titleLabel setFont:ZCUIFont14];
+    _btnTurnUser.tag = type;
+    if(type == 1){
+        [_btnTurnUser setBackgroundColor:UIColorFromThemeColor(ZCBgSystemWhiteLightGrayColor)];
+        _btnTurnUser.layer.borderColor = UIColorFromThemeColor(ZCBgLineColor).CGColor;
+        [_btnTurnUser setTitleColor:UIColorFromThemeColor(ZCTextMainColor) forState:UIControlStateNormal];
+    }else{
+        [_btnTurnUser setBackgroundColor:UIColorFromThemeColor(ZCThemeColor)];
+        _btnTurnUser.layer.borderColor = UIColorFromThemeColor(ZCThemeColor).CGColor;
+        [_btnTurnUser setTitleColor:UIColorFromThemeColor(ZCTextSystemWhiteColor) forState:UIControlStateNormal];
+        
+    }
+    return _btnTurnUser;
+}
+
+-(void)authSensitive:(UIButton *) button{
+    if(button.tag == 1){
+        // 拒绝
+        if(self.delegate && [self.delegate respondsToSelector:@selector(cellItemClick:type:obj:)]){
+            [self.delegate cellItemClick:self.tempModel type:ZCChatCellClickTypeRefuseSend obj:nil];
+        }
+    }else{
+        // 继续发送
+        if(self.delegate && [self.delegate respondsToSelector:@selector(cellItemClick:type:obj:)]){
+            [self.delegate cellItemClick:self.tempModel type:ZCChatCellClickTypeAgreeSend obj:nil];
+        }
+    }
+}
 @end

@@ -115,16 +115,15 @@
     view.backgroundColor = [UIColor clearColor];
     [_listTable setTableFooterView:view];
     
-    
     if (iOS7) {
         _listTable.backgroundView = nil;
     }
-    
+    if (zcGetSystemDoubleVersion()>= 15.0) {
+        _listTable.sectionHeaderTopPadding = 0;
+    }
     
     [_listTable setSeparatorColor:UIColorFromThemeColor(ZCBgLineColor)];
     [_listTable setSeparatorStyle:UITableViewCellSeparatorStyleSingleLine];
-    
-    
     [self setTableSeparatorInset];
     
     [ZCIMChat getZCIMChat].delegate = self;

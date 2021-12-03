@@ -9,7 +9,8 @@
 #import "ZCServiceListCell.h"
 #import "ZCLibGlobalDefine.h"
 #import "ZCUIColorsDefine.h"
-#import "ZCUIImageView.h"
+//#import "ZCUIImageView.h"
+#import "SobotImageView.h"
 
 @interface ZCServiceListCell(){
     
@@ -17,7 +18,7 @@
 
 @property (nonatomic,strong) UILabel * titleLab;
 
-@property (nonatomic,strong) ZCUIImageView * img;
+@property (nonatomic,strong) SobotImageView * img;
 
 
 @end
@@ -36,7 +37,7 @@
 //        _titleLab.text = @"weriewr";
         [self.contentView addSubview:_titleLab];
         
-        _img = [[ZCUIImageView alloc]initWithFrame:CGRectMake(ScreenWidth - ZCNumber(20) - 12 , ZCNumber(20), 8, 12)];
+        _img = [[SobotImageView alloc]initWithFrame:CGRectMake(ScreenWidth - ZCNumber(20) - 12 , ZCNumber(20), 8, 12)];
         [_img setContentMode:UIViewContentModeScaleAspectFit];
 //        [_img setAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin];
         _img.image = [ZCUITools zcuiGetBundleImage:@"zcicon_list_right_arrow"];

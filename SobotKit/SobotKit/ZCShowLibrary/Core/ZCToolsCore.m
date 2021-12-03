@@ -223,6 +223,7 @@ static dispatch_once_t onceToken;
         UIAlertAction  *confirmAction = [UIAlertAction actionWithTitle:ZCSTLocalString(@"确定")
                                                                  style:UIAlertActionStyleDefault
                                                                handler:^(UIAlertAction * _Nonnull action) {
+                
             [alert dismissViewControllerAnimated:NO completion:^{
                 if (confirm)confirm(0);
             }];
@@ -235,6 +236,7 @@ static dispatch_once_t onceToken;
             UIAlertAction  *action = [UIAlertAction actionWithTitle:titleArray[i]
                                                               style:UIAlertActionStyleDefault
                                                             handler:^(UIAlertAction * _Nonnull action) {
+                    if (confirm)confirm(i);
                 [alert dismissViewControllerAnimated:NO completion:^{
                     if (confirm)confirm(i);
                 }];

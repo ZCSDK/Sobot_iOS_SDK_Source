@@ -7,7 +7,7 @@
 //
 
 #import "ZCMultiRichCell.h"
-#import "ZCUIImageView.h"
+#import "SobotImageView.h"
 #import "ZCLibGlobalDefine.h"
 #import "ZCUIToastTools.h"
 #import "ZCUIColorsDefine.h"
@@ -23,7 +23,7 @@
     ZCMLEmojiLabel *_lblEmojiAnswerStrip;// 标题
     ZCMLEmojiLabel *_lblEmojiQuestion;// 问题
     ZCMLEmojiLabel *_lblTextMsg; // 描述
-    ZCUIImageView *_middleImageView; // 图片
+    SobotImageView *_middleImageView; // 图片
     ZCMLEmojiLabel *_lookMoreLabel; // 展开
     UIView       * _lineView; // 线条
     NSString * morelink;
@@ -96,9 +96,9 @@
     return _lblEmojiQuestion;
 }
 
--(ZCUIImageView *)middleImageView{
+-(SobotImageView *)middleImageView{
     if(!_middleImageView){
-        _middleImageView=[[ZCUIImageView alloc] init];
+        _middleImageView=[[SobotImageView alloc] init];
         [_middleImageView setBackgroundColor:[UIColor clearColor]];
         [_middleImageView setContentMode:UIViewContentModeScaleAspectFill];
         _middleImageView.layer.masksToBounds=YES;

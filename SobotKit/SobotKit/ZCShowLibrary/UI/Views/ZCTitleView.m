@@ -8,11 +8,12 @@
 
 #import "ZCTitleView.h"
 #import "ZCLibGlobalDefine.h"
-#import "ZCUIXHImageViewer.h"
-#import "ZCUIImageView.h"
+//#import "ZCUIXHImageViewer.h"
+#import "SobotImageView.h"
+//#import "ZCUIImageView.h"
 #import "ZCUIImageTools.h"
 #import "ZCLibClient.h"
-
+#import "SobotImageView.h"
 #define ImgWidth 38
 
 @interface ZCTitleView(){
@@ -23,7 +24,7 @@
 
 
 @property(nonatomic,strong) UILabel *labTitle;
-@property(nonatomic,strong) ZCUIImageView *imgAvatar;
+@property(nonatomic,strong) SobotImageView *imgAvatar;
 
 @end
 
@@ -75,7 +76,7 @@
         [self addSubview:_labTitle];
         
         
-        _imgAvatar = [[ZCUIImageView alloc] init];
+        _imgAvatar = [[SobotImageView alloc] init];
         [_imgAvatar setContentMode:UIViewContentModeScaleAspectFill];
         [_imgAvatar setFrame:CGRectMake(0, self.bounds.size.height/2 - ImgWidth/2, ImgWidth, ImgWidth)];
         [_imgAvatar setBackgroundColor:[UIColor clearColor]];

@@ -57,4 +57,5 @@
 
 @property (nonatomic,assign) int type; // 1.占位文字要设置 文字颜色
 
+@property (nonatomic,assign) BOOL isAddLink;//不设置超链
 @end

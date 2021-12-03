@@ -38,7 +38,7 @@ NSString *const kZCCollectionViewCellID = @"ZCCollectionViewCell";
     self.backgroundColor = [UIColor whiteColor];
     self.contentView.backgroundColor = [UIColor whiteColor];
     
-    _posterView=[[ZCUIImageView alloc] init];
+    _posterView=[[SobotImageView alloc] init];
     [_posterView setContentMode:UIViewContentModeScaleAspectFill];
     _posterView.layer.masksToBounds=YES;
     _posterView.clipsToBounds = YES;

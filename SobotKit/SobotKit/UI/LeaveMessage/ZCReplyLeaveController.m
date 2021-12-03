@@ -383,7 +383,9 @@
     if (version.doubleValue >= 11.0) {
         [_listTable setInsetsContentViewsToSafeArea:NO];
     }
-    
+    if (version.doubleValue >= 15.0) {
+        _listTable.sectionHeaderTopPadding = 0;
+    }
     UITapGestureRecognizer *gestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapHideKeyboard)];
     gestureRecognizer.numberOfTapsRequired = 1;
     gestureRecognizer.cancelsTouchesInView = NO;

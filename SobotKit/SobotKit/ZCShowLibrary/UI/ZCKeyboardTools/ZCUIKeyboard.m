@@ -914,6 +914,11 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
             NSURL *videoUrl = video[@"video"];
             if (videoUrl != nil) {
                 NSString *filePath = zcLibConvertToString(video[@"image"]);
+                NSString *videoUrlStr = videoUrl.absoluteString;
+                if ([videoUrlStr hasPrefix:@"file:///"]) {
+                    videoUrlStr = [videoUrlStr stringByReplacingOccurrencesOfString:@"file://" withString:@""];
+                    videoUrl = [NSURL URLWithString:videoUrlStr];
+                }
                 [keyboardSelf sendMessageOrFile:[self URLDecodedString:videoUrl.absoluteString] type:ZCMessageTypeVideo duration:@"" dict:@{@"cover":filePath}];
             }
         }
@@ -2725,4 +2730,11 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
     [self.zc_voiceButton setImage:[ZCUITools zcuiGetBundleImage:@"zcicon_voice_pressed"] forState:UIControlStateHighlighted];
 }
 
+
+-(void)setLaySubViewUI{
+    if (curKeyBoardStatus == ZCKeyboardStatusNewSession) {
+        // 新会话键盘样式 重新布局UI  在横竖屏切换的时候
+        [self showStatusView];
+    }
+}
 @end

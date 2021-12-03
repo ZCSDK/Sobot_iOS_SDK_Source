@@ -13,7 +13,8 @@
 #import "ZCUIColorsDefine.h"
 #import "ZCLibServer.h"
 #import "ZCButton.h"
-#import "ZCUIImageView.h"
+//#import "ZCUIImageView.h"
+#import "SobotImageView.h"
 #import "ZCServiceListVC.h"
 #import "ZCSCListModel.h"
 #import "ZCToolsCore.h"
@@ -364,7 +365,7 @@ typedef void (^PageLoadBlock)(id object,ZCPageBlockType type);
     [itemView setFrame:CGRectMake(x, y, w, h)];
     [itemView setBackgroundColor:UIColorFromThemeColor(ZCKeepWhiteColor)];
     
-    ZCUIImageView *img = [[ZCUIImageView alloc]initWithFrame:CGRectMake(14, 18, 40, 40)];
+    SobotImageView *img = [[SobotImageView alloc]initWithFrame:CGRectMake(14, 18, 40, 40)];
     [img loadWithURL:[NSURL URLWithString:zcUrlEncodedString(model.categoryUrl)] placeholer:nil showActivityIndicatorView:NO completionBlock:^(UIImage *image, NSURL *url, NSError *error) {
         if(image){
             dispatch_async(dispatch_get_main_queue(), ^{

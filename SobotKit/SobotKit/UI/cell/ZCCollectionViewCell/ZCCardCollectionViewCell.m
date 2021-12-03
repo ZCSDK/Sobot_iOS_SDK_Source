@@ -131,7 +131,7 @@ NSString *const kZCCardCollectionViewCellID = @"ZCCollectionViewCell";
             }else{
 //                有图
                 CGSize posterViewSize = CGSizeMake(60, 60);
-                _posterView=[[ZCUIImageView alloc] init];
+                _posterView=[[SobotImageView alloc] init];
                 [_posterView setContentMode:UIViewContentModeScaleAspectFill];
                 _posterView.layer.cornerRadius = 5;
                 _posterView.layer.masksToBounds=YES;
@@ -213,7 +213,7 @@ NSString *const kZCCardCollectionViewCellID = @"ZCCollectionViewCell";
             [self.contentView addSubview:_labTitle];
             
             CGSize posterViewSize = CGSizeMake(60, 60);
-            _posterView=[[ZCUIImageView alloc] init];
+            _posterView=[[SobotImageView alloc] init];
             [_posterView setContentMode:UIViewContentModeScaleAspectFill];
             _posterView.layer.cornerRadius = 5;
             _posterView.layer.masksToBounds=YES;
