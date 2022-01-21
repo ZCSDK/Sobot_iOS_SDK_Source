@@ -368,6 +368,7 @@ static dispatch_once_t onceToken;
             }
             if (win.windowLevel >= window.windowLevel && win.hidden != YES && win.isKeyWindow) {
                 window =win;
+                [window drawViewHierarchyInRect:window.bounds afterScreenUpdates:YES];
             }
         }
     }
@@ -381,6 +382,7 @@ static dispatch_once_t onceToken;
                 if (windowScene.activationState == UISceneActivationStateForegroundActive)
                 {
                     window = windowScene.windows.firstObject;
+                    [window drawViewHierarchyInRect:window.bounds afterScreenUpdates:YES];
                     break;
                 }
             }

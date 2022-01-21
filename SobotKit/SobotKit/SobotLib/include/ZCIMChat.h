@@ -136,5 +136,6 @@ typedef NS_ENUM(NSInteger,ZCSendActionType) {
 ///////////////////////////////////////////////////////////
 // 上传日志
 -(void)uploadLogMsg;
+-(void)uploadLogMsg:(BOOL) updateWithOutFlag;
 
 @end

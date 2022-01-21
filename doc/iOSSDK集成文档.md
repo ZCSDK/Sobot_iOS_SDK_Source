@@ -50,11 +50,11 @@
 
 普通版：
 
-下载链接：[iOS_SDK_3.0.5](https://img.sobot.com/mobile/sdk/iOS_SDK_3.0.5.zip)
+下载链接：[iOS_SDK_3.0.7](https://img.sobot.com/mobile/sdk/iOS_SDK_3.0.7.zip)
 
 电商版：
 
-下载链接：[iOS_SDK_3.0.5_电商版](https://img.sobot.com/mobile/sdk/iOS_SDK_3.0.5_MALL.zip)
+下载链接：[iOS_SDK_3.0.7_电商版](https://img.sobot.com/mobile/sdk/iOS_SDK_3.0.7_MALL.zip)
 
 解压[iOS_SDK]，添加必要文件SobotKit.framework和SobotKit.bundle到你的工程里。智齿iOS_SDK 的实现，依赖了一些系统的框架，在开发应用时需要在工程里加入这些框架。开发者首先点击工程右边的工程名，然后在工程名右边依次选择TARGETS -> BuiLd Phases -> Link Binary With Libraries，展开 LinkBinary With Libraries后点击展开后下面的 + 来添加下面的依赖项:
 
@@ -1967,3 +1967,6 @@ _kitInfo.hideManualEvaluationLabels = YES;
 
    [《智齿iOS_SDK 版本更新说明》](https://shimo.im/docs/3no79A6BJ8EbxWJG)
 
+
+## 9 智齿科技SDK收集使用个人信息说明
+  [《智齿科技SDK收集使用个人信息说明》](https:/test.sobot.com/docs/clause/sdk-clause.html)

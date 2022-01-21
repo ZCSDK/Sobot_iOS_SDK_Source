@@ -437,13 +437,17 @@
 }
 
 // 转人工自定义
-+ (void)connectCustomerService:(NSString *)groupId  Obj:(id)obj KitInfo:(ZCKitInfo*)uiInfo ZCTurnType:(NSInteger)turnType Keyword:(NSString*)keyword KeywordId:(NSString*)keywordId {
-    [[ZCUICore getUICore] customTurnServiceWithGroupId:groupId Obj:obj KitInfo:uiInfo ZCTurnType:turnType Keyword:keyword KeywordId:keywordId];
++ (void)connectCustomerService:(ZCLibMessage *)message KitInfo:(ZCKitInfo*)uiInfo ZCTurnType:(NSInteger)turnType {
+    [[ZCUICore getUICore] customConnectUserService:message KitInfo:uiInfo ZCTurnType:turnType];
 }
 
 +(void)getLastLeaveReplyMessage:(NSString *)partnerid resultBlock:(void (^)(NSDictionary * , NSMutableArray * , int))ResultBlock{
     if(zcLibConvertToString(partnerid).length == 0){
         partnerid = [ZCSobotApi getUserUUID];
+    }
+    if(zcLibConvertToString([ZCSobotApi getCommanyId]).length == 0){
+        ResultBlock(@{@"msg":@"companyId is null"},nil,ZC_PARAMS_FAIL);
+        return;
     }
     NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
     [params setObject:zcLibConvertToString([ZCSobotApi getCommanyId]) forKey:@"companyId"];

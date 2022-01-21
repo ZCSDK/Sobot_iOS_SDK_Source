@@ -64,9 +64,6 @@
     
     self.automaticallyAdjustsScrollViewInsets = false;
     
-    
-    
-    
     _imgView = [[UIImageView alloc] initWithFrame:CGRectMake(ScreenWidth/2-68/2, 60 + NavBarHeight, 68, 80)];
     [_imgView setContentMode:UIViewContentModeScaleAspectFit];
     [_imgView setBackgroundColor:UIColor.clearColor];
@@ -77,15 +74,14 @@
     [_labName setTextColor:UIColorFromThemeColor(ZCTextMainColor)];
     [_labName setTextAlignment:NSTextAlignmentCenter];
     _labName.numberOfLines = 0;
-    [_labName setText:_message.richModel.msg];
+    [_labName setText:_message.richModel.fileName];
     [self autoHeightOfLabel:_labName with:ScreenWidth - 40];
-    
+    [_labName sizeToFit];
     
     _labSize = [[UILabel  alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(_labName.frame) + 10, ScreenWidth, 21)];
     [_labSize setTextColor:UIColorFromThemeColor(ZCTextSubColor)];
     [_labSize setTextAlignment:NSTextAlignmentCenter];
     [_labSize setFont:ZCUIFont14];
-    
     
     _viewProgress = [[UIView alloc] initWithFrame:CGRectMake(20, CGRectGetMaxY(_labSize.frame) + 20, ScreenWidth - 40, 15)];
     [_viewProgress setBackgroundColor:UIColor.clearColor];
@@ -103,8 +99,6 @@
     [_btnDown setFrame:CGRectMake(38, CGRectGetMaxY(_labSize.frame) + 100, ScreenWidth - 38*2, 44)];
     [_btnDown addTarget:self action:@selector(buttonClick:) forControlEvents:UIControlEventTouchUpInside];
     
-    
-    
     _labLookTip = [[UILabel  alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(_btnDown.frame) + 10, ScreenWidth, 18)];
     [_labLookTip setTextColor:UIColorFromThemeColor(ZCTextMainColor)];
     [_labLookTip setTextAlignment:NSTextAlignmentCenter];
@@ -118,7 +112,6 @@
     [self.view addSubview:_viewProgress];
     [self.view addSubview:_btnDown];
 //    [self.view addSubview:_labLookTip];
-    
     
     //拿到cache目录的路径
     
@@ -147,7 +140,10 @@
     
     _imgView.frame = CGRectMake(w/2-68/2, (isLandspace?30:60) + NavBarHeight, 68, 80);
     _labName.frame = CGRectMake(20, CGRectGetMaxY(_imgView.frame)+30, w - 40, 0);
-   
+    [_labName setText:_message.richModel.fileName];
+    [self autoHeightOfLabel:_labName with:ScreenWidth - 40];
+    [_labName sizeToFit];
+    
     _labSize.frame = CGRectMake(0, CGRectGetMaxY(_labName.frame) + 10, w, 21);
   
     _viewProgress.frame = CGRectMake(20, CGRectGetMaxY(_labSize.frame) + 20, w - 40, 15);

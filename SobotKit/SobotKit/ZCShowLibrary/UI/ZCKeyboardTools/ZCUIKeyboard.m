@@ -771,11 +771,7 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
 - (void)addResourcesAction:(ZCObjButton *)btn{
     if(btn.tag == ZCKeyboardClickTypeTurnUser){
         // 执行转人工操作
-        if ([ZCLibClient getZCLibClient].turnServiceBlock) {
-            [ZCLibClient getZCLibClient].turnServiceBlock(nil, nil, ZCTurnType_BtnClick, @"", @"");
-            return;
-        }
-        [[ZCUICore getUICore] checkUserServiceWithObject:nil Msg:@"keyboard"];
+        [[ZCUICore getUICore] checkUserServiceWithType:ZCTurnType_BtnClick model:nil];
     }else if(btn.tag == ZCKeyboardClickTypeSatisfaction){
         [[ZCUICore getUICore] keyboardOnClick:ZCShowStatusSatisfaction];
         // 满意度
@@ -941,11 +937,7 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
     
     if(sender.tag==BUTTON_CONNECT_USER){
         // 执行转人工操作
-        if ([ZCLibClient getZCLibClient].turnServiceBlock) {
-            [ZCLibClient getZCLibClient].turnServiceBlock(nil, nil, ZCTurnType_BtnClick, @"", @"");
-            return;
-        }
-        [[ZCUICore getUICore] checkUserServiceWithObject:nil Msg:@"keyboard"];
+        [[ZCUICore getUICore] checkUserServiceWithType:ZCTurnType_BtnClick model:nil];
         
         // 此处回收键盘处理UI刷新
         [self hideKeyboard];
@@ -1146,7 +1138,7 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
         // 2.9.2版本开始，如果客服发送过离线消息，直接转接到对应的客服
         // 不是仅机器人，不是黑名单用户
         if([ZCPlatformTools sharedInstance].isOfflineMsgConnect && zcLibConvertToString([ZCPlatformTools sharedInstance].offlineMsgAdminId).length > 0 && !config.isblack){
-            [[ZCUICore getUICore] doConnectUserService:nil];
+            [[ZCUICore getUICore] doConnectUserService:nil connectType:ZCTurnType_OffMessageAdmin];
         }
     }else if(config.type == 2){
         [self setServiceModeView:config.type];
@@ -1156,9 +1148,9 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
         // 如果显示在线或者排队中，自动转接到人工
         if(config.ustatus == 1|| config.ustatus == -2){
             [ZCUICore getUICore].isShowForm = YES;
-            [[ZCUICore getUICore] checkUserServiceWithObject:nil Msg: @"isinitiativeTurn"];
+            [[ZCUICore getUICore] checkUserServiceWithType:ZCTurnType_InitBeConnected model:nil];
         }else{
-            [[ZCUICore getUICore] checkUserServiceWithObject:nil Msg:nil];
+            [[ZCUICore getUICore] checkUserServiceWithType:ZCTurnType_InitOnUserType model:nil];
         }
     }
     //

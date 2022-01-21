@@ -23,6 +23,7 @@
 #import "ZCUIKeyboard.h"
 
 #import "ZCToolsCore.h"
+#import "UIDeviceTools.h"
 
 #define VoiceLocalPath zcLibGetDocumentsFilePath(@"/sobot/")
 
@@ -137,13 +138,13 @@ static dispatch_once_t onceToken;
     // 评价页面是否消失
     _isDismissSheetPage = YES;
     _isDismissRobotPage = YES;
-    _isSmartTurnServer = NO;
     _isTurnLoading = NO;
     // 判断是否需要重新初始化
     if([ZCPlatformTools checkInitParameterChanged]){
         if(isLoadingConfig){
             return;
         }
+        [ZCUICore getUICore].checkGroupId = @"";// 初始化需要清理掉之前缓存的技能组ID
         isLoadingConfig = YES;
         if (_listArray == nil) {
             _listArray = [NSMutableArray arrayWithCapacity:0];
@@ -252,6 +253,11 @@ static dispatch_once_t onceToken;
             safeCore.isInitLoading = NO;
         }];
     }else{
+        // 平台版新增**************************
+        if(![@"" isEqual:zcLibConvertToString([ZCLibClient getZCLibClient].platformUnionCode)] && isPlatformUnion()){
+            // 获取一次id，重新赋值，否则新给对象所有值一样，不会重新初始化
+            [[ZCLibClient getZCLibClient] getPlatform_userid];
+        }
         if(_ResultBlock){
             _ResultBlock(ZCInitStatusLoading,_listArray,@"开始初始化");
         }
@@ -520,12 +526,189 @@ static dispatch_once_t onceToken;
     }];
 }
 
-
--(void)checkUserServiceWithObject:(id)obj Msg:(NSString *)msg{
-    // 不直接转人工，等待发送消息
-    if(zcLibConvertToString(msg).length == 0 && [self checkAfterConnectUser]){
+-(void)doConnectUserService:(ZCLibMessage *)msgModel connectType:(ZCTurnType) type{
+    // 2.4.2新增询前表单
+    // 2.8.0添加单独配置，关闭询前表单
+    // 在转人工的事件进行操作
+    if (!_isShowForm  && !_kitInfo.isCloseInquiryForm) {
+        // 关闭加载动画
+        [[ZCUIToastTools shareToast] dismisProgress];
+        [_apiServer getAskTabelWithUid:[self getPlatfromInfo].config.uid start:^{
+            
+        } success:^(NSDictionary *dict, ZCNetWorkCode sendCode) {
+            self.isShowForm = YES;
+            
+            @try{
+                if ([zcLibConvertToString(dict[@"code"]) intValue] == 1 && [zcLibConvertToString(dict[@"data"][@"openFlag"]) intValue] == 1) {
+                    if (self.delegate && [self.delegate respondsToSelector:@selector(coreOpenNewPageVC:IsExist:isShowToat:tipMsg:Dict:Object:trunType:)]) {
+                        // 选择技能组时返回不用再选择，会回收
+                        if(zcLibConvertToString(_checkGroupId).length > 0){
+                            [self.delegate coreOpenNewPageVC:ZC_AskTabelPage IsExist:LeaveExitTypeISCOLSE isShowToat:NO tipMsg:@"clearskillId" Dict:dict Object:msgModel trunType:type];
+                        }else{
+                            [self.delegate coreOpenNewPageVC:ZC_AskTabelPage IsExist:LeaveExitTypeISCOLSE isShowToat:NO tipMsg:@"" Dict:dict Object:msgModel trunType:type];
+                        }
+                    }
+                }else{
+                    // 去执行转人工的操作
+                    [self doConnectUserService:msgModel connectType:type];
+                }
+                
+            } @catch (NSException *exception) {
+                
+            } @finally {
+                
+            }
+            
+        } failed:^(NSString *errorMessage, ZCNetWorkCode errorCode) {
+            
+        }];
+        // 先填写询前表单，填写完成再执行转人工
         return;
+        
     }
+    
+    // 定义传输参数
+    ZCLibOnlineCustomerParams * paramter = [[ZCLibOnlineCustomerParams  alloc] init];
+    
+    // 指定客服
+    NSString *chooseAdminId = zcLibConvertToString([ZCLibClient getZCLibClient].libInitInfo.choose_adminid);
+    if(type == ZCTurnType_OffMessageAdmin){
+        chooseAdminId = zcLibConvertToString([ZCPlatformTools sharedInstance].offlineMsgAdminId);
+    }
+    // 如果指定客服，客服不在线是否还要继续往下转，tranFlag=0往下转，默认为0
+    int tranFlag = [ZCLibClient getZCLibClient].libInitInfo.tran_flag;
+    if (self.isDoConnectedUser) {
+        chooseAdminId = @"";
+        tranFlag = 0;
+        self.isDoConnectedUser = NO;
+    }
+    paramter.tranFlag = tranFlag;
+    paramter.chooseAdminId = chooseAdminId;
+    
+    bool current = NO;
+    if([self getPlatfromInfo].waitintMessage!=nil &&  [[self getLibConfig].cid isEqual:[self getPlatfromInfo].waitintMessage.cid]){
+        current = YES;
+    }
+    paramter.current = current;
+    
+    // 技能组
+    if(zcLibConvertToString([ZCLibClient getZCLibClient].libInitInfo.groupid).length > 0){
+        paramter.groupId = zcLibConvertToString([ZCLibClient getZCLibClient].libInitInfo.groupid);
+        paramter.groupName = zcLibConvertToString([ZCLibClient getZCLibClient].libInitInfo.group_name);
+    }
+    
+    if(zcLibConvertToString(_checkGroupId).length > 0){
+        paramter.groupId = zcLibConvertToString(_checkGroupId);
+        paramter.groupName = zcLibConvertToString(_checkGroupName);
+        
+        if(type == ZCTurnType_KeyWord || type == ZCTurnType_CellGroupClick || type == ZCTurnType_KeyWordNoGroup){
+            _checkGroupId = @"";
+            _checkGroupName   = @"";
+        }
+    }
+    
+    if(msgModel!=nil && [msgModel isKindOfClass:[ZCLibMessage class]]){
+        if(type == ZCTurnType_KeyWord){
+            paramter.queueFlag = msgModel.queueFlag;
+            
+            paramter.keyword = zcLibConvertToString(msgModel.keyword);
+            paramter.keywordId = zcLibConvertToString(msgModel.keywordId);
+        }
+        
+        paramter.transferType = msgModel.transferType;
+        
+        // 当transferType=5时,需要拆分transferType的值为6、7、8、9
+        // 3.0.6版本发现bug，当transferType=0时，点击转人工作，需要根据机器人回答，重新赋值类型
+        if((paramter.transferType == 0 && type == ZCTurnType_BtnClick) || paramter.transferType == 5){
+            int temptransferType = 0;
+            // 1 直接回答，2 理解回答，3 不能回答, 4引导回答
+            if(msgModel.richModel.answerType == 1){
+                temptransferType = 6;
+            }else if(msgModel.richModel.answerType == 2){
+                temptransferType = 7;
+            }else if(msgModel.richModel.answerType == 3){
+                temptransferType = 9;
+            }else if(msgModel.richModel.answerType == 4){
+                temptransferType = 8;
+            }
+            if(temptransferType > 0){
+                paramter.transferType = temptransferType;
+            }
+        }
+        if(paramter.transferType >= 4 && paramter.transferType <= 9){
+            if(paramter.transferType==4){
+                paramter.docId = msgModel.richModel.multiModel.docId;
+            }else{
+                paramter.docId = msgModel.richModel.docId;
+            }
+        }
+        if(zcLibConvertToString(paramter.docId).length == 0){
+            paramter.docId = msgModel.richModel.docId;
+        }
+        paramter.unknownQuestion = zcLibConvertToString(msgModel.originQuestion);
+    }
+    
+    // 机器人出现转人工按钮
+    if(paramter.transferType >= 1 && paramter.transferType < 4){
+        paramter.activeTransfer = 0;
+        
+    }else if(type == ZCTurnType_BtnClickUpOrDown){
+        // 客户踩或赞显示转人工按钮
+        paramter.activeTransfer = 1;
+        paramter.transferType = 10;
+    }else if(type == ZCTurnType_BtnClick || type == ZCTurnType_InitBeConnected  || type == ZCTurnType_InitOnUserType){
+        // 客服主动转
+        paramter.activeTransfer = 1;
+    }else{
+        paramter.activeTransfer = 0;
+    }
+    paramter.transferAction  = [ZCLibClient getZCLibClient].libInitInfo.transferaction;
+    paramter.queueFirst  = [ZCLibClient getZCLibClient].libInitInfo.queue_first;
+    
+    
+    [self saveGroupIdWith:zcLibConvertToString(paramter.groupId)];
+    
+    __weak ZCUICore *safeVC = self;
+    [_apiServer connectOnlineCustomer:paramter config:[self getLibConfig] start:^{
+        //开始转人工
+        if (safeVC.delegate && [self.delegate respondsToSelector:@selector(onPageStatusChanged:message:obj:)]) {
+            [safeVC.delegate onPageStatusChanged:ZCShowStatusConnectingUser message:@"" obj:nil];
+        }
+    } result:^(NSDictionary *dict, ZCConnectUserStatusCode status) {
+        // 转人工完成
+        if (safeVC.delegate && [self.delegate respondsToSelector:@selector(onPageStatusChanged:message:obj:)]) {
+            [safeVC.delegate onPageStatusChanged:ZCShowStatusConnectFinished message:@"" obj:nil];
+        }
+        
+        safeVC.isTurnLoading = NO;
+        
+        
+        [[ZCUIToastTools shareToast] dismisProgress];
+        
+        safeVC.receivedName = [safeVC getPlatfromInfo].config.robotName;
+        
+        [safeVC configConnectedResult:dict code:status ZCTurnType:type];
+        
+        // configConnectedResult 函数中已对参数做了设置
+        if (status == ZCConnectUserNextTry) {
+            // 重新检查，可以弹技能组
+            [self checkUserServiceWithType:type model:msgModel];
+        }
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            if ([ZCUICore getUICore].delegate && [[ZCUICore getUICore].delegate respondsToSelector:@selector(beginAniantions)]) {
+                [[ZCUICore getUICore].delegate beginAniantions];
+            }
+        });
+        
+    }];
+    
+}
+
+
+/// 检查转人工
+/// @param type  转人工类型
+/// @param message 当前影响的对象
+-(void)checkUserServiceWithType:(ZCTurnType) type model:(ZCLibMessage *) message{
     
     ZCPlatformInfo *info = [[ZCPlatformTools sharedInstance] getPlatformInfo];
     // 没有初始化
@@ -538,7 +721,11 @@ static dispatch_once_t onceToken;
         return;
     }
     
-    // 被拉黑
+    // 不直接转人工，等待发送消息
+    if([self checkAfterConnectUser:type]){
+        return;
+    }
+    
     if(info.config.isblack){
         // 如果是被拉黑的用户在仅人工的模式直接跳到留言
         if (info.config.type == 2 && info.config.msgFlag == 0) {
@@ -547,10 +734,16 @@ static dispatch_once_t onceToken;
         }
     }
     
+    // 用户拦截转人工，不做其他关键字判断
+    if ([ZCLibClient getZCLibClient].turnServiceBlock) {
+        [ZCLibClient getZCLibClient].turnServiceBlock(message, ZCTurnType_CellGroupClick);
+        return;
+    }
     
     // 如果有指定的客服ID 先传客服ID
     if (_kitInfo!= nil && zcLibConvertToString([ZCLibClient getZCLibClient].libInitInfo.choose_adminid).length>0) {
-        [self turnUserService:nil object:obj Msg:msg];
+        
+        [self doConnectUserService:message connectType:type];
         return;
     }
     
@@ -558,32 +751,32 @@ static dispatch_once_t onceToken;
     
     if(_kitInfo!=nil && zcLibConvertToString([ZCLibClient getZCLibClient].libInitInfo.groupid).length>0){
         // 设置外部技能组
-        [[ZCUICore getUICore] turnUserService:nil object:obj Msg:msg];
+        [self doConnectUserService:message connectType:type];
         return;
     }
     
     // 3.0.5 设置溢出技能组，直接转人工
     if([ZCLibClient getZCLibClient].libInitInfo.transferaction!=nil && [ZCLibClient getZCLibClient].libInitInfo.transferaction.count > 0){
         // 设置溢出技能组
-        [[ZCUICore getUICore] turnUserService:nil object:obj Msg:msg];
+        [self doConnectUserService:message connectType:type];
         return;
     }
     
     // 已经选择了技能组了
     if(_kitInfo!=nil && zcLibConvertToString(_checkGroupId).length>0){
         // 设置外部技能组
-        [[ZCUICore getUICore] turnUserService:nil object:obj Msg:msg];
+        [self doConnectUserService:message connectType:type];
         return;
     }
     
-    if (self.isShowForm && ![@"aginturn" isEqualToString:msg]) {
-        [[ZCUICore getUICore] turnUserService:nil object:obj Msg:msg];
+    if (self.isShowForm && !self.isDoConnectedUser) {
+        [self doConnectUserService:message connectType:type];
         return;
     }
     
     // 是否开启智能路由 并且不是再次转人工（已经执行过一次智能路由转人工了）
-    if ([self getPlatfromInfo].config.smartRouteInfoFlag == 1 && ![@"aginturn" isEqualToString:msg]) {
-        [[ZCUICore getUICore] turnUserService:nil object:obj Msg:msg];
+    if ([self getPlatfromInfo].config.smartRouteInfoFlag == 1 && !self.isDoConnectedUser) {
+        [self doConnectUserService:message connectType:type];
         return;
     }
     
@@ -592,7 +785,7 @@ static dispatch_once_t onceToken;
     //判断是否需要显示技能组
     //1、根据初始化信息直接判断，不显示技能组
     if(![self getLibConfig].groupflag){
-        [[ZCUICore getUICore] turnUserService:nil object:obj Msg:msg];
+        [self doConnectUserService:message connectType:type];
         return;
     }
     
@@ -607,7 +800,11 @@ static dispatch_once_t onceToken;
         
         if(sendCode != ZC_NETWORK_FAIL){
             // 根据结果判定显示转人工操作
-            [self showSkillSetView:messages Object:obj];
+            [self showSkillSetView:messages result:^(int code) {
+                if(code == 0){
+                    [self doConnectUserService:message connectType:type];
+                }
+            }];
         }
     } failed:^(NSString *errorMessage, ZCNetWorkCode errorCode) {
         // 加载动画
@@ -615,51 +812,7 @@ static dispatch_once_t onceToken;
     }];
 }
 
--(void)turnUserService:(void (^)(int, NSMutableArray *, NSString *))ResultBlock object:(id)obj Msg:(NSString *)msg{
-    ZCPlatformInfo *info = [[ZCPlatformTools sharedInstance] getPlatformInfo];
-    if(zcLibIs_null(info.config)){
-        return;
-    }
-    
-    if(_isTurnLoading){
-        return;
-    }
-    
-    
-    // 2.4.2新增询前表单
-    // 2.8.0添加单独配置，关闭询前表单
-    // 在转人工的事件进行操作
-    if (!_isShowForm  && !_kitInfo.isCloseInquiryForm) {
-        // 关闭加载动画
-        [[ZCUIToastTools shareToast] dismisProgress];
-        [_apiServer getAskTabelWithUid:[self getPlatfromInfo].config.uid start:^{
-            
-        } success:^(NSDictionary *dict, ZCNetWorkCode sendCode) {
-            @try{
-                if ([zcLibConvertToString(dict[@"code"]) intValue] == 1 && [zcLibConvertToString(dict[@"data"][@"openFlag"]) intValue] == 1) {
-                    if (self.delegate && [self.delegate respondsToSelector:@selector(coreOpenNewPageVC:IsExist:isShowToat:tipMsg:Dict:Object:)]) {
-                        [self.delegate coreOpenNewPageVC:ZC_AskTabelPage IsExist:LeaveExitTypeISCOLSE isShowToat:NO tipMsg:msg Dict:dict Object:obj];
-                    }                    
-                }else{
-                    // 去执行转人工的操作
-                    [self doConnectUserService:obj];
-                }
-                
-            } @catch (NSException *exception) {
-                
-            } @finally {
-                
-            }
-            
-            self.isShowForm = YES;
-        } failed:^(NSString *errorMessage, ZCNetWorkCode errorCode) {
-            
-        }];
-        
-    }else{
-        [self doConnectUserService:obj];
-    }
-}
+
 
 
 #pragma mark -- 判断是否需要显示技能组(以及点击技能组后的加载动画)
@@ -668,12 +821,14 @@ static dispatch_once_t onceToken;
 
  @param groupArr 技能组列表
  */
--(void)showSkillSetView:(NSMutableArray *) groupArr Object:(id)obj{
+-(void)showSkillSetView:(NSMutableArray *) groupArr  result:(void (^)(int code))doConnectServiceBlock{
     /**
      *  技能组没有数据
      */
     if(groupArr == nil || groupArr.count==0){
-        [[ZCUICore getUICore] turnUserService:nil object:obj Msg:nil];
+        if(doConnectServiceBlock){
+            doConnectServiceBlock(0);
+        }
         
         return;
     }
@@ -711,9 +866,9 @@ static dispatch_once_t onceToken;
         
         // 仅人工模式，直接留言
         if ([self getLibConfig].msgFlag == 1 && [self getLibConfig].type == 2) {
-            if(_delegate && [_delegate respondsToSelector:@selector(coreOpenNewPageVC:IsExist:isShowToat:tipMsg: Dict:Object:)]){
+            if(_delegate && [_delegate respondsToSelector:@selector(coreOpenNewPageVC:IsExist:isShowToat:tipMsg: Dict:Object:trunType:)]){
                 //  跳转到留言不直接退出SDK
-                [self.delegate coreOpenNewPageVC:ZC_LeaveMsgPage IsExist:LeaveExitTypeISNOCOLSE isShowToat:YES tipMsg:@"" Dict:nil Object:nil];
+                [self.delegate coreOpenNewPageVC:ZC_LeaveMsgPage IsExist:LeaveExitTypeISNOCOLSE isShowToat:YES tipMsg:@"" Dict:nil Object:nil trunType:ZCTurnType_BtnClick];
             }
         }else{
             // 添加暂无客服在线提醒
@@ -730,39 +885,39 @@ static dispatch_once_t onceToken;
 //        [ZCLibClient getZCLibClient].libInitInfo.group_name = @"";
 //        [ZCLibClient getZCLibClient].libInitInfo.groupid = @"";
         
-        __weak ZCUICore * keyboard = self;
+        __weak ZCUICore * safeSelf = self;
        _skillSetView  = [[ZCUISkillSetView alloc] initActionSheet:groupArr  withView:(UIView *)_delegate];
         
         [_skillSetView setItemClickBlock:^(ZCLibSkillSet *itemModel) {
             [ZCLogUtils logHeader:LogHeader debug:@"选择一个技能组"];
 
             // 点击之后就影藏
-            [keyboard.skillSetView tappedCancel:NO];
-            keyboard.skillSetView = nil;
+            [safeSelf.skillSetView tappedCancel:NO];
+            safeSelf.skillSetView = nil;
             
             // 客服不在线且开启了留言开关
             if(!itemModel.isOnline ){
                 // 添加暂无客服在线提醒
-                [keyboard keyboardOnClickAddLeavemeg];
+                [safeSelf keyboardOnClickAddLeavemeg];
                 
                 
                 // 点击技能组弹框上的留言跳转
-                if ([keyboard getLibConfig].msgFlag == 0) {
-                    if ([keyboard getLibConfig].type == 2) {
+                if ([safeSelf getLibConfig].msgFlag == 0) {
+                    if ([safeSelf getLibConfig].type == 2) {
                         if ([ZCUICore getUICore].delegate  && [[ZCUICore getUICore].delegate respondsToSelector:@selector(changeLeaveMsgType:)]) {
                             [[ZCUICore getUICore].delegate changeLeaveMsgType:LeaveExitTypeISBACKANDUPDATE];
                         }
 
                         return ;
                     }
-                    if ([keyboard getLibConfig].type == 3) {
+                    if ([safeSelf getLibConfig].type == 3) {
 
                         if ([ZCUICore getUICore].delegate  && [[ZCUICore getUICore].delegate respondsToSelector:@selector(changeLeaveMsgType:)]) {
                             [[ZCUICore getUICore].delegate changeLeaveMsgType:LeaveExitTypeISROBOT];
                         }
                         return;
                     }
-                    if ([keyboard getLibConfig].type == 4) {
+                    if ([safeSelf getLibConfig].type == 4) {
 
                         if ([ZCUICore getUICore].delegate  && [[ZCUICore getUICore].delegate respondsToSelector:@selector(changeLeaveMsgType:)]) {
                             [[ZCUICore getUICore].delegate changeLeaveMsgType:LeaveExitTypeISUSER];
@@ -776,18 +931,16 @@ static dispatch_once_t onceToken;
                 }
 
             }else{
-
-            // 使用 _checkGroupId 替换一下选项,调用接口时会清空
-//                [ZCLibClient getZCLibClient].libInitInfo.group_name = itemModel.groupName;
-//                [ZCLibClient getZCLibClient].libInitInfo.groupid = itemModel.groupId;
-            _checkGroupId = itemModel.groupId;
-            _checkGroupName = itemModel.groupName;
-
+                // 使用 _checkGroupId 替换一下选项,调用接口时会清空
+                _checkGroupId = itemModel.groupId;
+                _checkGroupName = itemModel.groupName;
                 // 加载动画
-                [[ZCUIToastTools shareToast] showProgress:@"" with:(UIView *)keyboard.delegate];
+                [[ZCUIToastTools shareToast] showProgress:@"" with:(UIView *)safeSelf.delegate];
 
                 // 执行转人工
-                [keyboard checkUserServiceWithObject:obj Msg:@"clearskillId"];
+                if(doConnectServiceBlock){
+                    doConnectServiceBlock(0);
+                }
             }
         }];
         
@@ -798,8 +951,8 @@ static dispatch_once_t onceToken;
             // 关闭技能组（取消按钮）选项，如果是仅人工模式和人工优先 退出   // 2.4.2 只有仅人工模式起效
             if([self getPlatfromInfo].config.type == 2){
                 // 直接关闭技能组
-                if(keyboard.delegate && [_delegate respondsToSelector:@selector(onPageStatusChanged:message:obj:)]){
-                    [keyboard.delegate onPageStatusChanged:ZCInitStatusCloseSkillSet message:ZCSTLocalString(@"") obj:nil];
+                if(safeCore.delegate && [_delegate respondsToSelector:@selector(onPageStatusChanged:message:obj:)]){
+                    [safeCore.delegate onPageStatusChanged:ZCInitStatusCloseSkillSet message:ZCSTLocalString(@"") obj:nil];
                 }
             }else if([self getPlatfromInfo].config.type == 4){
                 // 添加机器人欢迎语
@@ -810,7 +963,7 @@ static dispatch_once_t onceToken;
                 }
             }
             
-            keyboard.skillSetView = nil;
+            safeCore.skillSetView = nil;
             
         }];
         
@@ -818,7 +971,7 @@ static dispatch_once_t onceToken;
         [_skillSetView closeSkillToRobotBlock:^{
             // 添加暂无客服在线提醒
             [self keyboardOnClickAddLeavemeg];
-            keyboard.skillSetView = nil;
+            safeCore.skillSetView = nil;
         }];
         
         [_skillSetView showInView:(UIView *)_delegate];
@@ -841,252 +994,16 @@ static dispatch_once_t onceToken;
     return _skillSetView;
 }
 
-// 用户自定义转人工事件
--(void)customTurnServiceWithGroupId:(NSString *)groupId Obj:(id)obj KitInfo:(ZCKitInfo*)uiInfo ZCTurnType:(NSInteger)turnType Keyword:(NSString*)keyword KeywordId:(NSString*)keywordId{
-    
+-(void)customConnectUserService:(ZCLibMessage *) message KitInfo:(ZCKitInfo*)uiInfo ZCTurnType:(ZCTurnType) turnType{
     [ZCUICore getUICore].kitInfo = uiInfo;
     
-    _isTurnLoading = YES;
-    __weak ZCUICore *safeVC = self;
-   
-
     
-    NSString  *aid = @"";
-    
-    // 如果指定客服，客服不在线是否还要继续往下转，tranFlag=0往下转，默认为0
-    int  tranFlag = 0;
-    
-    
-    BOOL isWaiting = NO;
-    // [ZCIMChat getZCIMChat].waitMessage!=nil &&  [[self getZCLibConfig].cid isEqual:[ZCIMChat getZCIMChat].waitMessage.cid]
-    if([self getPlatfromInfo].waitintMessage!=nil &&  [[self getLibConfig].cid isEqual:[self getPlatfromInfo].waitintMessage.cid]){
-        isWaiting = YES;
-    }
-    
-    int  transferType = 0;
-    if (obj != nil && [[obj allKeys] containsObject:@"value"]) {
-        transferType = [zcLibConvertToString(obj[@"value"]) intValue];
-    }
-    if (zcLibConvertToString(keyword).length > 0) {
-        transferType = 0;
-    }
-    [self saveGroupIdWith:zcLibConvertToString(groupId)];
-    [_apiServer connectOnlineCustomer:zcLibConvertToString(groupId) groupName:@"" config:[self getLibConfig] Aid:aid TranFlag:tranFlag Keyword:keyword KeywordId:keywordId  current:isWaiting TransferType:transferType QueueFlag:0 ActionType:[ZCLibClient getZCLibClient].libInitInfo.transferaction QueueFirst:[ZCLibClient getZCLibClient].libInitInfo.queue_first start:^{
-        if (safeVC.delegate && [self.delegate respondsToSelector:@selector(onPageStatusChanged:message:obj:)]) {
-            [safeVC.delegate onPageStatusChanged:ZCShowStatusConnectingUser message:ZCSTLocalString(@"开始转人工") obj:nil];
-        }
-    } result:^(NSDictionary *dict, ZCConnectUserStatusCode status) {
-        if (safeVC.delegate && [self.delegate respondsToSelector:@selector(onPageStatusChanged:message:obj:)]) {
-            [safeVC.delegate onPageStatusChanged:ZCShowStatusConnectFinished message:ZCSTLocalString(@"转人工完成") obj:nil];
-        }
-        
-        safeVC.isTurnLoading = NO;
-        
-        
-        [[ZCUIToastTools shareToast] dismisProgress];
-        
-        safeVC.receivedName = [safeVC getPlatfromInfo].config.robotName;
-        
-//        [self cleanUserCount];
-//        [self cleanAdminCount];
-        
-        //        [ZCLogUtils logHeader:LogHeader debug:@"连接完成！状态：%zd %@",status,dict];
-        
-        if (zcLibConvertToString(keyword).length > 0) {
-            [safeVC configConnectedResult:dict code:status ZCTurnType:turnType];
-        }else{
-            if (transferType > 0) {
-                [safeVC configConnectedResult:dict code:status ZCTurnType:ZCTurnType_RepeatOrMood];
-            }else{
-                [safeVC configConnectedResult:dict code:status ZCTurnType:ZCTurnType_BtnClick];
-            }
-        }
-       
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            if ([ZCUICore getUICore].delegate && [[ZCUICore getUICore].delegate respondsToSelector:@selector(beginAniantions)]) {
-                [[ZCUICore getUICore].delegate beginAniantions];
-            }
-        });
-        
-    }];
+    [self doConnectUserService:message connectType:turnType];
 }
 
 
-/**
- 执行转人工操作
- obj:转人工类型 obj[@"value"] = 0,1,2 ，0-不转，1-重复提问转人工，2-情绪负向转人工
- */
--(void)doConnectUserService:(id)obj{
-    
-    _isTurnLoading = YES;
-    __weak ZCUICore *safeVC = self;
-    NSString *groupId = zcLibConvertToString([ZCLibClient getZCLibClient].libInitInfo.groupid);
-    NSString *groupName = zcLibConvertToString([ZCLibClient getZCLibClient].libInitInfo.group_name);
-    
-    if(zcLibConvertToString(_checkGroupId).length > 0){
-        groupId = _checkGroupId ;
-        groupName = _checkGroupName;
-    }
-    
-    // 清空数值，重复转人工，重复弹技能组
-    _checkGroupId = @"";
-    _checkGroupName = @"";
-    
-    NSString  *aid = [ZCLibClient getZCLibClient].libInitInfo.choose_adminid ;
-    
-    // 如果指定客服，客服不在线是否还要继续往下转，tranFlag=0往下转，默认为0
-    int  tranFlag = [ZCLibClient getZCLibClient].libInitInfo.tran_flag;
-    if (self.isDoConnectedUser) {
-        aid = @"";
-        tranFlag = 0;
-        self.isDoConnectedUser = NO;
-    }
-    
-    BOOL isWaiting = NO;
-    // [ZCIMChat getZCIMChat].waitMessage!=nil &&  [[self getZCLibConfig].cid isEqual:[ZCIMChat getZCIMChat].waitMessage.cid]
-    if([self getPlatfromInfo].waitintMessage!=nil &&  [[self getLibConfig].cid isEqual:[self getPlatfromInfo].waitintMessage.cid]){
-        isWaiting = YES;
-    }
-    
-    int  transferType = 0;
-    if (obj != nil && [[obj allKeys] containsObject:@"value"]) {
-        transferType = [zcLibConvertToString(obj[@"value"]) intValue];
-    }
-    [self saveGroupIdWith:zcLibConvertToString(groupId)];
-    [_apiServer connectOnlineCustomer:groupId groupName:groupName config:[self getLibConfig] Aid:aid TranFlag:tranFlag Keyword:@"" KeywordId:@""  current:isWaiting TransferType:transferType QueueFlag:0 ActionType:[ZCLibClient getZCLibClient].libInitInfo.transferaction QueueFirst:[ZCLibClient getZCLibClient].libInitInfo.queue_first start:^{
-        //开始转人工
-        if (safeVC.delegate && [self.delegate respondsToSelector:@selector(onPageStatusChanged:message:obj:)]) {
-            [safeVC.delegate onPageStatusChanged:ZCShowStatusConnectingUser message:@"" obj:nil];
-        }
-    } result:^(NSDictionary *dict, ZCConnectUserStatusCode status) {
-        // 转人工完成
-        if (safeVC.delegate && [self.delegate respondsToSelector:@selector(onPageStatusChanged:message:obj:)]) {
-            [safeVC.delegate onPageStatusChanged:ZCShowStatusConnectFinished message:@"" obj:nil];
-        }
-        
-        safeVC.isTurnLoading = NO;
-        
-        
-        [[ZCUIToastTools shareToast] dismisProgress];
-        
-        safeVC.receivedName = [safeVC getPlatfromInfo].config.robotName;
-        
-//        [self cleanUserCount];
-//        [self cleanAdminCount];
-        
-//        [ZCLogUtils logHeader:LogHeader debug:@"连接完成！状态：%zd %@",status,dict];
-        if (transferType > 0) {
-            [safeVC configConnectedResult:dict code:status ZCTurnType:ZCTurnType_RepeatOrMood];
-        }else{
-            [safeVC configConnectedResult:dict code:status ZCTurnType:ZCTurnType_BtnClick];
-        }
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            if ([ZCUICore getUICore].delegate && [[ZCUICore getUICore].delegate respondsToSelector:@selector(beginAniantions)]) {
-                [[ZCUICore getUICore].delegate beginAniantions];
-            }
-        });
-        
-    }];
-}
 
-
-/**
- *
- *   关键字转人工
- *
- **/
--(void)toConnectUserService:(ZCLibMessage *)msgModel GroupId:(NSString *)groupidStr GroupName:(NSString *)groupNameStr ZCTurnType:(ZCTurnType)turnType{
-    
-    if ([ZCLibClient getZCLibClient].turnServiceBlock) {
-        [ZCLibClient getZCLibClient].turnServiceBlock(msgModel, groupidStr, turnType, msgModel.keyword, msgModel.keywordId);
-        return ;
-    }
-    
-    // 不直接转人工，等待发送消息
-    if([self checkAfterConnectUser]){
-        return;
-    }
-    
-    _isTurnLoading = YES;
-    __weak ZCUICore *safeVC = self;
-    
-    NSString *groupId =  @"";
-    NSString *groupName = @"";
-    
-    if (msgModel.groupId.length >0) {
-        groupId = msgModel.groupId;
-        groupName = @"";
-    }
-    
-    
-    if (zcLibConvertToString([ZCLibClient getZCLibClient].libInitInfo.groupid).length >0) {
-       groupId = zcLibConvertToString([ZCLibClient getZCLibClient].libInitInfo.groupid);
-       groupName = zcLibConvertToString([ZCLibClient getZCLibClient].libInitInfo.group_name);
-    }
-    
-    
-    if(zcLibConvertToString(_checkGroupId).length > 0){
-        groupId = _checkGroupId ;
-        groupName = _checkGroupName;
-    }
-    
-    if (groupidStr.length >0) {
-        groupId = groupidStr;
-        groupName = groupNameStr;
-    }
-    
-   // 清空数值，重复转人工，重复弹技能组
-   _checkGroupId = @"";
-   _checkGroupName = @"";
-    
-    NSString  *aid = [ZCLibClient getZCLibClient].libInitInfo.choose_adminid ;
-    
-    // 如果指定客服，客服不在线是否还要继续往下转，tranFlag=0往下转，默认为0
-    int  tranFlag = [ZCLibClient getZCLibClient].libInitInfo.tran_flag;
-    if (self.isDoConnectedUser) {
-        aid = @"";
-        tranFlag = 0;
-        self.isDoConnectedUser = NO;
-    }
-    
-    BOOL isWaiting = NO;
-    // [ZCIMChat getZCIMChat].waitMessage!=nil &&  [[self getZCLibConfig].cid isEqual:[ZCIMChat getZCIMChat].waitMessage.cid]
-    if([self getPlatfromInfo].waitintMessage!=nil &&  [[self getLibConfig].cid isEqual:[self getPlatfromInfo].waitintMessage.cid]){
-        isWaiting = YES;
-    }
-
-    [self saveGroupIdWith:zcLibConvertToString(groupId)];
-    [_apiServer connectOnlineCustomer:groupId groupName:groupName config:[self getLibConfig] Aid:aid TranFlag:tranFlag Keyword:msgModel.keyword KeywordId:msgModel.keywordId current:isWaiting TransferType:msgModel.transferType QueueFlag:msgModel.queueFlag ActionType:[ZCLibClient getZCLibClient].libInitInfo.transferaction QueueFirst:[ZCLibClient getZCLibClient].libInitInfo.queue_first start:^{
-        if (safeVC.delegate && [self.delegate respondsToSelector:@selector(onPageStatusChanged:message:obj:)]) {
-            [safeVC.delegate onPageStatusChanged:ZCShowStatusConnectingUser message:ZCSTLocalString(@"开始转人工") obj:nil];
-        }
-    } result:^(NSDictionary *dict, ZCConnectUserStatusCode status) {
-        if (safeVC.delegate && [self.delegate respondsToSelector:@selector(onPageStatusChanged:message:obj:)]) {
-            [safeVC.delegate onPageStatusChanged:ZCShowStatusConnectFinished message:ZCSTLocalString(@"转人工完成") obj:nil];
-        }
-        
-        safeVC.isTurnLoading = NO;
-        
-        
-        [[ZCUIToastTools shareToast] dismisProgress];
-        
-        safeVC.receivedName = [safeVC getPlatfromInfo].config.robotName;
-        
-//        [self cleanUserCount];
-//        [self cleanAdminCount];
-        
-//        [ZCLogUtils logHeader:LogHeader debug:@"连接完成！状态：%zd %@",status,dict];
-        [safeVC configConnectedResult:dict code:status ZCTurnType:turnType];
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            if ([ZCUICore getUICore].delegate && [[ZCUICore getUICore].delegate respondsToSelector:@selector(beginAniantions)]) {
-                [[ZCUICore getUICore].delegate beginAniantions];
-            }
-        });
-        
-    }];
-}
-
--(BOOL)checkAfterConnectUser{
+-(BOOL)checkAfterConnectUser:(ZCTurnType ) type{
     if([self getLibConfig].invalidSessionFlag == 1 && ([self getLibConfig].type == 2||[self getLibConfig].type == 4) && _afterModel==nil){
         _isAfterConnectUser = YES;
         //切换键盘样式
@@ -1101,7 +1018,7 @@ static dispatch_once_t onceToken;
             
             // 添加自动发送自定义消息，客户单独要求需要每次都发送
             if ([ZCUICore getUICore].libInfo.good_msg_type >0 && zcLibConvertToString([ZCUICore getUICore].libInfo.content).length > 0) {
-                [self checkUserServiceWithObject:nil Msg:@"keyboard"];
+                [self checkUserServiceWithType:type model:nil];
             }
         }else{
             ZCLibMessage *message = [ZCLibServer setLocalDataToArr:ZCTipMessageAdminHelloWord type:0 duration:@"" style:0 send:NO name:self.receivedName content:nil config:[self getLibConfig]];
@@ -1251,11 +1168,13 @@ static dispatch_once_t onceToken;
                 // queueFlag=1:展示提示语，不展示机器人回复，触发转人工逻辑
                 if(message.queueFlag == 1){
                     //关键字转人工 直接转人工
-                    [self toConnectUserService:trunModel GroupId:trunModel.groupId GroupName:@"" ZCTurnType:ZCTurnType_KeyWord];
+                    [self doConnectUserService:trunModel connectType:ZCTurnType_KeyWordNoGroup];
                 }else{
                     if(message.onlineFlag == 1 || message.onlineFlag == 2){
                         //关键字转人工 直接转人工
-                        [self toConnectUserService:trunModel GroupId:trunModel.groupId GroupName:@"" ZCTurnType:ZCTurnType_KeyWord];
+                        _checkGroupId = zcLibConvertToString(trunModel.groupId);
+                        _checkGroupName = @"";
+                        [self doConnectUserService:trunModel connectType:ZCTurnType_KeyWord];
                         
                     }
                 }
@@ -1263,11 +1182,11 @@ static dispatch_once_t onceToken;
                 // queueFlag=1:展示提示语，不展示机器人回复，触发转人工逻辑
                 if(message.queueFlag == 1){
                     // 没有指定技能组
-                    [self checkUserServiceWithObject:nil Msg:nil];
+                    [self checkUserServiceWithType:ZCTurnType_KeyWordNoGroup model:message];
                 }else{
                     if(message.onlineFlag == 1 || message.onlineFlag == 2){
                         // 没有指定技能组
-                        [self checkUserServiceWithObject:nil Msg:nil];
+                        [self checkUserServiceWithType:ZCTurnType_KeyWordNoGroup model:message];
                     }
                 }
             }
@@ -1287,14 +1206,8 @@ static dispatch_once_t onceToken;
         ZCLibMessage * libMessage = [ZCLibServer setLocalDataToArr:ZCTipMessageRobotTurnMsg type:0 duration:@"" style:0 send:NO name:[self getLibConfig].robotName content:nil config:[self getLibConfig]];
         // 添加提示消息
         [self addReceivedNameMessageToList:libMessage IsAdminHelloWord:NO];
-        NSString * queueFlag = [NSString stringWithFormat:@"%d",message.transferType];
-        NSDictionary * dic = @{@"turnType":@"ZCTurnType_RepeatOrMood",@"value":queueFlag};
-
-        if ([ZCLibClient getZCLibClient].turnServiceBlock) {
-            [ZCLibClient getZCLibClient].turnServiceBlock(dic, nil, ZCTurnType_RepeatOrMood, @"", @"");
-            return;
-        }
-        [[ZCUICore getUICore] checkUserServiceWithObject:dic Msg:nil];
+        
+        [[ZCUICore getUICore] checkUserServiceWithType:ZCTurnType_RepeatOrMood model:model];
     }
 
 }
@@ -1304,7 +1217,6 @@ static dispatch_once_t onceToken;
     if(status==ZCConnectUserRobotTimeout){
         // 用户长时间没有说话，已经超时 （做机器人超时下线的操作显示新会话的键盘样式）
         [ZCUICore getUICore].isShowForm = NO;
-         [self isturnServerChangeValue];
         return;
     }
 
@@ -1329,17 +1241,7 @@ static dispatch_once_t onceToken;
 //        [ZCUICore getUICore].isShowForm = NO;
         // 回复原始值，在次转人工时，重新走转人工逻辑，不在直接转其他客服
         [ZCLibClient getZCLibClient].libInitInfo.choose_adminid = @"";
-        // 执行转人工的操作
-         [self isturnServerChangeValue];
-        
-//        if ([self getPlatfromInfo].config.smartRouteInfoFlag == 1) {
-            // 重新转 显示技能组弹框
-            [self checkUserServiceWithObject:nil Msg: @"aginturn"];
-//        }else{
-//            // 直接转 不弹技能组
-//             [self doConnectUserService];
-//        }
-        
+        // 执行转人工的操作，由于缺少message对象已放到调用地方执行
         return;
     }
     // 2.7.1 需求5185 关键字转人工 触发排队给提示 原逻辑不提示 && (turnType == ZCTurnType_BtnClick || turnType == ZCTurnType_CellGroupClick)
@@ -1358,9 +1260,7 @@ static dispatch_once_t onceToken;
         // 4.添加提示语
         // 5.设置键盘样式
         [ZCUICore getUICore].isShowForm = NO;
-        
-         [self isturnServerChangeValue];
-        
+                
         if ([self getPlatfromInfo].config.type ==2){
             if (self.delegate && [self.delegate respondsToSelector:@selector(onPageStatusChanged:message:obj:)]) {
                 [self.delegate onPageStatusChanged:ZCSetKeyBoardStatus message:@"ZCKeyboardStatusNewSession" obj:nil];
@@ -1377,8 +1277,8 @@ static dispatch_once_t onceToken;
         // 添加提示语
         if ([self getPlatfromInfo].config.msgFlag == 0) {
             //  跳转到留言不直接退出SDK
-            if (self.delegate && [self.delegate respondsToSelector:@selector(coreOpenNewPageVC:IsExist:isShowToat:tipMsg: Dict:Object:)]) {
-                [self.delegate coreOpenNewPageVC:ZC_LeaveMsgPage  IsExist:LeaveExitTypeISNOCOLSE isShowToat:YES tipMsg:zcLibConvertToString(dict[@"msg"]) Dict:nil Object:nil];
+            if (self.delegate && [self.delegate respondsToSelector:@selector(coreOpenNewPageVC:IsExist:isShowToat:tipMsg: Dict:Object:trunType:)]) {
+                [self.delegate coreOpenNewPageVC:ZC_LeaveMsgPage  IsExist:LeaveExitTypeISNOCOLSE isShowToat:YES tipMsg:zcLibConvertToString(dict[@"msg"]) Dict:nil Object:nil trunType:ZCTurnType_BtnClick];
             }
             
         }
@@ -1390,7 +1290,7 @@ static dispatch_once_t onceToken;
         if ( turnType == ZCTurnType_KeyWord && [zcLibConvertToString(dict[@"data"][@"queueFlag"]) intValue] == 0) {
             return;
         }
-         [self isturnServerChangeValue];
+
         [self addTipsListenerMessage:ZCTipMessageIsBlock];
         
     }else if(status==ZCConnectUserSuccess || status == ZCConnectUserBeConnected){
@@ -1441,7 +1341,7 @@ static dispatch_once_t onceToken;
         if ( turnType == ZCTurnType_KeyWord && [zcLibConvertToString(dict[@"data"][@"queueFlag"]) intValue] == 0) {
             return;
         }
-        [self isturnServerChangeValue];
+        
         int messageType = ZCReceivedMessageWaiting;
         if ([self getPlatfromInfo].config.type == 2) {
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -1484,7 +1384,6 @@ static dispatch_once_t onceToken;
         }
         [ZCUICore getUICore].isShowForm = NO;
         
-         [self isturnServerChangeValue];
         if (self.listArray.count != 0) {
             int index = 0;
             for (int i = 0; i< self.listArray.count; i++) {
@@ -1544,7 +1443,6 @@ static dispatch_once_t onceToken;
         }
         [ZCUICore getUICore].isShowForm = NO;
         
-        [self isturnServerChangeValue];
         // status == -1 重连
         if ([self getPlatfromInfo].config.type ==2){
             if([self getPlatfromInfo].config.msgFlag == 1){
@@ -1889,12 +1787,6 @@ static dispatch_once_t onceToken;
 }
 
 
-- (void)isturnServerChangeValue{
-    if ([ZCUICore getUICore].isSmartTurnServer) {
-        [ZCUICore getUICore].isSmartTurnServer = NO;
-        return;
-    }
-}
 
 /**
  添加消息到列表
@@ -2263,7 +2155,6 @@ static dispatch_once_t onceToken;
     // 评价页面是否消失
     _isDismissRobotPage = YES;
     _isDismissSheetPage = YES;
-    _isSmartTurnServer = NO;
     if (isNew) {
         // 重新赋值技能组ID和昵称（初始化传入字段）
         [ZCLibClient getZCLibClient].libInitInfo.groupid = zcLibConvertToString([[NSUserDefaults standardUserDefaults] valueForKey:@"UserDefaultGroupID"]);
@@ -2814,8 +2705,8 @@ static dispatch_once_t onceToken;
     if(_isAfterConnectUser && ![self getLibConfig].isArtificial && _afterModel==nil){
          _afterModel = [ZCLibServer setLocalDataToArr:type type:0 duration:@"" style:0 send:YES name:@"" content:text config:[self getLibConfig]];
         _isAfterConnectUser = NO;
-        // 转完人工再发送，如果排队了
-        [self checkUserServiceWithObject:nil Msg:nil];
+        // 转完人工再发送，检查转人工
+        [self checkUserServiceWithType:ZCTurnType_BtnClick model:nil];
         return;
     }
     
@@ -2830,12 +2721,7 @@ static dispatch_once_t onceToken;
             [self createMessageToArrayByAction:0 type:0 name:_receivedName face:[self getPlatfromInfo].config.face tips:0 content:text];
             // 刷新页面，在去转人工
 //            [self turnUserService:nil object:nil];
-            
-            if ([ZCLibClient getZCLibClient].turnServiceBlock) {
-                [ZCLibClient getZCLibClient].turnServiceBlock(nil, nil, ZCTurnType_BtnClick, @"", @"");
-                return;
-            }
-             [[ZCUICore getUICore] checkUserServiceWithObject:nil Msg:nil];
+            [[ZCUICore getUICore] checkUserServiceWithType:ZCTurnType_CustomKeyWord model:nil];
             return;
         }
     }
