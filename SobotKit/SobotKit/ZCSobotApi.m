@@ -445,6 +445,10 @@
     if(zcLibConvertToString(partnerid).length == 0){
         partnerid = [ZCSobotApi getUserUUID];
     }
+    if(zcLibConvertToString([ZCSobotApi getCommanyId]).length == 0){
+        ResultBlock(@{@"msg":@"companyId is null"},nil,ZC_PARAMS_FAIL);
+        return;
+    }
     NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
     [params setObject:zcLibConvertToString([ZCSobotApi getCommanyId]) forKey:@"companyId"];
     [params setObject:zcLibConvertToString(partnerid) forKey:@"partnerId"];

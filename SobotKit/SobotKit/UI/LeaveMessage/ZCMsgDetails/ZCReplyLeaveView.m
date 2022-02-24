@@ -255,7 +255,7 @@
       } success:^(NSDictionary *dict, NSMutableArray *itemArray, ZCNetWorkCode sendCode) {
 //          _isSend = NO;
           // 回复成功
-//          [[ZCUIToastTools shareToast] showToast:ZCSTLocalString(@"客服已经成功收到您的问题，请耐心等待") duration:1.0f view:saveSelf position:ZCToastPositionCenter];
+//          [[ZCUIToastTools shareToast] showToast:ZCSTLocalString(@"提交成功") duration:1.0f view:saveSelf position:ZCToastPositionCenter];
           [self tappedCancel:YES];
           
           

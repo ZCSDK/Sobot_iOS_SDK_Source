@@ -23,6 +23,7 @@
 #import "ZCUIKeyboard.h"
 
 #import "ZCToolsCore.h"
+#import "UIDeviceTools.h"
 
 #define VoiceLocalPath zcLibGetDocumentsFilePath(@"/sobot/")
 
@@ -143,6 +144,7 @@ static dispatch_once_t onceToken;
         if(isLoadingConfig){
             return;
         }
+        [ZCUICore getUICore].checkGroupId = @"";// 初始化需要清理掉之前缓存的技能组ID
         isLoadingConfig = YES;
         if (_listArray == nil) {
             _listArray = [NSMutableArray arrayWithCapacity:0];
@@ -251,6 +253,11 @@ static dispatch_once_t onceToken;
             safeCore.isInitLoading = NO;
         }];
     }else{
+        // 平台版新增**************************
+        if(![@"" isEqual:zcLibConvertToString([ZCLibClient getZCLibClient].platformUnionCode)] && isPlatformUnion()){
+            // 获取一次id，重新赋值，否则新给对象所有值一样，不会重新初始化
+            [[ZCLibClient getZCLibClient] getPlatform_userid];
+        }
         if(_ResultBlock){
             _ResultBlock(ZCInitStatusLoading,_listArray,@"开始初始化");
         }
@@ -559,7 +566,7 @@ static dispatch_once_t onceToken;
         return;
         
     }
-    
+
     // 定义传输参数
     ZCLibOnlineCustomerParams * paramter = [[ZCLibOnlineCustomerParams  alloc] init];
     
@@ -622,6 +629,45 @@ static dispatch_once_t onceToken;
     if(paramter.transferType >= 1 && paramter.transferType <= 4){
         paramter.activeTransfer = 1;
         
+        // 当transferType=5时,需要拆分transferType的值为6、7、8、9
+        // 3.0.6版本发现bug，当transferType=0时，点击转人工作，需要根据机器人回答，重新赋值类型
+        if((paramter.transferType == 0 && type == ZCTurnType_BtnClick) || paramter.transferType == 5){
+            int temptransferType = 0;
+            // 1 直接回答，2 理解回答，3 不能回答, 4引导回答
+            if(msgModel.richModel.answerType == 1){
+                temptransferType = 6;
+            }else if(msgModel.richModel.answerType == 2){
+                temptransferType = 7;
+            }else if(msgModel.richModel.answerType == 3){
+                temptransferType = 9;
+            }else if(msgModel.richModel.answerType == 4){
+                temptransferType = 8;
+            }
+            if(temptransferType > 0){
+                paramter.transferType = temptransferType;
+            }
+        }
+        if(paramter.transferType >= 4 && paramter.transferType <= 9){
+            if(paramter.transferType==4){
+                paramter.docId = msgModel.richModel.multiModel.docId;
+            }else{
+                paramter.docId = msgModel.richModel.docId;
+            }
+        }
+        if(zcLibConvertToString(paramter.docId).length == 0){
+            paramter.docId = msgModel.richModel.docId;
+        }
+        paramter.unknownQuestion = zcLibConvertToString(msgModel.originQuestion);
+    }
+    
+    // 机器人出现转人工按钮
+    if(paramter.transferType >= 1 && paramter.transferType < 4){
+        paramter.activeTransfer = 0;
+        
+    }else if(type == ZCTurnType_BtnClickUpOrDown){
+        // 客户踩或赞显示转人工按钮
+        paramter.activeTransfer = 1;
+        paramter.transferType = 10;
     }else if(type == ZCTurnType_BtnClick || type == ZCTurnType_InitBeConnected  || type == ZCTurnType_InitOnUserType){
         // 客服主动转
         paramter.activeTransfer = 1;
@@ -966,7 +1012,6 @@ static dispatch_once_t onceToken;
     
     [self doConnectUserService:message connectType:turnType];
 }
-
 
 
 -(BOOL)checkAfterConnectUser:(ZCTurnType ) type{

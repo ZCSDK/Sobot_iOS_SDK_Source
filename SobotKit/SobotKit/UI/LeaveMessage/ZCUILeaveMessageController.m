@@ -95,8 +95,6 @@ typedef NS_ENUM(NSInteger,ExitType) {
     
     int  btnTag; // 当前选中的选项卡下标
     UIView *lineView; // 选项卡下面的线条
-    UIButton * leftBtn; // 留言选项卡
-    UIButton * rightBtn;// 留言记录
     
     UIView * lmsView;// 留言成功后 提示页面
 }
@@ -106,7 +104,10 @@ typedef NS_ENUM(NSInteger,ExitType) {
 @property (nonatomic, assign) BOOL isSend;
 /** 系统相册相机图片 */
 @property (nonatomic,strong) UIImagePickerController *zc_imagepicker;
-
+// 留言选项卡
+@property (nonatomic,strong) UIButton * leftBtn;
+// 留言记录
+@property (nonatomic,strong) UIButton * rightBtn;
 @property (nonatomic,strong) UITableView * listTable;
 
 @property (nonatomic,strong) NSMutableArray * listArray;
@@ -139,14 +140,16 @@ typedef NS_ENUM(NSInteger,ExitType) {
     [super viewWillAppear:animated];
     
     if(_mainScrollView){
-        [self orientationChanged];
-        [self viewDidLayoutSubviews];
+        if([self orientationChanged]){
+            [self viewDidLayoutSubviews];
+        }
     }
 
     [self.mesRecordVC loadData];
     // 当从 “您的留言状态有 更新” 进入留言页面 只显示留言记录刷新时 设置选中留言记录页面
     if (self.selectedType == 2) {
-        [self itemsClick:rightBtn];
+//        [self itemsClick:rightBtn];
+        [self itemsClick:self.rightBtn];
     }
 }
 
@@ -224,10 +227,10 @@ typedef NS_ENUM(NSInteger,ExitType) {
     
     // 设置选中的选项卡
     if (self.selectedType != 2) {
-        leftBtn.selected = YES;
-        rightBtn.selected = NO;
+        self.leftBtn.selected = YES;
+        self.rightBtn.selected = NO;
     }else{
-        [self itemsClick:rightBtn];
+        [self itemsClick:self.rightBtn];
     }
     
 //    2.8.0 增加导航栏下面 细线
@@ -321,11 +324,15 @@ typedef NS_ENUM(NSInteger,ExitType) {
         [btnBgView addSubview:btn];
         
         if (i == 0) {
-            leftBtn = btn;
+            self.leftBtn = btn;
         }else if(i == 1){
-            rightBtn = btn;
+            self.rightBtn = btn;
         }
-        
+        if(btnTag == tag){
+            btn.selected = YES;
+        }else if(btnTag == 0 && i == 0){
+            btn.selected = YES;
+        }
         
         [[ZCToolsCore getToolsCore] setRTLFrame:btn];
     }
@@ -337,23 +344,28 @@ typedef NS_ENUM(NSInteger,ExitType) {
     lineView.layer.cornerRadius = 1.5f;
     lineView.layer.masksToBounds = YES;
     CGRect LF = lineView.frame;
-    LF.origin.x = leftBtn.frame.origin.x + leftBtn.frame.size.width/2-10;
+    LF.origin.x = self.leftBtn.frame.origin.x + self.leftBtn.frame.size.width/2-10;
     lineView.frame = LF;
     [btnBgView addSubview:lineView];
 }
 
 -(void) itemsClick:(UIButton *)sender{
+    if(lmsView!=nil){
+        lmsView.hidden = YES;
+        if(sender.tag == self.rightBtn.tag){
+            [_mesRecordVC loadData];
+        }
+    }
     
     if (btnTag == sender.tag) {
         return;
     }
-    
-    if(sender.tag == leftBtn.tag){
-        leftBtn.selected = YES;
-        rightBtn.selected = NO;
+    if(sender.tag == self.leftBtn.tag){
+        _leftBtn.selected = YES;
+        _rightBtn.selected = NO;
     }else{
-        leftBtn.selected = NO;
-        rightBtn.selected = YES;
+        _leftBtn.selected = NO;
+        _rightBtn.selected = YES;
         
     }
     
@@ -362,7 +374,7 @@ typedef NS_ENUM(NSInteger,ExitType) {
     LF.origin.x = sender.frame.origin.x + sender.frame.size.width/2 - 10;
     lineView.frame = LF;
     btnTag = (int)sender.tag;
-    
+    [self.navigationItem.titleView setNeedsDisplay];
     
     // 1.获取当前的页面
     NSInteger index = (NSInteger)(sender.tag - 2001);
@@ -1983,6 +1995,7 @@ return [UIView new];
     CGFloat viewWidth = [self getCurViewWidth];
     CGFloat viewHeigth = [self getCurViewHeight];
     if (lmsView != nil) {
+        lmsView.hidden = NO;
         return;
     }
     
@@ -2064,8 +2077,10 @@ return [UIView new];
         
     }else if (sender.tag == 3002){
         btnBgView.hidden = NO;
-        [self removeAddLeaveMsgSuccessView];
-        [self itemsClick:rightBtn];
+        // 不要移除，可以隐藏，否则会执行viewDidLayoutSubviews ，导致itemsClick 无效
+//        [self removeAddLeaveMsgSuccessView];
+        lmsView.hidden = YES;
+        [self itemsClick:_rightBtn];
         [_mesRecordVC loadData];
     }
 }

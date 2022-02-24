@@ -1704,7 +1704,7 @@
         if ([self getZCIMConfig].isArtificial) {
             return;
         }
-        [[ZCUICore getUICore] checkUserServiceWithType:ZCTurnType_BtnClick model:model];
+        [[ZCUICore getUICore] checkUserServiceWithType:ZCTurnType_BtnClickUpOrDown model:model];
     }
     
     // 踩/顶   -1踩   1顶
