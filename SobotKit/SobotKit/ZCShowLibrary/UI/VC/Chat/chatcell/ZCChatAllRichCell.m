@@ -624,7 +624,7 @@
                 int type = [item[@"type"] intValue];
                 
                 NSString *msg = zcLibConvertToString(item[@"msg"]);
-                if([@"<br>" isEqual:msg]){
+                if([@"<br>" isEqual:msg] || [@"<br/>" isEqual:msg]){
                     continue;
                 }
     //            while ([msg hasPrefix:@"\n"]){
@@ -655,8 +655,8 @@
                         }
                     }
                     if(zcLibConvertToString(item[@"name"]).length > 0 && zcLibIsUrl(msg,[ZCUITools zcgetUrlRegular])){
-                        [label setText:zcLibConvertToString(item[@"name"])];
-                        [label addLinkToURL:[NSURL URLWithString:zcLibConvertToString(msg)] withRange:NSMakeRange(0, zcLibConvertToString(item[@"name"]).length)];
+                        [label setText:[ZCHtmlCore filterHTMLTag:zcLibConvertToString(item[@"name"])]];
+                        [label addLinkToURL:[NSURL URLWithString:zcLibConvertToString(msg)] withRange:NSMakeRange(0, [ZCHtmlCore filterHTMLTag:zcLibConvertToString(item[@"name"])].length)];
                     }else{
                         NSMutableAttributedString *attr = item[@"attr"];
                         if(attr){

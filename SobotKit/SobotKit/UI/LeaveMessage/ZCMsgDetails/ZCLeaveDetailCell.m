@@ -256,7 +256,7 @@
              _statusLab.text = ZCSTLocalString(@"受理中");
             
             tmp = ZCSTLocalString(@"客服已经成功收到您的问题，请耐心等待");
-            _timeLab.text =  zcLibDateTransformString(@"MM-dd HH:mm", zcLibStringFormateDate(model.replyTime));
+            _timeLab.text =  timeText;
            
             if (model.startType == 0) {
                 tmp = @"";//ZCSTLocalString(@"客服回复");
@@ -322,6 +322,8 @@
     if ([timeText containsString:@" "]) {
        if (model.replyTimeStrAttr) {
            _timeLab.attributedText = model.replyTimeStrAttr;
+       }else{
+           _timeLab.text = timeText;
        }
    }
     

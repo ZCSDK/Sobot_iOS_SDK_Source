@@ -788,6 +788,40 @@
         }
     }];
     
+    //Hack for italic/skew effect to custom fonts
+    __block NSMutableDictionary *rangeIDict = [[NSMutableDictionary alloc] init];
+    [attributedString enumerateAttribute:NSParagraphStyleAttributeName inRange:NSMakeRange(0,attributedString.length) options:0 usingBlock:^(id value,NSRange range,BOOL *stop) {
+         if (value) {
+             NSMutableParagraphStyle *myStyle = (NSMutableParagraphStyle *)value;
+             if (myStyle.minimumLineHeight == 101) {
+                 // 保存加粗的标签位置，如果相同位置有斜体，需要设置为斜体加粗
+                 [rangeIDict setObject:@"YES" forKey:NSStringFromRange(range)];
+                 [attributedString addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:label.font.pointSize weight:UIFontWeightBold] range:range];
+             }
+         }
+     }];
+    
+    [attributedString enumerateAttribute:NSParagraphStyleAttributeName inRange:NSMakeRange(0,attributedString.length) options:0 usingBlock:^(id value,NSRange range,BOOL *stop) {
+      
+         if (value) {
+      
+             NSMutableParagraphStyle *myStyle = (NSMutableParagraphStyle *)value;
+             if (myStyle.minimumLineHeight == 99) {
+                 UIFont *textFont = label.font;
+                 CGAffineTransform matrix =  CGAffineTransformMake(1, 0, tanf(10 * (CGFloat)M_PI / 180), 1, 0, 0);
+                 UIFont *font = [UIFont systemFontOfSize:textFont.pointSize];
+                 // 相同的位置，有加粗
+                 if ([@"YES" isEqual:[rangeIDict objectForKey:NSStringFromRange(range)]]) {
+                    font = [UIFont boldSystemFontOfSize:textFont.pointSize];
+                 }
+                 UIFontDescriptor *desc = [UIFontDescriptor fontDescriptorWithName:font.fontName matrix:matrix];
+                 [attributedString addAttribute:NSFontAttributeName value:[UIFont fontWithDescriptor:desc size:textFont.pointSize] range:range];
+             }
+             
+      
+         }
+     }];
+    
     // 文本段落排版格式
     NSMutableParagraphStyle *textStyle = [[NSMutableParagraphStyle alloc] init];
     textStyle.lineBreakMode = NSLineBreakByWordWrapping; // 结尾部分的内容以……方式省略

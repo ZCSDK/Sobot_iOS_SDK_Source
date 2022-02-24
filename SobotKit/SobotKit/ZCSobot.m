@@ -64,9 +64,8 @@
     [ZCSobotApi sendTextToUser:textMsg resultBlock:nil];
 }
 
-
-+(void)turnServiceWithGroupId:(NSString *)groupId  Obj:(id)obj KitInfo:(ZCKitInfo*)uiInfo ZCTurnType:(NSInteger)turnType Keyword:(NSString*)keyword KeywordId:(NSString*)keywordId{
-    [ZCSobotApi connectCustomerService:groupId Obj:obj KitInfo:uiInfo ZCTurnType:turnType Keyword:keyword KeywordId:keywordId];
++(void)customConnectUserService:(ZCLibMessage *) message kitInfo:(ZCKitInfo*)uiInfo type:(int) trunType{
+    [ZCSobotApi connectCustomerService:message KitInfo:uiInfo ZCTurnType:trunType];
 }
 
 

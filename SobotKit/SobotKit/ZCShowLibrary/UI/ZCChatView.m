@@ -561,12 +561,6 @@
         
     }
     
-    // 智能转人工，转不成功也不提示
-    if (status == ZCShowStatusMessageTurnServer) {
-        [ZCUICore getUICore].isSmartTurnServer = YES;
-        [[ZCUICore getUICore] turnUserService:nil object:object Msg:nil];
-    }
-    
     if (status == ZCTurnRobotFramChange) {
         // TODO 测试数据
         if ([self getZCIMConfig].robotSwitchFlag  == 1) {
@@ -683,7 +677,7 @@
     _changeRobotBtn.frame = robotF;
 }
 
--(void)coreOpenNewPageVC:(ZCPagesType)type IsExist:(LeaveExitType) isExist  isShowToat:(BOOL) isShow  tipMsg:(NSString *)msg  Dict:(NSDictionary*)dict Object:(id)obj{
+-(void)coreOpenNewPageVC:(ZCPagesType)type IsExist:(LeaveExitType) isExist  isShowToat:(BOOL) isShow  tipMsg:(NSString *)msg  Dict:(NSDictionary*)dict Object:(id)obj trunType:(ZCTurnType) trunType{
         if (type == ZC_AskTabelPage) {
             ZCUIAskTableController * askVC = [[ZCUIAskTableController alloc]init];
             askVC.dict = dict[@"data"];
@@ -700,8 +694,7 @@
                         return ;
                     }else{
                         // 去执行转人工的操作
-                        [[ZCUICore getUICore] doConnectUserService:obj];
-                    }
+                        [[ZCUICore getUICore] doConnectUserService:obj connectType:trunType];                    }
                     
                 }
             };
@@ -714,30 +707,7 @@
 }
 
 -(void)jumpNewPageVC:(ZCPagesType)type IsExist:(LeaveExitType)isExist isShowToat:(BOOL)isShow tipMsg:(NSString *)msg Dict:(NSDictionary *)dict{
-    if (type == ZC_AskTabelPage) {
-        ZCUIAskTableController * askVC = [[ZCUIAskTableController alloc]init];
-        askVC.dict = dict[@"data"];
-        if (msg !=nil && [msg isEqualToString:@"clearskillId"]) {
-            askVC.isclearskillId = YES;
-        }
-       askVC.isNavOpen = (self.superController.navigationController!=nil ? YES: NO);
-        askVC.trunServerBlock = ^(BOOL isback) {
-            if (isback && [[ZCUICore getUICore] getLibConfig].type == 2) {
-                // 返回当前页面 结束会话回到启动页面
-                [self goBackIsKeep];
-            }else{
-                if (isback) {
-                    return ;
-                }else{
-                    // 去执行转人工的操作
-                    [[ZCUICore getUICore] doConnectUserService:nil];
-                }
-                
-            }
-        };
-         [self openNewPage:askVC];
-        
-    }else if (type == ZC_LeaveMsgPage || type == ZC_LeaveRecordPage){
+    if (type == ZC_LeaveMsgPage || type == ZC_LeaveRecordPage){
         
         
         if (_delegate && [_delegate respondsToSelector:@selector(onLeaveMsgClick:)] && _isJumpCustomLeaveVC) {
@@ -1565,17 +1535,9 @@
         if (temptype == 1) {
             return;
         }
-        // 点击技能组转人工
-//        [ZCLibClient getZCLibClient].libInitInfo.skillSetName = zcLibConvertToString (dict[@"groupName"]);
-//        [ZCLibClient getZCLibClient].libInitInfo.skillSetId = zcLibConvertToString(dict[@"groupId"]);
-        
-        // 执行转人工  不在显示技能组
-        if ([ZCLibClient getZCLibClient].turnServiceBlock) {
-            [ZCLibClient getZCLibClient].turnServiceBlock(nil, nil, ZCTurnType_CellGroupClick, model.keyword, model.keywordId);
-            return;
-        }
-        [[ZCUICore getUICore] toConnectUserService:model  GroupId:dict[@"groupId"] GroupName:dict[@"groupName"] ZCTurnType:ZCTurnType_CellGroupClick];
-        
+        [ZCUICore getUICore].checkGroupId = zcLibConvertToString(dict[@"groupId"]);
+        [ZCUICore getUICore].checkGroupName = zcLibConvertToString(dict[@"groupName"]);
+        [[ZCUICore getUICore] checkUserServiceWithType:ZCTurnType_CellGroupClick model:model];
     }
     
     // 发送商品信息给客服
@@ -1734,15 +1696,7 @@
     
     // 转人工
     if(type == ZCChatCellClickTypeConnectUser){
-        if ([ZCLibClient getZCLibClient].turnServiceBlock) {
-            [ZCLibClient getZCLibClient].turnServiceBlock(nil, nil, ZCTurnType_BtnClick, @"", @"");
-            return;
-        }
-        NSDictionary *obj = nil;
-        if(model.transferType == 4){
-            obj=@{@"value":@"4"};
-        }
-        [[ZCUICore getUICore] checkUserServiceWithObject:obj Msg:nil];
+        [[ZCUICore getUICore] checkUserServiceWithType:ZCTurnType_BtnClick model:model];
     }
     
     // 机器人 点踩 转人工
@@ -1750,12 +1704,7 @@
         if ([self getZCIMConfig].isArtificial) {
             return;
         }
-        if ([ZCLibClient getZCLibClient].turnServiceBlock) {
-            [ZCLibClient getZCLibClient].turnServiceBlock(nil, nil, ZCTurnType_BtnClick, @"", @"");
-            return;
-        }
-        NSDictionary *obj = nil;
-        [[ZCUICore getUICore] checkUserServiceWithObject:obj Msg:nil];
+        [[ZCUICore getUICore] checkUserServiceWithType:ZCTurnType_BtnClick model:model];
     }
     
     // 踩/顶   -1踩   1顶
@@ -2589,7 +2538,7 @@
     }
     
     if(isShow){
-         [[ZCUICore getUICore] checkUserServiceWithObject:nil Msg:nil];
+        [[ZCUICore getUICore] checkUserServiceWithType:ZCTurnType_BtnClick model:nil];
     }
     if ([[UIDevice currentDevice] orientation] == UIInterfaceOrientationPortrait
         || [[UIDevice currentDevice] orientation] == UIInterfaceOrientationPortraitUpsideDown) {

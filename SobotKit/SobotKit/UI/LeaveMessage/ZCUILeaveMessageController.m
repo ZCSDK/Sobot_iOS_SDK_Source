@@ -142,9 +142,12 @@ typedef NS_ENUM(NSInteger,ExitType) {
         [self orientationChanged];
         [self viewDidLayoutSubviews];
     }
-    
+
     [self.mesRecordVC loadData];
-    
+    // 当从 “您的留言状态有 更新” 进入留言页面 只显示留言记录刷新时 设置选中留言记录页面
+    if (self.selectedType == 2) {
+        [self itemsClick:rightBtn];
+    }
 }
 
 - (void)viewDidLoad {

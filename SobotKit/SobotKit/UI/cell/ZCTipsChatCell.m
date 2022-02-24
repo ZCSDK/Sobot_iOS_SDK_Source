@@ -234,10 +234,11 @@
 #pragma mark EmojiLabel链接点击事件
 // 链接点击
 -(void)attributedLabel:(ZCTTTAttributedLabel *)label didSelectLinkWithURL:(NSURL *)url{
-    
+    NSString *leaveUpMsg = [NSString stringWithFormat:@"%@ %@",ZCSTLocalString(@"您的留言状态有"),ZCSTLocalString(@"更新")];
+    leaveUpMsg = [leaveUpMsg stringByReplacingOccurrencesOfString:@" " withString:@" "];// 处理特殊空格国际化下字符串不相同的问题
     if ([zcLibConvertToString(label.text) hasSuffix:ZCSTLocalString(@"留言")] && (url.absoluteString.length ==0 || [@"sobot://leavemessage" isEqual:url.absoluteString] )) {
         [self turnLeverMessageVC];
-    }else if ([zcLibConvertToString(label.text) hasSuffix:ZCSTLocalString(@"您的留言状态有 更新")] && (url.absoluteString.length ==0 || [ZCSTLocalString(@"您的留言状态有 更新") isEqual:url.absoluteString] || [ZCSTLocalString(@"更新") isEqual:url.absoluteString])){
+    }else if ([zcLibConvertToString(label.text) hasSuffix:leaveUpMsg] && (url.absoluteString.length ==0 || [leaveUpMsg isEqual:url.absoluteString] || [ZCSTLocalString(@"更新") isEqual:url.absoluteString])){
         [self turnLeverMsgRecordVC];
     }else{
         [self doClickURL:url.absoluteString text:@""];
@@ -359,10 +360,15 @@
     if ([zcLibConvertToString( model.sysTips) hasPrefix:zcLibConvertToString([self getZCLibConfig].userOutWord)] || [zcLibConvertToString( model.sysTips) hasPrefix:zcLibConvertToString([self getZCLibConfig].adminNonelineTitle)]) {
         [self setTipCellAnimateTransformWith:model];
     }
-    
-    if ([zcLibConvertToString(text) hasSuffix:ZCSTLocalString(@"您的留言状态有 更新")]) {
+ 
+    // 处理工单留言提醒
+    NSString *leaveUpMsg = [NSString stringWithFormat:@"%@ %@",ZCSTLocalString(@"您的留言状态有"),ZCSTLocalString(@"更新")];
+    // 国际化译文中的空格需要处理  会导致判断失效
+//    tempStr = [tempStr stringByReplacingOccurrencesOfString:@" " withString:@"-"];
+    leaveUpMsg = [leaveUpMsg stringByReplacingOccurrencesOfString:@" " withString:@" "];
+    if ([leaveUpMsg isEqualToString:zcLibConvertToString(text)]) {
         NSString *update = ZCSTLocalString(@"更新");
-        [_lblTextMsg addLinkToURL:[NSURL URLWithString:update] withRange:NSMakeRange(ZCSTLocalString(@"您的留言状态有 更新").length - update.length, update.length)];
+        [_lblTextMsg addLinkToURL:[NSURL URLWithString:update] withRange:NSMakeRange(leaveUpMsg.length - update.length, update.length)];
         
         [self.ivBgView setBackgroundColor:[ZCUITools zcgetLeftChatColor]];
     }
