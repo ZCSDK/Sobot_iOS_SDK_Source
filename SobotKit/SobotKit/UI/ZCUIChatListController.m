@@ -118,7 +118,7 @@
     if (iOS7) {
         _listTable.backgroundView = nil;
     }
-    if (zcGetSystemDoubleVersion()>= 15.0) {
+    if (sobotGetSystemDoubleVersion()>= 15.0) {
         _listTable.sectionHeaderTopPadding = 0;
     }
     
@@ -291,7 +291,7 @@
     {
         ZCPlatformInfo *model = [_listArray objectAtIndex:indexPath.row];
         
-        [[ZCPlatformTools sharedInstance] deletePlatformByAppKey:zcLibConvertToString(model.app_key) user:zcLibConvertToString(model.partnerid)];
+        [[ZCPlatformTools sharedInstance] deletePlatformByAppKey:sobotConvertToString(model.app_key) user:sobotConvertToString(model.partnerid)];
         
         [[ZCLibServer getLibServer] delPlatformMemberByUser:model.listId start:^{
         } success:^(NSDictionary *dictionary, ZCNetWorkCode sendCode) {
@@ -321,7 +321,7 @@
     }
     ZCPlatformInfo *info = [_listArray objectAtIndex:indexPath.row];
     if([ZCLibClient getZCLibClient].libInitInfo==nil || ![info.app_key isEqual:[ZCLibClient getZCLibClient].libInitInfo.app_key]){
-        if(zcLibConvertToString(info.configJson).length > 0){
+        if(sobotConvertToString(info.configJson).length > 0){
             [ZCLibClient getZCLibClient].libInitInfo = [[ZCLibInitInfo alloc] initByJsonDict:[ZCLocalStore dictionaryWithJsonString:info.configJson]];
         }else{
             ZCLibInitInfo *initinfo = [ZCLibInitInfo new];

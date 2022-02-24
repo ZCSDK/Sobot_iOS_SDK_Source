@@ -155,16 +155,16 @@ typedef NS_ENUM(NSInteger,ZCGoodsCellType){
     if(model.richModel.msg!=nil){
         @try {
             NSError * err;
-            NSDictionary *dict=[NSJSONSerialization JSONObjectWithData:[zcLibConvertToString(model.richModel.msg) dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableLeaves error:&err];
+            NSDictionary *dict=[NSJSONSerialization JSONObjectWithData:[sobotConvertToString(model.richModel.msg) dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableLeaves error:&err];
             if (!err) {
                 productInfo = [ZCProductInfo new];
-                productInfo.thumbUrl = zcLibConvertToString(dict[@"thumbnail"]);
-                productInfo.title = zcLibConvertToString(dict[@"title"]);
-                productInfo.desc = zcLibConvertToString(dict[@"description"]);
-                productInfo.label = zcLibConvertToString(dict[@"label"]);
-                productInfo.link = zcLibConvertToString(dict[@"link"]);
+                productInfo.thumbUrl = sobotConvertToString(dict[@"thumbnail"]);
+                productInfo.title = sobotConvertToString(dict[@"title"]);
+                productInfo.desc = sobotConvertToString(dict[@"description"]);
+                productInfo.label = sobotConvertToString(dict[@"label"]);
+                productInfo.link = sobotConvertToString(dict[@"link"]);
                 if (!productInfo.link.length){
-                    productInfo.link = zcLibConvertToString(dict[@"url"]);
+                    productInfo.link = sobotConvertToString(dict[@"url"]);
                 }
             }else{
                 productInfo = [ZCUICore getUICore].kitInfo.productInfo;
@@ -206,39 +206,39 @@ typedef NS_ENUM(NSInteger,ZCGoodsCellType){
     //    标题
     NSString *titleStr;
     if (model.miniPageDic && model.isHistory) {
-        titleStr = zcLibConvertToString(model.miniPageDic[@"title"]);
+        titleStr = sobotConvertToString(model.miniPageDic[@"title"]);
     }else{
-        titleStr = zcLibConvertToString([self getZCproductInfo].title);
+        titleStr = sobotConvertToString([self getZCproductInfo].title);
     }
     
     //    pic
     NSURL *picUrl = [NSURL URLWithString:@""];
     if (model.miniPageDic && model.isHistory) {
-        picUrl = [NSURL URLWithString:zcLibConvertToString(model.miniPageDic[@"thumbnail"])];
+        picUrl = [NSURL URLWithString:sobotConvertToString(model.miniPageDic[@"thumbnail"])];
     }else{
-        picUrl = [NSURL URLWithString:zcLibConvertToString([self getZCproductInfo].thumbUrl)];
+        picUrl = [NSURL URLWithString:sobotConvertToString([self getZCproductInfo].thumbUrl)];
     }
     
     //    des
     NSString *desStr = [NSString string];
     if (model.miniPageDic && model.isHistory) {
-        desStr = zcLibConvertToString(model.miniPageDic[@"description"]);
+        desStr = sobotConvertToString(model.miniPageDic[@"description"]);
     }else{
-        desStr = zcLibConvertToString([self getZCproductInfo].desc);
+        desStr = sobotConvertToString([self getZCproductInfo].desc);
     }
     
     
     NSString *labelStr = [NSString string];
     if (model.miniPageDic && model.isHistory) {
-        labelStr = zcLibConvertToString(model.miniPageDic[@"label"]);
+        labelStr = sobotConvertToString(model.miniPageDic[@"label"]);
     }else{
-        labelStr = zcLibConvertToString([self getZCproductInfo].label);
+        labelStr = sobotConvertToString([self getZCproductInfo].label);
     }
     
     ZCGoodsCellType currentCellType;
-    BOOL hasPic = zcLibConvertToString(picUrl)!=nil  && ![@"" isEqualToString:zcLibConvertToString(picUrl)];
+    BOOL hasPic = sobotConvertToString(picUrl)!=nil  && ![@"" isEqualToString:sobotConvertToString(picUrl)];
     
-    BOOL hasDesc = zcLibConvertToString(desStr)!=nil && ![@"" isEqualToString:zcLibConvertToString(desStr)];
+    BOOL hasDesc = sobotConvertToString(desStr)!=nil && ![@"" isEqualToString:sobotConvertToString(desStr)];
     
     if (hasPic && hasDesc) {
         currentCellType = ZCGoodsCellType_pic_twoText;
@@ -419,9 +419,9 @@ typedef NS_ENUM(NSInteger,ZCGoodsCellType){
         
         NSString * link = @"";
         if (tempModel.miniPageDic && tempModel.isHistory) {
-            link = zcLibConvertToString(tempModel.miniPageDic[@"url"]);
+            link = sobotConvertToString(tempModel.miniPageDic[@"url"]);
         }else{
-            link = zcLibConvertToString([self getZCproductInfo].link);
+            link = sobotConvertToString([self getZCproductInfo].link);
         }
         [self.delegate cellItemLinkClick:@"" type:ZCChatCellClickTypeOpenURL obj:link];
     }
@@ -440,41 +440,41 @@ typedef NS_ENUM(NSInteger,ZCGoodsCellType){
     NSString *titleStr;
     ZCInfoCardCell *cell = [[ZCInfoCardCell alloc]init];
     if (model.miniPageDic && model.isHistory) {
-        titleStr = zcLibConvertToString(model.miniPageDic[@"title"]);
+        titleStr = sobotConvertToString(model.miniPageDic[@"title"]);
     }else{
-        titleStr = zcLibConvertToString([cell getZCproductInfoWith:model].title);
+        titleStr = sobotConvertToString([cell getZCproductInfoWith:model].title);
     }
     
     //    pic
     NSURL *picUrl = [NSURL URLWithString:@""];
     if (model.miniPageDic && model.isHistory) {
-        picUrl = [NSURL URLWithString:zcLibConvertToString(model.miniPageDic[@"thumbnail"])];
+        picUrl = [NSURL URLWithString:sobotConvertToString(model.miniPageDic[@"thumbnail"])];
     }else{
-        picUrl = [NSURL URLWithString:zcLibConvertToString([cell getZCproductInfoWith:model].thumbUrl)];
+        picUrl = [NSURL URLWithString:sobotConvertToString([cell getZCproductInfoWith:model].thumbUrl)];
     }
     
     //    des
     NSString *desStr = [NSString string];
     if (model.miniPageDic && model.isHistory) {
-        desStr = zcLibConvertToString(model.miniPageDic[@"description"]);
+        desStr = sobotConvertToString(model.miniPageDic[@"description"]);
     }else{
-        desStr = zcLibConvertToString([cell getZCproductInfoWith:model].desc);
+        desStr = sobotConvertToString([cell getZCproductInfoWith:model].desc);
     }
 
     //    label
     
 //    NSString *labelStr = [NSString string];
 //    if (model.miniPageDic && model.isHistory) {
-//        labelStr = zcLibConvertToString(model.miniPageDic[@"label"]);
+//        labelStr = sobotConvertToString(model.miniPageDic[@"label"]);
 //    }else{
-//        labelStr = zcLibConvertToString([cell getZCproductInfo].label);
+//        labelStr = sobotConvertToString([cell getZCproductInfo].label);
 //    }
     
     
     ZCGoodsCellType currentCellType;
-    BOOL hasPic = zcLibConvertToString(picUrl)!=nil  && ![@"" isEqualToString:zcLibConvertToString(picUrl)];
+    BOOL hasPic = sobotConvertToString(picUrl)!=nil  && ![@"" isEqualToString:sobotConvertToString(picUrl)];
     
-    BOOL hasDesc = zcLibConvertToString(desStr)!=nil && ![@"" isEqualToString:zcLibConvertToString(desStr)];
+    BOOL hasDesc = sobotConvertToString(desStr)!=nil && ![@"" isEqualToString:sobotConvertToString(desStr)];
     
 
     

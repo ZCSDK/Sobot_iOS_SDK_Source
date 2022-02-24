@@ -188,15 +188,15 @@
     itemView.layer.cornerRadius = h/2;
     itemView.layer.masksToBounds = YES;
     
-    [itemView setTitle:zcLibConvertToString(model.operationRemark) forState:UIControlStateNormal];
-    [itemView setTitle:zcLibConvertToString(model.operationRemark) forState:UIControlStateHighlighted];
+    [itemView setTitle:sobotConvertToString(model.operationRemark) forState:UIControlStateNormal];
+    [itemView setTitle:sobotConvertToString(model.operationRemark) forState:UIControlStateHighlighted];
     itemView.titleLabel.textAlignment = NSTextAlignmentCenter;
     
     [itemView setTitleColor:UIColorFromThemeColor(ZCTextMainColor) forState:UIControlStateNormal];
     [itemView setTitleColor:UIColorFromThemeColor(ZCKeepWhiteColor) forState:UIControlStateHighlighted];
     [itemView setTitleColor:UIColorFromThemeColor(ZCKeepWhiteColor) forState:UIControlStateSelected];
     
-    if ([zcLibConvertToString(model.robotFlag) intValue] == _robotid) {
+    if ([sobotConvertToString(model.robotFlag) intValue] == _robotid) {
         itemView.selected = YES;
     }
     

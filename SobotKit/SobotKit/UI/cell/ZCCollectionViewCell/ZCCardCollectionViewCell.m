@@ -222,7 +222,7 @@ NSString *const kZCCardCollectionViewCellID = @"ZCCollectionViewCell";
             [self.contentView addSubview:_posterView];
             
             _posterView.hidden = NO;
-            if(zcLibConvertToString(model[@"thumbnail"]).length == 0){
+            if(sobotConvertToString(model[@"thumbnail"]).length == 0){
                 _posterView.hidden = YES;
                 [_posterView setFrame:CGRectMake(gap,CGRectGetMaxY(_labTitle.frame)+10, 0,0)];
             }
@@ -272,11 +272,11 @@ NSString *const kZCCardCollectionViewCellID = @"ZCCollectionViewCell";
     
     
    
-    [_posterView loadWithURL:[NSURL URLWithString:zcUrlEncodedString(model[@"thumbnail"])] placeholer:[ZCUITools zcuiGetBundleImage:@"zcicon_default_goods"] showActivityIndicatorView:YES];
-    [_labTitle setText:zcLibConvertToString(model[@"title"])];// [NSString stringWithFormat:@"我是标题%@",item[@"row"]] zcicon_avatar_robot
-    [_labDesc setText:zcLibConvertToString(model[@"summary"])];// [NSString stringWithFormat:@"我是描述%@",item[@"desc"]]
-    [_labTag setText:zcLibConvertToString(model[@"tag"])];
-    [_labLabel setText:zcLibConvertToString(model[@"label"])];
+    [_posterView loadWithURL:[NSURL URLWithString:sobotUrlEncodedString(model[@"thumbnail"])] placeholer:[ZCUITools zcuiGetBundleImage:@"zcicon_default_goods"] showActivityIndicatorView:YES];
+    [_labTitle setText:sobotConvertToString(model[@"title"])];// [NSString stringWithFormat:@"我是标题%@",item[@"row"]] zcicon_avatar_robot
+    [_labDesc setText:sobotConvertToString(model[@"summary"])];// [NSString stringWithFormat:@"我是描述%@",item[@"desc"]]
+    [_labTag setText:sobotConvertToString(model[@"tag"])];
+    [_labLabel setText:sobotConvertToString(model[@"label"])];
     [_labTitle setTextColor:[ZCUITools zcgetLeftChatTextColor]];
     if(cellType == ZCMultitemHorizontaRollCellType_text){
         if(!isHistory){
@@ -289,7 +289,7 @@ NSString *const kZCCardCollectionViewCellID = @"ZCCollectionViewCell";
             _labTitle.numberOfLines = 2;
             // 自动折行设置
             _labTitle.lineBreakMode = NSLineBreakByCharWrapping;
-            [_labTitle setText:[NSString stringWithFormat:@"%d、%@",(int)self.indexPath.row+1,zcLibConvertToString(model[@"title"])]];
+            [_labTitle setText:[NSString stringWithFormat:@"%d、%@",(int)self.indexPath.row+1,sobotConvertToString(model[@"title"])]];
             [_labTitle sizeToFit];
         }
     }

@@ -135,10 +135,10 @@
             
         } success:^(NSDictionary *dict, ZCNetWorkCode sendCode) {
             if (dict) {
-                if(!zcLibIs_null(dict[@"data"])){
+                if(!sobotIsNull(dict[@"data"])){
                     int status = [dict[@"data"][@"status"] intValue];
                     if(status == 0){
-                        [[ZCUIToastTools shareToast] showToast:zcLibConvertToString(dict[@"data"][@"msg"]) duration:1.0f view:saveSelf.view position:ZCToastPositionCenter];
+                        [[ZCUIToastTools shareToast] showToast:sobotConvertToString(dict[@"data"][@"msg"]) duration:1.0f view:saveSelf.view position:ZCToastPositionCenter];
                         return;
                     }
                 }
@@ -153,7 +153,7 @@
                 }
             }
         } failed:^(NSString *errorMessage, ZCNetWorkCode errorCode) {
-            [[ZCUIToastTools shareToast] showToast:zcLibConvertToString(errorMessage) duration:1.0f view:saveSelf.view position:ZCToastPositionCenter];
+            [[ZCUIToastTools shareToast] showToast:sobotConvertToString(errorMessage) duration:1.0f view:saveSelf.view position:ZCToastPositionCenter];
             NSLog(@"%@",errorMessage);
         }];
     }
@@ -195,11 +195,11 @@
     _tipLab.delegate = self;
     NSString *text = @"";
     if (_msgTxt !=nil && _msgTxt.length > 0) {
-        text = zcLibConvertToString(_msgTxt);
+        text = sobotConvertToString(_msgTxt);
     }
 //    NSString *text = _msgTxt;//[self getCurConfig].msgTxt;
-     if(zcLibConvertToString([ZCUICore getUICore].kitInfo.leaveMsgGuideContent).length > 0){
-        text = ZCSTLocalString(zcLibConvertToString([ZCUICore getUICore].kitInfo.leaveMsgGuideContent));
+     if(sobotConvertToString([ZCUICore getUICore].kitInfo.leaveMsgGuideContent).length > 0){
+        text = ZCSTLocalString(sobotConvertToString([ZCUICore getUICore].kitInfo.leaveMsgGuideContent));
     }
     text = [ZCHtmlCore filterHTMLTag:text];
     
@@ -235,14 +235,14 @@
     _textView.layer.masksToBounds = YES;
     [_textView setBackgroundColor:[ZCUITools zcgetLeftChatColor]];
     [_textView setContentInset:UIEdgeInsetsMake( 7, 12, 15, 15)];
-    NSString * tmp =   zcLibConvertToString(self.msgTmp);
+    NSString * tmp =   sobotConvertToString(self.msgTmp);
     tmp = [ZCHtmlCore filterHTMLTag:tmp];
     while ([tmp hasPrefix:@"\n"]) {
         tmp=[tmp substringWithRange:NSMakeRange(1, tmp.length-1)];
     }
     
-    if(zcLibConvertToString([ZCUICore getUICore].kitInfo.leaveContentPlaceholder).length > 0){
-        tmp = ZCSTLocalString(zcLibConvertToString([ZCUICore getUICore].kitInfo.leaveContentPlaceholder));
+    if(sobotConvertToString([ZCUICore getUICore].kitInfo.leaveContentPlaceholder).length > 0){
+        tmp = ZCSTLocalString(sobotConvertToString([ZCUICore getUICore].kitInfo.leaveContentPlaceholder));
     }
     
     [ZCHtmlCore filterHtml:tmp result:^(NSString * _Nonnull text1, NSMutableArray * _Nonnull arr, NSMutableArray * _Nonnull links) {
@@ -266,11 +266,11 @@
     
     
     int th = CGRectGetMaxY(wbgView.frame);
-    if(zcLibConvertToString(_leaveExplain).length > 0){
+    if(sobotConvertToString(_leaveExplain).length > 0){
         UILabel *label=[[UILabel alloc] initWithFrame:CGRectMake(15, th + 10, [self getCurViewWidth]-30, 0)];
         label.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         [label setFont:ZCUIFont14];
-        [label setText:zcLibConvertToString(_leaveExplain)];
+        [label setText:sobotConvertToString(_leaveExplain)];
         //    [label setText:_listArray[section][@"sectionName"]];
         [label setBackgroundColor:[UIColor clearColor]];
         [label setTextAlignment:NSTextAlignmentLeft];
@@ -360,7 +360,7 @@
     if(url){
         url=[url stringByReplacingOccurrencesOfString:@"\"" withString:@""];
     
-            if([url hasPrefix:@"tel:"] || zcLibValidateMobileWithRegex(url, [ZCUITools zcgetTelRegular])){
+            if([url hasPrefix:@"tel:"] || sobotValidateMobileWithRegex(url, [ZCUITools zcgetTelRegular])){
                 callURL=url;
                 
   
@@ -372,7 +372,7 @@
                 } buttonTitles:ZCSTLocalString(@"呼叫"), nil];
                 
                 
-            }else if([url hasPrefix:@"mailto:"] || zcLibValidateEmail(url)){
+            }else if([url hasPrefix:@"mailto:"] || sobotValidateEmail(url)){
                 [[UIApplication sharedApplication] openURL:[NSURL URLWithString:url]];
             }
             
@@ -380,7 +380,7 @@
                 if (![url hasPrefix:@"https"] && ![url hasPrefix:@"http"]) {
                     url = [@"http://" stringByAppendingString:url];
                 }
-                ZCUIWebController *webPage=[[ZCUIWebController alloc] initWithURL:zcUrlEncodedString(url)];
+                ZCUIWebController *webPage=[[ZCUIWebController alloc] initWithURL:sobotUrlEncodedString(url)];
                 if(self.navigationController != nil ){
                     [self.navigationController pushViewController:webPage animated:YES];
                 }else{

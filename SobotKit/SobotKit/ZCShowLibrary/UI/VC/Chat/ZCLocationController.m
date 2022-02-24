@@ -153,13 +153,13 @@
         
         NSData * imageData =UIImageJPEGRepresentation(image, 0.75f);
         NSString * fname = [NSString stringWithFormat:@"/sobot/image100%ld.jpg",(long)[NSDate date].timeIntervalSince1970];
-        zcLibCheckPathAndCreate(zcLibGetDocumentsFilePath(@"/sobot/"));
-        NSString *fullPath=zcLibGetDocumentsFilePath(fname);
+        sobotCheckPathAndCreate(sobotGetDocumentsFilePath(@"/sobot/"));
+        NSString *fullPath=sobotGetDocumentsFilePath(fname);
         [imageData writeToFile:fullPath atomically:YES];
         
         CLLocationCoordinate2D coordinate= checkPlacemark.location.coordinate;
         
-        NSDictionary *dict = @{@"lng":[NSString stringWithFormat:@"%f",coordinate.longitude],@"lat":[NSString stringWithFormat:@"%f",coordinate.latitude],@"localName":zcLibConvertToString(checkPlacemark.name),@"localLabel":zcLibConvertToString(checkPlacemark.addressDictionary[@"Street"]),@"file":zcLibConvertToString(fullPath)};
+        NSDictionary *dict = @{@"lng":[NSString stringWithFormat:@"%f",coordinate.longitude],@"lat":[NSString stringWithFormat:@"%f",coordinate.latitude],@"localName":sobotConvertToString(checkPlacemark.name),@"localLabel":sobotConvertToString(checkPlacemark.addressDictionary[@"Street"]),@"file":sobotConvertToString(fullPath)};
         
         if(_checkLocationBlock){
             _checkLocationBlock(dict);

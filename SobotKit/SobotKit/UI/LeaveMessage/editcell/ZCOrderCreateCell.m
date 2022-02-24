@@ -34,7 +34,7 @@
 
 -(BOOL)checkLabelState:(BOOL) showSmall text:(NSString *)text{
     if(_labelName){
-        if(zcLibConvertToString(self.tempDict[@"dictValue"]).length > 0 || zcLibConvertToString(text).length >0 || showSmall){
+        if(sobotConvertToString(self.tempDict[@"dictValue"]).length > 0 || sobotConvertToString(text).length >0 || showSmall){
             [_labelName setFrame:CGRectMake(20, 6, ScreenWidth - 40, 17)];
             [_labelName setFont:ZCUIFont12];
             [_labelName setTextColor:UIColorFromThemeColor(ZCTextPlaceHolderColor)];
@@ -61,10 +61,10 @@
     
     if (stringArray.count != colorArray.count) {
         
-        return [[NSMutableAttributedString alloc] initWithString:zcLibConvertToString(originalString)];
+        return [[NSMutableAttributedString alloc] initWithString:sobotConvertToString(originalString)];
     }
     
-    NSMutableString *temp = [NSMutableString stringWithString:zcLibConvertToString(originalString)];
+    NSMutableString *temp = [NSMutableString stringWithString:sobotConvertToString(originalString)];
     NSMutableAttributedString *str = [[NSMutableAttributedString alloc] initWithString:temp];
     for (int i = 0;i < stringArray.count; i++) {
         if (stringArray[i].length) {
@@ -79,7 +79,7 @@
 
 -(NSMutableAttributedString *)getOtherColorString:(NSString *)string Color:(UIColor *)Color withString:(NSString *)originalString
 {
-    NSMutableString *temp = [NSMutableString stringWithString:zcLibConvertToString(originalString)];
+    NSMutableString *temp = [NSMutableString stringWithString:sobotConvertToString(originalString)];
     
     NSMutableAttributedString *str = [[NSMutableAttributedString alloc] initWithString:temp];
     if (string.length) {

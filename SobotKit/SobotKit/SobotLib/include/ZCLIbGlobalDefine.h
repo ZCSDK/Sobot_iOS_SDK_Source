@@ -6,7 +6,7 @@
 //  Copyright (c) 2015年 sobot. All rights reserved.
 //
 #import "ZCLibClient.h"
-#import "ZCLibCommon.h"
+#import "SobotUtils.h"
 
 
 // UTF8 字符串
@@ -55,7 +55,7 @@
 
 
 // iPhoneX
-#define ZC_iPhoneX zcIsIPhoneX() //(((SysScreenWidth == 375.f && SysScreenHeight == 812.f ) ||(SysScreenHeight == 375.f && SysScreenWidth == 812.f ) || (SysScreenHeight == 414.f && SysScreenWidth == 896.f ) || (SysScreenWidth == 414.f && SysScreenHeight == 896.f ))? YES : NO)
+#define ZC_iPhoneX sobotIsIPhoneX() //(((SysScreenWidth == 375.f && SysScreenHeight == 812.f ) ||(SysScreenHeight == 375.f && SysScreenWidth == 812.f ) || (SysScreenHeight == 414.f && SysScreenWidth == 896.f ) || (SysScreenWidth == 414.f && SysScreenHeight == 896.f ))? YES : NO)
 
 // 导航栏的高度
 #define isLandspace     ([UIApplication sharedApplication].statusBarOrientation == UIInterfaceOrientationLandscapeRight || [UIApplication sharedApplication].statusBarOrientation == UIInterfaceOrientationLandscapeLeft)
@@ -101,8 +101,8 @@ if([ZCLibClient getZCLibClient].libInitInfo!=nil && [ZCLibClient getZCLibClient]
     sourcePath = [bundlePath stringByAppendingFormat:@"/SobotLocalizable/%@",[ZCLibClient getZCLibClient].libInitInfo.absolute_language];\
     if(![NSBundle bundleWithPath:sourcePath]){\
         sourcePath = @"";\
-        NSString *jsonPath = zcLibGetDocumentsFilePath([NSString stringWithFormat:@"/sobot/ios_%@_%@.json",zcGetSDKVersion(),[ZCLibClient getZCLibClient].libInitInfo.absolute_language]);\
-        if(zcLibCheckFileIsExsis(jsonPath)){\
+        NSString *jsonPath = sobotGetDocumentsFilePath([NSString stringWithFormat:@"/sobot/ios_%@_%@.json",[ZCLibClient sobotGetSDKVersion],[ZCLibClient getZCLibClient].libInitInfo.absolute_language]);\
+        if(sobotCheckFileIsExsis(jsonPath)){\
            NSData *data=[NSData dataWithContentsOfFile:jsonPath];\
            NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:nil];\
            if(dict && [[dict allKeys] containsObject:key]){\
@@ -112,7 +112,7 @@ if([ZCLibClient getZCLibClient].libInitInfo!=nil && [ZCLibClient getZCLibClient]
     }\
 }\
 if(v==nil && sourcePath.length == 0){\
-    sourcePath = [bundlePath stringByAppendingPathComponent:[NSString stringWithFormat:@"SobotLocalizable/%@_lproj",zcGetLanguagePrefix()]];\
+    sourcePath = [bundlePath stringByAppendingPathComponent:[NSString stringWithFormat:@"SobotLocalizable/%@_lproj",sobotGetLanguagePrefix()]];\
     if(![NSBundle bundleWithPath:sourcePath]){\
         if([ZCLibClient getZCLibClient].libInitInfo!=nil && [ZCLibClient getZCLibClient].libInitInfo.default_language!=nil){\
             sourcePath = [bundlePath stringByAppendingPathComponent:[NSString stringWithFormat:@"SobotLocalizable/%@",[ZCLibClient getZCLibClient].libInitInfo.default_language]];\
@@ -125,5 +125,5 @@ if(sourcePath.length > 0){\
     NSBundle *resourceBundle = [NSBundle bundleWithPath:sourcePath];\
     v = [resourceBundle localizedStringForKey:key value:@"" table:@"SobotLocalizable"];\
 }\
-(v==nil ? key : zcLibConvertToString(v));\
+(v==nil ? key : sobotConvertToString(v));\
 })

@@ -240,9 +240,9 @@
     ZCSCListModel * model  = _listArray[indexPath.row];
     
     ZCServiceDetailVC *VC = [[ZCServiceDetailVC alloc]init];
-    VC.appId = zcLibConvertToString(self.appId);
-    VC.docId = zcLibConvertToString(model.docId);
-    VC.questionTitle = zcLibConvertToString(model.questionTitle);
+    VC.appId = sobotConvertToString(self.appId);
+    VC.docId = sobotConvertToString(model.docId);
+    VC.questionTitle = sobotConvertToString(model.questionTitle);
     [VC setOpenZCSDKTypeBlock:self.OpenZCSDKTypeBlock];
    
     if (self.navigationController) {

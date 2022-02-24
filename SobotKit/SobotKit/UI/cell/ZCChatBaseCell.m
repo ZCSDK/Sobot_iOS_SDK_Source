@@ -7,7 +7,7 @@
 //
 
 #import "ZCChatBaseCell.h"
-#import "ZCLibCommon.h"
+#import "SobotUtils.h"
 #import "ZCUITools.h"
 #import "ZCLibGlobalDefine.h"
 //#import "ZCUIXHImageViewer.h"
@@ -211,7 +211,7 @@
     [self resetCellView];
     
     _tempModel = model;
-    if(![@"" isEqual:zcLibConvertToString(showTime)]){
+    if(![@"" isEqual:sobotConvertToString(showTime)]){
         [_lblTime setText:showTime];
         [_lblTime setFrame:CGRectMake(0, 0, self.viewWidth, 30)];
         _lblTime.hidden=NO;
@@ -705,7 +705,7 @@
 
 +(CGFloat)getCellHeight:(ZCLibMessage *)model time:(NSString *)showTime viewWith:(CGFloat )viewWidth{
     CGFloat cellheight = 0;
-    if(![@"" isEqual:zcLibConvertToString(showTime)]){
+    if(![@"" isEqual:sobotConvertToString(showTime)]){
         cellheight = 30;
     }
     cellheight=cellheight+10;
@@ -716,7 +716,7 @@
     //    }
     //
     //    if (model.senderType ==0 ) {
-    //        if (![@"" isEqual:zcLibConvertToString([ZCLibClient getZCLibClient].libInitInfo.user_nick)]) {
+    //        if (![@"" isEqual:sobotConvertToString([ZCLibClient getZCLibClient].libInitInfo.user_nick)]) {
     //            // 设置内容的Y坐标
     //            cellheight=cellheight+5;
     //        }

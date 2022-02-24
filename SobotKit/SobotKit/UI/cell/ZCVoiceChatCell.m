@@ -61,7 +61,7 @@
     
     [_voiceButton setBackgroundColor:[UIColor clearColor]];
     
-    if([@"" isEqual:zcLibConvertToString(model.richModel.msgtranslation)]){
+    if([@"" isEqual:sobotConvertToString(model.richModel.msgtranslation)]){
         _voiceButton.hidden  = NO;
         _translationLabel.hidden = YES;
         
@@ -162,7 +162,7 @@
         height=height+50 ;
     }else{
         _voiceButton.hidden = YES;
-        _translationLabel.text = zcLibConvertToString(model.richModel.msgtranslation);
+        _translationLabel.text = sobotConvertToString(model.richModel.msgtranslation);
         _translationLabel.hidden = NO;
         
         CGSize size = [_translationLabel.text boundingRectWithSize:CGSizeMake(self.maxWidth, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:_translationLabel.font} context:nil].size;
@@ -284,7 +284,7 @@
 +(CGFloat)getCellHeight:(ZCLibMessage *)model time:(NSString *)showTime viewWith:(CGFloat)width{
     CGFloat height=[super getCellHeight:model time:showTime viewWith:width];
    
-    if(![@"" isEqual:zcLibConvertToString(model.richModel.msgtranslation)]){
+    if(![@"" isEqual:sobotConvertToString(model.richModel.msgtranslation)]){
         CGSize size = [model.richModel.msgtranslation boundingRectWithSize:CGSizeMake(width - 160, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:[ZCUITools zcgetKitChatFont]} context:nil].size;
         height = height + size.height + 34;
         

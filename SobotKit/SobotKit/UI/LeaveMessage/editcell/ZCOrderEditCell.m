@@ -62,7 +62,7 @@
     _textContent.frame = CGRectMake(20, 20, self.tableWidth - 20, 76-40);
 //    [_textContent setPlaceholder:dict[@"placeholder"]];
     [_textContent setText:@""];
-    if(!zcLibIs_null(dict[@"dictValue"])){
+    if(!sobotIsNull(dict[@"dictValue"])){
         [_textContent setText:dict[@"dictValue"]];
     }
     [self checkLabelState:NO];
@@ -79,7 +79,7 @@
 
 -(void)textViewDidChange:(ZCUIPlaceHolderTextView *)textView{
     if (self.delegate && [self.delegate respondsToSelector:@selector(itemCreateCusCellOnClick:dictValue:dict:indexPath:)]) {
-        [self.delegate itemCreateCusCellOnClick:ZCOrderCreateItemTypeOnlyEdit dictValue:zcLibConvertToString(textView.text) dict:self.tempDict indexPath:self.indexPath];
+        [self.delegate itemCreateCusCellOnClick:ZCOrderCreateItemTypeOnlyEdit dictValue:sobotConvertToString(textView.text) dict:self.tempDict indexPath:self.indexPath];
     }
     
     

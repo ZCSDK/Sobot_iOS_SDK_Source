@@ -76,7 +76,7 @@ typedef enum _ZCEditLimitType {
     _fieldContent.text = @"";
     [_fieldContent setPlaceholder:dict[@"placeholder"]];
     [_fieldContent setPlaceholder:@""];
-    if(!zcLibIs_null(dict[@"dictValue"])){
+    if(!sobotIsNull(dict[@"dictValue"])){
         [_fieldContent setText:dict[@"dictValue"]];
     }
     
@@ -119,14 +119,14 @@ typedef enum _ZCEditLimitType {
 
 -(BOOL)checkContentValid:(NSString *) text model:(ZCLibOrderCusFieldsModel *) model{
     
-    if(model != nil && zcLibConvertToString(text).length >0){
+    if(model != nil && sobotConvertToString(text).length >0){
         NSArray *limitOptions = nil;
         
         if(limitOptions==nil || limitOptions.count == 0){
             return YES;
         }
         if([model.limitOptions isKindOfClass:[NSString class]]){
-            NSString *limitOption =  zcLibConvertToString(model.limitOptions);
+            NSString *limitOption =  sobotConvertToString(model.limitOptions);
             limitOption = [limitOption stringByReplacingOccurrencesOfString:@"[" withString:@""];
             limitOption = [limitOption stringByReplacingOccurrencesOfString:@"]" withString:@""];
             limitOptions = [limitOption componentsSeparatedByString:@","];
@@ -150,31 +150,31 @@ typedef enum _ZCEditLimitType {
             }
         }
         if([limitOptions containsObject:[NSNumber numberWithInt:3]] || [limitOptions containsObject:@"3"]){
-             return zcLibValidateDecimalDouble(text);
+             return sobotValidateFloatWithNum(text,2);
         }
         if([limitOptions containsObject:[NSNumber numberWithInt:4]] || [limitOptions containsObject:@"4"]){
-             return zcLibValidateRuleNotBlank(text);
+             return sobotValidateRuleNotBlank(text);
         }
         
         if([limitOptions containsObject:[NSNumber numberWithInt:5]] || [limitOptions containsObject:@"5"]){
-             return zcLibValidateNumber(text);
+             return sobotValidateNumber(text);
         }
         
         if([limitOptions containsObject:[NSNumber numberWithInt:6]] || [limitOptions containsObject:@"6"]){
-            if(zcLibConvertToString(text).length > [model.limitChar intValue]){
+            if(sobotConvertToString(text).length > [model.limitChar intValue]){
                 return NO;
             }
         }
         
         if([limitOptions containsObject:[NSNumber numberWithInt:7]] || [limitOptions containsObject:@"7"]){
-//            return zcLibValidateEmail(text);
+//            return sobotValidateEmail(text);
         }
         
         if([limitOptions containsObject:[NSNumber numberWithInt:8]] || [limitOptions containsObject:@"8"]){
-            if(zcLibConvertToString(text).length >= 11){
+            if(sobotConvertToString(text).length >= 11){
                 return NO;
             }
-            return zcLibValidateNumber(text);
+            return sobotValidateNumber(text);
         }
         
     }
@@ -242,7 +242,7 @@ typedef enum _ZCEditLimitType {
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
     
     if([self getLitmitTypeWithModel:_cusModel] == ZCEditLimitType_special) {
-        if (!zcLibValidateRuleNotBlank(string)) {
+        if (!sobotValidateRuleNotBlank(string)) {
             return NO;
         }
     }
@@ -295,7 +295,7 @@ typedef enum _ZCEditLimitType {
             NSArray *limitOptions = nil;
             
             if([model.limitOptions isKindOfClass:[NSString class]]){
-                NSString *limitOption =  zcLibConvertToString(model.limitOptions);
+                NSString *limitOption =  sobotConvertToString(model.limitOptions);
                 limitOption = [limitOption stringByReplacingOccurrencesOfString:@"[" withString:@""];
                 limitOption = [limitOption stringByReplacingOccurrencesOfString:@"]" withString:@""];
                 limitOptions = [limitOption componentsSeparatedByString:@","];
@@ -331,7 +331,7 @@ typedef enum _ZCEditLimitType {
         return;
     }
     if (self.delegate && [self.delegate respondsToSelector:@selector(itemCreateCusCellOnClick:dictValue:dict:indexPath:)]) {
-        [self.delegate itemCreateCusCellOnClick:ZCOrderCreateItemTypeOnlyEdit dictValue:zcLibConvertToString(textField.text) dict:self.tempDict indexPath:self.indexPath];
+        [self.delegate itemCreateCusCellOnClick:ZCOrderCreateItemTypeOnlyEdit dictValue:sobotConvertToString(textField.text) dict:self.tempDict indexPath:self.indexPath];
     }
 }
 

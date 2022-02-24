@@ -366,7 +366,7 @@ typedef void (^PageLoadBlock)(id object,ZCPageBlockType type);
     [itemView setBackgroundColor:UIColorFromThemeColor(ZCKeepWhiteColor)];
     
     SobotImageView *img = [[SobotImageView alloc]initWithFrame:CGRectMake(14, 18, 40, 40)];
-    [img loadWithURL:[NSURL URLWithString:zcUrlEncodedString(model.categoryUrl)] placeholer:nil showActivityIndicatorView:NO completionBlock:^(UIImage *image, NSURL *url, NSError *error) {
+    [img loadWithURL:[NSURL URLWithString:sobotUrlEncodedString(model.categoryUrl)] placeholer:nil showActivityIndicatorView:NO completionBlock:^(UIImage *image, NSURL *url, NSError *error) {
         if(image){
             dispatch_async(dispatch_get_main_queue(), ^{
                 img.image = [self grayImage:image];
@@ -382,7 +382,7 @@ typedef void (^PageLoadBlock)(id object,ZCPageBlockType type);
     titlelab.numberOfLines = 1;
     [titlelab setTextAlignment:NSTextAlignmentLeft];
     [titlelab setTextColor:UIColorFromThemeColor(ZCTextSubColor)];
-    [titlelab setText:zcLibConvertToString(model.categoryName)];
+    [titlelab setText:sobotConvertToString(model.categoryName)];
     [titlelab setFont:ZCUIFontBold14];
     [itemView addSubview:titlelab];
     [titlelab sizeToFit];
@@ -393,7 +393,7 @@ typedef void (^PageLoadBlock)(id object,ZCPageBlockType type);
     [detailLab setTextAlignment:NSTextAlignmentLeft];
     detailLab.numberOfLines = 2;
     [detailLab setTextColor:UIColorFromThemeColor(ZCTextSubColor)];
-    [detailLab setText:zcLibConvertToString(model.categoryDetail)];
+    [detailLab setText:sobotConvertToString(model.categoryDetail)];
     [detailLab setFont:ZCUIFont12];
     [itemView addSubview:detailLab];
     CGSize s = [detailLab sizeThatFits:CGSizeMake(w - 70, 40)];
@@ -420,8 +420,8 @@ typedef void (^PageLoadBlock)(id object,ZCPageBlockType type);
     ZCServiceListVC * listVC = [[ZCServiceListVC alloc]init];
     int tag = (int)sender.tag;
     ZCSCListModel * model= _listArray[tag];
-    listVC.titleName = zcLibConvertToString(model.categoryName);
-    listVC.appId = zcLibConvertToString(model.appId);
+    listVC.titleName = sobotConvertToString(model.categoryName);
+    listVC.appId = sobotConvertToString(model.appId);
     listVC.categoryId = model.categoryId;
     [listVC setOpenZCSDKTypeBlock:self.OpenZCSDKTypeBlock];
     if (self.navigationController) {
@@ -447,7 +447,7 @@ typedef void (^PageLoadBlock)(id object,ZCPageBlockType type);
 -(id)initWithInitInfo:(ZCKitInfo *)info{
     self=[super init];
     if(self){
-        if(info !=nil && !zcLibIs_null([ZCLibClient getZCLibClient].libInitInfo) && !zcLibIs_null([ZCLibClient getZCLibClient].libInitInfo.app_key)){
+        if(info !=nil && !sobotIsNull([ZCLibClient getZCLibClient].libInitInfo) && !sobotIsNull([ZCLibClient getZCLibClient].libInitInfo.app_key)){
             //            self.zckitInfo=info;
         }else{
             //            self.zckitInfo=[ZCKitInfo new];

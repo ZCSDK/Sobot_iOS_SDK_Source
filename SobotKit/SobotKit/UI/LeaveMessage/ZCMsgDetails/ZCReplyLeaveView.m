@@ -135,7 +135,7 @@
     self.textDesc.textContainerInset = UIEdgeInsetsMake(10, 10, 0, 10);
     [self.backGroundView addSubview:self.textDesc];
     
-    if(isRTLLayout()){
+    if(sobotIsRTLLayout()){
         [self.textDesc setTextAlignment:NSTextAlignmentRight];
     }
     
@@ -228,7 +228,7 @@
 - (void)submitButtonClick{
     
 //    判断输入框是否为空 请填写回复内容
-    if(self.textDesc.text.length == 0 || zcLibTrimString(self.textDesc.text).length == 0){
+    if(self.textDesc.text.length == 0 || sobotTrimString(self.textDesc.text).length == 0){
     
         [[ZCUIToastTools shareToast] showToast:ZCSTLocalString(@"回复内容不能为空") duration:1.0 view:self position:ZCToastPositionCenter];
         
@@ -236,17 +236,17 @@
     }
     
     NSMutableDictionary *dic = [NSMutableDictionary dictionary];
-    [dic setValue:zcLibConvertToString(self.textDesc.text) forKey:@"replyContent"];
-    [dic setObject:zcLibConvertToString(self.ticketId) forKey:@"ticketId"];
-    [dic setObject:zcLibConvertToString([self getCurConfig].companyID) forKey:@"companyId"];
+    [dic setValue:sobotConvertToString(self.textDesc.text) forKey:@"replyContent"];
+    [dic setObject:sobotConvertToString(self.ticketId) forKey:@"ticketId"];
+    [dic setObject:sobotConvertToString([self getCurConfig].companyID) forKey:@"companyId"];
     if(_imageArr.count>0){
         NSString *fileStr = @"";
         for (NSDictionary *model in _imageArr) {
-            fileStr = [fileStr stringByAppendingFormat:@"%@;",zcLibConvertToString(model[@"fileUrl"])];
+            fileStr = [fileStr stringByAppendingFormat:@"%@;",sobotConvertToString(model[@"fileUrl"])];
         }
         
         fileStr = [fileStr substringToIndex:fileStr.length-1];
-        [dic setObject:zcLibConvertToString(fileStr) forKey:@"fileStr"];
+        [dic setObject:sobotConvertToString(fileStr) forKey:@"fileStr"];
     }
     
     __block ZCReplyLeaveView *saveSelf = self;
@@ -388,14 +388,14 @@
     CGFloat heigth = 60;
     NSUInteger countX = 0;
     CGFloat x = 0;
-    if(isRTLLayout()){
+    if(sobotIsRTLLayout()){
        countX = (assetCount < 4) ? 4 : assetCount;
     }
     for (NSInteger i = 0; i < assetCount; i++) {
         UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
         btn.imageView.contentMode = UIViewContentModeScaleAspectFill;
         x=(width + 5)*i;
-        if(isRTLLayout()){
+        if(sobotIsRTLLayout()){
             x = (width + 5)* (countX - i - 1);
         }
         btn.frame = CGRectMake(x,0, width, heigth);
@@ -419,13 +419,13 @@
             [btn.imageView setContentMode:UIViewContentModeScaleAspectFill];
             // 就从本地取
 //            ZCUploadImageModel *model = [_imageArr objectAtIndex:i];
-            if(zcLibCheckFileIsExsis([_imagePathArr objectAtIndex:i])){
+            if(sobotCheckFileIsExsis([_imagePathArr objectAtIndex:i])){
                 UIImage *localImage=[UIImage imageWithContentsOfFile:[_imagePathArr objectAtIndex:i]];
                 [btn setImage:localImage forState:UIControlStateNormal];
             }
             
             NSDictionary *imgDic = [_imageArr objectAtIndex:i];
-            NSString *imgFileStr =  zcLibConvertToString(imgDic[@"cover"]);
+            NSString *imgFileStr =  sobotConvertToString(imgDic[@"cover"]);
             if (imgFileStr.length>0) {
                 UIImage *localImage=[UIImage imageWithContentsOfFile:imgFileStr];
                 [btn setImage:localImage forState:UIControlStateNormal];
@@ -448,7 +448,7 @@
             UIButton *btnDel = [UIButton buttonWithType:UIButtonTypeCustom];
             btnDel.imageView.contentMode = UIViewContentModeScaleAspectFit;
             x = (width + 5)*i + width - 24;
-            if(isRTLLayout()){
+            if(sobotIsRTLLayout()){
                 x = (width + 5)* (countX - i - 1) + width - 24;
             }
             
@@ -470,7 +470,7 @@
     // 设置contentSize
     self.fileScrollView.contentSize = CGSizeMake((width+5)*assetCount, CGRectGetMaxY([[self.fileScrollView.subviews lastObject] frame]));
     if(assetCount > 4){
-        if(isRTLLayout()){
+        if(sobotIsRTLLayout()){
             [self.fileScrollView setContentOffset:CGPointMake(0, 0)];
         }else{
             [self.fileScrollView setContentOffset:CGPointMake(self.fileScrollView.contentSize.width - self.fileScrollView.frame.size.width, 0)];

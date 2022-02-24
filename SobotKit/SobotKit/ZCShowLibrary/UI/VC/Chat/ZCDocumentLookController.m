@@ -115,9 +115,9 @@
     
     //拿到cache目录的路径
     
-    NSString *dataPath = zcLibGetDocumentsFilePath(@"/sobot/");
+    NSString *dataPath = sobotGetDocumentsFilePath(@"/sobot/");
     // 创建目录
-    zcLibCheckPathAndCreate(dataPath);
+    sobotCheckPathAndCreate(dataPath);
 #pragma Mark -- 文件路径问题修改  (_message.richModel.fileName  替换原_message.richModel.msg  历史记录中msg返回“数据错误”，本次会话返回“”导致文件路径有误)
     //拼接文件的路径
     self.localFilePath = [dataPath stringByAppendingPathComponent:_message.richModel.fileName];
@@ -296,7 +296,7 @@
 - (void)getServerFileSize{
     // 文件的URL 从 richmodel“url”字段获取
     //1. url
-    NSURL *url = [NSURL URLWithString:zcUrlEncodedString(_message.richModel.url)];
+    NSURL *url = [NSURL URLWithString:sobotUrlEncodedString(_message.richModel.url)];
     //2.request
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     //设置HEAD请求方法
@@ -337,7 +337,7 @@
         
         //比较服务器文件的总大小和本地文件的总大小
         //1. url
-        NSURL *url = [NSURL URLWithString:zcUrlEncodedString(_message.richModel.url)];
+        NSURL *url = [NSURL URLWithString:sobotUrlEncodedString(_message.richModel.url)];
         //2.request
         NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
         //设置请求头 Range

@@ -61,11 +61,11 @@ typedef NS_ENUM(NSInteger, PageClickTag) {
     [self.backButton setImage:[ZCUITools zcuiGetBundleImage:@"zcicon_titlebar_back_normal"] forState:UIControlStateHighlighted];
     
     
-    if (![@"" isEqual:zcLibConvertToString([ZCUICore getUICore].kitInfo.topBackNolImg)]) {
-        [self.backButton setImage:[ZCUITools zcuiGetBundleImage:zcLibConvertToString([ZCUICore getUICore].kitInfo.topBackNolImg)] forState:UIControlStateNormal];
+    if (![@"" isEqual:sobotConvertToString([ZCUICore getUICore].kitInfo.topBackNolImg)]) {
+        [self.backButton setImage:[ZCUITools zcuiGetBundleImage:sobotConvertToString([ZCUICore getUICore].kitInfo.topBackNolImg)] forState:UIControlStateNormal];
     }
-    if (![@"" isEqual:zcLibConvertToString([ZCUICore getUICore].kitInfo.topBackSelImg)]) {
-        [self.backButton setImage:[ZCUITools zcuiGetBundleImage:zcLibConvertToString([ZCUICore getUICore].kitInfo.topBackSelImg)] forState:UIControlStateHighlighted];
+    if (![@"" isEqual:sobotConvertToString([ZCUICore getUICore].kitInfo.topBackSelImg)]) {
+        [self.backButton setImage:[ZCUITools zcuiGetBundleImage:sobotConvertToString([ZCUICore getUICore].kitInfo.topBackSelImg)] forState:UIControlStateHighlighted];
     }
     if ([ZCUICore getUICore].kitInfo.topBackNolColor != nil) {
         [self.backButton setBackgroundImage:[ZCUIImageTools zcimageWithColor:[ZCUICore getUICore].kitInfo.topBackNolColor] forState:UIControlStateNormal];
@@ -155,7 +155,7 @@ typedef NS_ENUM(NSInteger, PageClickTag) {
             NSURL *url=[[ NSURL alloc ] initWithString:pageURL];
             [_webView loadRequest:[ NSURLRequest requestWithURL:url]];
         }
-    }else if (zcLibIsUrl(pageURL,@"")){
+    }else if (sobotIsUrl(pageURL,@"")){
         NSURL *url=[[ NSURL alloc ] initWithString:pageURL];
         [_webView loadRequest:[ NSURLRequest requestWithURL:url]];
         
@@ -225,7 +225,7 @@ typedef NS_ENUM(NSInteger, PageClickTag) {
 -(id)initWithURL:(NSString *)url{
     self=[super init];
     if(self){
-        if (zcLibIsUrl(url,@"")) {
+        if (sobotIsUrl(url,@"")) {
             
             pageURL=url;
             
@@ -295,7 +295,7 @@ typedef NS_ENUM(NSInteger, PageClickTag) {
 - (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation{
     //    self.titleLabel.text = [webView stringByEvaluatingJavaScriptFromString:@"document.title"];
     [webView evaluateJavaScript:@"document.title" completionHandler:^(NSString *currentURL, NSError * _Nullable error) {
-        if (zcLibConvertToString(currentURL).length >0) {
+        if (sobotConvertToString(currentURL).length >0) {
             //    NSLog(@"复制链接%@",currentURL);
             self.titleLabel.text = currentURL;
         }
@@ -334,7 +334,7 @@ typedef NS_ENUM(NSInteger, PageClickTag) {
         
         NSArray *items;
         
-        if (zcLibConvertToString(pageURL).length == 0) {
+        if (sobotConvertToString(pageURL).length == 0) {
             items = [NSArray arrayWithObjects:
             fixedSpace,
             refreshStopBarButtonItem,
@@ -372,7 +372,7 @@ typedef NS_ENUM(NSInteger, PageClickTag) {
     
     else {
         NSArray *items;
-        if (zcLibConvertToString(pageURL).length == 0) {
+        if (sobotConvertToString(pageURL).length == 0) {
             items = [NSArray arrayWithObjects:
             fixedSpace,
             self.backBarButtonItem,
@@ -512,7 +512,7 @@ typedef NS_ENUM(NSInteger, PageClickTag) {
 - (void)reloadTapped:(UIBarButtonItem *)sender {
     
     //v2.7.9 如果是通过htmlstring直接加载的页面无URL，不需要刷新
-    if (zcLibConvertToString(pageURL).length == 0) {
+    if (sobotConvertToString(pageURL).length == 0) {
         return;
     }
     
@@ -524,10 +524,10 @@ typedef NS_ENUM(NSInteger, PageClickTag) {
     //    = [_webView stringByEvaluatingJavaScriptFromString:@"document.location.href"];
     [_webView evaluateJavaScript:@"document.location.href" completionHandler:^(NSString *currentURL, NSError * _Nullable error) {
         
-        if (zcLibConvertToString(currentURL).length >0) {
+        if (sobotConvertToString(currentURL).length >0) {
             //    NSLog(@"复制链接%@",currentURL);
             UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
-            [pasteboard setString:zcLibConvertToString(currentURL)];
+            [pasteboard setString:sobotConvertToString(currentURL)];
             [[ZCUIToastTools shareToast] showToast:ZCSTLocalString(@" 复制成功 ") duration:1.0f view:self.view position:ZCToastPositionCenter];
         }
         

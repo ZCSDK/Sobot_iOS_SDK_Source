@@ -150,10 +150,10 @@
 #pragma mark  -- 图片
     CGFloat height = 15;
     
-    if(model.richModel.multiModel.endFlag && zcLibConvertToString(model.richModel.multiModel.msg).length > 0){
+    if(model.richModel.multiModel.endFlag && sobotConvertToString(model.richModel.multiModel.msg).length > 0){
         [self.lblEmojiAnswerStrip setTextColor:[ZCUITools zcgetLeftChatTextColor]];
         [self.lblEmojiAnswerStrip setLinkColor:[ZCUITools zcgetChatLeftLinkColor]];
-        self.lblEmojiAnswerStrip.text = zcLibConvertToString(model.richModel.multiModel.msg);
+        self.lblEmojiAnswerStrip.text = sobotConvertToString(model.richModel.multiModel.msg);
         CGSize size = [self.lblEmojiAnswerStrip preferredSizeWithMaxWidth:self.maxWidth-30];
         CGFloat msgX = GetCellItemX(self.isRight)+15;
         if(self.isRight){
@@ -166,8 +166,8 @@
     }
 
     // 处理图片  当前的图片高度固定110
-    if(![@"" isEqualToString:zcLibConvertToString(detailDict[@"thumbnail"])]){
-        [[self middleImageView] loadWithURL:[NSURL URLWithString:zcUrlEncodedString(detailDict[@"thumbnail"])] placeholer:nil showActivityIndicatorView:YES];
+    if(![@"" isEqualToString:sobotConvertToString(detailDict[@"thumbnail"])]){
+        [[self middleImageView] loadWithURL:[NSURL URLWithString:sobotUrlEncodedString(detailDict[@"thumbnail"])] placeholer:nil showActivityIndicatorView:YES];
         [self middleImageView].hidden=NO;
         [self middleImageView].userInteractionEnabled=YES;
         imgF = CGRectMake(GetCellItemX(self.isRight), height, self.maxWidth - SpaceLX*2, MidImageHeight);
@@ -176,7 +176,7 @@
     }
     
 #pragma mark 标题
-    NSString *question = zcLibConvertToString(detailDict[@"title"]);
+    NSString *question = sobotConvertToString(detailDict[@"title"]);
     
     if(![@"" isEqual:question]){
         [self lblEmojiQuestion].text = @"";
@@ -215,8 +215,8 @@
     
 #pragma mark -- 中间的文本内容详情，如果图片是显示的，最多显示3行
     
-    if (![@"" isEqualToString:zcLibConvertToString(detailDict[@"summary"])]) {
-        NSString *text  =  zcLibConvertToString(zcLibConvertToString(detailDict[@"summary"]));
+    if (![@"" isEqualToString:sobotConvertToString(detailDict[@"summary"])]) {
+        NSString *text  =  sobotConvertToString(sobotConvertToString(detailDict[@"summary"]));
         
         [ZCHtmlCore filterHtml:text result:^(NSString * _Nonnull text1, NSMutableArray * _Nonnull arr, NSMutableArray * _Nonnull links) {
             if (self.isRight) {
@@ -239,7 +239,7 @@
         CGSize size = [self.lblTextMsg preferredSizeWithMaxWidth:self.maxWidth];
         
         // 如果显示图片，文本最多显示3行
-        if(![@"" isEqualToString:zcLibConvertToString(detailDict[@"thumbnail"])]){
+        if(![@"" isEqualToString:sobotConvertToString(detailDict[@"thumbnail"])]){
             // 最多显示三行
             if(size.height>70){
                 size.height = 70;
@@ -252,10 +252,10 @@
     }
     
     //设置线条 和展开
-    if (![@"" isEqualToString:zcLibConvertToString(detailDict[@"anchor"])] ||
-        ([@"" isEqualToString: zcLibConvertToString(detailDict[@"thumbnail"])] &&
-          [@"" isEqualToString: zcLibConvertToString(detailDict[@"summary"]) ] &&
-          [@"" isEqualToString: zcLibConvertToString(detailDict[@"title"])])) {
+    if (![@"" isEqualToString:sobotConvertToString(detailDict[@"anchor"])] ||
+        ([@"" isEqualToString: sobotConvertToString(detailDict[@"thumbnail"])] &&
+          [@"" isEqualToString: sobotConvertToString(detailDict[@"summary"]) ] &&
+          [@"" isEqualToString: sobotConvertToString(detailDict[@"title"])])) {
         
             // 添加线条
             _lineView  = [[UIView alloc]init];
@@ -265,9 +265,9 @@
             [self.contentView addSubview:_lineView];
             
             
-        if (!([@"" isEqualToString: zcLibConvertToString(detailDict[@"thumbnail"])] &&
-                [@"" isEqualToString: zcLibConvertToString(detailDict[@"summary"]) ] &&
-                [@"" isEqualToString: zcLibConvertToString(detailDict[@"title"])])) {
+        if (!([@"" isEqualToString: sobotConvertToString(detailDict[@"thumbnail"])] &&
+                [@"" isEqualToString: sobotConvertToString(detailDict[@"summary"]) ] &&
+                [@"" isEqualToString: sobotConvertToString(detailDict[@"title"])])) {
             // 这三项 全为空的时候不添加 线条
             _lineView.hidden = NO;
             height = height + 10 + Spaceheight + 1;
@@ -287,8 +287,8 @@
         self.lookMoreLabel.textAlignment = NSTextAlignmentCenter;
 //        if (!model.richModel.multiModel.isHistoryMessages) {
             // 一定要在设置text文本之后设置
-            [[self lookMoreLabel] addLinkToURL:[NSURL URLWithString:zcLibConvertToString(detailDict[@"anchor"])] withRange:NSMakeRange(0, ZCSTLocalString(@"查看详情").length)];
-            morelink = zcLibConvertToString(detailDict[@"anchor"]);
+            [[self lookMoreLabel] addLinkToURL:[NSURL URLWithString:sobotConvertToString(detailDict[@"anchor"])] withRange:NSMakeRange(0, ZCSTLocalString(@"查看详情").length)];
+            morelink = sobotConvertToString(detailDict[@"anchor"]);
         
 //        }
         CGSize size = [[self lookMoreLabel]preferredSizeWithMaxWidth:self.maxWidth];
@@ -314,7 +314,7 @@
     msgF.origin.y =  msgF.origin.y + bgY - 10;
 
     // 如果是不是富文本消息 整个 Y值增加间距 上间距
-    if (![@"" isEqualToString:zcLibConvertToString(detailDict[@"thumbnail"])] || [@"" isEqual:question] ) {
+    if (![@"" isEqualToString:sobotConvertToString(detailDict[@"thumbnail"])] || [@"" isEqual:question] ) {
         msgF.origin.y += 10;
     }
     // 设置详情文本的frame
@@ -461,27 +461,27 @@
         tempLabel.verticalAlignment = ZCTTTAttributedLabelVerticalAlignmentCenter;
     }
     
-    if (![@"" isEqualToString:zcLibConvertToString(detailDict[@"thumbnail"])]) {
+    if (![@"" isEqualToString:sobotConvertToString(detailDict[@"thumbnail"])]) {
         cellheith = cellheith + MidImageHeight + 10 + Spaceheight;
     }
     
     //判断显示标题
-    if(![@"" isEqual:zcLibConvertToString(detailDict[@"title"])]){
+    if(![@"" isEqual:sobotConvertToString(detailDict[@"title"])]){
         UIFontDescriptor *ctfFont = [ZCUITools zcgetKitChatFont].fontDescriptor;
         NSNumber *fontString = [ctfFont objectForKey:@"NSFontSizeAttribute"];
         tempLabel.font = [UIFont boldSystemFontOfSize:[fontString floatValue]];
         
-        tempLabel.text = zcLibConvertToString(model.richModel.question);
+        tempLabel.text = sobotConvertToString(model.richModel.question);
         CGSize size = [tempLabel preferredSizeWithMaxWidth:maxWidth];
         
         cellheith = cellheith + size.height +10 + Spaceheight;
     }
     
     //判断显示标题
-    if(model.richModel.multiModel.endFlag && zcLibConvertToString(model.richModel.multiModel.msg).length > 0){
+    if(model.richModel.multiModel.endFlag && sobotConvertToString(model.richModel.multiModel.msg).length > 0){
         tempLabel.font = ZCUIFontBold14;
         
-        tempLabel.text = zcLibConvertToString(model.richModel.multiModel.msg);
+        tempLabel.text = sobotConvertToString(model.richModel.multiModel.msg);
         CGSize size = [tempLabel preferredSizeWithMaxWidth:maxWidth];
         
         cellheith = cellheith + size.height +10 + Spaceheight;
@@ -489,7 +489,7 @@
     
     
     // 摘要
-    if (![@"" isEqualToString:zcLibConvertToString(detailDict[@"summary"])]) {
+    if (![@"" isEqualToString:sobotConvertToString(detailDict[@"summary"])]) {
         // 正在输入，需要放置加载动画图片
         NSString *text=model.richModel.msg;
         
@@ -518,13 +518,13 @@
 
   
     // 阅读全文
-    if(![@"" isEqualToString:zcLibConvertToString(detailDict[@"anchor"])] ||
-       ([@"" isEqualToString: zcLibConvertToString(detailDict[@"thumbnail"])] &&
-        [@"" isEqualToString: zcLibConvertToString(detailDict[@"summary"]) ] &&
-        [@"" isEqualToString: zcLibConvertToString(detailDict[@"title"])])){
-           if (!([@"" isEqualToString: zcLibConvertToString(detailDict[@"thumbnail"])] &&
-                 [@"" isEqualToString: zcLibConvertToString(detailDict[@"summary"]) ] &&
-                 [@"" isEqualToString: zcLibConvertToString(detailDict[@"title"])])) {
+    if(![@"" isEqualToString:sobotConvertToString(detailDict[@"anchor"])] ||
+       ([@"" isEqualToString: sobotConvertToString(detailDict[@"thumbnail"])] &&
+        [@"" isEqualToString: sobotConvertToString(detailDict[@"summary"]) ] &&
+        [@"" isEqualToString: sobotConvertToString(detailDict[@"title"])])){
+           if (!([@"" isEqualToString: sobotConvertToString(detailDict[@"thumbnail"])] &&
+                 [@"" isEqualToString: sobotConvertToString(detailDict[@"summary"]) ] &&
+                 [@"" isEqualToString: sobotConvertToString(detailDict[@"title"])])) {
              
                // 线条的高度
                cellheith = cellheith + 10 + Spaceheight + 1;

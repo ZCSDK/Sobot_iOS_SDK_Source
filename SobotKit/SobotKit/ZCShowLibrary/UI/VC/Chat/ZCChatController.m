@@ -28,6 +28,8 @@
 
 @property (nonatomic,strong) ZCChatView * chatView;
 
+//@property (nonatomic,strong)NSDate *countDate;
+
 @end
 
 @implementation ZCChatController
@@ -48,6 +50,7 @@
     
     
     [_chatView beginAniantions];
+
     
 }
 
@@ -61,12 +64,25 @@
         // 多级跳转的时候，需要重新初始化一次UI
         [_chatView showZCChatView:[ZCUICore getUICore].kitInfo];
     }
+#pragma mark -- 查看当前时间和之前记录的时间差值是否相差30min 如果达到，重新初始化
+//    if (_countDate != nil) {
+//        NSDate *currtDate = [NSDate date];
+//        NSTimeInterval distanceBetweenDates = [currtDate timeIntervalSinceDate:_countDate];
+//        CGFloat hours = distanceBetweenDates / 3600;
+//        if (hours>0.5) {
+//            [[ZCUICore getUICore] initConfigData:YES IsNewChat:YES];
+//            _countDate = nil;
+//        }
+//    }
 }
 
 -(void)viewDidDisappear:(BOOL)animated{
     [super viewDidDisappear:animated];
 
     [ZCAutoListView getAutoListView].isAllowShow = NO;
+    
+//    NSDate *newdate = [NSDate date];
+//    _countDate = newdate;
 }
 
 - (BOOL)shouldAutorotate {
@@ -192,6 +208,8 @@
         // 返回提醒开关
         if ([ZCUICore getUICore].kitInfo.isShowReturnTips) {
            [[ZCToolsCore getToolsCore] showAlert:ZCSTLocalString(@"您是否要结束会话?") message:nil cancelTitle:ZCSTLocalString(@"暂时离开") titleArray:@[ZCSTLocalString(@"结束会话")] viewController:self  confirm:^(NSInteger buttonTag) {
+//               self.countDate = nil;
+               [[ZCUICore getUICore] setclosepamasAndClearConfig];
                if(buttonTag >= 0){
                    // 点击关闭，离线用户
                    [self.chatView confimGoBackWithType:ZCChatViewGoBackType_close];
@@ -210,11 +228,13 @@
         }
         // 点击返回，清理数据
         [self.chatView confimGoBackWithType:ZCChatViewGoBackType_normal];
-        
+//        self.countDate = nil;
+        [[ZCUICore getUICore] setclosepamasAndClearConfig];
     }else if (sender.tag == BUTTON_CLOSE) {
+//        self.countDate = nil;
+        [[ZCUICore getUICore] setclosepamasAndClearConfig];
         // 点击关闭，离线用户
         [self.chatView confimGoBackWithType:ZCChatViewGoBackType_close];
-        
     }else if (sender.tag == BUTTON_MORE){
         // 点击清理数据事件
         [self.chatView cleanHistoryMessage];
@@ -226,7 +246,7 @@
             [ZCUICore getUICore].ZCViewControllerCloseBlock(self,ZC_PhoneCustomerService);
         }
         // 去打电话
-        NSString *phoneNumber = [NSString stringWithFormat:@"tel:%@",zcLibConvertToString([ZCUICore getUICore].kitInfo.customTel)];
+        NSString *phoneNumber = [NSString stringWithFormat:@"tel:%@",sobotConvertToString([ZCUICore getUICore].kitInfo.customTel)];
         [[UIApplication sharedApplication] openURL:[NSURL URLWithString:phoneNumber]];
     }
     
@@ -319,7 +339,7 @@
 -(void)onTitleChanged:(NSString *)title imageUrl:(NSString *)url{
     // 如果是使用系统导航，更换标题
     if(!self.navigationController.navigationBarHidden){
-        [self.titleView setTitle:zcLibConvertToString(title) image:url];
+        [self.titleView setTitle:sobotConvertToString(title) image:url];
     }
 }
 
@@ -416,7 +436,7 @@
 -(id)initWithInitInfo:(ZCKitInfo *)info{
     self=[super init];
     if(self){
-        if(info !=nil && !zcLibIs_null([ZCLibClient getZCLibClient].libInitInfo) && !zcLibIs_null([ZCLibClient getZCLibClient].libInitInfo.app_key)){
+        if(info !=nil && !sobotIsNull([ZCLibClient getZCLibClient].libInitInfo) && !sobotIsNull([ZCLibClient getZCLibClient].libInitInfo.app_key)){
 //            self.zckitInfo=info;
         }else{
 //            self.zckitInfo=[ZCKitInfo new];

@@ -50,11 +50,11 @@
 
 普通版：
 
-下载链接：[iOS_SDK_3.0.7](https://img.sobot.com/mobile/sdk/iOS_SDK_3.0.7.zip)
+下载链接：[iOS_SDK_3.0.8](https://img.sobot.com/mobile/sdk/iOS_SDK_3.0.8.zip)
 
 电商版：
 
-下载链接：[iOS_SDK_3.0.7_电商版](https://img.sobot.com/mobile/sdk/iOS_SDK_3.0.7_MALL.zip)
+下载链接：[iOS_SDK_3.0.8_电商版](https://img.sobot.com/mobile/sdk/iOS_SDK_3.0.8_MALL.zip)
 
 解压[iOS_SDK]，添加必要文件SobotKit.framework和SobotKit.bundle到你的工程里。智齿iOS_SDK 的实现，依赖了一些系统的框架，在开发应用时需要在工程里加入这些框架。开发者首先点击工程右边的工程名，然后在工程名右边依次选择TARGETS -> BuiLd Phases -> Link Binary With Libraries，展开 LinkBinary With Libraries后点击展开后下面的 + 来添加下面的依赖项:
 
@@ -1790,51 +1790,64 @@ _kitInfo.hideManualEvaluationLabels = YES;
 | showPhotoPreview   | BOOL   | 选择图片时，不直接发送，预览发送【注意：预览方框仅为放大镜效果，不是裁切图片，发送的还是原图】  |  默认NO，关闭 |
 | leaveTemplateId   | NSString   |  留言模板 id【注意 配合ZCChatControllerDelegate 使用 】  |    |
 | hideNavBtnMore   | BOOL   |  是否隐藏导航右上角“...”更多按钮  |  默认NO，默认不隐藏 |
+| hideQRCode   | BOOL   |  是否关闭识别二维码的功能  |  设置YES关闭，默认NO保留 |
+
 
 ### 字体相关：
 | 属性名称 | 数据类型 | 说明 | 备注 |
 |:----|:----|:----|:----|
 | titleFont   | UIFont   | 顶部标题的font   |    |
-| listDetailFont   | UIFont   | 各种按钮，网络提醒 font   |    |
-| listTimeFont   | UIFont   | 消息提醒(转人工、客服接待等)  font   |    |
+| subTitleFont   | UIFont   | 副标题font   |    |
+| listTitleFont   | UIFont   | 列表标题 font   |    |
+| listDetailFont   | UIFont   | 未读消息按钮、评价标签 font   |    |
+| customlistDetailFont   | UIFont   | 评价页面中”是否有以下情况“标签 font   |    |
+| listTimeFont   | UIFont   | 消息提醒(时间、转人工、客服接待等) font   |    |
 | chatFont   | UIFont   | 聊天气泡中文字 font   |    |
 | voiceButtonFont   | UIFont   | 录音按钮的文字 font   |    |
 | goodsTitleFont   | UIFont   | 商品详情cell 中title的文字 font   |    |
 | goodsDetFont   | UIFont   | 商品详情cell中摘要的文字 font   |    |
-| notificationTopViewLabelFont   | UIFont   | 通告的文字 字号 大小   |    |
+| notificationTopViewLabelFont   | UIFont   | 通告的文字 字号    |    |
+| scTopTextFont   | UIFont   | 帮助中心 标题font    |    |
+| scTopBackTextFont   | UIFont   | 顶部返回按钮的文字font    |    |
 
 ### 背景颜色相关:
 | 属性名称 | 数据类型 | 说明 | 备注 |
 |:----|:----|:----|:----|
 | goodSendBtnColor   | UIColor   | 商品详情cell中btn的背景色   |    |
 | backgroundColor   | UIColor   | 对话页面背景色   |    |
-| imagePickerColor   | UIColor   | 相册导航栏的颜色   |    |
-| imagePickerTitleColor   | UIColor   | 相册导航栏的标题颜色   |    |
 | leftChatColor   | UIColor   | 左边聊天气泡的颜色   |    |
 | rightChatColor   | UIColor   | 右边聊天气泡的颜色   |    |
 | leftChatSelectedColor   | UIColor   | 左边气泡复制选中的颜色   |    |
 | rightChatSelectedColor   | UIColor   | 右边气泡复制选中的颜色   |    |
 | backgroundBottomColor   | UIColor   | 底部bottom的背景颜色   |    |
-| commentCommitButtonColor   | UIColor   | 评价提交按钮背景颜色   |    |
-| BgTipAirBubblesColor   | UIColor   | 提示气泡的背景颜色   |    |
-| goodSendBtnColor   | UIColor   | 商品发送按钮的背景色   |    |
-| satisfactionSelectedBgColor   | UIColor   | 评价页“已解决”和“未解决”背景色   |    |
-| satisfactionTextSelectedColor   | UIColor   | 评价页“已解决”和“未解决”文字颜色   |    |
-| topViewBgColor   | UIColor   | 自定义导航栏背景色   |    |
-| trunServerBtnColor   | UIColor   | 机器人的问答中 提示转人工按钮的文字颜色   |    |
 | bottomLineColor   | UIColor   | 底部bottom框边框线颜色(输入框、录音按钮、分割线)   |    |
-| notificationTopViewBgColor   | UIColor   | 通告栏的背景色   |    |
-| commentButtonBgColor   | UIColor   | 评价弹出页面 按钮选中颜色(默认跟随主题色)  |    |
-| commentItemButtonBgColor   | UIColor   | 评价选项按钮选中颜色(默认跟随主题色)   |    |
+| commentCommitButtonColor   | UIColor   | 评价提交按钮背景颜色   |    |
+| commentItemButtonBgColor   | UIColor   | 评价选项按钮默认颜色(默认跟随主题色)   |    |
 | commentItemButtonSelBgColor   | UIColor   | 评价选项按钮选中颜色(默认跟随主题色)   |    |
+| BgTipAirBubblesColor   | UIColor   | 提示气泡的背景颜色   |    |
+| videoCellBgSelColor   | UIColor   | 语音cell选中的背景色   |    |
+| LineRichColor   | UIColor   | 富文本中的线条颜色   |    |
+| goodSendBtnColor   | UIColor   | 商品发送按钮的背景色   |    |
+| leaveSubmitBtnImgColor   | UIColor   | 留言页面中 提交按钮的背景颜色   |    |
+| topBackNolColor   | UIColor   | 返回按钮的默认背景色  |    |
+| topBackSelColor   | UIColor   | 返回按钮的高亮背景色   |    |
+| topViewBgColor   | UIColor   | 自定义导航栏背景色   |    |
+| scTopBgColor   | UIColor   | 帮助中心 导航条背景色   |    |
+| documentLookImgProgressColor   | UIColor   | 文件查看，ImgProgress 图片背景颜色    |    |
+| documentBtnDownColor   | UIColor   |  文件查看，按钮 背景颜色    |    |
+| notificationTopViewBgColor   | UIColor   | 通告栏的背景色   |    |
+| satisfactionSelectedBgColor   | UIColor   | 评价页“已解决”和“未解决”背景色   |    |
+
+
 
 ### 文字颜色相关：
 | 属性名称 | 数据类型 | 说明 | 备注 |
 |:----|:----|:----|:----|
-| submitEvaluationColor   | UIColor   | 提交评价按钮的文字颜色   |    |
 | topViewTextColor   | UIColor   | 顶部文字颜色   |    |
 | leftChatTextColor   | UIColor   | 左边气泡文字颜色   |    |
 | rightChatTextColor   | UIColor   | 右边气泡文字颜色   |    |
+| emojiSendBgColor   | UIColor   | 表情键盘发送按钮背景颜色,2.8.5新增   |    |
+| chatTextViewColor   | UIColor   | 输入框文本颜色   |    |
 | timeTextColor   | UIColor   | 时间文字的颜色   |    |
 | tipLayerTextColor   | UIColor   | 提示文字的颜色   |    |
 | chatLeftLinkColor   | UIColor   | 左边气泡中链接颜色   |    |
@@ -1843,12 +1856,22 @@ _kitInfo.hideManualEvaluationLabels = YES;
 | goodsTipTextColor   | UIColor   | 商品cell中标签的文字颜色   |    |
 | goodsDetTextColor   | UIColor   | 商品cell中摘要的文字颜色   |    |
 | goodsSendTextColor   | UIColor   | 商品详情cell中发送的文字颜色   |    |
+| satisfactionTextColor   | UIColor   | 提交评价后将结束会话的文字颜色   |    |
+| noSatisfactionTextColor   | UIColor   | 暂不评价文字颜色   |    |
+| satisfactionTextSelectedColor   | UIColor   | 评价页“已解决”和“未解决”文字颜色   |    |
 | scoreExplainTextColor   | UIColor   | 满意度星级说明的文字颜色   |    |
-| chatTextViewColor   | UIColor   | 输入框文本颜色   |    |
+| commentButtonTextColor   | UIColor   | 评价(条件选择 按钮）文字颜色(默认跟随主题色) |    |
+| submitEvaluationColor   | UIColor   | 提价评价按钮的文字颜色 |    |
 | notificationTopViewLabelColor   | UIColor   | 通告栏的文字颜色   |    |
-| emojiSendBgColor   | UIColor   | 表情键盘发送按钮背景颜色,2.8.5新增   |    |
-| commentItemButtonBgColor   | UIColor   |  评价选项按钮选中颜色(默认跟随主题色)  |    |
-| commentItemButtonSelBgColor   | UIColor   |  评价选项按钮选中颜色(默认跟随主题色)   |    |
+| chatLeftMultColor   | UIColor   | 多轮会话模板四的超链颜色   |    |
+| openMoreBtnTextColor   | UIColor   | 多轮会话中 展开和收起的文字颜色   |    |
+| topBtnNolColor   | UIColor   | 聊天对话框中 顶踩、转人工 文字 默认颜色   |    |
+| topBtnSelColor   | UIColor   | 聊天对话框中顶踩 、转人工文字 选中颜色   |    |
+| topBtnGreyColor   | UIColor   | 顶踩 文字 置灰颜色   |    |
+| leaveSubmitBtnTextColor   | UIColor   | 留言页面中 提交按钮的文字颜色   |    |
+| scTopTextColor   | UIColor   | 帮助中心、导航 标题的文字颜色  |    |
+| scTopBackTextColor   | UIColor   | 帮助中心 顶部返回的文字颜色 |    |
+
 
 ### 图片相关：
 | 属性名称 | 数据类型 | 说明 | 备注 |

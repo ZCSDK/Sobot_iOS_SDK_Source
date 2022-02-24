@@ -10,6 +10,7 @@
 #import "ZCLibGlobalDefine.h"
 #import "ZCUIColorsDefine.h"
 #import "ZCToolsCore.h"
+#import "SobotLocaliable.h"
 
 #define ZCCommitHeight 54
 @interface ZCZHPickView ()<UIPickerViewDelegate,UIPickerViewDataSource>
@@ -183,11 +184,11 @@
     
     
     _datePicker =[[UIDatePicker alloc] init];
-    _datePicker.locale = [[NSLocale alloc] initWithLocaleIdentifier:zcGetCurrentLanguages()];
+    _datePicker.locale = [[NSLocale alloc] initWithLocaleIdentifier:[SobotLocaliable sobotGetCurrentLanguages]];
 //    _datePicker.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"zh_CN"];
     _datePicker.datePickerMode = datePickerMode;
     // 兼容iOS 14
-    if(zcGetSystemDoubleVersion()>=13.4){
+    if(sobotGetSystemDoubleVersion()>=13.4){
         _datePicker.preferredDatePickerStyle = UIDatePickerStyleWheels;
     }
     
@@ -315,7 +316,7 @@
 
 -(void)setTitle:(NSString *)title{
     if(_labelTitle){
-        [_labelTitle setText:zcLibConvertToString(title)];
+        [_labelTitle setText:sobotConvertToString(title)];
     }
 }
 
@@ -490,14 +491,14 @@
         }
     }else if (_datePicker) {
         if(_datePicker.datePickerMode == UIDatePickerModeTime){
-            _resultString = zcLibDateTransformString(@"HH:mm", _datePicker.date);
+            _resultString = sobotDateTransformString(@"HH:mm", _datePicker.date);
         }
         if(_datePicker.datePickerMode == UIDatePickerModeDate){
-            _resultString = zcLibDateTransformString(@"yyyy-MM-dd", _datePicker.date);
+            _resultString = sobotDateTransformString(@"yyyy-MM-dd", _datePicker.date);
             
         }
         if(_datePicker.datePickerMode == UIDatePickerModeDateAndTime){
-            _resultString = zcLibDateTransformString(@"yyyy-MM-dd HH:mm:ss", _datePicker.date);
+            _resultString = sobotDateTransformString(@"yyyy-MM-dd HH:mm:ss", _datePicker.date);
             
         }
     }

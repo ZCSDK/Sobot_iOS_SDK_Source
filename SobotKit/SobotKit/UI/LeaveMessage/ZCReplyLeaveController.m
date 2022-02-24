@@ -35,7 +35,7 @@
 #define cellOrderSwitchIdentifier @"ZCOrderReplyOpenCell"
 #define cellOrderSingleIdentifier @"ZCOrderOnlyEditCell"
 #import "ZCLibOrderCusFieldsModel.h"
-#import "ZCLibCommon.h"
+#import "SobotUtils.h"
 #import "ZCPlatformTools.h"
 
 #import "ZCUICore.h"
@@ -192,7 +192,7 @@
 //                      @"dictName":@"ticketTitle",
 //                      @"dictDesc":title,
 //                      @"placeholder":text,
-//                      @"dictValue":zcLibConvertToString(_model.ticketTitle),
+//                      @"dictValue":sobotConvertToString(_model.ticketTitle),
 //                      @"dictType":@"1",
 //                      @"propertyType":@"0"
 //    }];
@@ -208,7 +208,7 @@
                       @"dictName":@"ticketReplyContent",
                       @"dictDesc":@"问题描述",
                       @"placeholder":@"",//  libConfig.msgTmp
-                      @"dictValue":zcLibConvertToString(_model.ticketDesc),
+                      @"dictValue":sobotConvertToString(_model.ticketDesc),
                       @"dictType":@"0",
                       @"propertyType":@"0"
                       }];
@@ -268,7 +268,7 @@
 -(IBAction)buttonClick:(UIButton *) sender{
     if(sender.tag == BUTTON_MORE){
         // 提交留言内容
-        if (zcLibTrimString(_model.ticketDesc).length<=0) {
+        if (sobotTrimString(_model.ticketDesc).length<=0) {
             [[ZCUIToastTools shareToast] showToast:ZCSTLocalString(@"回复内容不能为空")  duration:1.0f view:self.view position:ZCToastPositionCenter];
             return;
         }
@@ -300,17 +300,17 @@
     _isSend = YES;
     
     NSMutableDictionary *dic = [NSMutableDictionary dictionary];
-    [dic setValue:zcLibConvertToString(_model.ticketDesc) forKey:@"replyContent"];
-    [dic setObject:zcLibConvertToString(_ticketId) forKey:@"ticketId"];
-    [dic setObject:zcLibConvertToString([self getCurConfig].companyID) forKey:@"companyId"];
+    [dic setValue:sobotConvertToString(_model.ticketDesc) forKey:@"replyContent"];
+    [dic setObject:sobotConvertToString(_ticketId) forKey:@"ticketId"];
+    [dic setObject:sobotConvertToString([self getCurConfig].companyID) forKey:@"companyId"];
     if(_imageArr.count>0){
         NSString *fileStr = @"";
         for (NSDictionary *model in _imageArr) {
-            fileStr = [fileStr stringByAppendingFormat:@"%@;",zcLibConvertToString(model[@"fileUrl"])];
+            fileStr = [fileStr stringByAppendingFormat:@"%@;",sobotConvertToString(model[@"fileUrl"])];
         }
         
         fileStr = [fileStr substringToIndex:fileStr.length-1];
-        [dic setObject:zcLibConvertToString(fileStr) forKey:@"fileStr"];
+        [dic setObject:sobotConvertToString(fileStr) forKey:@"fileStr"];
     }
 
     __block ZCReplyLeaveController *saveSelf = self;
@@ -478,7 +478,7 @@
         if(LinkedClickBlock){
             LinkedClickBlock(url);
         }else{
-            if([url hasPrefix:@"tel:"] || zcLibValidateMobileWithRegex(url, [ZCUITools zcgetTelRegular])){
+            if([url hasPrefix:@"tel:"] || sobotValidateMobileWithRegex(url, [ZCUITools zcgetTelRegular])){
                 callURL=url;
                 
                 [[ZCToolsCore getToolsCore] showAlert:nil message:[url stringByReplacingOccurrencesOfString:@"tel:" withString:@""] cancelTitle:ZCSTLocalString(@"取消") viewController:self.navigationController confirm:^(NSInteger buttonTag) {
@@ -487,13 +487,13 @@
                     }
                     
                 } buttonTitles:ZCSTLocalString(@"呼叫"), nil];
-            }else if([url hasPrefix:@"mailto:"] || zcLibValidateEmail(url)){
+            }else if([url hasPrefix:@"mailto:"] || sobotValidateEmail(url)){
                 [[UIApplication sharedApplication] openURL:[NSURL URLWithString:url]];
             } else{
                 if (![url hasPrefix:@"https"] && ![url hasPrefix:@"http"]) {
                     url = [@"http://" stringByAppendingString:url];
                 }
-                ZCUIWebController *webPage=[[ZCUIWebController alloc] initWithURL:zcUrlEncodedString(url)];
+                ZCUIWebController *webPage=[[ZCUIWebController alloc] initWithURL:sobotUrlEncodedString(url)];
                 if(self.navigationController != nil ){
                     [self.navigationController pushViewController:webPage animated:YES];
                 }else{
@@ -525,7 +525,7 @@
 
 // 返回section高度
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
-    if (section == 0 && zcLibConvertToString(_msgTxt).length > 0) {
+    if (section == 0 && sobotConvertToString(_msgTxt).length > 0) {
         _msgTxt = [_msgTxt stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
 
         ZCMLEmojiLabel  *label=[[ZCMLEmojiLabel alloc] initWithFrame:CGRectMake(15, 15, ScreenWidth-30, 0)];
@@ -542,7 +542,7 @@
         label.lineSpacing = 3.0f;
         NSString *text = @"";
         if (_msgTxt != nil && _msgTxt.length >0)   {
-            text = zcLibConvertToString(_msgTxt);
+            text = sobotConvertToString(_msgTxt);
         }
 //        NSString *text = _msgTxt;//[self getCurConfig].msgTxt;
         
@@ -737,18 +737,18 @@
 //            temModel.fieldSaveValue = value;
 //
 //            // 这里要重新处理数据 *
-//            NSString * titleStr = zcLibConvertToString(temModel.fieldName);
-//            if([zcLibConvertToString(temModel.fillFlag) intValue] == 1){
+//            NSString * titleStr = sobotConvertToString(temModel.fieldName);
+//            if([sobotConvertToString(temModel.fillFlag) intValue] == 1){
 //                titleStr = [NSString stringWithFormat:@"%@*",titleStr];
 //            }
 //
 //            NSMutableArray *arr1 = _listArray[indexPath.section][@"arr"];
 //            arr1[indexPath.row] = @{@"code":[NSString stringWithFormat:@"%d",index],
-//                                    @"dictName":zcLibConvertToString(temModel.fieldName),
-//                                    @"dictDesc":zcLibConvertToString(titleStr),
-//                                    @"placeholder":zcLibConvertToString(temModel.fieldRemark),
-//                                    @"dictValue":zcLibConvertToString(temModel.fieldValue),
-//                                    @"dictType":zcLibConvertToString(temModel.fieldType),
+//                                    @"dictName":sobotConvertToString(temModel.fieldName),
+//                                    @"dictDesc":sobotConvertToString(titleStr),
+//                                    @"placeholder":sobotConvertToString(temModel.fieldRemark),
+//                                    @"dictValue":sobotConvertToString(temModel.fieldValue),
+//                                    @"dictType":sobotConvertToString(temModel.fieldType),
 //                                    @"propertyType":@"1"
 //                                    };
         }
@@ -868,10 +868,10 @@
             } success:^(NSString *fileURL, ZCNetWorkCode code) {
 
                   [[ZCUIToastTools shareToast] dismisProgress];
-                            if (zcLibIs_null(_imageArr)) {
+                            if (sobotIsNull(_imageArr)) {
                                 _imageArr = [NSMutableArray arrayWithCapacity:0];
                             }
-                            if (zcLibIs_null(_imagePathArr)) {
+                            if (sobotIsNull(_imagePathArr)) {
                                 _imagePathArr = [NSMutableArray arrayWithCapacity:0];
                             }
                             [_imagePathArr addObject:filePath];
@@ -924,8 +924,8 @@
     //    [formater setDateFormat:@"yyyy-MM-dd-HH:mm:ss"];
 
     NSString * fname = [NSString stringWithFormat:@"/sobot/output-%ld.mp4",(long)[NSDate date].timeIntervalSince1970];
-    zcLibCheckPathAndCreate(zcLibGetDocumentsFilePath(@"/sobot/"));
-    NSString *resultPath=zcLibGetDocumentsFilePath(fname);
+    sobotCheckPathAndCreate(sobotGetDocumentsFilePath(@"/sobot/"));
+    NSString *resultPath=sobotGetDocumentsFilePath(fname);
     //    NSLog(@"resultPath = %@",resultPath);
     exportSession.outputURL = [NSURL fileURLWithPath:resultPath];
     exportSession.outputFileType = AVFileTypeMPEG4;
@@ -992,10 +992,10 @@
 
 
 -(void)tapHideKeyboard{
-    if(!zcLibIs_null(_tempTextView)){
+    if(!sobotIsNull(_tempTextView)){
         [_tempTextView resignFirstResponder];
         _tempTextView = nil;
-    }else if(!zcLibIs_null(_tempTextField)){
+    }else if(!sobotIsNull(_tempTextField)){
         [_tempTextField resignFirstResponder];
         _tempTextField  = nil;
     }else{
@@ -1009,10 +1009,10 @@
 
 
 - (void) hideKeyboard {
-    if(!zcLibIs_null(_tempTextView)){
+    if(!sobotIsNull(_tempTextView)){
         [_tempTextView resignFirstResponder];
         _tempTextView = nil;
-    }else if(!zcLibIs_null(_tempTextField)){
+    }else if(!sobotIsNull(_tempTextField)){
         [_tempTextField resignFirstResponder];
         _tempTextField  = nil;
     }else{

@@ -70,7 +70,7 @@
     audioPlayer.volume=1;
     if (error) {
         
-        [ZCLogUtils logHeader:LogHeader info:@"error:%@",[error description]];
+        [SobotLog logHeader:SobotLogHeader info:@"error:%@",[error description]];
         if(_delegate && [_delegate respondsToSelector:@selector(voicePlayStatusChange:)]){
             [_delegate voicePlayStatusChange:ZCVoicePlayStatusStartError];
         }
@@ -107,7 +107,7 @@
 #pragma mark 播放停止、失败 代理
 - (void)audioPlayerDidFinishPlaying:(AVAudioPlayer *)player successfully:(BOOL)flag{
     
-    [ZCLogUtils logHeader:LogHeader debug:@"走了完成的代理-----"];
+    [SobotLog logDebug:@"走了完成的代理-----"];
     
     [[UIDevice currentDevice] setProximityMonitoringEnabled:YES];
     if ([UIDevice currentDevice].proximityMonitoringEnabled == YES) {
@@ -126,7 +126,7 @@
 /* if an error occurs while decoding it will be reported to the delegate. */
 - (void)audioPlayerDecodeErrorDidOccur:(AVAudioPlayer *)player error:(NSError *)error{
     
-    [ZCLogUtils logHeader:LogHeader debug:@"走了失败的代理-----"];
+    [SobotLog logDebug:@"走了失败的代理-----"];
     
     [[UIDevice currentDevice] setProximityMonitoringEnabled:YES];
     if ([UIDevice currentDevice].proximityMonitoringEnabled == YES) {
@@ -155,7 +155,7 @@
     // 该标识在iOS 6.0 被废除。需要用flags参数，来表示视频的状态。
     
     
-    [ZCLogUtils logHeader:LogHeader debug:@"中断结束，恢复播放"];
+    [SobotLog logDebug:@"中断结束，恢复播放"];
     
     if (flags == AVAudioSessionInterruptionOptionShouldResume && player != nil){
         [player play];
@@ -176,14 +176,14 @@
     if ([[UIDevice currentDevice] proximityState] == YES)//黑屏
     {
         
-        [ZCLogUtils logHeader:LogHeader info:@"Device is close to user"];
+        [SobotLog logHeader:SobotLogHeader info:@"Device is close to user"];
         [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayAndRecord error:nil];
     }
     else
     {
         //没黑屏幕
         
-        [ZCLogUtils logHeader:LogHeader info:@"Device is not close to user"];
+        [SobotLog logHeader:SobotLogHeader info:@"Device is not close to user"];
         [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
         if (![audioPlayer isPlaying]) {//没有播放了，也没有在黑屏状态下，就可以把距离传感器关了
             [[UIDevice currentDevice] setProximityMonitoringEnabled:NO];

@@ -422,8 +422,8 @@ typedef void(^ZCPropertyChangeBlock)(AVCaptureDevice *captureDevice);
     //    [formater setDateFormat:@"yyyy-MM-dd-HH:mm:ss"];
     
     NSString * fname = [NSString stringWithFormat:@"/sobot/output-%ld.mp4",(long)[NSDate date].timeIntervalSince1970];
-    zcLibCheckPathAndCreate(zcLibGetTmpDownloadFilePath(@"/sobot/"));
-    NSString *resultPath=zcLibGetTmpDownloadFilePath(fname);
+    sobotCheckPathAndCreate(sobotGetTempFilePath(@"/sobot/"));
+    NSString *resultPath=sobotGetTempFilePath(fname);
 //    NSLog(@"resultPath = %@",resultPath);
     exportSession.outputURL = [NSURL fileURLWithPath:resultPath];
     exportSession.outputFileType = AVFileTypeMPEG4;
@@ -439,10 +439,10 @@ typedef void(^ZCPropertyChangeBlock)(AVCaptureDevice *captureDevice);
                      
                      NSData * imageData =UIImageJPEGRepresentation(img, 1.0f);
                      NSString * fname = [NSString stringWithFormat:@"/sobot/image100%ld.jpg",(long)[NSDate date].timeIntervalSince1970];
-                     zcLibCheckPathAndCreate(zcLibGetDocumentsFilePath(@"/sobot/"));
-                     NSString *fullPath=zcLibGetDocumentsFilePath(fname);
+                     sobotCheckPathAndCreate(sobotGetDocumentsFilePath(@"/sobot/"));
+                     NSString *fullPath=sobotGetDocumentsFilePath(fname);
                      [imageData writeToFile:fullPath atomically:YES];
-                     videoSaveSelf.operationResultBlock(@{@"video":[NSURL fileURLWithPath:[self URLDecodedString:zcLibConvertToString(resultPath)]],@"image":zcLibConvertToString(fullPath)});
+                     videoSaveSelf.operationResultBlock(@{@"video":[NSURL fileURLWithPath:[self URLDecodedString:sobotConvertToString(resultPath)]],@"image":sobotConvertToString(fullPath)});
                  });
              }
                  break;

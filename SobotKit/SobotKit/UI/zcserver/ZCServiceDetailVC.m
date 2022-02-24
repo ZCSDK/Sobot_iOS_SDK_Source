@@ -108,7 +108,7 @@
     titleLab.font = ZCUIFont20;
     [self.view addSubview:titleLab];
     
-    titleLab.text = zcLibConvertToString(_questionTitle);
+    titleLab.text = sobotConvertToString(_questionTitle);
     [titleLab sizeToFit];
     
     //创建网页配置对象
@@ -151,9 +151,9 @@
             if (dict) {
                 NSDictionary * dataDic = dict[@"data"];
                 if ([dataDic isKindOfClass:[NSDictionary class]] && dataDic != nil) {
-                    [webView loadHTMLString:zcLibConvertToString(dict[@"data"][@"answerDesc"]) baseURL:nil];
-//                    [webView loadHTMLString:zcLibConvertToString(@"<a href=\"https://www.baidu.com\" >智齿</a>") baseURL:nil];
-                    titleLab.text = zcLibConvertToString(dict[@"data"][@"questionTitle"]);
+                    [webView loadHTMLString:sobotConvertToString(dict[@"data"][@"answerDesc"]) baseURL:nil];
+//                    [webView loadHTMLString:sobotConvertToString(@"<a href=\"https://www.baidu.com\" >智齿</a>") baseURL:nil];
+                    titleLab.text = sobotConvertToString(dict[@"data"][@"questionTitle"]);
                 }
             }
             

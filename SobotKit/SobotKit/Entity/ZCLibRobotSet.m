@@ -7,7 +7,7 @@
 //
 
 #import "ZCLibRobotSet.h"
-#import "ZCLibCommon.h"
+#import "SobotUtils.h"
 @implementation ZCLibRobotSet
 
 
@@ -15,13 +15,13 @@
     self=[super init];
     if(self){
         @try {
-            _robotFlag      = zcLibConvertToString(dict[@"robotFlag"]);
-            _robotAlias      = zcLibConvertToString(dict[@"robotAlias"]);
-            _robotName  = zcLibConvertToString(dict[@"robotName"]);
-            _operationRemark = zcLibConvertToString(dict[@"operationRemark"]);
-            _guideFlag     = [zcLibConvertToString(dict[@"guideFlag"]) boolValue];
-            _robotLog     = zcLibConvertToString(dict[@"robotLogo"]);
-            _robotHelloWord = zcLibConvertToString(dict[@"robotHelloWord"]);
+            _robotFlag      = sobotConvertToString(dict[@"robotFlag"]);
+            _robotAlias      = sobotConvertToString(dict[@"robotAlias"]);
+            _robotName  = sobotConvertToString(dict[@"robotName"]);
+            _operationRemark = sobotConvertToString(dict[@"operationRemark"]);
+            _guideFlag     = [sobotConvertToString(dict[@"guideFlag"]) boolValue];
+            _robotLog     = sobotConvertToString(dict[@"robotLogo"]);
+            _robotHelloWord = sobotConvertToString(dict[@"robotHelloWord"]);
         }
         @catch (NSException *exception) {
             

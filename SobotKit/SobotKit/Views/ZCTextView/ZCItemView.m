@@ -52,8 +52,8 @@
     [self.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
     int tagI = 100;
     NSArray *checksArr = @[];
-    if(zcLibConvertToString(labels).length > 0){
-        checksArr = [zcLibConvertToString(labels) componentsSeparatedByString:@","];
+    if(sobotConvertToString(labels).length > 0){
+        checksArr = [sobotConvertToString(labels) componentsSeparatedByString:@","];
     }
     
     CGFloat spaceX = 10;

@@ -145,7 +145,7 @@
         paragraphStyle.lineSpacing = lineSpaceing; // 调整行间距
     }
     
-    if(isRTLLayout()){
+    if(sobotIsRTLLayout()){
         [paragraphStyle setAlignment:NSTextAlignmentRight];
     }
     NSRange range = NSMakeRange(0, str.length);
@@ -308,7 +308,7 @@
 +(void) addTextToLabel:(UILabel *)label text:(NSString *)text textColor:(UIColor *)textColor textFont:(UIFont *)textFont linkColor:(UIColor *)linkColor  result:(void(^)(NSMutableAttributedString *attr)) attrBlock{
     
     [label setTextColor:textColor];
-    if(zcLibConvertToString(text).length == 0){
+    if(sobotConvertToString(text).length == 0){
         return;
     }
     

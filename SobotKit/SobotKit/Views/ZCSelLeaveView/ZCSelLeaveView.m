@@ -183,11 +183,11 @@
     // 设置文字长度 最多20个字 1行显示
     itemView.titleLabel.numberOfLines = 1;
     
-    [itemView setTitle:zcLibConvertToString(model.templateName) forState:UIControlStateNormal];
-    [itemView setTitle:zcLibConvertToString(model.templateName) forState:UIControlStateHighlighted];
+    [itemView setTitle:sobotConvertToString(model.templateName) forState:UIControlStateNormal];
+    [itemView setTitle:sobotConvertToString(model.templateName) forState:UIControlStateHighlighted];
     itemView.titleLabel.textAlignment = NSTextAlignmentCenter;
     // 设置选中的状态
-//    if ([zcLibConvertToString(model.robotFlag) intValue] == _msgId) {
+//    if ([sobotConvertToString(model.robotFlag) intValue] == _msgId) {
 //        itemView.selected = YES;
 //    }
     

@@ -261,7 +261,7 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
     if (!_zc_turnButton) {
         _zc_turnButton = [UIButton buttonWithType:UIButtonTypeCustom];
         
-        if ([[ZCLibClient getZCLibClient].libInitInfo.absolute_language hasPrefix:@"zh-"] || (zcLibConvertToString([ZCLibClient getZCLibClient].libInitInfo.absolute_language).length == 0 && [zcGetLanguagePrefix() hasPrefix:@"zh-"])) {
+        if ([[ZCLibClient getZCLibClient].libInitInfo.absolute_language hasPrefix:@"zh-"] || (sobotConvertToString([ZCLibClient getZCLibClient].libInitInfo.absolute_language).length == 0 && [sobotGetLanguagePrefix() hasPrefix:@"zh-"])) {
             [_zc_turnButton setImage:[ZCUITools zcuiGetBundleImage:@"zcicon_turnserver_word_nol"] forState:UIControlStateNormal];
             [_zc_turnButton setImage:[ZCUITools zcuiGetBundleImage:@"zcicon_turnserver_word_nol"] forState:UIControlStateHighlighted];
         }else{
@@ -269,11 +269,11 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
             [_zc_turnButton setImage:[ZCUITools zcuiGetBundleImage:@"zcicon_turnserver_word_nol_en"] forState:UIControlStateHighlighted];
         }
         
-        if (zcLibConvertToString([ZCUICore getUICore].kitInfo.turnBtnNolImg).length >0) {
-            [_zc_turnButton setImage:[ZCUITools zcuiGetBundleImage:zcLibConvertToString([ZCUICore getUICore].kitInfo.turnBtnNolImg)] forState:UIControlStateNormal];
+        if (sobotConvertToString([ZCUICore getUICore].kitInfo.turnBtnNolImg).length >0) {
+            [_zc_turnButton setImage:[ZCUITools zcuiGetBundleImage:sobotConvertToString([ZCUICore getUICore].kitInfo.turnBtnNolImg)] forState:UIControlStateNormal];
         }
-        if (zcLibConvertToString([ZCUICore getUICore].kitInfo.turnBtnSelImg).length >0) {
-            [_zc_turnButton setImage:[ZCUITools zcuiGetBundleImage:zcLibConvertToString([ZCUICore getUICore].kitInfo.turnBtnSelImg)] forState:UIControlStateHighlighted];
+        if (sobotConvertToString([ZCUICore getUICore].kitInfo.turnBtnSelImg).length >0) {
+            [_zc_turnButton setImage:[ZCUITools zcuiGetBundleImage:sobotConvertToString([ZCUICore getUICore].kitInfo.turnBtnSelImg)] forState:UIControlStateHighlighted];
         }
 
         [_zc_turnButton setFrame:CGRectMake(0, 0 , 48, 49)];
@@ -667,9 +667,9 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
     [buttons addTarget:self action:@selector(addResourcesAction:) forControlEvents:UIControlEventTouchUpInside];
     [buttons setImageEdgeInsets:UIEdgeInsetsMake(0, 0, 10, 0)];
     [buttons setImage:[ZCUITools zcuiGetBundleImage:menu.imgName] forState:UIControlStateNormal];
-    if(zcLibConvertToString(menu.imgNamePress).length > 0){
-        [buttons setImage:[ZCUITools zcuiGetBundleImage:zcLibConvertToString(menu.imgNamePress)] forState:UIControlStateHighlighted];
-        [buttons setImage:[ZCUITools zcuiGetBundleImage:zcLibConvertToString(menu.imgNamePress)] forState:UIControlStateSelected];
+    if(sobotConvertToString(menu.imgNamePress).length > 0){
+        [buttons setImage:[ZCUITools zcuiGetBundleImage:sobotConvertToString(menu.imgNamePress)] forState:UIControlStateHighlighted];
+        [buttons setImage:[ZCUITools zcuiGetBundleImage:sobotConvertToString(menu.imgNamePress)] forState:UIControlStateSelected];
     }
     
     
@@ -682,7 +682,7 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
         [lbl setBackgroundColor:[UIColor clearColor]];
         [buttons addSubview:lbl];
         
-        CGSize s = [zcLibConvertToString(menu.title)  sizeWithAttributes:@{NSFontAttributeName:lbl.font}];
+        CGSize s = [sobotConvertToString(menu.title)  sizeWithAttributes:@{NSFontAttributeName:lbl.font}];
         if(s.width > 60){
             [lbl setFont:ZCUIFont8];
         }
@@ -909,7 +909,7 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
             }
             NSURL *videoUrl = video[@"video"];
             if (videoUrl != nil) {
-                NSString *filePath = zcLibConvertToString(video[@"image"]);
+                NSString *filePath = sobotConvertToString(video[@"image"]);
                 NSString *videoUrlStr = videoUrl.absoluteString;
                 if ([videoUrlStr hasPrefix:@"file:///"]) {
                     videoUrlStr = [videoUrlStr stringByReplacingOccurrencesOfString:@"file://" withString:@""];
@@ -1137,7 +1137,7 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
         
         // 2.9.2版本开始，如果客服发送过离线消息，直接转接到对应的客服
         // 不是仅机器人，不是黑名单用户
-        if([ZCPlatformTools sharedInstance].isOfflineMsgConnect && zcLibConvertToString([ZCPlatformTools sharedInstance].offlineMsgAdminId).length > 0 && !config.isblack){
+        if([ZCPlatformTools sharedInstance].isOfflineMsgConnect && sobotConvertToString([ZCPlatformTools sharedInstance].offlineMsgAdminId).length > 0 && !config.isblack){
             [[ZCUICore getUICore] doConnectUserService:nil connectType:ZCTurnType_OffMessageAdmin];
         }
     }else if(config.type == 2){
@@ -1497,7 +1497,7 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
 }
 
 -(void)setKeyboardRTLFrame{
-    if(isRTLLayout()){
+    if(sobotIsRTLLayout()){
         if(!self.zc_faceButton.isHidden){
             _zc_chatTextView.textContainerInset = UIEdgeInsetsMake(10, 10+30, 10, 10);
         }else{
@@ -1547,7 +1547,7 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
         return NO;
     }
     
-    //    [ZCLogUtils logHeader:LogHeader debug:@"%@",[[UITextInputMode currentInputMode]primaryLanguage]];
+    //    [SobotLog logDebug:@"%@",[[UITextInputMode currentInputMode]primaryLanguage]];
     // 不输入Emoji
     if ([[[UIApplication sharedApplication]textInputMode].primaryLanguage isEqualToString:@"emoji"]) {
         return NO;
@@ -1683,7 +1683,7 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
         
         CGFloat ch=_zc_listTable.contentSize.height;
         CGFloat h=_zc_listTable.bounds.size.height;
-        //        [ZCLogUtils logHeader:LogHeader debug:@"当前滚动的高度：%f,%f",ch,h];
+        //        [SobotLog logDebug:@"当前滚动的高度：%f,%f",ch,h];
         CGRect tf         = _zc_listTable.frame;
         
         CGFloat tx = _zc_listTable.contentSize.height - tf.size.height;
@@ -2040,8 +2040,8 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
     //    [formater setDateFormat:@"yyyy-MM-dd-HH:mm:ss"];
     
     NSString * fname = [NSString stringWithFormat:@"/sobot/output-%ld.mp4",(long)[NSDate date].timeIntervalSince1970];
-    zcLibCheckPathAndCreate(zcLibGetDocumentsFilePath(@"/sobot/"));
-    NSString *resultPath=zcLibGetDocumentsFilePath(fname);
+    sobotCheckPathAndCreate(sobotGetDocumentsFilePath(@"/sobot/"));
+    NSString *resultPath=sobotGetDocumentsFilePath(fname);
     //    NSLog(@"resultPath = %@",resultPath);
     exportSession.outputURL = [NSURL fileURLWithPath:resultPath];
     exportSession.outputFileType = AVFileTypeMPEG4;
@@ -2103,7 +2103,7 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
 
 - (void)documentPicker:(UIDocumentPickerViewController *)controller didPickDocumentAtURL:(NSURL *)url{
 //    NSString *filePath = url.absoluteString;
-//    [ZCLogUtils logHeader:LogHeader debug:@"%@",filePath];
+//    [SobotLog logDebug:@"%@",filePath];
 }
 - (void)documentPicker:(UIDocumentPickerViewController *)controller didPickDocumentsAtURLs:(NSArray<NSURL *> *)urls{
     if(urls.count > 0){
@@ -2115,12 +2115,12 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
             urlStr = [urlStr stringByReplacingOccurrencesOfString:@"file://" withString:@""];
         }
         url = [NSURL URLWithString:urlStr];
-        [ZCLogUtils logHeader:LogHeader info:@"%@\n%@\n",url.absoluteString,[self URLDecodedString:url.absoluteString]];
+        [SobotLog logHeader:SobotLogHeader info:@"%@\n%@\n",url.absoluteString,[self URLDecodedString:url.absoluteString]];
         
         //        [self hideKeyboard];
         //获取文件的大小 不能大于50M
         
-        NSURL *Kurl = [NSURL URLWithString:zcUrlEncodedString(url.absoluteString)];
+        NSURL *Kurl = [NSURL URLWithString:sobotUrlEncodedString(url.absoluteString)];
         NSURLRequest *request = [NSURLRequest requestWithURL:Kurl];
         
         // 只有响应头中才有其真实属性 也就是MIME
@@ -2162,7 +2162,7 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
 #pragma 录音相关事件触发
 -(void)btnTouchDown:(id)sender{
     
-    [ZCLogUtils logHeader:LogHeader debug:@"按下了"];
+    [SobotLog logDebug:@"按下了"];
     
      AVAuthorizationStatus authStatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeAudio];
     
@@ -2206,7 +2206,7 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
 }
 -(void)btnTouchDownRepeat:(id)sender{
     
-    [ZCLogUtils logHeader:LogHeader debug:@"按下了,重复了"];
+    [SobotLog logDebug:@"按下了,重复了"];
 }
 -(void)btnTouchMoved:(UIButton *)sender withEvent:(UIEvent *)event {
     UITouch *touch = [[event allTouches] anyObject];
@@ -2218,7 +2218,7 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
         if (previewTouchInside) {
             // UIControlEventTouchDragExit
             
-            [ZCLogUtils logHeader:LogHeader debug:@"拖出了"];
+            [SobotLog logDebug:@"拖出了"];
             
             // 暂停，抬起就取消
             [_zc_recordView didChangeState:RecordPause];
@@ -2235,7 +2235,7 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
         if (previewTouchOutside) {
             // UIControlEventTouchDragEnter
             
-            [ZCLogUtils logHeader:LogHeader debug:@"拖入"];
+            [SobotLog logDebug:@"拖入"];
             
             // 接着录音
             [_zc_recordView didChangeState:RecordStart];
@@ -2251,7 +2251,7 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
 
 -(void)btnTouchCancel:(UIButton *)sender{
     
-    [ZCLogUtils logHeader:LogHeader debug:@"取消"];
+    [SobotLog logDebug:@"取消"];
     if(_zc_recordView){
         // 取消发送
         [_zc_recordView didChangeState:RecordCancel];
@@ -2267,7 +2267,7 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
     BOOL touchOutside = !CGRectContainsPoint(outerBounds, [touch locationInView:sender]);
     if (touchOutside) {
         // UIControlEventTouchUpOutside
-        [ZCLogUtils logHeader:LogHeader debug:@"取消ccc"];
+        [SobotLog logDebug:@"取消ccc"];
         
         if(_zc_recordView){
             // 取消发送
@@ -2276,7 +2276,7 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
         }
     } else {
         // UIControlEventTouchUpInside
-        [ZCLogUtils logHeader:LogHeader debug:@"结束了"];
+        [SobotLog logDebug:@"结束了"];
         
         // 发送
         [_zc_recordView didChangeState:RecordComplete];
@@ -2302,7 +2302,7 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
     _zc_faceButton.enabled = YES;
     if(duration<1){
         
-        [ZCLogUtils logHeader:LogHeader debug:@"当前的时长：%d",duration];
+        [SobotLog logDebug:@"当前的时长：%d",duration];
         
         sender.enabled = NO;
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.5f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -2315,7 +2315,7 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
 #pragma mark 录音完成，上传录音
 -(void)recordComplete:(NSString *)filePath videoDuration:(CGFloat)duration{
     NSDate  *date = [NSDate dateWithTimeIntervalSince1970:duration];
-    NSString *time=zcLibDateTransformString(@"mm:ss", date);
+    NSString *time=sobotDateTransformString(@"mm:ss", date);
     [self sendMessageOrFile:filePath type:ZCMessageTypeSound duration:time];
 }
 
@@ -2368,8 +2368,8 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
     text=_zc_chatTextView.text;
     
     // 过滤空格
-    text = zcLibTrimString(text);
-    if([@"" isEqual:zcLibConvertToString(text)]){
+    text = sobotTrimString(text);
+    if([@"" isEqual:sobotConvertToString(text)]){
         [_zc_chatTextView setText:@""];
         [self textChanged:_zc_chatTextView];
         return;
@@ -2617,6 +2617,7 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
         [[ZCUICore getUICore] keyboardOnClickSatisfacetion:NO];
     }else if (sender.tag == BUTTON_RECONNECT_USER){
         [_zc_activityView startAnimating];
+        [[ZCUICore getUICore] setclosepamasAndClearConfig];
         //  要去初始化啊
         [[ZCUICore getUICore] initConfigData:YES IsNewChat:YES];
         [self handleKeyboard];
@@ -2626,6 +2627,7 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
         // 点击bottom上的留言按钮 跳转到留言并提交 不直接退出SDK
         [self leaveMsgBtnAction:LeaveExitTypeISNOCOLSE];
     }
+
 }
 
 #pragma mark -- 留言事件
@@ -2710,7 +2712,7 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
     [self.zc_addMoreButton setImage:[ZCUITools zcuiGetBundleImage:@"zcicon_add"] forState:UIControlStateNormal];
     [self.zc_addMoreButton setImage:[ZCUITools zcuiGetBundleImage:@"zcicon_add_selected"] forState:UIControlStateHighlighted];
     
-    if ([[ZCLibClient getZCLibClient].libInitInfo.absolute_language hasPrefix:@"zh-"] || (zcLibConvertToString([ZCLibClient getZCLibClient].libInitInfo.absolute_language).length == 0 && [zcGetLanguagePrefix() hasPrefix:@"zh-"])) {
+    if ([[ZCLibClient getZCLibClient].libInitInfo.absolute_language hasPrefix:@"zh-"] || (sobotConvertToString([ZCLibClient getZCLibClient].libInitInfo.absolute_language).length == 0 && [sobotGetLanguagePrefix() hasPrefix:@"zh-"])) {
         [_zc_turnButton setImage:[ZCUITools zcuiGetBundleImage:@"zcicon_turnserver_word_nol"] forState:UIControlStateNormal];
         [_zc_turnButton setImage:[ZCUITools zcuiGetBundleImage:@"zcicon_turnserver_word_nol"] forState:UIControlStateHighlighted];
     }else{

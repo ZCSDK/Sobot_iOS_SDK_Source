@@ -35,11 +35,11 @@
     
     self.backgroundColor = UIColorFromThemeColor(ZCBgChatLightGrayColor);
     
-    NSString *fileType = zcLibConvertToString(self.modelDic[@"fileType"]);
-    NSString *fileUrlStr = zcLibConvertToString(self.modelDic[@"fileUrl"]);
-    NSString *fileName = zcLibConvertToString(self.modelDic[@"fileName"]);
+    NSString *fileType = sobotConvertToString(self.modelDic[@"fileType"]);
+    NSString *fileUrlStr = sobotConvertToString(self.modelDic[@"fileUrl"]);
+    NSString *fileName = sobotConvertToString(self.modelDic[@"fileName"]);
     
-    NSString *cellIndexStr = zcLibConvertToString(self.modelDic[@"cellIndex"]);
+    NSString *cellIndexStr = sobotConvertToString(self.modelDic[@"cellIndex"]);
     UIColor *titleColor;
     if (cellIndexStr.length > 0 && [cellIndexStr isEqualToString:@"0"]) {
         titleColor = UIColorFromThemeColor(ZCTextMainColor);
@@ -47,7 +47,7 @@
         titleColor = UIColorFromThemeColor(ZCTextSubColor);
     }
 //    NSLog(@"fileurlstr ===%@",fileUrlStr);
-    fileUrlStr = zcLibValidURLString(fileUrlStr);
+    fileUrlStr = sobotValidURLString(fileUrlStr);
     
     NSURL *fileUrl = [NSURL URLWithString:fileUrlStr];
     

@@ -25,7 +25,7 @@
 #import "ZCToolsCore.h"
 #import "UIDeviceTools.h"
 
-#define VoiceLocalPath zcLibGetDocumentsFilePath(@"/sobot/")
+#define VoiceLocalPath sobotGetDocumentsFilePath(@"/sobot/")
 
 @interface ZCUICore()<ZCMessageDelegate>{
     
@@ -50,8 +50,9 @@
     BOOL        isComment;  // 正在调用提交评价接口
     BOOL        isShowRobotGuide;
     
-    
     BOOL isLoadingConfig; // 正在初始化
+    
+    NSString *tempUid;// 此UID 用于 和人工会话设置了评价人工之后结束会话的场景下，config置为nil的情况下，临时存储使用
 }
 @property(nonatomic,strong) ZCUISkillSetView *skillSetView;
 
@@ -161,7 +162,7 @@ static dispatch_once_t onceToken;
         if (self.delegate && [self.delegate respondsToSelector:@selector(showSoketConentStatus:)]) {
             [self.delegate showSoketConentStatus:201];
         }
-        [ZCLogUtils logHeader:LogHeader debug:@"初始化方法调用"];
+        [SobotLog logDebug:@"初始化方法调用"];
         self.isInitLoading = YES;
         // 清理数据
         [self clearData];
@@ -180,7 +181,7 @@ static dispatch_once_t onceToken;
         [[ZCUICore getUICore] saveGroupIdWith:@""];
         [_apiServer initSobotChat:^(ZCLibConfig *config) {
             isLoadingConfig = NO;
-            [ZCLogUtils logHeader:LogHeader debug:@"%@",config];
+            [SobotLog logDebug:@"%@",config];
             _isShowForm = NO;
             // 必须设置，不然收不到消息
             [ZCIMChat getZCIMChat].delegate = nil;
@@ -217,7 +218,7 @@ static dispatch_once_t onceToken;
             }
             
             
-            if(zcLibIs_null(_cids) || _cids.count == 0){
+            if(sobotIsNull(_cids) || _cids.count == 0){
                 // 获取历史记录
                 [safeCore getChatMessages];
 //                NSLog(@"初始化第一次加载cid 列表数据");
@@ -227,11 +228,11 @@ static dispatch_once_t onceToken;
         } error:^(ZCNetWorkCode status,NSString *errorMessage) {
             isLoadingConfig = NO;
             
-            if(zcLibConvertToString(errorMessage).length > 0 && self.delegate!=nil){
+            if(sobotConvertToString(errorMessage).length > 0 && self.delegate!=nil){
                 [[ZCUIToastTools shareToast] showToast:errorMessage duration:2.0f view:((UIView *)self.delegate).window position:ZCToastPositionCenter];
             }
             if(safeCore.ResultBlock){
-                safeCore.ResultBlock(ZCInitStatusFail,safeCore.listArray,zcLibConvertToString(errorMessage).length > 0 ? errorMessage : @"初始化失败");
+                safeCore.ResultBlock(ZCInitStatusFail,safeCore.listArray,sobotConvertToString(errorMessage).length > 0 ? errorMessage : @"初始化失败");
             }
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 if (safeCore.delegate && [safeCore.delegate respondsToSelector:@selector(onPageStatusChanged:message:obj:)]) {
@@ -254,7 +255,7 @@ static dispatch_once_t onceToken;
         }];
     }else{
         // 平台版新增**************************
-        if(![@"" isEqual:zcLibConvertToString([ZCLibClient getZCLibClient].platformUnionCode)] && isPlatformUnion()){
+        if(![@"" isEqual:sobotConvertToString([ZCLibClient getZCLibClient].platformUnionCode)] && [ZCLibClient isPlatformUnion]){
             // 获取一次id，重新赋值，否则新给对象所有值一样，不会重新初始化
             [[ZCLibClient getZCLibClient] getPlatform_userid];
         }
@@ -375,16 +376,16 @@ static dispatch_once_t onceToken;
 
 -(void)getChatMessages{
     
-    if(zcLibIs_null(_curCid) && !_isCidLoading){
+    if(sobotIsNull(_curCid) && !_isCidLoading){
         
         [self getCids];
         return;
     }
     
-    if([self getLibConfig]==nil || zcLibConvertToString([self getLibConfig].uid).length == 0){
+    if([self getLibConfig]==nil || sobotConvertToString([self getLibConfig].uid).length == 0){
         return;
     }
-    if(zcLibIs_null(_curCid) && _isCidLoading){// 当前cid空  加载过cid数据
+    if(sobotIsNull(_curCid) && _isCidLoading){// 当前cid空  加载过cid数据
         if(_cids!=nil && _cids.count>0){
             _curCid = [_cids lastObject];
         }else{
@@ -400,7 +401,7 @@ static dispatch_once_t onceToken;
     
     
     __weak ZCUICore *  weakSelf = self;
-    [_apiServer getHistoryMessages:_curCid withUid:zcLibConvertToString([self getPlatfromInfo].config.uid) start:^{
+    [_apiServer getHistoryMessages:_curCid withUid:sobotConvertToString([self getPlatfromInfo].config.uid) start:^{
         // 开始加载历史记录
         if(self.delegate && [self.delegate respondsToSelector:@selector(onPageStatusChanged:message:obj:)]){
             
@@ -481,10 +482,10 @@ static dispatch_once_t onceToken;
         return;
     }
     
-    if([self getLibConfig]==nil || zcLibConvertToString([self getLibConfig].uid).length == 0){
+    if([self getLibConfig]==nil || sobotConvertToString([self getLibConfig].uid).length == 0){
         return;
     }
-    if(zcLibIs_null(_cids)){
+    if(sobotIsNull(_cids)){
         _cids  = [[NSMutableArray alloc] init];
     }else{
         [_cids removeAllObjects];
@@ -495,17 +496,17 @@ static dispatch_once_t onceToken;
     } success:^(NSDictionary *dict, ZCNetWorkCode sendCode) {
 //                _isCidLoading = YES;
         NSArray *arr = dict[@"data"][@"cids"];
-        if(!zcLibIs_null(arr)  && arr.count > 0){
+        if(!sobotIsNull(arr)  && arr.count > 0){
             //            [_cids removeAllObjects];
             for (NSString *itemCid in arr) {
-                if((!zcLibIs_null(weakSelf.curCid) && [itemCid isEqual:weakSelf.curCid]) || ([itemCid isEqualToString:[weakSelf getPlatfromInfo].config.cid])){
+                if((!sobotIsNull(weakSelf.curCid) && [itemCid isEqual:weakSelf.curCid]) || ([itemCid isEqualToString:[weakSelf getPlatfromInfo].config.cid])){
                     continue;
                 }
                 [weakSelf.cids addObject:itemCid];
                 
             }
             weakSelf.isCidLoading = YES;
-            if(zcLibIs_null(weakSelf.curCid)){
+            if(sobotIsNull(weakSelf.curCid)){
                 weakSelf.curCid = [weakSelf.cids lastObject];
                 [weakSelf getChatMessages];
             }else{
@@ -514,7 +515,7 @@ static dispatch_once_t onceToken;
                 //                    [self.delegate onPageStatusChanged:ZCInitStatusCompleteNoMore message:@"加载历史消息完成" obj:nil];
                 //                }
             }
-        }else if (!zcLibIs_null(arr) && arr.count == 0){
+        }else if (!sobotIsNull(arr) && arr.count == 0){
             //  cid 接口加载完成之后，cid 数据为空 新用户首次加载是发生 刷新页面 取消加载动画
             // 加载历史消息完成
             if(weakSelf.delegate && [weakSelf.delegate respondsToSelector:@selector(onPageStatusChanged:message:obj:)]){
@@ -539,10 +540,10 @@ static dispatch_once_t onceToken;
             self.isShowForm = YES;
             
             @try{
-                if ([zcLibConvertToString(dict[@"code"]) intValue] == 1 && [zcLibConvertToString(dict[@"data"][@"openFlag"]) intValue] == 1) {
+                if ([sobotConvertToString(dict[@"code"]) intValue] == 1 && [sobotConvertToString(dict[@"data"][@"openFlag"]) intValue] == 1) {
                     if (self.delegate && [self.delegate respondsToSelector:@selector(coreOpenNewPageVC:IsExist:isShowToat:tipMsg:Dict:Object:trunType:)]) {
                         // 选择技能组时返回不用再选择，会回收
-                        if(zcLibConvertToString(_checkGroupId).length > 0){
+                        if(sobotConvertToString(_checkGroupId).length > 0){
                             [self.delegate coreOpenNewPageVC:ZC_AskTabelPage IsExist:LeaveExitTypeISCOLSE isShowToat:NO tipMsg:@"clearskillId" Dict:dict Object:msgModel trunType:type];
                         }else{
                             [self.delegate coreOpenNewPageVC:ZC_AskTabelPage IsExist:LeaveExitTypeISCOLSE isShowToat:NO tipMsg:@"" Dict:dict Object:msgModel trunType:type];
@@ -566,14 +567,14 @@ static dispatch_once_t onceToken;
         return;
         
     }
-
+    
     // 定义传输参数
     ZCLibOnlineCustomerParams * paramter = [[ZCLibOnlineCustomerParams  alloc] init];
     
     // 指定客服
-    NSString *chooseAdminId = zcLibConvertToString([ZCLibClient getZCLibClient].libInitInfo.choose_adminid);
+    NSString *chooseAdminId = sobotConvertToString([ZCLibClient getZCLibClient].libInitInfo.choose_adminid);
     if(type == ZCTurnType_OffMessageAdmin){
-        chooseAdminId = zcLibConvertToString([ZCPlatformTools sharedInstance].offlineMsgAdminId);
+        chooseAdminId = sobotConvertToString([ZCPlatformTools sharedInstance].offlineMsgAdminId);
     }
     // 如果指定客服，客服不在线是否还要继续往下转，tranFlag=0往下转，默认为0
     int tranFlag = [ZCLibClient getZCLibClient].libInitInfo.tran_flag;
@@ -592,14 +593,14 @@ static dispatch_once_t onceToken;
     paramter.current = current;
     
     // 技能组
-    if(zcLibConvertToString([ZCLibClient getZCLibClient].libInitInfo.groupid).length > 0){
-        paramter.groupId = zcLibConvertToString([ZCLibClient getZCLibClient].libInitInfo.groupid);
-        paramter.groupName = zcLibConvertToString([ZCLibClient getZCLibClient].libInitInfo.group_name);
+    if(sobotConvertToString([ZCLibClient getZCLibClient].libInitInfo.groupid).length > 0){
+        paramter.groupId = sobotConvertToString([ZCLibClient getZCLibClient].libInitInfo.groupid);
+        paramter.groupName = sobotConvertToString([ZCLibClient getZCLibClient].libInitInfo.group_name);
     }
     
-    if(zcLibConvertToString(_checkGroupId).length > 0){
-        paramter.groupId = zcLibConvertToString(_checkGroupId);
-        paramter.groupName = zcLibConvertToString(_checkGroupName);
+    if(sobotConvertToString(_checkGroupId).length > 0){
+        paramter.groupId = sobotConvertToString(_checkGroupId);
+        paramter.groupName = sobotConvertToString(_checkGroupName);
         
         if(type == ZCTurnType_KeyWord || type == ZCTurnType_CellGroupClick || type == ZCTurnType_KeyWordNoGroup){
             _checkGroupId = @"";
@@ -611,23 +612,11 @@ static dispatch_once_t onceToken;
         if(type == ZCTurnType_KeyWord){
             paramter.queueFlag = msgModel.queueFlag;
             
-            paramter.keyword = zcLibConvertToString(msgModel.keyword);
-            paramter.keywordId = zcLibConvertToString(msgModel.keywordId);
+            paramter.keyword = sobotConvertToString(msgModel.keyword);
+            paramter.keywordId = sobotConvertToString(msgModel.keywordId);
         }
         
         paramter.transferType = msgModel.transferType;
-        
-        if(paramter.transferType >= 5 && paramter.transferType <= 9){
-            paramter.docId = msgModel.richModel.docId;
-        }
-        
-        paramter.unknownQuestion = zcLibConvertToString(msgModel.originQuestion);
-        
-    }
-    
-    // 机器人出现转人工按钮
-    if(paramter.transferType >= 1 && paramter.transferType <= 4){
-        paramter.activeTransfer = 1;
         
         // 当transferType=5时,需要拆分transferType的值为6、7、8、9
         // 3.0.6版本发现bug，当transferType=0时，点击转人工作，需要根据机器人回答，重新赋值类型
@@ -654,10 +643,10 @@ static dispatch_once_t onceToken;
                 paramter.docId = msgModel.richModel.docId;
             }
         }
-        if(zcLibConvertToString(paramter.docId).length == 0){
+        if(sobotConvertToString(paramter.docId).length == 0){
             paramter.docId = msgModel.richModel.docId;
         }
-        paramter.unknownQuestion = zcLibConvertToString(msgModel.originQuestion);
+        paramter.unknownQuestion = sobotConvertToString(msgModel.originQuestion);
     }
     
     // 机器人出现转人工按钮
@@ -678,7 +667,7 @@ static dispatch_once_t onceToken;
     paramter.queueFirst  = [ZCLibClient getZCLibClient].libInitInfo.queue_first;
     
     
-    [self saveGroupIdWith:zcLibConvertToString(paramter.groupId)];
+    [self saveGroupIdWith:sobotConvertToString(paramter.groupId)];
     
     __weak ZCUICore *safeVC = self;
     [_apiServer connectOnlineCustomer:paramter config:[self getLibConfig] start:^{
@@ -724,7 +713,7 @@ static dispatch_once_t onceToken;
     
     ZCPlatformInfo *info = [[ZCPlatformTools sharedInstance] getPlatformInfo];
     // 没有初始化
-    if(zcLibIs_null(info.config) || zcLibConvertToString(info.config.uid).length == 0){
+    if(sobotIsNull(info.config) || sobotConvertToString(info.config.uid).length == 0){
         return;
     }
     
@@ -753,7 +742,7 @@ static dispatch_once_t onceToken;
     }
     
     // 如果有指定的客服ID 先传客服ID
-    if (_kitInfo!= nil && zcLibConvertToString([ZCLibClient getZCLibClient].libInitInfo.choose_adminid).length>0) {
+    if (_kitInfo!= nil && sobotConvertToString([ZCLibClient getZCLibClient].libInitInfo.choose_adminid).length>0) {
         
         [self doConnectUserService:message connectType:type];
         return;
@@ -761,7 +750,7 @@ static dispatch_once_t onceToken;
     
     
     
-    if(_kitInfo!=nil && zcLibConvertToString([ZCLibClient getZCLibClient].libInitInfo.groupid).length>0){
+    if(_kitInfo!=nil && sobotConvertToString([ZCLibClient getZCLibClient].libInitInfo.groupid).length>0){
         // 设置外部技能组
         [self doConnectUserService:message connectType:type];
         return;
@@ -775,7 +764,7 @@ static dispatch_once_t onceToken;
     }
     
     // 已经选择了技能组了
-    if(_kitInfo!=nil && zcLibConvertToString(_checkGroupId).length>0){
+    if(_kitInfo!=nil && sobotConvertToString(_checkGroupId).length>0){
         // 设置外部技能组
         [self doConnectUserService:message connectType:type];
         return;
@@ -901,7 +890,7 @@ static dispatch_once_t onceToken;
        _skillSetView  = [[ZCUISkillSetView alloc] initActionSheet:groupArr  withView:(UIView *)_delegate];
         
         [_skillSetView setItemClickBlock:^(ZCLibSkillSet *itemModel) {
-            [ZCLogUtils logHeader:LogHeader debug:@"选择一个技能组"];
+            [SobotLog logDebug:@"选择一个技能组"];
 
             // 点击之后就影藏
             [safeSelf.skillSetView tappedCancel:NO];
@@ -1014,6 +1003,7 @@ static dispatch_once_t onceToken;
 }
 
 
+
 -(BOOL)checkAfterConnectUser:(ZCTurnType ) type{
     if([self getLibConfig].invalidSessionFlag == 1 && ([self getLibConfig].type == 2||[self getLibConfig].type == 4) && _afterModel==nil){
         _isAfterConnectUser = YES;
@@ -1028,12 +1018,12 @@ static dispatch_once_t onceToken;
             [self keyboardOnClickAddRobotHelloWolrd];
             
             // 添加自动发送自定义消息，客户单独要求需要每次都发送
-            if ([ZCUICore getUICore].libInfo.good_msg_type >0 && zcLibConvertToString([ZCUICore getUICore].libInfo.content).length > 0) {
+            if ([ZCUICore getUICore].libInfo.good_msg_type >0 && sobotConvertToString([ZCUICore getUICore].libInfo.content).length > 0) {
                 [self checkUserServiceWithType:type model:nil];
             }
         }else{
             ZCLibMessage *message = [ZCLibServer setLocalDataToArr:ZCTipMessageAdminHelloWord type:0 duration:@"" style:0 send:NO name:self.receivedName content:nil config:[self getLibConfig]];
-            message.senderFace = zcLibConvertToString([self getLibConfig].face);
+            message.senderFace = sobotConvertToString([self getLibConfig].face);
             [message getModelDisplayText:YES];// 处理欢迎语中带有富文本标签
             
             [self addReceivedNameMessageToList:message IsAdminHelloWord:NO];
@@ -1051,9 +1041,9 @@ static dispatch_once_t onceToken;
     
     // 如果返回的数据是最后一轮，当前的多轮会话的cell不可点击
     // 记录下标
-    if ( [zcLibConvertToString([NSString stringWithFormat:@"%d",message.richModel.answerType]) hasPrefix:@"15"]  && message.richModel.multiModel.endFlag) {
+    if ( [sobotConvertToString([NSString stringWithFormat:@"%d",message.richModel.answerType]) hasPrefix:@"15"]  && message.richModel.multiModel.endFlag) {
         for (ZCLibMessage *message in _listArray) {
-            if ([zcLibConvertToString([NSString stringWithFormat:@"%d",message.richModel.answerType]) hasPrefix:@"15"] && !message.richModel.multiModel.endFlag && !message.richModel.multiModel.isHistoryMessages ) {
+            if ([sobotConvertToString([NSString stringWithFormat:@"%d",message.richModel.answerType]) hasPrefix:@"15"] && !message.richModel.multiModel.endFlag && !message.richModel.multiModel.isHistoryMessages ) {
                 // 2.9.0屏蔽
 //                message.richModel.multiModel.isHistoryMessages = YES;// 变成不可点击，成为历史
             }
@@ -1160,7 +1150,7 @@ static dispatch_once_t onceToken;
         }else if(message.transferFlag == 1 || message.transferFlag == 3){
             // 1-指定技能组接入，2-选择技能组列表，3-直接转入;
             if(message.queueFlag==1 || (message.queueFlag==0 && message.onlineFlag==1)){
-                if(zcLibConvertToString(message.transferTips).length > 0){
+                if(sobotConvertToString(message.transferTips).length > 0){
                     // 提示语
                     trunModel.richModel.msg = message.transferTips;
                     trunModel.richModel.msgType = ZCMessageTypeText;
@@ -1183,7 +1173,7 @@ static dispatch_once_t onceToken;
                 }else{
                     if(message.onlineFlag == 1 || message.onlineFlag == 2){
                         //关键字转人工 直接转人工
-                        _checkGroupId = zcLibConvertToString(trunModel.groupId);
+                        _checkGroupId = sobotConvertToString(trunModel.groupId);
                         _checkGroupName = @"";
                         [self doConnectUserService:trunModel connectType:ZCTurnType_KeyWord];
                         
@@ -1259,7 +1249,7 @@ static dispatch_once_t onceToken;
     //[dict[@"data"][@"status"] intValue] == 7   status == ZCConnectUserWaitingThreshold
     if (status == ZCConnectUserWaitingThreshold ) {
         
-        if ( turnType == ZCTurnType_KeyWord && [zcLibConvertToString(dict[@"data"][@"queueFlag"]) intValue] == 0) {
+        if ( turnType == ZCTurnType_KeyWord && [sobotConvertToString(dict[@"data"][@"queueFlag"]) intValue] == 0) {
             return;
         }
         
@@ -1289,7 +1279,7 @@ static dispatch_once_t onceToken;
         if ([self getPlatfromInfo].config.msgFlag == 0) {
             //  跳转到留言不直接退出SDK
             if (self.delegate && [self.delegate respondsToSelector:@selector(coreOpenNewPageVC:IsExist:isShowToat:tipMsg: Dict:Object:trunType:)]) {
-                [self.delegate coreOpenNewPageVC:ZC_LeaveMsgPage  IsExist:LeaveExitTypeISNOCOLSE isShowToat:YES tipMsg:zcLibConvertToString(dict[@"msg"]) Dict:nil Object:nil trunType:ZCTurnType_BtnClick];
+                [self.delegate coreOpenNewPageVC:ZC_LeaveMsgPage  IsExist:LeaveExitTypeISNOCOLSE isShowToat:YES tipMsg:sobotConvertToString(dict[@"msg"]) Dict:nil Object:nil trunType:ZCTurnType_BtnClick];
             }
             
         }
@@ -1298,23 +1288,23 @@ static dispatch_once_t onceToken;
     
     // 转人工成功或者已经是人工状态
     if(status == ZCConnectUserBeBlock){// 说明当前用户是黑名单用户
-        if ( turnType == ZCTurnType_KeyWord && [zcLibConvertToString(dict[@"data"][@"queueFlag"]) intValue] == 0) {
+        if ( turnType == ZCTurnType_KeyWord && [sobotConvertToString(dict[@"data"][@"queueFlag"]) intValue] == 0) {
             return;
         }
 
         [self addTipsListenerMessage:ZCTipMessageIsBlock];
         
     }else if(status==ZCConnectUserSuccess || status == ZCConnectUserBeConnected){
-        self.receivedName = zcLibConvertToString(dict[@"data"][@"aname"]);
+        self.receivedName = sobotConvertToString(dict[@"data"][@"aname"]);
         ZCLibConfig *libConfig = [self getPlatfromInfo].config;
         libConfig.isArtificial = YES;
-        libConfig.senderFace = zcLibConvertToString(dict[@"data"][@"aface"]);
+        libConfig.senderFace = sobotConvertToString(dict[@"data"][@"aface"]);
         libConfig.senderName = self.receivedName;
         [[self getPlatfromInfo] setConfig:libConfig];
         int messageType=ZCReceivedMessageNews;
         
         ZCLibMessage *message = [ZCLibServer  setLocalDataToArr:ZCTipMessageOnline type:messageType duration:@"" style:ZCReceivedMessageOnline send:NO name:_receivedName content:_receivedName config:libConfig];
-        message.senderFace = zcLibConvertToString(dict[@"data"][@"aface"]);
+        message.senderFace = sobotConvertToString(dict[@"data"][@"aface"]);
         
         // 是否设置语音开关
         if (self.delegate && [self.delegate respondsToSelector:@selector(onPageStatusChanged:message:obj:)]) {
@@ -1333,7 +1323,7 @@ static dispatch_once_t onceToken;
         
         if([self showChatAdminHello]){
             message = [ZCLibServer setLocalDataToArr:ZCTipMessageAdminHelloWord type:0 duration:@"" style:0 send:NO name:self.receivedName content:nil config:libConfig];
-            message.senderFace = zcLibConvertToString(dict[@"data"][@"aface"]);
+            message.senderFace = sobotConvertToString(dict[@"data"][@"aface"]);
             [message getModelDisplayText:YES];//处理欢迎语中包含富文本标签
             // 发送人工欢迎语，并添加 商品和订单信息
 //            [self addReceivedNameMessageToList:message IsAdminHelloWord:YES];
@@ -1349,7 +1339,7 @@ static dispatch_once_t onceToken;
         [self addAutoSendAdminMessageWithCheckAddMsg:YES isAddGoodMsg:YES isAutoSendMsg:YES];
     }else if(status==ZCConnectUserOfWaiting ){
         // queueFlag 关键字转人工未成功，是否排队 1-排队，0-不排队（决定页面端是否展示排队文案）
-        if ( turnType == ZCTurnType_KeyWord && [zcLibConvertToString(dict[@"data"][@"queueFlag"]) intValue] == 0) {
+        if ( turnType == ZCTurnType_KeyWord && [sobotConvertToString(dict[@"data"][@"queueFlag"]) intValue] == 0) {
             return;
         }
         
@@ -1363,16 +1353,16 @@ static dispatch_once_t onceToken;
             });
         }else{
             
-            if (zcLibConvertToString(dict[@"data"][@"aname"]).length) {
-                self.receivedName = zcLibConvertToString(dict[@"data"][@"aname"]);
+            if (sobotConvertToString(dict[@"data"][@"aname"]).length) {
+                self.receivedName = sobotConvertToString(dict[@"data"][@"aname"]);
             }
           
             if (self.delegate && [self.delegate respondsToSelector:@selector(onPageStatusChanged:message:obj:)]) {
                 [self.delegate onPageStatusChanged:ZCSetKeyBoardStatus message:@"ZCKeyboardStatusRobot" obj:nil];
             }
         }
-        // 2.6.4  content:zcLibConvertToString(dict[@"data"][@"count"])  替换 由服务端处理排队个数数据
-        ZCLibMessage *message = [ZCLibServer setLocalDataToArr:ZCTipMessageWaiting type:ZCReceivedMessageWaiting duration:@"" style:messageType send:NO name:self.receivedName content:zcLibConvertToString(dict[@"data"][@"queueDoc"]) config:[self getPlatfromInfo].config];
+        // 2.6.4  content:sobotConvertToString(dict[@"data"][@"count"])  替换 由服务端处理排队个数数据
+        ZCLibMessage *message = [ZCLibServer setLocalDataToArr:ZCTipMessageWaiting type:ZCReceivedMessageWaiting duration:@"" style:messageType send:NO name:self.receivedName content:sobotConvertToString(dict[@"data"][@"queueDoc"]) config:[self getPlatfromInfo].config];
         if ([self getLibConfig].queueFlag == 1) {
             [self addReceivedNameMessageToList:message IsAdminHelloWord:NO];
         }
@@ -1390,7 +1380,7 @@ static dispatch_once_t onceToken;
         // 转完人工再发送，如果排队了不发送了，等待转人工成功再发送
         // [self sendAfterConnectUserMessage];
     } else if(status==ZCConnectUserNoAdmin){
-        if ( turnType == ZCTurnType_KeyWord && [zcLibConvertToString(dict[@"data"][@"queueFlag"]) intValue] == 0) {
+        if ( turnType == ZCTurnType_KeyWord && [sobotConvertToString(dict[@"data"][@"queueFlag"]) intValue] == 0) {
             return;
         }
         [ZCUICore getUICore].isShowForm = NO;
@@ -1449,7 +1439,7 @@ static dispatch_once_t onceToken;
         
         // 2.7.1 逻辑修改 && (turnType == ZCTurnType_BtnClick || turnType == ZCTurnType_CellGroupClick)
     }else if(status == ZCConnectUserServerFailed ){
-        if ( turnType == ZCTurnType_KeyWord && [zcLibConvertToString(dict[@"data"][@"queueFlag"]) intValue] == 0) {
+        if ( turnType == ZCTurnType_KeyWord && [sobotConvertToString(dict[@"data"][@"queueFlag"]) intValue] == 0) {
             return;
         }
         [ZCUICore getUICore].isShowForm = NO;
@@ -1520,7 +1510,7 @@ static dispatch_once_t onceToken;
     ZCLibConfig *conf = [self getPlatfromInfo].config;
     
     ZCLibMessage *temModel=[[ZCLibMessage alloc] init];
-    temModel.date         =  zcLibCurrentDateFormateString(FormateTime);
+    temModel.date         =  sobotGetCurrentTimes();
     //    temModel.contentTemp  = text;
     temModel.cid          = conf.cid;
     temModel.action       = 0;
@@ -1564,7 +1554,7 @@ static dispatch_once_t onceToken;
         temModel.senderType = 1;
     }
     temModel.t=[NSString stringWithFormat:@"%ld",(long)[[NSDate date] timeIntervalSince1970]];
-    temModel.ts           = zcLibCurrentDateFormateString(FormateTime);//zcLibCurrentDateFormateString(FormateTime);
+    temModel.ts           = sobotGetCurrentTimes();//sobotGetCurrentTimes();
     temModel.receiver     = conf.companyName;
     temModel.receiverName = conf.uid;
     temModel.offlineType  = @"1";
@@ -1632,7 +1622,7 @@ static dispatch_once_t onceToken;
 
 #pragma mark 实现智齿消息监听
 -(void)onReceivedMessage:(ZCLibMessage *)message unReaded:(int)num object:(id)obj showType:(ZCReceivedMessageType)type{
-    if(![[self getPlatfromInfo].app_key isEqual:zcLibConvertToString(obj[@"appId"])]){
+    if(![[self getPlatfromInfo].app_key isEqual:sobotConvertToString(obj[@"appId"])]){
         return;
     }
     
@@ -1706,8 +1696,8 @@ static dispatch_once_t onceToken;
        type== ZCReceivedMessageOfflineToLong ||
        type == ZCReceivedMessageToNewWindow){
         
-        if (zcLibConvertToString(obj[@"aname"]).length) {
-            _receivedName = zcLibConvertToString(obj[@"aname"]);
+        if (sobotConvertToString(obj[@"aname"]).length) {
+            _receivedName = sobotConvertToString(obj[@"aname"]);
         }
 //         客户长时间不在线，标题不变
 //        if(type!= ZCReceivedMessageOfflineToLong){
@@ -1765,7 +1755,7 @@ static dispatch_once_t onceToken;
     if (type == ZCReceivedMessageEvaluation){
         BOOL isUser = self.isSendToUser;
         
-        [ZCLogUtils logHeader:LogHeader debug:@"当前发送状态：%d",isUser];
+        [SobotLog logDebug:@"当前发送状态：%d",isUser];
         // 是否转接过人工  或者当前是否是人工 （人工的评价逻辑）
         if ((_isOffline
              || [self getPlatfromInfo].config.isArtificial)
@@ -1838,7 +1828,7 @@ static dispatch_once_t onceToken;
             NSMutableArray *indexs = [[NSMutableArray alloc] init];
             for (int i = (int)_listArray.count-1; i>=0 ; i--) {
                 ZCLibMessage *libMassage = _listArray[i];
-                if ( [zcLibConvertToString(libMassage.sysTips) hasSuffix:ZCSTLocalString(@"留言")] ) {// 2.6.4 去掉|| [libMassage.sysTips hasPrefix:ZCSTLocalString(@"排队中，您在队伍中")]
+                if ( [sobotConvertToString(libMassage.sysTips) hasSuffix:ZCSTLocalString(@"留言")] ) {// 2.6.4 去掉|| [libMassage.sysTips hasPrefix:ZCSTLocalString(@"排队中，您在队伍中")]
                     [indexs addObject:[NSString stringWithFormat:@"%d",i]];
                 }
                 
@@ -1880,12 +1870,12 @@ static dispatch_once_t onceToken;
                 ZCLibMessage *libMassage = _listArray[i];
                 
                 // 删除上一条留言信息
-                if ([zcLibConvertToString(libMassage.sysTips) hasSuffix:ZCSTLocalString(@"留言")] || [libMassage.sysTips isEqualToString:conf.adminNonelineTitle]) {
+                if ([sobotConvertToString(libMassage.sysTips) hasSuffix:ZCSTLocalString(@"留言")] || [libMassage.sysTips isEqualToString:conf.adminNonelineTitle]) {
                     indexs = [indexs stringByAppendingFormat:@",%d",i];
                 }else if(libMassage.tipStyle == ZCReceivedMessageUnKonw){
                     // 删除上一次商品信息
                     indexs = [indexs stringByAppendingFormat:@",%d",i];
-                }else if([zcLibConvertToString(libMassage.sysTips) hasPrefix:ZCSTLocalString(@"未解决问题？点击")]){
+                }else if([sobotConvertToString(libMassage.sysTips) hasPrefix:ZCSTLocalString(@"未解决问题？点击")]){
                     libMassage.isHistory = YES;
                     indexs = [indexs stringByAppendingFormat:@",%d",i];
                 }
@@ -2168,8 +2158,8 @@ static dispatch_once_t onceToken;
     _isDismissSheetPage = YES;
     if (isNew) {
         // 重新赋值技能组ID和昵称（初始化传入字段）
-        [ZCLibClient getZCLibClient].libInitInfo.groupid = zcLibConvertToString([[NSUserDefaults standardUserDefaults] valueForKey:@"UserDefaultGroupID"]);
-        [ZCLibClient getZCLibClient].libInitInfo.group_name = zcLibConvertToString([[NSUserDefaults standardUserDefaults] valueForKey:@"UserDefaultGroupName"]);
+        [ZCLibClient getZCLibClient].libInitInfo.groupid = sobotConvertToString([[NSUserDefaults standardUserDefaults] valueForKey:@"UserDefaultGroupID"]);
+        [ZCLibClient getZCLibClient].libInitInfo.group_name = sobotConvertToString([[NSUserDefaults standardUserDefaults] valueForKey:@"UserDefaultGroupName"]);
         // 重新设置判定参数
         self.isSendToUser = NO;
         self.isSendToRobot = NO;
@@ -2183,7 +2173,7 @@ static dispatch_once_t onceToken;
    _checkGroupId = @"";
    _checkGroupName = @"";
     
-    [ZCLogUtils logHeader:LogHeader debug:@"初始化方法调用"];
+    [SobotLog logDebug:@"初始化方法调用"];
     _isCidLoading = YES;
     self.isDoConnectedUser = NO;
 
@@ -2250,7 +2240,7 @@ static dispatch_once_t onceToken;
         if (self.delegate && [self.delegate respondsToSelector:@selector(showSoketConentStatus:)]) {
             [self.delegate showSoketConentStatus:200];
         }
-        [ZCLogUtils logHeader:LogHeader debug:@"%@",config];
+        [SobotLog logDebug:@"%@",config];
 //        NSString *isblack = @"0";
         self.isOfflineBeBlack = NO;
         if (config.isblack == YES) {
@@ -2296,12 +2286,12 @@ static dispatch_once_t onceToken;
     } error:^(ZCNetWorkCode status,NSString *errorMessage) {
         isLoadingConfig = NO;
         
-        if(zcLibConvertToString(errorMessage).length > 0 && self.delegate!=nil){
+        if(sobotConvertToString(errorMessage).length > 0 && self.delegate!=nil){
             [[ZCUIToastTools shareToast] showToast:errorMessage duration:2.0f view:((UIView *)self.delegate).window position:ZCToastPositionCenter];
             
             
             if(safeSelf.ResultBlock){
-                safeSelf.ResultBlock(ZCInitStatusFail,safeSelf.listArray,zcLibConvertToString(errorMessage).length > 0 ? errorMessage : @"初始化失败");
+                safeSelf.ResultBlock(ZCInitStatusFail,safeSelf.listArray,sobotConvertToString(errorMessage).length > 0 ? errorMessage : @"初始化失败");
             }
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 if (safeSelf.delegate && [safeSelf.delegate respondsToSelector:@selector(onPageStatusChanged:message:obj:)]) {
@@ -2380,7 +2370,7 @@ static dispatch_once_t onceToken;
         isRobot = YES;
     }
     
-    [ZCLogUtils logHeader:LogHeader debug:@"当前发送状态：%d,%d",isUser,isRobot];
+    [SobotLog logDebug:@"当前发送状态：%d,%d",isUser,isRobot];
     
     //1.只和机器人聊过天 评价机器人
     //2.只和人工聊过天 评价人工
@@ -2439,14 +2429,14 @@ static dispatch_once_t onceToken;
 
     // 邀请评价结束后替换满意度cell
     ZCLibMessage *temModel=[[ZCLibMessage alloc] init];
-    temModel.date         = zcLibCurrentDateFormateString(FormateTime);
+    temModel.date         = sobotGetCurrentTimes();
     temModel.cid          = [self getLibConfig].cid;
     temModel.action       = 0;
     temModel.sender       = [self getLibConfig].uid;
     temModel.senderName   = _receivedName;
     temModel.senderFace   = @"";
     temModel.t=[NSString stringWithFormat:@"%ld",(long)[[NSDate date] timeIntervalSince1970]];
-    temModel.ts           = zcLibCurrentDateFormateString(FormateTime);
+    temModel.ts           = sobotGetCurrentTimes();
     temModel.receiver     = [self getLibConfig].companyName;
     temModel.receiverName = [self getLibConfig].uid;
     temModel.offlineType  = @"1";
@@ -2497,7 +2487,12 @@ static dispatch_once_t onceToken;
         self.isOffline = YES;
         
         // 加上这一句，下次进入会立即初始化
-        [[ZCPlatformTools sharedInstance] getPlatformInfo].config = nil;
+        // 处理之前先存一下临时数据uid
+//        tempUid = [[ZCPlatformTools sharedInstance] getPlatformInfo].config.uid;
+        
+        [ZCUICore getUICore].currtChatOver = YES;
+        // 这里暂时先不置空 点击留言以及留言后面的数据会使用
+//        [[ZCPlatformTools sharedInstance] getPlatformInfo].config = nil;
     }
 }
 
@@ -2519,7 +2514,7 @@ static dispatch_once_t onceToken;
         self.isEvaluationRobot = YES;
     }
     NSMutableDictionary *dict=[[NSMutableDictionary alloc] init];
-    [dict setObject:zcLibConvertToString(problem) forKey:@"problem"];
+    [dict setObject:sobotConvertToString(problem) forKey:@"problem"];
     [dict setObject:[self getLibConfig].cid forKey:@"cid"];
     [dict setObject:[self getLibConfig].uid forKey:@"userId"];
     
@@ -2573,7 +2568,7 @@ static dispatch_once_t onceToken;
                 for (int i = (int)_listArray.count-1; i>=0; i--) {
                     ZCLibMessage *model = _listArray[i];
                     // 删除上一条留言信息
-                    if ([model.sysTips hasPrefix:zcLibConvertToString([self getPlatfromInfo].config.adminNonelineTitle)] && (action == ZCTipMessageUserNoAdmin)) {
+                    if ([model.sysTips hasPrefix:sobotConvertToString([self getPlatfromInfo].config.adminNonelineTitle)] && (action == ZCTipMessageUserNoAdmin)) {
                         indexs = [indexs stringByAppendingFormat:@",%d",i];
                     }else if([model.sysTips hasPrefix:ZCSTLocalString(@"您已完成评价")] && (action == ZCTipMessageEvaluationCompleted)){
                         // 删除上一次商品信息
@@ -2614,9 +2609,9 @@ static dispatch_once_t onceToken;
     ZCLibConfig * config = [self getPlatfromInfo].config;
     
     // 设置客服发送离线消息转人工参数
-    if(config.offlineMsgConnectFlag && zcLibConvertToString(config.offlineMsgAdminId).length > 0 && !config.isblack){
+    if(config.offlineMsgConnectFlag && sobotConvertToString(config.offlineMsgAdminId).length > 0 && !config.isblack){
         [ZCPlatformTools sharedInstance].isOfflineMsgConnect = config.offlineMsgConnectFlag;
-        [ZCPlatformTools sharedInstance].offlineMsgAdminId   = zcLibConvertToString(config.offlineMsgAdminId);
+        [ZCPlatformTools sharedInstance].offlineMsgAdminId   = sobotConvertToString(config.offlineMsgAdminId);
     }
     
     if ([self getPlatfromInfo].config.isArtificial) {
@@ -2725,7 +2720,7 @@ static dispatch_once_t onceToken;
     [self cleanUserCount];
     
     if(self.kitInfo.isOpenActiveUser && type == ZCMessageTypeText && ![self getPlatfromInfo].config.isArtificial && [self getPlatfromInfo].config.type!=1){
-        if(!zcLibIs_null(self.kitInfo.activeKeywords) && [self.kitInfo.activeKeywords objectForKey:text]){
+        if(!sobotIsNull(self.kitInfo.activeKeywords) && [self.kitInfo.activeKeywords objectForKey:text]){
             
             //        ZCLibMessage *sendModel = nil;
             // action 为0
@@ -2869,14 +2864,14 @@ static dispatch_once_t onceToken;
     }
     if([self getLibConfig].isArtificial){
         // 如果已经是人工了，发送普通消息
-        [self sendMessage:zcLibConvertToString(_afterModel.richModel.msg) questionId:@"" type:_afterModel.richModel.msgType duration:zcLibConvertToString(_afterModel.richModel.duration)];
+        [self sendMessage:sobotConvertToString(_afterModel.richModel.msg) questionId:@"" type:_afterModel.richModel.msgType duration:sobotConvertToString(_afterModel.richModel.duration)];
 
         _afterModel = nil;
         return;
     }
 //    __weak ZCUICore *safeVC = self;
 //    __block ZCLibMessage *sendMessage  = nil;
-//    [_apiServer sendFirstMsgToUser:zcLibConvertToString(_afterModel.richModel.msg) config:[self getPlatfromInfo].config msgType:_afterModel.richModel.msgType start:^(ZCLibMessage *message) {
+//    [_apiServer sendFirstMsgToUser:sobotConvertToString(_afterModel.richModel.msg) config:[self getPlatfromInfo].config msgType:_afterModel.richModel.msgType start:^(ZCLibMessage *message) {
 //
 //        message.sendStatus=1;
 //        sendMessage = message;
@@ -2996,13 +2991,13 @@ static dispatch_once_t onceToken;
                             config:(ZCLibConfig *) _config{
     
     ZCLibMessage *temModel=[[ZCLibMessage alloc] init];
-    temModel.date         = zcLibCurrentDateFormateString(FormateTime);
+    temModel.date         = sobotGetCurrentTimes();
     //    temModel.contentTemp  = text;
     temModel.senderFace = _config.zcinitInfo.face;
     temModel.cid          = _config.cid;
     temModel.action       = 0;
     temModel.sender       = _config.uid;
-    if(user_nick!=nil && ![@"" isEqual:zcLibConvertToString(user_nick)]){
+    if(user_nick!=nil && ![@"" isEqual:sobotConvertToString(user_nick)]){
         temModel.senderName   = user_nick;
     }else{
         temModel.senderName   = _config.senderName;
@@ -3010,7 +3005,7 @@ static dispatch_once_t onceToken;
     
     temModel.senderFace   = _config.robotLogo;
     temModel.t=[NSString stringWithFormat:@"%ld",(long)[[NSDate date] timeIntervalSince1970]];
-    temModel.ts           = zcLibCurrentDateFormateString(FormateTime);
+    temModel.ts           = sobotGetCurrentTimes();
     temModel.receiver     = _config.cid;
     temModel.receiverName = _config.robotName;
     temModel.offlineType  = @"1";
@@ -3101,15 +3096,15 @@ static dispatch_once_t onceToken;
         NSMutableDictionary * contentDic = [NSMutableDictionary dictionaryWithCapacity:5];
         NSString *contextStr = @"";
         
-        [contentDic setObject:[NSString stringWithFormat:@"%@",zcLibConvertToString(_kitInfo.productInfo.title)] forKey:@"title"];
+        [contentDic setObject:[NSString stringWithFormat:@"%@",sobotConvertToString(_kitInfo.productInfo.title)] forKey:@"title"];
         
-        [contentDic setObject:[NSString stringWithFormat:@"%@",zcLibConvertToString(_kitInfo.productInfo.desc)] forKey:@"description"];
+        [contentDic setObject:[NSString stringWithFormat:@"%@",sobotConvertToString(_kitInfo.productInfo.desc)] forKey:@"description"];
         
-        [contentDic setObject:[NSString stringWithFormat:@"%@",zcLibConvertToString(_kitInfo.productInfo.label)] forKey:@"label"];
+        [contentDic setObject:[NSString stringWithFormat:@"%@",sobotConvertToString(_kitInfo.productInfo.label)] forKey:@"label"];
         
-        [contentDic setObject:[NSString stringWithFormat:@"%@",zcLibConvertToString(_kitInfo.productInfo.link)] forKey:@"url"];
+        [contentDic setObject:[NSString stringWithFormat:@"%@",sobotConvertToString(_kitInfo.productInfo.link)] forKey:@"url"];
         
-        [contentDic setObject:[NSString stringWithFormat:@"%@",zcLibConvertToString(_kitInfo.productInfo.thumbUrl)] forKey:@"thumbnail"];
+        [contentDic setObject:[NSString stringWithFormat:@"%@",sobotConvertToString(_kitInfo.productInfo.thumbUrl)] forKey:@"thumbnail"];
         // 转json
         contextStr = [ZCLocalStore DataTOjsonString:contentDic];
         
@@ -3119,7 +3114,7 @@ static dispatch_once_t onceToken;
         if (!_kitInfo.isEveryTimeSendCard) {
             // 查看之前有没有发送过，同一次会话中 查找
             NSUserDefaults *userDefatluts = [NSUserDefaults standardUserDefaults];
-            NSString *isSave = zcLibConvertToString([userDefatluts objectForKey:[NSString stringWithFormat:@"sobot_cid_sendCardCount%@",[self getLibConfig].cid]]);
+            NSString *isSave = sobotConvertToString([userDefatluts objectForKey:[NSString stringWithFormat:@"sobot_cid_sendCardCount%@",[self getLibConfig].cid]]);
             if (isSave.length > 0) {
                 // 只发送一次 同一次会话之前已经发送过 不在发送
             }else{
@@ -3141,14 +3136,14 @@ static dispatch_once_t onceToken;
         NSMutableDictionary * contentDic = [NSMutableDictionary dictionaryWithCapacity:5];
         NSString *contextStr = @"";
         [contentDic setObject:[NSString stringWithFormat:@"%d",_kitInfo.orderGoodsInfo.orderStatus] forKey:@"orderStatus"];
-        [contentDic setObject:zcLibConvertToString(_kitInfo.orderGoodsInfo.statusCustom) forKey:@"statusCustom"];
-        [contentDic setObject:zcLibConvertToString(_kitInfo.orderGoodsInfo.createTime) forKey:@"createTime"];
-        [contentDic setObject:zcLibConvertToString(_kitInfo.orderGoodsInfo.orderCode) forKey:@"orderCode"];
-        [contentDic setObject:zcLibConvertToString(_kitInfo.orderGoodsInfo.createTime) forKey:@"createTime"];
+        [contentDic setObject:sobotConvertToString(_kitInfo.orderGoodsInfo.statusCustom) forKey:@"statusCustom"];
+        [contentDic setObject:sobotConvertToString(_kitInfo.orderGoodsInfo.createTime) forKey:@"createTime"];
+        [contentDic setObject:sobotConvertToString(_kitInfo.orderGoodsInfo.orderCode) forKey:@"orderCode"];
+        [contentDic setObject:sobotConvertToString(_kitInfo.orderGoodsInfo.createTime) forKey:@"createTime"];
         [contentDic setObject:_kitInfo.orderGoodsInfo.goods forKey:@"goods"];
-        [contentDic setObject:zcLibConvertToString(_kitInfo.orderGoodsInfo.orderUrl) forKey:@"orderUrl"];
-        [contentDic setObject:zcLibConvertToString(_kitInfo.orderGoodsInfo.goodsCount) forKey:@"goodsCount"];
-        [contentDic setObject:zcLibConvertToString(_kitInfo.orderGoodsInfo.totalFee) forKey:@"totalFee"];
+        [contentDic setObject:sobotConvertToString(_kitInfo.orderGoodsInfo.orderUrl) forKey:@"orderUrl"];
+        [contentDic setObject:sobotConvertToString(_kitInfo.orderGoodsInfo.goodsCount) forKey:@"goodsCount"];
+        [contentDic setObject:sobotConvertToString(_kitInfo.orderGoodsInfo.totalFee) forKey:@"totalFee"];
         // 转json
         contextStr = [ZCLocalStore DataTOjsonString:contentDic];
         if (_kitInfo.isEveryTimeAutoSend) {
@@ -3158,7 +3153,7 @@ static dispatch_once_t onceToken;
         if (!_kitInfo.isEveryTimeAutoSend) {
             // 查看之前有没有发送过，同一次会话中 查找
             NSUserDefaults *userDefatluts = [NSUserDefaults standardUserDefaults];
-            NSString *isSave = zcLibConvertToString([userDefatluts objectForKey:[NSString stringWithFormat:@"sobot_cid_sendOrderCount%@",[self getLibConfig].cid]]);
+            NSString *isSave = sobotConvertToString([userDefatluts objectForKey:[NSString stringWithFormat:@"sobot_cid_sendOrderCount%@",[self getLibConfig].cid]]);
             if (isSave.length > 0 ) {
                 // 只发送一次 同一次会话之前已经发送过 不在发送
             }else{
@@ -3273,18 +3268,18 @@ static dispatch_once_t onceToken;
     
     
     // 添加自动发送自定义消息，客户单独要求需要每次都发送
-    if ([ZCUICore getUICore].libInfo.good_msg_type >0 && ![zcLibConvertToString([ZCUICore getUICore].libInfo.content) isEqualToString:@""]) {
+    if ([ZCUICore getUICore].libInfo.good_msg_type >0 && ![sobotConvertToString([ZCUICore getUICore].libInfo.content) isEqualToString:@""]) {
         // 机器人和人工都发送
         if([ZCUICore getUICore].libInfo.good_msg_type > 1 && [self getPlatfromInfo].config.isArtificial){
             // 默认ZCMessageTypeText
             ZCMessageType type = [ZCUICore getUICore].libInfo.auto_send_msgtype;
-            [[ZCUICore getUICore] sendMessage:zcLibConvertToString([ZCUICore getUICore].libInfo.content) questionId:@"" type:type duration:@""];
+            [[ZCUICore getUICore] sendMessage:sobotConvertToString([ZCUICore getUICore].libInfo.content) questionId:@"" type:type duration:@""];
         }
         // 自动给机器人发送文本信息
         if (([ZCUICore getUICore].libInfo.good_msg_type == 1 || [ZCUICore getUICore].libInfo.good_msg_type == 3) && ![self getPlatfromInfo].config.isArtificial) {
             // 默认ZCMessageTypeText
             ZCMessageType type = [ZCUICore getUICore].libInfo.auto_send_msgtype;
-            [[ZCUICore getUICore] sendMessage:zcLibConvertToString([ZCUICore getUICore].libInfo.content) questionId:@"" type:type duration:@""];
+            [[ZCUICore getUICore] sendMessage:sobotConvertToString([ZCUICore getUICore].libInfo.content) questionId:@"" type:type duration:@""];
         }
     }
     
@@ -3361,7 +3356,7 @@ static dispatch_once_t onceToken;
         if ([ZCLibClient getZCLibClient].libInitInfo.margs != nil && [[ZCLibClient getZCLibClient].libInitInfo.margs isKindOfClass:[NSDictionary class]]) {
             margs = [ZCLocalStore DataTOjsonString:[ZCLibClient getZCLibClient].libInitInfo.margs];
             
-            [param setObject:zcLibConvertToString(margs) forKey:@"margs"];
+            [param setObject:sobotConvertToString(margs) forKey:@"margs"];
         }else{
             [param setObject:@"" forKey:@"margs"];
         }
@@ -3535,7 +3530,7 @@ static dispatch_once_t onceToken;
             NSString *text = inputTextView.text;
             if(![text isEqual:lastMessage]){
                 lastMessage = text;
-//                [ZCLogUtils logHeader:LogHeader debug:@"发送正在输入内容...%@",lastMessage];
+//                [SobotLog logDebug:@"发送正在输入内容...%@",lastMessage];
                 if(isSendInput){
                     return;
                 }
@@ -3575,7 +3570,7 @@ static dispatch_once_t onceToken;
             colorThemeDict = [[NSMutableDictionary alloc] init];
         }
     }
-    return colorThemeDict[zcLibConvertToString(style)];
+    return colorThemeDict[sobotConvertToString(style)];
 }
 
 
@@ -3655,7 +3650,7 @@ static dispatch_once_t onceToken;
         if([self getLibConfig].adminHelloWordCountRule == 1){
             
             NSUserDefaults *userDefatluts = [NSUserDefaults standardUserDefaults];
-            NSString *isSave =  zcLibConvertToString([userDefatluts objectForKey:[NSString stringWithFormat:@"sobot_cid_adminhello%@",[self getLibConfig].cid]]);
+            NSString *isSave =  sobotConvertToString([userDefatluts objectForKey:[NSString stringWithFormat:@"sobot_cid_adminhello%@",[self getLibConfig].cid]]);
             if(isSave.length > 0){
                 // 已经显示过了，不显示了
                 return NO;
@@ -3688,7 +3683,7 @@ static dispatch_once_t onceToken;
             
             NSUserDefaults *userDefatluts = [NSUserDefaults standardUserDefaults];
             
-            NSString *isSave =  zcLibConvertToString([userDefatluts objectForKey:[NSString stringWithFormat:@"sobot_cid_adminouttips%@",[self getLibConfig].cid]]);
+            NSString *isSave =  sobotConvertToString([userDefatluts objectForKey:[NSString stringWithFormat:@"sobot_cid_adminouttips%@",[self getLibConfig].cid]]);
             if(isSave.length > 0){
                 // 已经显示过了
                 return NO;
@@ -3719,7 +3714,7 @@ static dispatch_once_t onceToken;
             
         } success:^(NSDictionary *dict, ZCNetWorkCode sendCode) {
             if (dict) {
-                int existFlag = [zcLibConvertToString(dict[@"data"][@"item"][@"existFlag"]) intValue];
+                int existFlag = [sobotConvertToString(dict[@"data"][@"item"][@"existFlag"]) intValue];
                 if (existFlag == 1) {
                     [save addTipsListenerMessage:ZCTipMessageUpdateLeave];
                 }
@@ -3740,13 +3735,23 @@ static dispatch_once_t onceToken;
             [userDefatluts synchronize];
         }
     }
-    [userDefatluts setObject:zcLibConvertToString(groupId) forKey:@"sobot_temp_groupid"];
+    [userDefatluts setObject:sobotConvertToString(groupId) forKey:@"sobot_temp_groupid"];
 }
 
 #pragma mark -- 获取临时保存的技能组ID
 -(NSString*)getTempGroupId{
     NSUserDefaults *userDefatluts = [NSUserDefaults standardUserDefaults];
-    return zcLibConvertToString([userDefatluts objectForKey:[NSString stringWithFormat:@"sobot_temp_groupid"]]);
+    return sobotConvertToString([userDefatluts objectForKey:[NSString stringWithFormat:@"sobot_temp_groupid"]]);
 }
 
+-(NSString *)getTempUid{
+    return tempUid;
+}
+
+-(void)setclosepamasAndClearConfig{
+    if ([ZCUICore getUICore].currtChatOver) {
+        [ZCUICore getUICore].currtChatOver = NO;
+        [[ZCPlatformTools sharedInstance] getPlatformInfo].config = nil;
+    }
+}
 @end

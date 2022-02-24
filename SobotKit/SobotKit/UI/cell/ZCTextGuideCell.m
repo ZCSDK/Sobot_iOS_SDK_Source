@@ -21,7 +21,7 @@
 #import "ZCHtmlCore.h"
 #import "ZCHtmlFilter.h"
 #import "ZCToolsCore.h"
-
+#import "ZCUICore.h"
 @interface ZCTextGuideCell()<ZCMLEmojiLabelDelegate,SobotXHImageViewerDelegate,ZCActionSheetDelegate>{
     NSString    *callURL;
     ZCMLEmojiLabel *_lblEmojiQuestion;// 标题
@@ -345,7 +345,7 @@
             
         }
         
-        [self lblAnswerType].text =  zcLibConvertToString(model.richModel.answerStrip);
+        [self lblAnswerType].text =  sobotConvertToString(model.richModel.answerStrip);
         CGSize size = [[self lblAnswerType] preferredSizeWithMaxWidth:self.maxWidth];
         
         awF = CGRectMake(GetCellItemX(self.isRight), height, size.width, size.height);
@@ -359,11 +359,11 @@
 #pragma mark  -- 图片
     
     // 处理图片  当前的图片高度固定110
-    if(model.richModel.msgType>0 && !zcLibIs_null(model.richModel.richpricurl)){
+    if(model.richModel.msgType>0 && !sobotIsNull(model.richModel.richpricurl)){
         if(rw < ImageHeight){
             rw = ImageHeight;
         }
-        [[self middleImageView] loadWithURL:[NSURL URLWithString:zcUrlEncodedString(model.richModel.richpricurl)] placeholer:nil showActivityIndicatorView:YES];
+        [[self middleImageView] loadWithURL:[NSURL URLWithString:sobotUrlEncodedString(model.richModel.richpricurl)] placeholer:nil showActivityIndicatorView:YES];
         [self middleImageView].hidden=NO;
         
         [self middleImageView].userInteractionEnabled=YES;
@@ -377,7 +377,7 @@
     
     
 #pragma mark 标题
-    NSString *question = zcLibConvertToString(model.richModel.question);
+    NSString *question = sobotConvertToString(model.richModel.question);
     
     if(![@"" isEqual:question]){
         [self lblEmojiQuestion].text = @"";
@@ -491,7 +491,7 @@
     }
     
     // 如果显示图片，文本最多显示3行
-    if(model.richModel.msgType>0 && !zcLibIs_null(model.richModel.richpricurl)){
+    if(model.richModel.msgType>0 && !sobotIsNull(model.richModel.richpricurl)){
         // 最多显示三行
         if(size.height>70){
             size.height = 70;
@@ -509,7 +509,7 @@
     NSString *sugguestText=@"";
     
     // 添加stripe
-    if(![@"" isEqual:zcLibConvertToString(model.richModel.stripe)]){
+    if(![@"" isEqual:sobotConvertToString(model.richModel.stripe)]){
         sugguestText = [sugguestText stringByAppendingString:model.richModel.stripe];
     }
     
@@ -618,7 +618,7 @@
     
     
     //设置线条
-    if (!zcLibIs_null(model.richModel.richmoreurl)) {
+    if (!sobotIsNull(model.richModel.richmoreurl)) {
         // 添加线条
         _lineView  = [[UIView alloc]init];
         linF = CGRectMake(GetCellItemX(self.isRight), height, rw, 1);
@@ -653,7 +653,7 @@
     if(self.isRight){
         int rx=self.viewWidth-rw-30 -50;
         msgX = rx;
-        if (model.richModel.msgType == 0 || model.richModel.msgType == 5 || [@"" isEqual:question] || !(model.richModel.msgType>0 && !zcLibIs_null(model.richModel.richpricurl))) {
+        if (model.richModel.msgType == 0 || model.richModel.msgType == 5 || [@"" isEqual:question] || !(model.richModel.msgType>0 && !sobotIsNull(model.richModel.richpricurl))) {
             [self.ivBgView setFrame:CGRectMake(rx-8, bgY, rw+28, height + 10)];
         }else{
             [self.ivBgView setFrame:CGRectMake(rx-8, bgY, rw+28, height)];
@@ -661,7 +661,7 @@
         
     }else{
         msgX = 78;
-        if (model.richModel.msgType == 0 || model.richModel.msgType == 5 || [@"" isEqual:question] || !(model.richModel.msgType>0 && !zcLibIs_null(model.richModel.richpricurl))) {
+        if (model.richModel.msgType == 0 || model.richModel.msgType == 5 || [@"" isEqual:question] || !(model.richModel.msgType>0 && !sobotIsNull(model.richModel.richpricurl))) {
             [self.ivBgView setFrame:CGRectMake(58, bgY, rw+33, height +10)];
         }else{
             [self.ivBgView setFrame:CGRectMake(58, bgY, rw+33, height)];
@@ -679,7 +679,7 @@
     }
     
     // 如果是不是富文本消息 整个 Y值增加间距
-    if (model.richModel.msgType == 0 || model.richModel.msgType == 5 || [@"" isEqual:question] || !(model.richModel.msgType>0 && !zcLibIs_null(model.richModel.richpricurl))) {
+    if (model.richModel.msgType == 0 || model.richModel.msgType == 5 || [@"" isEqual:question] || !(model.richModel.msgType>0 && !sobotIsNull(model.richModel.richpricurl))) {
         msgF.origin.y += 10;
     }
     [self.emojiLabel setFrame:msgF];
@@ -1003,7 +1003,7 @@
     CGSize msgSize = [tempLabe preferredSizeWithMaxWidth:maxWidth];
     //    CGSize msgSize = [self autoHeightOfLabel:tempLabel with:maxWidth];
     // 如果图片不为空 先放置图片
-    if (model.richModel.msgType >0 && !zcLibIs_null(model.richModel.richpricurl)) {
+    if (model.richModel.msgType >0 && !sobotIsNull(model.richModel.richpricurl)) {
         
         cellheith = cellheith + MidImageHeight + 10 + Spaceheight;
         
@@ -1017,25 +1017,25 @@
     
     
     //判断显示标题
-    if(![@"" isEqual:zcLibConvertToString(model.richModel.question)]){
+    if(![@"" isEqual:sobotConvertToString(model.richModel.question)]){
         
         UIFontDescriptor *ctfFont = [ZCUITools zcgetKitChatFont].fontDescriptor;
         NSNumber *fontString = [ctfFont objectForKey:@"NSFontSizeAttribute"];
         tempLabe.font = [UIFont boldSystemFontOfSize:[fontString floatValue]];
         
-        tempLabel.text = zcLibConvertToString(model.richModel.question);
+        tempLabel.text = sobotConvertToString(model.richModel.question);
         CGSize size = [tempLabe preferredSizeWithMaxWidth:maxWidth];
         
         cellheith = cellheith + size.height +10 + Spaceheight;
     }
     
     
-    if (![@"" isEqualToString:zcLibConvertToString(model.richModel.answerStrip)]) {
+    if (![@"" isEqualToString:sobotConvertToString(model.richModel.answerStrip)]) {
         UIFontDescriptor *ctfFont = [ZCUITools zcgetKitChatFont].fontDescriptor;
         NSNumber *fontString = [ctfFont objectForKey:@"NSFontSizeAttribute"];
         tempLabe.font = [UIFont boldSystemFontOfSize:[fontString floatValue]];
         
-        tempLabel.text = zcLibConvertToString(model.richModel.answerStrip);
+        tempLabel.text = sobotConvertToString(model.richModel.answerStrip);
         CGSize size = [tempLabe preferredSizeWithMaxWidth:maxWidth];
         
         cellheith = cellheith + size.height +10 + Spaceheight;
@@ -1045,7 +1045,7 @@
     NSString *sugguestText=@"";
     
     // 引导说辞的阐述 添加stripe
-    if (![@"" isEqualToString:zcLibConvertToString(model.richModel.stripe)]) {
+    if (![@"" isEqualToString:sobotConvertToString(model.richModel.stripe)]) {
         sugguestText = model.richModel.stripe;
     }
     
@@ -1112,7 +1112,7 @@
     }
     
     // 阅读全文
-    if(model.richModel.msgType>0 && !zcLibIs_null(model.richModel.richmoreurl)){
+    if(model.richModel.msgType>0 && !sobotIsNull(model.richModel.richmoreurl)){
         
         // 线条的高度
         cellheith = cellheith + 10 + Spaceheight + 1;

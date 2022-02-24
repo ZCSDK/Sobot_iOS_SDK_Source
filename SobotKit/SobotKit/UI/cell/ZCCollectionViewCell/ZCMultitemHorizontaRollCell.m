@@ -138,7 +138,7 @@ static const float gap = 15;
     [_btnNext setTitleColor:[ZCUITools zcgetServiceNameTextColor] forState:0];
     [_btnNext setTitleColor:[ZCUITools zcgetTopBtnGreyColor] forState:UIControlStateDisabled];
     [_btnNext addTarget:self action:@selector(onPageClick:) forControlEvents:UIControlEventTouchUpInside];
-    if(zcGetSystemDoubleVersion()>=9.0){
+    if(sobotGetSystemDoubleVersion()>=9.0){
         _btnNext.semanticContentAttribute = UISemanticContentAttributeForceRightToLeft;
     }else{
         [_btnNext setTitleEdgeInsets:UIEdgeInsetsMake(0, - _btnNext.imageView.image.size.width, 0, _btnNext.imageView.image.size.width)];
@@ -168,7 +168,7 @@ static const float gap = 15;
     _isHistoryMsg = model.richModel.multiModel.isHistoryMessages;
     // 提示语
     CGFloat height = 0;
-    NSString * text = zcLibConvertToString(model.richModel.multiModel.msg);
+    NSString * text = sobotConvertToString(model.richModel.multiModel.msg);
     
     [ZCHtmlCore filterHtml:text result:^(NSString * _Nonnull text1, NSMutableArray * _Nonnull arr, NSMutableArray * _Nonnull links) {
         if (self.isRight) {
@@ -470,7 +470,7 @@ static const float gap = 15;
 //    if (self.cellType == ZCMultitemHorizontaRollCellType_text && self.tempModel.richModel.multiModel.showLinkStyle)
 //    {
 //        NSDictionary * model = _listArray[indexPath.row];
-//        NSString *text = [NSString stringWithFormat:@"%d、%@",(int)indexPath.row+1,zcLibConvertToString(model[@"title"])];
+//        NSString *text = [NSString stringWithFormat:@"%d、%@",(int)indexPath.row+1,sobotConvertToString(model[@"title"])];
 //        CGSize s = [text sizeWithFont:ZCUIFont14 constrainedToSize:CGSizeMake(self.maxWidth-30, 0)];
 //
 //        return CGSizeMake(self.maxWidth, s.height+3);
@@ -526,10 +526,10 @@ static const float gap = 15;
     
     if (pm.endFlag) {
         // 最后一轮会话，有外链，点击跳转外链
-        if (![@"" isEqualToString: zcLibConvertToString(detail[@"anchor"])]) {
+        if (![@"" isEqualToString: sobotConvertToString(detail[@"anchor"])]) {
             // 点击超链跳转
             if (self.delegate && [self.delegate respondsToSelector:@selector(cellItemLinkClick:type:obj:)]) {
-                [self.delegate cellItemLinkClick:nil type:ZCChatCellClickTypeOpenURL obj:zcLibConvertToString(detail[@"anchor"])];
+                [self.delegate cellItemLinkClick:nil type:ZCChatCellClickTypeOpenURL obj:sobotConvertToString(detail[@"anchor"])];
             }
         }
         return;
@@ -551,7 +551,7 @@ static const float gap = 15;
     
     
     // 发送点击消息
-    NSString * title = zcLibConvertToString(detail[@"title"]);
+    NSString * title = sobotConvertToString(detail[@"title"]);
     NSDictionary * dict = @{@"requestText":[pm getRequestText:detail],
                             @"question":[pm getQuestion:detail],
                             @"questionFlag":@"2",

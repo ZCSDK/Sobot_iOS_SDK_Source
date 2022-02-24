@@ -9,7 +9,7 @@
 #import "ZCImageChatCell.h"
 //#import "ZCUIXHImageViewer.h"
 #import "SobotXHImageViewer.h"
-#import "ZCLibCommon.h"
+#import "SobotUtils.h"
 #import "ZCUIColorsDefine.h"
 #import "ZCUIToastTools.h"
 #import "ZCActionSheet.h"
@@ -17,7 +17,7 @@
 #import "ZCVideoPlayer.h"
 #import "ZCToolsCore.h"
 #import "ZCLibGlobalDefine.h"
-
+#import "ZCUICore.h"
 #import <AVFoundation/AVFoundation.h>
 
 @interface ZCImageChatCell()<SobotXHImageViewerDelegate,ZCActionSheetDelegate>{
@@ -98,7 +98,7 @@
     [self.ivBgView setBackgroundColor:[UIColor clearColor]];
     [_ivSingleImage setContentMode:UIViewContentModeScaleAspectFill];
     // 判断图片来源，本地或网络
-    if(zcLibCheckFileIsExsis(model.richModel.msg)){
+    if(sobotCheckFileIsExsis(model.richModel.msg)){
         UIImage *localImage=[UIImage imageWithContentsOfFile:model.richModel.msg];
 //
         //发送状态，1 开始发送，2发送失败，0，发送完成
@@ -112,9 +112,9 @@
         [_ivSingleImage setImage:localImage];
     }else{
         if (model.richModel.msgType == ZCMessageTypeVideo) {
-            [_ivSingleImage loadWithURL:[NSURL URLWithString:zcUrlEncodedString(model.richModel.snapshot)] placeholer:[ZCUITools zcuiGetBundleImage:@"zcicon_default_goods_1"]  showActivityIndicatorView:YES];
+            [_ivSingleImage loadWithURL:[NSURL URLWithString:sobotUrlEncodedString(model.richModel.snapshot)] placeholer:[ZCUITools zcuiGetBundleImage:@"zcicon_default_goods_1"]  showActivityIndicatorView:YES];
         }else{
-            [_ivSingleImage loadWithURL:[NSURL URLWithString:zcUrlEncodedString(model.richModel.msg)] placeholer:[ZCUITools zcuiGetBundleImage:@"zcicon_default_goods_1"]  showActivityIndicatorView:YES];
+            [_ivSingleImage loadWithURL:[NSURL URLWithString:sobotUrlEncodedString(model.richModel.msg)] placeholer:[ZCUITools zcuiGetBundleImage:@"zcicon_default_goods_1"]  showActivityIndicatorView:YES];
         }
     }
     if(model.richModel.msgType == ZCMessageTypeVideo && _pieChartView == nil){
@@ -166,7 +166,7 @@
         [self playVideo:nil];
         return;
     }
-    //    [ZCLogUtils logHeader:LogHeader debug:@"查看大图：%@",self.tempModel.richModel.msg];
+    //    [SobotLog logDebug:@"查看大图：%@",self.tempModel.richModel.msg];
     UIImageView *_picView = (UIImageView*)recognizer.view;
     
     CALayer *calayer = _picView.layer.mask;

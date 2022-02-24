@@ -7,25 +7,25 @@
 //
 
 #import "ZCAddressModel.h"
-#import "ZCLibCommon.h"
+#import "SobotUtils.h"
 @implementation ZCAddressModel
 
 -(id)initWithMyDict:(NSDictionary *)dict{
     if (self = [super init]) {
         
-       _provinceId = zcLibConvertToString(dict[@"provinceId"]);
+       _provinceId = sobotConvertToString(dict[@"provinceId"]);
         
-       _provinceName = zcLibConvertToString(dict[@"provinceName"]);
+       _provinceName = sobotConvertToString(dict[@"provinceName"]);
         
-       _cityId = zcLibConvertToString(dict[@"cityId"]);
+       _cityId = sobotConvertToString(dict[@"cityId"]);
         
-       _cityName = zcLibConvertToString(dict[@"cityName"]);
+       _cityName = sobotConvertToString(dict[@"cityName"]);
         
-       _areaId = zcLibConvertToString(dict[@"areaId"]);
+       _areaId = sobotConvertToString(dict[@"areaId"]);
         
-       _areaName = zcLibConvertToString(dict[@"areaName"]);
+       _areaName = sobotConvertToString(dict[@"areaName"]);
         
-       _endFlag = [zcLibConvertToString(dict[@"endFlag"]) intValue];
+       _endFlag = [sobotConvertToString(dict[@"endFlag"]) intValue];
     }
     return self;
 }

@@ -140,11 +140,11 @@
     [footView addSubview:lineView_2];
     
     int th = 0;
-    if(zcLibConvertToString(_dict[@"formSafety"]).length > 0){
+    if(sobotConvertToString(_dict[@"formSafety"]).length > 0){
         UILabel *label=[[UILabel alloc] initWithFrame:CGRectMake(15, 10, [self getCurViewWidth]-30, 0)];
         label.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         [label setFont:ZCUIFont14];
-        [label setText:zcLibConvertToString(_dict[@"formSafety"])];
+        [label setText:sobotConvertToString(_dict[@"formSafety"])];
         //    [label setText:_listArray[section][@"sectionName"]];
         [label setBackgroundColor:[UIColor clearColor]];
         [label setTextAlignment:NSTextAlignmentLeft];
@@ -190,11 +190,11 @@
 
 -(BOOL)checkContentValid:(NSString *) text model:(ZCLibOrderCusFieldsModel *) model{
     
-    if(model != nil && zcLibConvertToString(text).length >0){
+    if(model != nil && sobotConvertToString(text).length >0){
         NSArray *limitOptions = nil;
         
         if([model.limitOptions isKindOfClass:[NSString class]]){
-            NSString *limitOption =  zcLibConvertToString(model.limitOptions);
+            NSString *limitOption =  sobotConvertToString(model.limitOptions);
             limitOption = [limitOption stringByReplacingOccurrencesOfString:@"[" withString:@""];
             limitOption = [limitOption stringByReplacingOccurrencesOfString:@"]" withString:@""];
             limitOptions = [limitOption componentsSeparatedByString:@","];
@@ -220,28 +220,28 @@
             }
         }
         if([limitOptions containsObject:[NSNumber numberWithInt:3]] || [limitOptions containsObject:@"3"]){
-             return zcLibValidateDecimalDouble(text);
+             return sobotValidateFloatWithNum(text,2);
         }
         if([limitOptions containsObject:[NSNumber numberWithInt:4]] || [limitOptions containsObject:@"4"]){
-             return zcLibValidateRuleNotBlank(text);
+             return sobotValidateRuleNotBlank(text);
         }
         
         if([limitOptions containsObject:[NSNumber numberWithInt:5]] || [limitOptions containsObject:@"5"]){
-             return zcLibValidateNumber(text);
+             return sobotValidateNumber(text);
         }
         
         if([limitOptions containsObject:[NSNumber numberWithInt:6]] || [limitOptions containsObject:@"6"]){
-            if(zcLibConvertToString(text).length > [model.limitChar intValue]){
+            if(sobotConvertToString(text).length > [model.limitChar intValue]){
                 return NO;
             }
         }
         
         if([limitOptions containsObject:[NSNumber numberWithInt:7]] || [limitOptions containsObject:@"7"]){
-            return zcLibValidateEmail(text);
+            return sobotValidateEmail(text);
         }
         
         if([limitOptions containsObject:[NSNumber numberWithInt:8]] || [limitOptions containsObject:@"8"]){
-            return zcLibValidateMobileWithRegex(text, [ZCUITools zcgetTelRegular]);
+            return sobotValidateMobileWithRegex(text, [ZCUITools zcgetTelRegular]);
         }
         
     }
@@ -267,7 +267,7 @@
         NSMutableDictionary *cusFields = [NSMutableDictionary dictionaryWithCapacity:0];
         // 自定义字段
         for (ZCLibOrderCusFieldsModel *cusModel in _coustomArr) {
-            if([cusModel.fillFlag intValue] == 1 && zcLibIs_null(cusModel.fieldValue)){
+            if([cusModel.fillFlag intValue] == 1 && sobotIsNull(cusModel.fieldValue)){
                 [[ZCUIToastTools shareToast] showToast:[NSString stringWithFormat:@"%@%@",cusModel.fieldName,ZCSTLocalString(@"不能为空")] duration:1.0f view:self.view position:ZCToastPositionCenter];
                 
                 return;
@@ -279,27 +279,27 @@
                 return;
             }
             
-            if( [@"tel" isEqual:zcLibConvertToString(cusModel.fieldId)] && zcLibConvertToString(cusModel.fieldValue).length>0 && !zcLibValidateMobile(zcLibConvertToString(cusModel.fieldValue))){
+            if( [@"tel" isEqual:sobotConvertToString(cusModel.fieldId)] && sobotConvertToString(cusModel.fieldValue).length>0 && !sobotValidateMobile(sobotConvertToString(cusModel.fieldValue))){
                 [[ZCUIToastTools shareToast] showToast:[NSString stringWithFormat:@"%@%@",cusModel.fieldName,ZCSTLocalString(@"格式不正确")] duration:1.0f view:self.view position:ZCToastPositionCenter];
                 return;
             }
             
-            if( [@"email" isEqual:zcLibConvertToString(cusModel.fieldId)] && zcLibConvertToString(cusModel.fieldValue).length>0 && !zcLibValidateEmail(zcLibConvertToString(cusModel.fieldValue))){
+            if( [@"email" isEqual:sobotConvertToString(cusModel.fieldId)] && sobotConvertToString(cusModel.fieldValue).length>0 && !sobotValidateEmail(sobotConvertToString(cusModel.fieldValue))){
                 [[ZCUIToastTools shareToast] showToast:ZCSTLocalString(@"请输入正确的邮箱") duration:1.0f view:self.view position:ZCToastPositionCenter];
                 return;
             }
             
             
-            if(!zcLibIs_null(cusModel.fieldSaveValue)){
-                if (![@"city" isEqualToString:zcLibConvertToString(cusModel.fieldId)]) {
-                     [cusFields setObject:zcLibConvertToString(cusModel.fieldSaveValue) forKey:zcLibConvertToString(cusModel.fieldId)];
-                }else if([@"city" isEqualToString:zcLibConvertToString(cusModel.fieldId)]){
-                    [cusFields setObject:zcLibConvertToString(_addressModel.provinceId) forKey:@"proviceId"];
-                    [cusFields setObject:zcLibConvertToString(_addressModel.provinceName) forKey:@"proviceName"];
-                    [cusFields setObject:zcLibConvertToString(_addressModel.cityId) forKey:@"cityId"];
-                    [cusFields setObject:zcLibConvertToString(_addressModel.cityName) forKey:@"cityName"];
-                    [cusFields setObject:zcLibConvertToString(_addressModel.areaId) forKey:@"areaId"];
-                    [cusFields setObject:zcLibConvertToString(_addressModel.areaName) forKey:@"areaName"];
+            if(!sobotIsNull(cusModel.fieldSaveValue)){
+                if (![@"city" isEqualToString:sobotConvertToString(cusModel.fieldId)]) {
+                     [cusFields setObject:sobotConvertToString(cusModel.fieldSaveValue) forKey:sobotConvertToString(cusModel.fieldId)];
+                }else if([@"city" isEqualToString:sobotConvertToString(cusModel.fieldId)]){
+                    [cusFields setObject:sobotConvertToString(_addressModel.provinceId) forKey:@"proviceId"];
+                    [cusFields setObject:sobotConvertToString(_addressModel.provinceName) forKey:@"proviceName"];
+                    [cusFields setObject:sobotConvertToString(_addressModel.cityId) forKey:@"cityId"];
+                    [cusFields setObject:sobotConvertToString(_addressModel.cityName) forKey:@"cityName"];
+                    [cusFields setObject:sobotConvertToString(_addressModel.areaId) forKey:@"areaId"];
+                    [cusFields setObject:sobotConvertToString(_addressModel.areaName) forKey:@"areaName"];
                 }
             }
         
@@ -324,7 +324,7 @@
      NSMutableDictionary *dic = [NSMutableDictionary dictionary];
     // 添加自定义字段
     if (_coustomArr>0) {
-        [dic setValue:zcLibConvertToString([ZCLocalStore DataTOjsonString:dict]) forKey:@"customerFields"];
+        [dic setValue:sobotConvertToString([ZCLocalStore DataTOjsonString:dict]) forKey:@"customerFields"];
     }
     
     // 调用接口
@@ -417,27 +417,27 @@
         int index = 0;
         for (ZCLibOrderCusFieldsModel *cusModel in _coustomArr) {
             NSString *propertyType = @"1";
-            NSString * titleStr = zcLibConvertToString(cusModel.fieldName);
-            if([zcLibConvertToString(cusModel.fillFlag) intValue] == 1){
+            NSString * titleStr = sobotConvertToString(cusModel.fieldName);
+            if([sobotConvertToString(cusModel.fillFlag) intValue] == 1){
                 titleStr = [NSString stringWithFormat:@"%@ *",titleStr];
             }
             // 城市
-            if ([zcLibConvertToString(cusModel.fieldId) isEqualToString:@"city"] ) {
-                cusModel.fieldValue = [NSString stringWithFormat:@"%@%@%@", zcLibConvertToString(self.addressModel.provinceName) ,zcLibConvertToString(self.addressModel.cityName) ,zcLibConvertToString(self.addressModel.areaName)];
+            if ([sobotConvertToString(cusModel.fieldId) isEqualToString:@"city"] ) {
+                cusModel.fieldValue = [NSString stringWithFormat:@"%@%@%@", sobotConvertToString(self.addressModel.provinceName) ,sobotConvertToString(self.addressModel.cityName) ,sobotConvertToString(self.addressModel.areaName)];
                 cusModel.fieldSaveValue = cusModel.fieldValue;
             }
             
-            if ([zcLibConvertToString(cusModel.fieldId) isEqualToString:@"qq"]) {
+            if ([sobotConvertToString(cusModel.fieldId) isEqualToString:@"qq"]) {
                 cusModel.fieldType = @"5";
             }
             [arr1 addObject:@{@"code":[NSString stringWithFormat:@"%d",index],
-                              @"dictName":zcLibConvertToString(cusModel.fieldName),
-                              @"dictDesc":zcLibConvertToString(titleStr),
-                              @"placeholder":zcLibConvertToString(cusModel.fieldRemark),
-                              @"dictValue":zcLibConvertToString(cusModel.fieldValue),
-                              @"dictType":zcLibConvertToString(cusModel.fieldType),
+                              @"dictName":sobotConvertToString(cusModel.fieldName),
+                              @"dictDesc":sobotConvertToString(titleStr),
+                              @"placeholder":sobotConvertToString(cusModel.fieldRemark),
+                              @"dictValue":sobotConvertToString(cusModel.fieldValue),
+                              @"dictType":sobotConvertToString(cusModel.fieldType),
                               @"propertyType":propertyType,
-                              @"dictfiledId":zcLibConvertToString(cusModel.fieldId),
+                              @"dictfiledId":sobotConvertToString(cusModel.fieldId),
                               @"model":cusModel
                               }];
             index = index + 1;
@@ -510,11 +510,11 @@
     
     if (_dict) {
         
-        if(zcLibConvertToString(_dict[@"formTitle"]).length >0){
+        if(sobotConvertToString(_dict[@"formTitle"]).length >0){
             if(!self.navigationController.navigationBarHidden){
-                self.title = ZCSTLocalString(zcLibConvertToString(_dict[@"formTitle"]));
+                self.title = ZCSTLocalString(sobotConvertToString(_dict[@"formTitle"]));
             }else{
-                self.titleLabel.text = ZCSTLocalString(zcLibConvertToString(_dict[@"formTitle"]));
+                self.titleLabel.text = ZCSTLocalString(sobotConvertToString(_dict[@"formTitle"]));
             }
         }
         
@@ -524,7 +524,7 @@
                 [_coustomArr addObject:model];
             }
         }
-        self.detailStr = zcLibConvertToString(_dict[@"formDoc"]);
+        self.detailStr = sobotConvertToString(_dict[@"formDoc"]);
     }
     
     
@@ -584,7 +584,7 @@
         if(LinkedClickBlock){
             LinkedClickBlock(url);
         }else{
-            if([url hasPrefix:@"tel:"] || zcLibValidateMobile(url)){
+            if([url hasPrefix:@"tel:"] || sobotValidateMobile(url)){
                 callURL=url;
                 
                 [[ZCToolsCore getToolsCore] showAlert:nil message:[url stringByReplacingOccurrencesOfString:@"tel:" withString:@""] cancelTitle:ZCSTLocalString(@"取消") viewController:self confirm:^(NSInteger buttonTag) {
@@ -596,7 +596,7 @@
                 } buttonTitles:ZCSTLocalString(@"呼叫"), nil];
                 
                 
-            }else if([url hasPrefix:@"mailto:"] || zcLibValidateEmail(url)){
+            }else if([url hasPrefix:@"mailto:"] || sobotValidateEmail(url)){
                 [[UIApplication sharedApplication] openURL:[NSURL URLWithString:url]];
             }
             
@@ -604,7 +604,7 @@
                 if (![url hasPrefix:@"https"] && ![url hasPrefix:@"http"]) {
                     url = [@"http://" stringByAppendingString:url];
                 }
-                ZCUIWebController *webPage=[[ZCUIWebController alloc] initWithURL:zcUrlEncodedString(url)];
+                ZCUIWebController *webPage=[[ZCUIWebController alloc] initWithURL:sobotUrlEncodedString(url)];
                 if(self.navigationController != nil ){
                     [self.navigationController pushViewController:webPage animated:YES];
                 }else{
@@ -863,11 +863,11 @@
             temModel.fieldSaveValue = value;
             
             _listArray[indexPath.row] = @{@"code":[NSString stringWithFormat:@"%d",index],
-                                    @"dictName":zcLibConvertToString(temModel.fieldName),
-                                    @"dictDesc":zcLibConvertToString(temModel.fieldName),
-                                    @"placeholder":zcLibConvertToString(temModel.fieldRemark),
-                                    @"dictValue":zcLibConvertToString(temModel.fieldValue),
-                                    @"dictType":zcLibConvertToString(temModel.fieldType),
+                                    @"dictName":sobotConvertToString(temModel.fieldName),
+                                    @"dictDesc":sobotConvertToString(temModel.fieldName),
+                                    @"placeholder":sobotConvertToString(temModel.fieldRemark),
+                                    @"dictValue":sobotConvertToString(temModel.fieldValue),
+                                    @"dictType":sobotConvertToString(temModel.fieldType),
                                     @"propertyType":@"1"
                                     };
         }
@@ -929,10 +929,10 @@
 }
 
 -(void)tapHideKeyboard{
-    if(!zcLibIs_null(_tempTextView)){
+    if(!sobotIsNull(_tempTextView)){
         [_tempTextView resignFirstResponder];
         _tempTextView = nil;
-    }else if(!zcLibIs_null(_tempTextField)){
+    }else if(!sobotIsNull(_tempTextField)){
         [_tempTextField resignFirstResponder];
         _tempTextField  = nil;
     }else{
@@ -947,10 +947,10 @@
 }
 
 - (void) hideKeyboard {
-    if(!zcLibIs_null(_tempTextView)){
+    if(!sobotIsNull(_tempTextView)){
         [_tempTextView resignFirstResponder];
         _tempTextView = nil;
-    }else if(!zcLibIs_null(_tempTextField)){
+    }else if(!sobotIsNull(_tempTextField)){
         [_tempTextField resignFirstResponder];
         _tempTextField  = nil;
     }else{

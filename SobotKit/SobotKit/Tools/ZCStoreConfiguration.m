@@ -17,8 +17,8 @@ NSString * const KEY_ZCISEVALUATIONSERVICE     = @"KEYP_ZCIsEvaluationService";
 NSString * const KEY_ZCISEVALUATIONROBOT       = @"KEYP_ZCisEvaluationRobot";
 
 // 包含 cid/time/out_time
-//NSDictionary *lastChat = @{@"cid":zcLibConvertToString([self getZCIMConfig].cid),
-//                           @"time":zcLibDateTransformString(FormateTime,[NSDate now]),
+//NSDictionary *lastChat = @{@"cid":sobotConvertToString([self getZCIMConfig].cid),
+//                           @"time":sobotDateTransformString(SOBOT_FORMATE_DATETIME,[NSDate now]),
 //                           @"out_time":[NSString stringWithFormat:@"%d",[self getZCIMConfig].userOutTime]
 //};
 NSString * const KEY_ZCLASTCHAT       = @"KEYP_ZCLastChat";
@@ -34,11 +34,11 @@ NSString * const KEY_ZCLASTCHAT       = @"KEYP_ZCLastChat";
 }
 
 +(NSString *)getZCParamter:(NSString *) key{
-    return zcLibConvertToString([ZCLocalStore getLocalParamter:key]);
+    return sobotConvertToString([ZCLocalStore getLocalParamter:key]);
 }
 
 +(int)getZCIntParamter:(NSString *) key{
-    return [zcLibConvertToString([ZCLocalStore getLocalParamter:key]) intValue];
+    return [sobotConvertToString([ZCLocalStore getLocalParamter:key]) intValue];
 }
 
 +(void)removeZCParamter:(NSString *) key{

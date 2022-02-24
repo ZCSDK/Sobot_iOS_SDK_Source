@@ -160,7 +160,7 @@ typedef NS_ENUM(NSUInteger,ZCNoticeStatus){
         imgIconY = 15;
     }
     self.imgIcon.frame = CGRectMake(ZCNumber(14), imgIconY, 13, 13);
-    NSString * text = zcLibConvertToString(model.richModel.msg);
+    NSString * text = sobotConvertToString(model.richModel.msg);
     
     [ZCHtmlCore filterHtml:text result:^(NSString * _Nonnull text1, NSMutableArray * _Nonnull arr, NSMutableArray * _Nonnull links) {
         if (text1 != nil && text1.length > 0) {
@@ -251,7 +251,7 @@ typedef NS_ENUM(NSUInteger,ZCNoticeStatus){
         tempLabel.verticalAlignment = ZCTTTAttributedLabelVerticalAlignmentCenter;
     }
     
-    NSString * text = zcLibConvertToString(model.richModel.msg);
+    NSString * text = sobotConvertToString(model.richModel.msg);
 
     [ZCHtmlCore filterHtml:text result:^(NSString * _Nonnull text1, NSMutableArray * _Nonnull arr, NSMutableArray * _Nonnull links) {
         if (text1 != nil && text1.length > 0) {

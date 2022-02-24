@@ -91,8 +91,8 @@
     itemView.titleLabel.numberOfLines = 1;
     itemView.titleLabel.font = ZCUIFont12;
 //    NSLog(@"%@",model.title);
-    [itemView setTitle:zcLibConvertToString(model.title) forState:UIControlStateNormal];
-    [itemView setTitle:zcLibConvertToString(model.title) forState:UIControlStateHighlighted];
+    [itemView setTitle:sobotConvertToString(model.title) forState:UIControlStateNormal];
+    [itemView setTitle:sobotConvertToString(model.title) forState:UIControlStateHighlighted];
     itemView.titleLabel.textAlignment = NSTextAlignmentCenter;
     [itemView setBackgroundColor:UIColorFromThemeColor(ZCBgSystemWhiteLightGrayColor)];
     [itemView setTitleColor:UIColorFromThemeColor(ZCTextMainColor) forState:UIControlStateNormal];

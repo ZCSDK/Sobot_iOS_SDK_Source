@@ -335,14 +335,14 @@ typedef NS_ENUM(NSInteger,ZCSatisfactionCellType){
 
     if(_satisfaction!=nil && (_satisfaction.scoreFlag==1 || defaultStar > 0 )){
         [_tiplab setTextColor:UIColorFromThemeColor(ZCTextNoticeLinkColor)];
-        if(zcLibConvertToString(_satisfaction.scoreExplain).length > 0){
-            [_tiplab setText:zcLibConvertToString(_satisfaction.scoreExplain)];
+        if(sobotConvertToString(_satisfaction.scoreExplain).length > 0){
+            [_tiplab setText:sobotConvertToString(_satisfaction.scoreExplain)];
         }
         _satisfactionView.hidden = NO;
         [_satisfactionView setFrame:CGRectMake(30, CGRectGetMaxY(_tiplab.frame) + 15, self.viewWidth - 60, 0)];
         CGRect itemF = self.satisfactionView.frame ;
-        if(zcLibConvertToString(_satisfaction.labelName).length > 0){
-            NSArray *items =  items = [zcLibConvertToString(_satisfaction.labelName) componentsSeparatedByString:@"," ];
+        if(sobotConvertToString(_satisfaction.labelName).length > 0){
+            NSArray *items =  items = [sobotConvertToString(_satisfaction.labelName) componentsSeparatedByString:@"," ];
             
             [_satisfactionView InitDataWithArray:items];
             itemF.size.height =[_satisfactionView getHeightWithArray:items];
@@ -425,9 +425,9 @@ typedef NS_ENUM(NSInteger,ZCSatisfactionCellType){
         if (defaultStar>0 || satisfactionModel.scoreFlag == 1) {
             ZCItemView *item = [[ZCItemView alloc] initWithFrame:CGRectMake(0,0, width - 60, 0)];
             CGFloat sheight = 0;
-            if(zcLibConvertToString(satisfactionModel.labelName).length > 0 && ![ZCUICore getUICore].kitInfo.hideManualEvaluationLabels) {
+            if(sobotConvertToString(satisfactionModel.labelName).length > 0 && ![ZCUICore getUICore].kitInfo.hideManualEvaluationLabels) {
                 
-                NSArray *items = [zcLibConvertToString(satisfactionModel.labelName) componentsSeparatedByString:@"," ];
+                NSArray *items = [sobotConvertToString(satisfactionModel.labelName) componentsSeparatedByString:@"," ];
                 
                 [item InitDataWithArray:items];
                 sheight = [item getHeightWithArray:items];
@@ -518,7 +518,7 @@ typedef NS_ENUM(NSInteger,ZCSatisfactionCellType){
 -(void)buttonClick:(UIButton *) btn{
     BOOL _isMustAdd = NO;
     if(_satisfaction!=nil){
-        if ([@"" isEqual: zcLibConvertToString(_satisfaction.labelName)]) {
+        if ([@"" isEqual: sobotConvertToString(_satisfaction.labelName)]) {
             _isMustAdd = NO;
         }else{
             if ([_satisfaction.isTagMust intValue] == 1 ) {
@@ -536,7 +536,7 @@ typedef NS_ENUM(NSInteger,ZCSatisfactionCellType){
     }
     
     // 必填项为空
-    if(_isMustAdd && zcLibConvertToString([_satisfactionView getSeletedTitle]).length == 0){
+    if(_isMustAdd && sobotConvertToString([_satisfactionView getSeletedTitle]).length == 0){
         // 提示
         [[ZCUIToastTools shareToast] showToast:ZCSTLocalString(@"标签必选") duration:1.0f view:self.superview.superview
                                     position:ZCToastPositionCenter];

@@ -300,7 +300,7 @@
             CFRelease((CFTypeRef) properties);
         } else {
             
-//            [ZCLogUtils logHeader:LogHeader debug:@"NO PROPERTIES, FAIL"];
+//            [SobotLog logDebug:@"NO PROPERTIES, FAIL"];
         }
         CFRelease(imageSource);
     }

@@ -62,7 +62,7 @@
         self.userInteractionEnabled = YES;
         UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(shareViewDismiss:)];
         [self addGestureRecognizer:tapGesture];
-        if(!zcLibIs_null(listArray) && listArray.count > 0){
+        if(!sobotIsNull(listArray) && listArray.count > 0){
             [self createSubviews];
         }
     }
@@ -133,8 +133,8 @@
     //groupStyle:无值 或 0 文本样式， 1 图文样式        2 图文+描述样式
     ZCLibSkillSet *firstModel = [listArray firstObject];
     int style = firstModel.groupStyle;
-    if(zcLibConvertToString(firstModel.groupGuideDoc).length>0){
-        [titleLabel setText:zcLibConvertToString(firstModel.groupGuideDoc)];
+    if(sobotConvertToString(firstModel.groupGuideDoc).length>0){
+        [titleLabel setText:sobotConvertToString(firstModel.groupGuideDoc)];
     }
     if(style == 1){
         startX = 30;
@@ -279,7 +279,7 @@
         [itemView setBackgroundColor:UIColor.clearColor];
         
         [_itemName setTextColor:UIColorFromThemeColor(ZCTextMainColor)];
-        SobotImageView *imgView = [SobotImageView imageViewWithURL:[NSURL URLWithString:zcLibConvertToString(model.groupPic)] autoLoading:YES];
+        SobotImageView *imgView = [SobotImageView imageViewWithURL:[NSURL URLWithString:sobotConvertToString(model.groupPic)] autoLoading:YES];
         [itemView addSubview:imgView];
         
         if(model.groupStyle == 1){
@@ -308,7 +308,7 @@
             [_itemStatus setFont:ZCUIFont12];
             _itemStatus.numberOfLines = 1;
             [_itemStatus setTextColor:UIColorFromThemeColor(ZCTextSubColor)];
-            [_itemStatus setText:zcLibConvertToString(model.desc)];
+            [_itemStatus setText:sobotConvertToString(model.desc)];
             [itemView addSubview:_itemStatus];
         }
         
@@ -320,7 +320,7 @@
 
 - (void)itemClick:(UIButton *) view{
     ZCLibSkillSet *model =  listArray[view.tag];
-    [ZCLogUtils logHeader:LogHeader info:@"%@",model.groupName];
+    [SobotLog logHeader:SobotLogHeader info:@"%@",model.groupName];
     
     if(SkillSetClickBlock){
         SkillSetClickBlock(model);

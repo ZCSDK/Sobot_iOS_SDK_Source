@@ -7,6 +7,9 @@
 //
 
 #import "ZCLeaveDetailCell.h"
+
+#import "SobotDateTimes.h"
+
 #import "ZCUIColorsDefine.h"
 #import "ZCLibGlobalDefine.h"
 #import "ZCUIImageTools.h"
@@ -28,6 +31,7 @@
 #import "ZCUIWebController.h"
 #import "ZCToolsCore.h"
 
+#import "ZCLibMessage.h"
 @interface ZCLeaveDetailCell()<ZCMLEmojiLabelDelegate>
 {
     ZCRecordListModel *tempModel;// 临时的变量
@@ -39,8 +43,8 @@
 
 @property (nonatomic,strong) UILabel * statusLab;
 
-//@property (nonatomic,strong) ZCMLEmojiLabel * replycont;// 回复内容
-@property (nonatomic,strong) UILabel * replycont;// 回复内容
+@property (nonatomic,strong) ZCMLEmojiLabel * replycont;// 回复内容
+//@property (nonatomic,strong) UILabel * replycont;// 回复内容
 
 @property (nonatomic,strong) UIView * lineView; // 竖线条
 
@@ -99,14 +103,18 @@
         _infoCardLineView.backgroundColor = [ZCUITools zcgetCommentButtonLineColor];
         [self.contentView addSubview:_infoCardLineView];
         
-//        _replycont =  [[ZCMLEmojiLabel alloc] initWithFrame:CGRectMake(0, 0, self.bounds.size.width, 0)];
-        _replycont =  [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.bounds.size.width, 0)];
+        _replycont =  [[ZCMLEmojiLabel alloc] initWithFrame:CGRectMake(0, 0, self.bounds.size.width, 0)];
+//        _replycont =  [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.bounds.size.width, 0)];
 //        _replycont.textColor = UIColorFromRGB(TextRecordDetailColor);
         _replycont.font = ZCUIFont14;
         _replycont.numberOfLines = 0;
-//        _replycont.delegate = self;
-//        _replycont.lineSpacing = 4.0f;
-//        [_replycont setLinkColor:[ZCUITools zcgetChatLeftLinkColor]];
+        _replycont.delegate = self;
+        _replycont.lineSpacing = 3.0f;
+        _replycont.isNeedAtAndPoundSign = NO;
+        _replycont.disableEmoji = NO;
+        [_replycont setLinkColor:[ZCUITools zcgetChatLeftLinkColor]];
+        _replycont.verticalAlignment = ZCTTTAttributedLabelVerticalAlignmentCenter;
+        _replycont.lineBreakMode = NSLineBreakByTruncatingTail;
         [self.contentView addSubview:_replycont];
         
         _detailBtn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -187,9 +195,9 @@
     }
     
      //@"2018-04-11 22:22:22";
-    NSString *timeText = zcLibDateTransformString(@"MM-dd HH:mm", zcLibStringFormateDate(model.timeStr));
-    if(zcLibConvertToString(model.replyTimeStr).length > 8){
-        timeText = zcLibDateTransformString(@"MM-dd HH:mm", zcLibStringFormateDate(model.replyTimeStr));
+    NSString *timeText = sobotDateTransformString(@"MM-dd HH:mm", sobotStringFormateDate(model.timeStr));
+    if(sobotConvertToString(model.replyTimeStr).length > 8){
+        timeText = sobotDateTransformString(@"MM-dd HH:mm", sobotStringFormateDate(model.replyTimeStr));
     }
     
     
@@ -240,7 +248,7 @@
 
     [_statusLab setTextColor:UIColorFromThemeColor(ZCTextSubColor)];
     
-    NSString *tmp = zcLibConvertToString(model.replyContent);
+    NSString *tmp = sobotConvertToString(model.replyContent);
     
     
     // 过滤标签 改为过滤图片
@@ -254,14 +262,12 @@
             break;
         case 2:
              _statusLab.text = ZCSTLocalString(@"受理中");
-            
-            tmp = ZCSTLocalString(@"客服已经成功收到您的问题，请耐心等待");
             _timeLab.text =  timeText;
            
             if (model.startType == 0) {
                 tmp = @"";//ZCSTLocalString(@"客服回复");
                 if (model.replyContent.length > 0) {
-                    tmp = zcLibConvertToString(model.replyContent);
+                    tmp = sobotConvertToString(model.replyContent);
                     isCardView = [self isContaintImage:tmp];
                     tmp = [self filterHtmlImage:tmp];
                 }
@@ -269,7 +275,7 @@
                 
                 _statusLab.text = ZCSTLocalString(@"我的回复");
                 if (model.replyContent.length > 0) {
-                    tmp = zcLibConvertToString(model.replyContent);
+                    tmp = sobotConvertToString(model.replyContent);
                     
                     isCardView = [self isContaintImage:tmp];
                     tmp = [self filterHtmlImage:tmp];
@@ -282,7 +288,7 @@
             if (model.startType == 1){
                 _statusLab.text = ZCSTLocalString(@"我的回复");
                 if (model.replyContent.length > 0) {
-                    tmp = zcLibConvertToString(model.replyContent);
+                    tmp = sobotConvertToString(model.replyContent);
                     
                     isCardView = [self isContaintImage:tmp];
                     tmp = [self filterHtmlImage:tmp];
@@ -294,7 +300,7 @@
                 _statusLab.text = ZCSTLocalString(@"已完成");
             }
             
-            tmp = zcLibConvertToString(model.content);
+            tmp = sobotConvertToString(model.content);
             
             isCardView = [self isContaintImage:tmp];
             tmp = [self filterHtmlImage:tmp];
@@ -318,7 +324,26 @@
         [_replycont setTextColor:UIColorFromThemeColor(ZCTextSubColor)];
         _timeLab.textColor = UIColorFromThemeColor(ZCTextSubColor);
     }
-    _replycont.text = tmp;
+    // 富文本赋值
+    NSString *text = [[ZCLibMessage new] getHtmlAttrStringWithText:tmp];
+    if(text.length == 0){
+        _replycont.text = @"";
+    }else{
+        UIColor *textColor = [ZCUITools zcgetLeftChatTextColor];
+        UIColor *linkColor = [ZCUITools zcgetChatLeftLinkColor];
+//        textColor = [ZCUITools zcgetRightChatTextColor];
+            [ZCHtmlCore filterHtml:text result:^(NSString * _Nonnull text1, NSMutableArray * _Nonnull arr, NSMutableArray * _Nonnull links) {
+                if (text1 != nil && text1.length > 0) {
+                    NSMutableAttributedString *attr;
+                    UIFont *font = [ZCUITools zcgetKitChatFont];
+                    attr   =  [ZCHtmlFilter setHtml:text1 attrs:arr view:_replycont textColor:textColor textFont:font linkColor:linkColor];
+                    _replycont.attributedText =   attr;
+                }else{
+                    _replycont.attributedText =   [[NSAttributedString alloc] initWithString:@""];
+                }
+            }];
+    }
+//    _replycont.text = tmp;
     if ([timeText containsString:@" "]) {
        if (model.replyTimeStrAttr) {
            _timeLab.attributedText = model.replyTimeStrAttr;
@@ -559,7 +584,7 @@
 
     _lineView_1.frame = CGRectMake(0, CGRectGetMaxY(self.frame) - 0.5, self.contentView.frame.size.width, 0.5);
     
-    if(isRTLLayout()){
+    if(sobotIsRTLLayout()){
         [_statusLab setTextAlignment:NSTextAlignmentRight];
         [_replycont setTextAlignment:NSTextAlignmentRight];
         for(UIView *v in self.contentView.subviews){
@@ -637,17 +662,17 @@
     NSRegularExpression *regularExpression = [NSRegularExpression regularExpressionWithPattern:@"<img.*?/>" options:0 error:nil];
     tmp  = [regularExpression stringByReplacingMatchesInString:tmp options:0 range:NSMakeRange(0, tmp.length) withTemplate:picStr];
     
-    tmp = [tmp stringByReplacingOccurrencesOfString:@"<br />" withString:@"\n"];
-    tmp = [tmp stringByReplacingOccurrencesOfString:@"<br/>" withString:@"\n"];
-    tmp = [tmp stringByReplacingOccurrencesOfString:@"<br>" withString:@"\n"];
-    tmp = [tmp stringByReplacingOccurrencesOfString:@"<BR/>" withString:@"\n"];
-    tmp = [tmp stringByReplacingOccurrencesOfString:@"<BR />" withString:@"\n"];
-    tmp = [tmp stringByReplacingOccurrencesOfString:@"<p>" withString:@"\n"];
-    tmp = [tmp stringByReplacingOccurrencesOfString:@"</p>" withString:@" "];
-    tmp = [tmp stringByReplacingOccurrencesOfString:@"&nbsp;" withString:@" "];
-    while ([tmp hasPrefix:@"\n"]) {
-        tmp=[tmp substringWithRange:NSMakeRange(1, tmp.length-1)];
-    }
+//    tmp = [tmp stringByReplacingOccurrencesOfString:@"<br />" withString:@"\n"];
+//    tmp = [tmp stringByReplacingOccurrencesOfString:@"<br/>" withString:@"\n"];
+//    tmp = [tmp stringByReplacingOccurrencesOfString:@"<br>" withString:@"\n"];
+//    tmp = [tmp stringByReplacingOccurrencesOfString:@"<BR/>" withString:@"\n"];
+//    tmp = [tmp stringByReplacingOccurrencesOfString:@"<BR />" withString:@"\n"];
+//    tmp = [tmp stringByReplacingOccurrencesOfString:@"<p>" withString:@"\n"];
+//    tmp = [tmp stringByReplacingOccurrencesOfString:@"</p>" withString:@" "];
+//    tmp = [tmp stringByReplacingOccurrencesOfString:@"&nbsp;" withString:@" "];
+//    while ([tmp hasPrefix:@"\n"]) {
+//        tmp=[tmp substringWithRange:NSMakeRange(1, tmp.length-1)];
+//    }
     return tmp;
     
 }
@@ -672,6 +697,13 @@
 }
 
 #pragma mark EmojiLabel链接点击事件
+- (void)ZCMLEmojiLabel:(ZCMLEmojiLabel*)emojiLabel didSelectLink:(NSString*)link withType:(ZCMLEmojiLabelLinkType)type{
+    link=[link stringByReplacingOccurrencesOfString:@"\"" withString:@""];
+    if (link) {
+        NSURL *url = [NSURL URLWithString:link];
+        [[ZCToolsCore getToolsCore] dealWithLinkClickWithLick:url.absoluteString viewController:[self getControllerFromView:self]];
+    }
+}
 // 链接点击
 -(void)attributedLabel:(ZCTTTAttributedLabel *)label didSelectLinkWithURL:(NSURL *)url{
     // 此处得到model 对象对应的值
@@ -685,9 +717,14 @@
     
     //        链接处理：
     [[ZCToolsCore getToolsCore] dealWithLinkClickWithLick:url.absoluteString viewController:[self getControllerFromView:self]];
-    
-
 }
+
+#pragma mark - gesture delegate
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
+{
+    return ![self.replycont containslinkAtPoint:[touch locationInView:self.replycont]];
+}
+
 
 #pragma mark - tools 获取当前控制器
 - (UIViewController *)getControllerFromView:(UIView *)view {
@@ -718,5 +755,6 @@
         }
     }
 }
+
 
 @end

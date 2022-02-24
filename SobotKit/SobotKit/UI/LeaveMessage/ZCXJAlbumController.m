@@ -137,7 +137,7 @@
         //设置 imageview
         UIImageView * imgview = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, myScreenWidth, myScreenHeight)];
         imgview.contentMode = UIViewContentModeScaleAspectFit;
-        if(zcLibCheckFileIsExsis([mImgLocationArr objectAtIndex:i])){
+        if(sobotCheckFileIsExsis([mImgLocationArr objectAtIndex:i])){
             UIImage *img=[UIImage imageWithContentsOfFile:[mImgLocationArr objectAtIndex:i]];
         
 //        UIImage *img  = [UIImage imageNamed:[mImgLocationArr objectAtIndex:i]];

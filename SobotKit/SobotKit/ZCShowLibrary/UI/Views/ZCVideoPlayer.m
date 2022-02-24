@@ -211,7 +211,7 @@
 //监控播放进度方法
 - (void)timer
 {
-    _labStartTime.text = [self getFormateTime:self.player.currentItem.currentTime];
+    _labStartTime.text = [self getSOBOT_FORMATE_DATETIME:self.player.currentItem.currentTime];
     _sliderProgress.value = CMTimeGetSeconds(self.player.currentTime) / CMTimeGetSeconds(self.player.currentItem.duration);
     if (_sliderProgress.value >0) {
         if (_imgView != nil) {
@@ -324,7 +324,7 @@
         if(status==AVPlayerStatusReadyToPlay){
 //            NSLog(@"正在播放...，视频总长度:%.2f",CMTimeGetSeconds(playerItem.duration));
 
-            [_labEndTime setText:[self getFormateTime:playerItem.duration]];
+            [_labEndTime setText:[self getSOBOT_FORMATE_DATETIME:playerItem.duration]];
         }
     }else if([keyPath isEqualToString:@"loadedTimeRanges"]){
 //        NSArray *array=playerItem.loadedTimeRanges;
@@ -341,7 +341,7 @@
         
 }
 
--(NSString *)getFormateTime:(CMTime ) duration {
+-(NSString *)getSOBOT_FORMATE_DATETIME:(CMTime ) duration {
     CGFloat seconds = CMTimeGetSeconds(duration);
     NSString  *mm = (int)seconds/60 > 9 ? [NSString stringWithFormat:@"%d",(int)seconds/60] : [NSString stringWithFormat:@"0%d",(int)seconds/60];
     NSString  *ss = (int)seconds % 60 > 9 ? [NSString stringWithFormat:@"%d",(int)seconds%60] : [NSString stringWithFormat:@"0%d",(int)seconds%60];

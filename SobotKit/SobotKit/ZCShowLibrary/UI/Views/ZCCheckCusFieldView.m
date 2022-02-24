@@ -116,7 +116,7 @@
     
     f.size.height = _listArray.count * 54;
     float footHeight = 0;
-    if(!zcLibIs_null(_preModel) && [_preModel.fieldType intValue] == 7){
+    if(!sobotIsNull(_preModel) && [_preModel.fieldType intValue] == 7){
         footHeight = 10 + 44 + 10;
     }else{
         footHeight = 0;
@@ -132,7 +132,7 @@
      self.superview.frame = CGRectMake(0, ScreenHeight - CGRectGetMaxY(self.frame), self.frame.size.width, CGRectGetMaxY(self.frame));
     
     
-    if(!zcLibIs_null(_preModel) && [_preModel.fieldType intValue] == 7){
+    if(!sobotIsNull(_preModel) && [_preModel.fieldType intValue] == 7){
         _mulArr = [NSMutableArray arrayWithCapacity:0];
         for (ZCLibOrderCusFieldsDetailModel *model in _preModel.detailArray) {
             if (model.isChecked) {
@@ -253,7 +253,7 @@
     
     f.size.height = _listArray.count * 54;
     float footHeight = 0;
-    if(!zcLibIs_null(_preModel) && [_preModel.fieldType intValue] == 7){
+    if(!sobotIsNull(_preModel) && [_preModel.fieldType intValue] == 7){
         footHeight = 10 + 44 + 10;
     }else{
         footHeight = 0;
@@ -302,12 +302,12 @@
 
 -(void)searchTextChanged:(UITextField *) field{
     NSString *text = field.text;
-    if(zcLibConvertToString(text).length > 0){
-//        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K contains[c] '%@'",@"dataName",zcLibConvertToString(text)];
+    if(sobotConvertToString(text).length > 0){
+//        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K contains[c] '%@'",@"dataName",sobotConvertToString(text)];
 //
         NSMutableArray *resultArr = [[NSMutableArray alloc] init];
         for (ZCLibOrderCusFieldsDetailModel *model in _searchArray) {
-            if ([model.dataName containsString:zcLibConvertToString(text)]) {
+            if ([model.dataName containsString:sobotConvertToString(text)]) {
                 [resultArr addObject:model];
             }
         }
@@ -410,7 +410,7 @@
     
     imgf.size = CGSizeMake(20, 20);
     
-    if (!zcLibIs_null(_preModel) && [_preModel.fieldType intValue] == 7) {
+    if (!sobotIsNull(_preModel) && [_preModel.fieldType intValue] == 7) {
         if (model.isChecked) {
             imageView.image =  [ZCUITools zcuiGetBundleImage:@"zcicon_app_moreselected_sel"];
         }else{

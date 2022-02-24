@@ -160,7 +160,7 @@
                 recording = YES;
                 NSString *fileName=[NSString stringWithFormat:@"%ldtempAudio.wav",(long)[[NSDate date] timeIntervalSince1970]];
                 
-                tmpFile = [NSURL fileURLWithPath:zcLibGetTmpDownloadFilePath(fileName)];
+                tmpFile = [NSURL fileURLWithPath:sobotGetTempFilePath(fileName)];
                 [self startForFilePath:tmpFile];
                 [recorder prepareToRecord];
                 
@@ -210,7 +210,7 @@
 
             }
             // 取消发送，删除文件
-            zcLibDeleteFileAtPath([tmpFile path]);
+            sobotDeleteFileOrPath([tmpFile path]);
             
             if(_delegate && [_delegate respondsToSelector:@selector(recordCompleteType:videoDuration:)]){
                 
@@ -320,13 +320,13 @@
     NSError *err = nil;
     [audioSession setCategory :AVAudioSessionCategoryPlayAndRecord error:&err];
     if(err){
-        // [ZCLogUtils logHeader:LogHeader debug:@"audioSession: %@ %d %@", [err domain], (int)[err code], [[[err userInfo] description]];
+        // [SobotLog logDebug:@"audioSession: %@ %d %@", [err domain], (int)[err code], [[[err userInfo] description]];
         return;
     }
     [audioSession setActive:YES error:&err];
     err = nil;
     if(err){
-//        [ZCLogUtils logHeader:LogHeader debug:@"audioSession: %@ %d %@", [err domain], [err code], [[err userInfo] description]];
+//        [SobotLog logDebug:@"audioSession: %@ %d %@", [err domain], [err code], [[err userInfo] description]];
         return;
     }
     

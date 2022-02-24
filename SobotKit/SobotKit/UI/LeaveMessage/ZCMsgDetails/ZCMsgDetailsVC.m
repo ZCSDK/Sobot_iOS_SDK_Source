@@ -7,6 +7,9 @@
 //
 
 #import "ZCMsgDetailsVC.h"
+
+#import "SobotDateTimes.h"
+
 #import "ZCUIColorsDefine.h"
 #import "ZCLibGlobalDefine.h"
 #import "ZCUIImageTools.h"
@@ -194,9 +197,9 @@ UINavigationControllerDelegate,ZCMLEmojiLabelDelegate>
     [[ZCUIToastTools shareToast] showProgress:@"" with:self.view];
     __weak ZCMsgDetailsVC * weakSelf = self;
     NSDictionary *dict = @{
-        @"partnerid":zcLibConvertToString([ZCLibClient getZCLibClient].libInitInfo.partnerid),
-        @"uid":zcLibConvertToString([self getCurConfig].uid),
-        @"companyId":zcLibConvertToString(_companyId)};
+        @"partnerid":sobotConvertToString([ZCLibClient getZCLibClient].libInitInfo.partnerid),
+        @"uid":sobotConvertToString([self getCurConfig].uid),
+        @"companyId":sobotConvertToString(_companyId)};
     [[[ZCUICore getUICore] getAPIServer] postUserDealTicketinfoListWith:dict ticketld:_ticketId start:^{
         
     } success:^(NSDictionary *dict, NSMutableArray *itemArray, ZCNetWorkCode sendCode) {
@@ -263,9 +266,9 @@ UINavigationControllerDelegate,ZCMLEmojiLabelDelegate>
 // 设置留言已读
 -(void)updateReadStatus{
     NSMutableDictionary *dict = [[NSMutableDictionary alloc] initWithDictionary:@{
-    @"partnerId":zcLibConvertToString([ZCLibClient getZCLibClient].libInitInfo.partnerid),
-    @"ticketId":zcLibConvertToString(_ticketId),
-    @"companyId":zcLibConvertToString(_companyId)}];
+    @"partnerId":sobotConvertToString([ZCLibClient getZCLibClient].libInitInfo.partnerid),
+    @"ticketId":sobotConvertToString(_ticketId),
+    @"companyId":sobotConvertToString(_companyId)}];
     [[[ZCUICore getUICore] getAPIServer] updateUserTicketReplyInfo:dict start:^{
        
     } success:^(NSDictionary *dict, ZCNetWorkCode sendCode) {
@@ -307,9 +310,9 @@ UINavigationControllerDelegate,ZCMLEmojiLabelDelegate>
         // evaluateModelDic当前评价信息，已经评价过
         if(first.isOpen && first.isEvalution == 0 && !self.evaluateModelDic)
         {
-            NSString *key = [NSString stringWithFormat:@"TicketKEY_%@",zcLibConvertToString(_ticketId)];
+            NSString *key = [NSString stringWithFormat:@"TicketKEY_%@",sobotConvertToString(_ticketId)];
             
-            if([ZCUICore getUICore].kitInfo.showLeaveDetailBackEvaluate && zcLibConvertToString([ZCLocalStore getLocalParamter:key]).length == 0){
+            if([ZCUICore getUICore].kitInfo.showLeaveDetailBackEvaluate && sobotConvertToString([ZCLocalStore getLocalParamter:key]).length == 0){
                 [ZCLocalStore addObject:key forKey:key];
                 [self commitScore];
                 return YES;
@@ -387,7 +390,7 @@ UINavigationControllerDelegate,ZCMLEmojiLabelDelegate>
 //    [self.replyButton setTitleEdgeInsets:UIEdgeInsetsMake(0, -self.replyButton.imageView.image.size.width, 0, self.replyButton.imageView.image.size.width)];
 //    [self.replyButton setImageEdgeInsets:UIEdgeInsetsMake(0, self.replyButton.titleLabel.bounds.size.width, 0, -self.replyButton.titleLabel.bounds.size.width)];
 //    [self.replyButton setTitleEdgeInsets:UIEdgeInsetsMake(0, -6, 0, 6)];
-    if(isRTLLayout()){
+    if(sobotIsRTLLayout()){
 
         [self.replyButton setTitleEdgeInsets:UIEdgeInsetsMake(0, -6, 0, 6)];
     }else{
@@ -588,8 +591,8 @@ UINavigationControllerDelegate,ZCMLEmojiLabelDelegate>
                        if (dic) {
                            NSDictionary *itemDic = dic[@"item"];
                            if (itemDic) {
-//                               scoreStr = zcLibConvertToString(itemDic[@"score"]);
-                               remarkStr = zcLibConvertToString(itemDic[@"remark"]);
+//                               scoreStr = sobotConvertToString(itemDic[@"score"]);
+                               remarkStr = sobotConvertToString(itemDic[@"remark"]);
                            }
                        }
                    }
@@ -601,8 +604,8 @@ UINavigationControllerDelegate,ZCMLEmojiLabelDelegate>
                    if (remarkStr.length > 0) {
                        sting = remarkStr;
                    }else{
-                       if(zcLibConvertToString(model.remark).length > 0){
-                           sting = zcLibConvertToString(model.remark);
+                       if(sobotConvertToString(model.remark).length > 0){
+                           sting = sobotConvertToString(model.remark);
                        }
                    }
                    
@@ -632,7 +635,7 @@ UINavigationControllerDelegate,ZCMLEmojiLabelDelegate>
         if (self.listArray.count > 0) {
             ZCRecordListModel * model = [_listArray lastObject];
             
-            str = zcLibConvertToString(model.content);
+            str = sobotConvertToString(model.content);
         }
         if(_headerView){
             [self changeHeaderStyle];
@@ -871,7 +874,7 @@ UINavigationControllerDelegate,ZCMLEmojiLabelDelegate>
     ZCRecordListModel * model = nil;
     if(_listArray.count > 0){
         model = [_listArray lastObject];
-        _headerTitleLab.text = zcLibConvertToString(zcLibDateTransformString(@"yyyy-MM-dd HH:mm:ss", zcLibStringFormateDate(model.timeStr)));
+        _headerTitleLab.text = sobotConvertToString(sobotDateTransformString(@"yyyy-MM-dd HH:mm:ss", sobotStringFormateDate(model.timeStr)));
         
         ZCRecordListModel *firstFlag = [_listArray firstObject];
         
@@ -986,7 +989,7 @@ UINavigationControllerDelegate,ZCMLEmojiLabelDelegate>
     ZCRecordListModel * model = nil;
     if(_listArray.count > 0){
         model = [_listArray lastObject];
-        _headerTitleLab.text = zcLibConvertToString(zcLibDateTransformString(@"yyyy-MM-dd HH:mm:ss", zcLibStringFormateDate(model.timeStr)));
+        _headerTitleLab.text = sobotConvertToString(sobotDateTransformString(@"yyyy-MM-dd HH:mm:ss", sobotStringFormateDate(model.timeStr)));
         
         ZCRecordListModel *firstFlag = [_listArray firstObject];
         
@@ -1245,8 +1248,8 @@ UINavigationControllerDelegate,ZCMLEmojiLabelDelegate>
         if (dic) {
             NSDictionary *itemDic = dic[@"item"];
             if (itemDic) {
-                scoreStr = zcLibConvertToString(itemDic[@"score"]);
-                remarkStr = zcLibConvertToString(itemDic[@"remark"]);
+                scoreStr = sobotConvertToString(itemDic[@"score"]);
+                remarkStr = sobotConvertToString(itemDic[@"remark"]);
             }
         }
     }
@@ -1294,7 +1297,7 @@ UINavigationControllerDelegate,ZCMLEmojiLabelDelegate>
     [_footView addSubview:startView];
     
     
-    if(isRTLLayout()){
+    if(sobotIsRTLLayout()){
         [titleLab setTextAlignment:NSTextAlignmentRight];
         [[ZCToolsCore getToolsCore] setRTLFrame:labScore];
         [[ZCToolsCore getToolsCore] setRTLFrame:startView];
@@ -1310,8 +1313,8 @@ UINavigationControllerDelegate,ZCMLEmojiLabelDelegate>
     if (remarkStr.length > 0) {
         sting = remarkStr;
     }else{
-        if(zcLibConvertToString(model.remark).length > 0){
-            sting = zcLibConvertToString(model.remark);
+        if(sobotConvertToString(model.remark).length > 0){
+            sting = sobotConvertToString(model.remark);
         }
     }
     
@@ -1321,7 +1324,7 @@ UINavigationControllerDelegate,ZCMLEmojiLabelDelegate>
     
     [_footView addSubview:conlab];
     [conlab setTextAlignment:NSTextAlignmentLeft];
-    if(isRTLLayout()){
+    if(sobotIsRTLLayout()){
            [conlab setTextAlignment:NSTextAlignmentRight];
     }
         
@@ -1379,7 +1382,7 @@ UINavigationControllerDelegate,ZCMLEmojiLabelDelegate>
         
         [self loadData];
         
-        NSString *key = [NSString stringWithFormat:@"TicketKEY_%@",zcLibConvertToString(_ticketId)];
+        NSString *key = [NSString stringWithFormat:@"TicketKEY_%@",sobotConvertToString(_ticketId)];
         [ZCLocalStore removeObjectByKey:key];
     });
 }
@@ -1422,11 +1425,11 @@ UINavigationControllerDelegate,ZCMLEmojiLabelDelegate>
     NSInteger currentInt = button.tag - 100;
 
     NSString *imgPathStr;
-    if(zcLibCheckFileIsExsis([_imagePathArr objectAtIndex:currentInt])){
+    if(sobotCheckFileIsExsis([_imagePathArr objectAtIndex:currentInt])){
         imgPathStr = [_imagePathArr objectAtIndex:currentInt];
     }
     NSDictionary *imgDic = [_imageArr objectAtIndex:currentInt];
-    NSString *imgFileStr =  zcLibConvertToString(imgDic[@"cover"]);
+    NSString *imgFileStr =  sobotConvertToString(imgDic[@"cover"]);
     
     if (imgFileStr.length>0) {
 //        视频预览
@@ -1532,10 +1535,10 @@ UINavigationControllerDelegate,ZCMLEmojiLabelDelegate>
             } success:^(NSString *fileURL, ZCNetWorkCode code) {
 
                 [[ZCUIToastTools shareToast] dismisProgress];
-                if (zcLibIs_null(_imageArr)) {
+                if (sobotIsNull(_imageArr)) {
                     safeSelf.imageArr = [NSMutableArray arrayWithCapacity:0];
                 }
-                if (zcLibIs_null(_imagePathArr)) {
+                if (sobotIsNull(_imagePathArr)) {
                     safeSelf.imagePathArr = [NSMutableArray arrayWithCapacity:0];
                 }
                 [safeSelf.imagePathArr addObject:filePath];
@@ -1591,8 +1594,8 @@ UINavigationControllerDelegate,ZCMLEmojiLabelDelegate>
     //    [formater setDateFormat:@"yyyy-MM-dd-HH:mm:ss"];
 
     NSString * fname = [NSString stringWithFormat:@"/sobot/output-%ld.mp4",(long)[NSDate date].timeIntervalSince1970];
-    zcLibCheckPathAndCreate(zcLibGetDocumentsFilePath(@"/sobot/"));
-    NSString *resultPath=zcLibGetDocumentsFilePath(fname);
+    sobotCheckPathAndCreate(sobotGetDocumentsFilePath(@"/sobot/"));
+    NSString *resultPath=sobotGetDocumentsFilePath(fname);
     //    NSLog(@"resultPath = %@",resultPath);
     exportSession.outputURL = [NSURL fileURLWithPath:resultPath];
     exportSession.outputFileType = AVFileTypeMPEG4;

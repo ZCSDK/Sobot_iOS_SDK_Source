@@ -54,7 +54,7 @@
 
 -(void)initWithModel:(ZCSCListModel *)model width:(CGFloat)tableWidth{
     _titleLab.frame = CGRectMake(ZCNumber(20), 0, tableWidth - ZCNumber(80), 54);
-    _titleLab.text = zcLibConvertToString(model.questionTitle);
+    _titleLab.text = sobotConvertToString(model.questionTitle);
 //    self.contentView.layer.borderColor = UIColorFromRGB(0xdedede).CGColor;
 //    self.contentView.layer.borderWidth = 0.5f;
     

@@ -156,7 +156,7 @@
     [self.titleLabel setFont:[ZCUITools zcgetscTopTextFont]];
     [self.titleLabel setTextColor:[ZCUITools zcgetscTopTextColor]];
     
-    self.titleLabel.text = zcLibConvertToString(_pageTitle);
+    self.titleLabel.text = sobotConvertToString(_pageTitle);
     [self.titleLabel setBackgroundColor:[UIColor clearColor]];
     [self.titleLabel setAutoresizingMask:UIViewAutoresizingFlexibleWidth];
     [self.titleLabel setAutoresizesSubviews:YES];
@@ -206,7 +206,7 @@
 -(void)setPageTitle:(NSString *)pageTitle{
     _pageTitle = pageTitle;
     
-    self.titleLabel.text = zcLibConvertToString(_pageTitle);
+    self.titleLabel.text = sobotConvertToString(_pageTitle);
 }
 
 

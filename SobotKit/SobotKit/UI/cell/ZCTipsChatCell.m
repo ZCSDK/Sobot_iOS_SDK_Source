@@ -82,7 +82,7 @@
     [self resetCellView];
     // 添加时间（触发新会话时）
     CGFloat timeHeight = 12 ;
-    if(![@"" isEqual:zcLibConvertToString(showTime)]){
+    if(![@"" isEqual:sobotConvertToString(showTime)]){
         [self.lblTime setText:showTime];
         [self.lblTime setFrame:CGRectMake(0, 0, self.viewWidth, 30)];
         self.lblTime.hidden=NO;
@@ -107,18 +107,18 @@
         [self.ivBgView setBackgroundColor:[ZCUITools zcgetBgTipAirBubblesColor]];
         //        self.ivBgView.backgroundColor = UIColorFromRGB(0xFFF8F9FA); FFACB5C4
     }
-//    NSLog(@"model.sysTips === %@",zcLibConvertToString(model.sysTips));
+//    NSLog(@"model.sysTips === %@",sobotConvertToString(model.sysTips));
     if(model){
         CGRect msgF = CGRectMake(0, cellHeight+5, self.viewWidth-40, 0);
         [_lblTextMsg setFrame:msgF];
         NSString *temp = [NSString stringWithFormat:@"%@", [NSString stringWithFormat:@"%@,%@ %@",ZCSTLocalString(@"暂时无法转接人工客服"),ZCSTLocalString(@"您可以"),ZCSTLocalString(@"留言")]];
         if(
-           (zcLibConvertToString(model.sysTips).length >0) &&
-           ([zcLibConvertToString(model.sysTips) hasSuffix:ZCSTLocalString(@"您已完成评价")] ||
-            [zcLibConvertToString(model.sysTips) hasSuffix:ZCSTLocalString(@"咨询后才能评价服务质量")] ||
-            [zcLibConvertToString(model.sysTips) hasPrefix:ZCSTLocalString(@"您好,本次会话已结束")] ||
-            [zcLibConvertToString(model.sysTips) hasPrefix:temp]||
-            [zcLibConvertToString(model.sysTips) hasPrefix:ZCSTLocalString(@"暂无客服在线")] ||
+           (sobotConvertToString(model.sysTips).length >0) &&
+           ([sobotConvertToString(model.sysTips) hasSuffix:ZCSTLocalString(@"您已完成评价")] ||
+            [sobotConvertToString(model.sysTips) hasSuffix:ZCSTLocalString(@"咨询后才能评价服务质量")] ||
+            [sobotConvertToString(model.sysTips) hasPrefix:ZCSTLocalString(@"您好,本次会话已结束")] ||
+            [sobotConvertToString(model.sysTips) hasPrefix:temp]||
+            [sobotConvertToString(model.sysTips) hasPrefix:ZCSTLocalString(@"暂无客服在线")] ||
             model.tipStyle == ZCReceivedMessageWaiting)){
             // 处理动画样式
             [self setTipCellAnimateTransformWith:model];
@@ -236,9 +236,9 @@
 -(void)attributedLabel:(ZCTTTAttributedLabel *)label didSelectLinkWithURL:(NSURL *)url{
     NSString *leaveUpMsg = [NSString stringWithFormat:@"%@ %@",ZCSTLocalString(@"您的留言状态有"),ZCSTLocalString(@"更新")];
     leaveUpMsg = [leaveUpMsg stringByReplacingOccurrencesOfString:@" " withString:@" "];// 处理特殊空格国际化下字符串不相同的问题
-    if ([zcLibConvertToString(label.text) hasSuffix:ZCSTLocalString(@"留言")] && (url.absoluteString.length ==0 || [@"sobot://leavemessage" isEqual:url.absoluteString] )) {
+    if ([sobotConvertToString(label.text) hasSuffix:ZCSTLocalString(@"留言")] && (url.absoluteString.length ==0 || [@"sobot://leavemessage" isEqual:url.absoluteString] )) {
         [self turnLeverMessageVC];
-    }else if ([zcLibConvertToString(label.text) hasSuffix:leaveUpMsg] && (url.absoluteString.length ==0 || [leaveUpMsg isEqual:url.absoluteString] || [ZCSTLocalString(@"更新") isEqual:url.absoluteString])){
+    }else if ([sobotConvertToString(label.text) hasSuffix:leaveUpMsg] && (url.absoluteString.length ==0 || [leaveUpMsg isEqual:url.absoluteString] || [ZCSTLocalString(@"更新") isEqual:url.absoluteString])){
         [self turnLeverMsgRecordVC];
     }else{
         [self doClickURL:url.absoluteString text:@""];
@@ -297,7 +297,7 @@
 +(CGFloat) getCellHeight:(ZCLibMessage *)model time:(NSString *)showTime viewWith:(CGFloat)viewWidth{
     // 添加时间（触发新会话时）
     CGFloat timeHeight = 12 ;
-    if(![@"" isEqual:zcLibConvertToString(showTime)]){
+    if(![@"" isEqual:sobotConvertToString(showTime)]){
         timeHeight = 30;
     }
     
@@ -357,7 +357,7 @@
         
     }];
     
-    if ([zcLibConvertToString( model.sysTips) hasPrefix:zcLibConvertToString([self getZCLibConfig].userOutWord)] || [zcLibConvertToString( model.sysTips) hasPrefix:zcLibConvertToString([self getZCLibConfig].adminNonelineTitle)]) {
+    if ([sobotConvertToString( model.sysTips) hasPrefix:sobotConvertToString([self getZCLibConfig].userOutWord)] || [sobotConvertToString( model.sysTips) hasPrefix:sobotConvertToString([self getZCLibConfig].adminNonelineTitle)]) {
         [self setTipCellAnimateTransformWith:model];
     }
  
@@ -366,7 +366,7 @@
     // 国际化译文中的空格需要处理  会导致判断失效
 //    tempStr = [tempStr stringByReplacingOccurrencesOfString:@" " withString:@"-"];
     leaveUpMsg = [leaveUpMsg stringByReplacingOccurrencesOfString:@" " withString:@" "];
-    if ([leaveUpMsg isEqualToString:zcLibConvertToString(text)]) {
+    if ([leaveUpMsg isEqualToString:sobotConvertToString(text)]) {
         NSString *update = ZCSTLocalString(@"更新");
         [_lblTextMsg addLinkToURL:[NSURL URLWithString:update] withRange:NSMakeRange(leaveUpMsg.length - update.length, update.length)];
         
@@ -378,29 +378,29 @@
 
 +(NSString *)getSysTipsText:(ZCLibMessage *) model{
     // 处理HTML标签
-    NSString  *text = [ZCHtmlCore filterHTMLTag:zcLibConvertToString(model.sysTips)] ;
-    while ([zcLibConvertToString(text) hasPrefix:@"\n"]) {
+    NSString  *text = [ZCHtmlCore filterHTMLTag:sobotConvertToString(model.sysTips)] ;
+    while ([sobotConvertToString(text) hasPrefix:@"\n"]) {
         text=[text substringWithRange:NSMakeRange(1, text.length-1)];
     }
     
-    if ([zcLibConvertToString(text) hasPrefix:[NSString stringWithFormat:@"%@",ZCSTLocalString(@"您好，客服")]]) {
+    if ([sobotConvertToString(text) hasPrefix:[NSString stringWithFormat:@"%@",ZCSTLocalString(@"您好，客服")]]) {
         // 留言标签的处理
         //        NSString nikeNameStr = ZCSTLocalString(@"昵称");
         text = [text stringByReplacingOccurrencesOfString:@"[" withString:@"<a href='昵称'>"];
         text = [text stringByReplacingOccurrencesOfString:@"]" withString:@"</a>"];
     }
     
-    if ([zcLibConvertToString(text) hasSuffix:ZCSTLocalString(@"留言")]) {
+    if ([sobotConvertToString(text) hasSuffix:ZCSTLocalString(@"留言")]) {
         // 留言标签的处理
         text = [text stringByReplacingOccurrencesOfString:ZCSTLocalString(@"留言") withString:[NSString stringWithFormat:@"<a href='sobot://leavemessage'>%@</a>",ZCSTLocalString(@"留言")]];
     }
     
-    if ([zcLibConvertToString(text) hasSuffix:ZCSTLocalString(@"重建会话")]) {
+    if ([sobotConvertToString(text) hasSuffix:ZCSTLocalString(@"重建会话")]) {
         // 如果有重建会话的时候，点击重新开始会话
         text = [text stringByReplacingOccurrencesOfString:ZCSTLocalString(@"重建会话") withString:[NSString stringWithFormat:@"<a href='sobot://newsessionchat'>%@</a>",ZCSTLocalString(@"重建会话")]];
     }
     
-    if ([zcLibConvertToString(text) hasPrefix:ZCSTLocalString(@"未解决问题？点击")]) {
+    if ([sobotConvertToString(text) hasPrefix:ZCSTLocalString(@"未解决问题？点击")]) {
         if (!model.isHistory) {
             // 转人工客服处理
             text = [text stringByReplacingOccurrencesOfString:ZCSTLocalString(@"转人工服务") withString:[NSString stringWithFormat:@"<a href='sobot://insterTrunMsg'>%@</a>",ZCSTLocalString(@"转人工服务")]];

@@ -95,8 +95,8 @@
     // Do any additional setup after loading the view.
     [self.view setBackgroundColor:[ZCUITools zcgetBackgroundColor]];
     
-    if(zcGetSystemDoubleVersion() >= 9.0){
-        if(isRTLLayout()){
+    if(sobotGetSystemDoubleVersion() >= 9.0){
+        if(sobotIsRTLLayout()){
             [UIView appearance].semanticContentAttribute = UISemanticContentAttributeForceRightToLeft;
             [UISearchBar appearance].semanticContentAttribute = UISemanticContentAttributeForceRightToLeft;
             [self.navigationController.navigationBar setSemanticContentAttribute:UISemanticContentAttributeForceRightToLeft];
@@ -228,7 +228,7 @@
 // 监听暗黑模式变化
 -(void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection{
     [super traitCollectionDidChange:previousTraitCollection];
-    if(zcGetSystemDoubleVersion()>=13){
+    if(sobotGetSystemDoubleVersion()>=13){
         // trait发生了改变
         if ([self.traitCollection hasDifferentColorAppearanceComparedToTraitCollection:previousTraitCollection]) {
             
@@ -239,11 +239,11 @@
 
                     [self.moreButton setImage:[ZCUITools zcuiGetBundleImage:@"zcicon_btnmore"] forState:UIControlStateNormal];
                     [self.moreButton setImage:[ZCUITools zcuiGetBundleImage:@"zcicon_btnmore_press"] forState:UIControlStateHighlighted];
-                    if (zcLibConvertToString([ZCUICore getUICore].kitInfo.moreBtnNolImg).length >0) {
-                        [self.moreButton setImage:[ZCUITools zcuiGetBundleImage:zcLibConvertToString([ZCUICore getUICore].kitInfo.moreBtnNolImg)]  forState:UIControlStateNormal];
+                    if (sobotConvertToString([ZCUICore getUICore].kitInfo.moreBtnNolImg).length >0) {
+                        [self.moreButton setImage:[ZCUITools zcuiGetBundleImage:sobotConvertToString([ZCUICore getUICore].kitInfo.moreBtnNolImg)]  forState:UIControlStateNormal];
                     }
-                    if (zcLibConvertToString([ZCUICore getUICore].kitInfo.moreBtnSelImg).length >0) {
-                        [self.moreButton setImage:[ZCUITools zcuiGetBundleImage:zcLibConvertToString([ZCUICore getUICore].kitInfo.moreBtnSelImg)]  forState:UIControlStateHighlighted];
+                    if (sobotConvertToString([ZCUICore getUICore].kitInfo.moreBtnSelImg).length >0) {
+                        [self.moreButton setImage:[ZCUITools zcuiGetBundleImage:sobotConvertToString([ZCUICore getUICore].kitInfo.moreBtnSelImg)]  forState:UIControlStateHighlighted];
                     }
                 }
             }else{
@@ -289,11 +289,11 @@
     [self.backButton setImage:[ZCUITools zcuiGetBundleImage:@"zcicon_titlebar_back_normal"] forState:UIControlStateNormal];
     [self.backButton setImage:[ZCUITools zcuiGetBundleImage:@"zcicon_titlebar_back_normal"] forState:UIControlStateHighlighted];
     
-    if (zcLibConvertToString([ZCUICore getUICore].kitInfo.topBackNolImg).length >0) {
-        [self.backButton setImage:[ZCUITools zcuiGetBundleImage:zcLibConvertToString([ZCUICore getUICore].kitInfo.topBackNolImg)] forState:UIControlStateNormal];
+    if (sobotConvertToString([ZCUICore getUICore].kitInfo.topBackNolImg).length >0) {
+        [self.backButton setImage:[ZCUITools zcuiGetBundleImage:sobotConvertToString([ZCUICore getUICore].kitInfo.topBackNolImg)] forState:UIControlStateNormal];
     }
-    if (zcLibConvertToString([ZCUICore getUICore].kitInfo.topBackSelImg).length >0) {
-        [self.backButton setImage:[ZCUITools zcuiGetBundleImage:zcLibConvertToString([ZCUICore getUICore].kitInfo.topBackSelImg)] forState:UIControlStateHighlighted];
+    if (sobotConvertToString([ZCUICore getUICore].kitInfo.topBackSelImg).length >0) {
+        [self.backButton setImage:[ZCUITools zcuiGetBundleImage:sobotConvertToString([ZCUICore getUICore].kitInfo.topBackSelImg)] forState:UIControlStateHighlighted];
     }
     [self.backButton setBackgroundColor:[UIColor clearColor]];
     if ([ZCUICore getUICore].kitInfo.topBackNolColor != nil ) {
@@ -330,11 +330,11 @@
     [self.moreButton setTitleColor:[ZCUITools zcgetTopViewTextColor] forState:UIControlStateNormal];
     [self.moreButton setImage:[ZCUITools zcuiGetBundleImage:@"zcicon_btnmore"] forState:UIControlStateNormal];
     [self.moreButton setImage:[ZCUITools zcuiGetBundleImage:@"zcicon_btnmore_press"] forState:UIControlStateHighlighted];
-    if (zcLibConvertToString([ZCUICore getUICore].kitInfo.moreBtnNolImg).length >0) {
-        [self.moreButton setImage:[ZCUITools zcuiGetBundleImage:zcLibConvertToString([ZCUICore getUICore].kitInfo.moreBtnNolImg)]  forState:UIControlStateNormal];
+    if (sobotConvertToString([ZCUICore getUICore].kitInfo.moreBtnNolImg).length >0) {
+        [self.moreButton setImage:[ZCUITools zcuiGetBundleImage:sobotConvertToString([ZCUICore getUICore].kitInfo.moreBtnNolImg)]  forState:UIControlStateNormal];
     }
-    if (zcLibConvertToString([ZCUICore getUICore].kitInfo.moreBtnSelImg).length >0) {
-        [self.moreButton setImage:[ZCUITools zcuiGetBundleImage:zcLibConvertToString([ZCUICore getUICore].kitInfo.moreBtnSelImg)]  forState:UIControlStateHighlighted];
+    if (sobotConvertToString([ZCUICore getUICore].kitInfo.moreBtnSelImg).length >0) {
+        [self.moreButton setImage:[ZCUITools zcuiGetBundleImage:sobotConvertToString([ZCUICore getUICore].kitInfo.moreBtnSelImg)]  forState:UIControlStateHighlighted];
     }
     [self.topView addSubview:self.moreButton];
     self.moreButton.tag = BUTTON_MORE;
@@ -361,7 +361,7 @@
         
     }
     
-    if(isRTLLayout()){
+    if(sobotIsRTLLayout()){
         [self.backButton setContentHorizontalAlignment:UIControlContentHorizontalAlignmentRight];
         [self.moreButton setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
         
@@ -407,7 +407,7 @@
         }
     }
     
-    if(isRTLLayout()){
+    if(sobotIsRTLLayout()){
         if(self.backButton != nil){
             [self.backButton setContentHorizontalAlignment:UIControlContentHorizontalAlignmentRight];
             [self.moreButton setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
@@ -475,7 +475,7 @@
     [self.navigationController.navigationBar setBarTintColor:[ZCUITools zcgetBgBannerColor]];
     
     // iOS15.0 导航栏适配
-    if (zcGetSystemDoubleVersion()>=15.0) {
+    if (sobotGetSystemDoubleVersion()>=15.0) {
         UINavigationBarAppearance *appearance = [UINavigationBarAppearance new];
         [appearance configureWithOpaqueBackground];
         appearance.backgroundColor = [ZCUITools zcgetBgBannerColor];
@@ -510,21 +510,21 @@
     
     [btn setContentHorizontalAlignment:UIControlContentHorizontalAlignmentRight];
     
-    if(isRTLLayout()){
+    if(sobotIsRTLLayout()){
         [btn setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
     }
 
     if(tag == BUTTON_BACK){
         [btn setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
-        if(isRTLLayout()){
+        if(sobotIsRTLLayout()){
             [btn setContentHorizontalAlignment:UIControlContentHorizontalAlignmentRight];
         }
         [btn setImage:[ZCUITools zcuiGetBundleImage:@"zcicon_titlebar_back_normal"] forState:UIControlStateNormal];
-        if (zcLibConvertToString([ZCUICore getUICore].kitInfo.topBackNolImg).length >0) {
-            [btn setImage:[ZCUITools zcuiGetBundleImage:zcLibConvertToString([ZCUICore getUICore].kitInfo.topBackNolImg)] forState:UIControlStateNormal];
+        if (sobotConvertToString([ZCUICore getUICore].kitInfo.topBackNolImg).length >0) {
+            [btn setImage:[ZCUITools zcuiGetBundleImage:sobotConvertToString([ZCUICore getUICore].kitInfo.topBackNolImg)] forState:UIControlStateNormal];
         }
-        if (zcLibConvertToString([ZCUICore getUICore].kitInfo.topBackSelImg).length >0) {
-            [btn setImage:[ZCUITools zcuiGetBundleImage:zcLibConvertToString([ZCUICore getUICore].kitInfo.topBackSelImg)] forState:UIControlStateHighlighted];
+        if (sobotConvertToString([ZCUICore getUICore].kitInfo.topBackSelImg).length >0) {
+            [btn setImage:[ZCUITools zcuiGetBundleImage:sobotConvertToString([ZCUICore getUICore].kitInfo.topBackSelImg)] forState:UIControlStateHighlighted];
         }
         [btn setTitle:ZCSTLocalString(@"") forState:UIControlStateNormal];
         if ([ZCUICore getUICore].kitInfo.topBackTitle != nil) {
@@ -533,7 +533,7 @@
         if (![@"" isEqual:[ZCUICore getUICore].kitInfo.topBackNolColor] && [ZCUICore getUICore].kitInfo.topBackNolColor != nil) {
             [btn setBackgroundImage:[ZCUIImageTools zcimageWithColor:[ZCUICore getUICore].kitInfo.topBackNolColor] forState:UIControlStateNormal];
         }
-        if(zcLibConvertToString(btn.titleLabel.text).length > 0){
+        if(sobotConvertToString(btn.titleLabel.text).length > 0){
             CGRect lf = btn.frame;
             lf.size.width=60;
             [btn setFrame:lf];
@@ -542,11 +542,11 @@
     if(tag == BUTTON_MORE){
         [btn setImage:[ZCUITools zcuiGetBundleImage:@"zcicon_btnmore"] forState:UIControlStateNormal];
         [btn setImage:[ZCUITools zcuiGetBundleImage:@"zcicon_btnmore_press"] forState:UIControlStateHighlighted];
-        if (zcLibConvertToString([ZCUICore getUICore].kitInfo.moreBtnNolImg).length >0) {
-            [btn setImage:[ZCUITools zcuiGetBundleImage:zcLibConvertToString([ZCUICore getUICore].kitInfo.moreBtnNolImg)]  forState:UIControlStateNormal];
+        if (sobotConvertToString([ZCUICore getUICore].kitInfo.moreBtnNolImg).length >0) {
+            [btn setImage:[ZCUITools zcuiGetBundleImage:sobotConvertToString([ZCUICore getUICore].kitInfo.moreBtnNolImg)]  forState:UIControlStateNormal];
         }
-        if (zcLibConvertToString([ZCUICore getUICore].kitInfo.moreBtnSelImg).length >0) {
-            [btn setImage:[ZCUITools zcuiGetBundleImage:zcLibConvertToString([ZCUICore getUICore].kitInfo.moreBtnSelImg)]  forState:UIControlStateHighlighted];
+        if (sobotConvertToString([ZCUICore getUICore].kitInfo.moreBtnSelImg).length >0) {
+            [btn setImage:[ZCUITools zcuiGetBundleImage:sobotConvertToString([ZCUICore getUICore].kitInfo.moreBtnSelImg)]  forState:UIControlStateHighlighted];
         }
     }
     if (tag == BUTTON_EVALUATION) {
@@ -573,7 +573,7 @@
 #pragma mark 石墨文档需求，改版状态栏颜色
 - (UIStatusBarStyle)preferredStatusBarStyle{
     if([ZCUITools getZCThemeStyle] == ZCThemeStyle_Dark){
-        if(zcGetSystemDoubleVersion()>=13){
+        if(sobotGetSystemDoubleVersion()>=13){
             return UIStatusBarStyleDarkContent;
         }
         return UIStatusBarStyleLightContent;
@@ -610,7 +610,7 @@
 
 -(void)openZCSDK:(UIButton *)sender{
     if(sender.tag == 2){
-        NSString *link = zcLibConvertToString([ZCUICore getUICore].kitInfo.helpCenterTel);
+        NSString *link = sobotConvertToString([ZCUICore getUICore].kitInfo.helpCenterTel);
         if(![link hasSuffix:@"tel:"]){
             link = [NSString stringWithFormat:@"tel:%@",link];
         }
@@ -635,7 +635,7 @@
     serviceButton.tag = 1;
     serviceButton.frame = CGRectMake(ZCNumber(12), y, viewWidth - ZCNumber(24), ZCNumber(44));
     
-    if(zcLibConvertToString([ZCUICore getUICore].kitInfo.helpCenterTel).length > 0 && zcLibConvertToString([ZCUICore getUICore].kitInfo.helpCenterTelTitle).length > 0){
+    if(sobotConvertToString([ZCUICore getUICore].kitInfo.helpCenterTel).length > 0 && sobotConvertToString([ZCUICore getUICore].kitInfo.helpCenterTelTitle).length > 0){
         CGFloat itemW =  (viewWidth - ZCNumber(24) - 20)/2;
         serviceButton.frame = CGRectMake(ZCNumber(12), y, itemW, ZCNumber(44));
         
@@ -643,8 +643,8 @@
         UIButton *telButton = [self createHelpCenterOpenButton];
         telButton.frame = CGRectMake(ZCNumber(12) + itemW + 20, y, itemW, ZCNumber(44));
         telButton.tag = 2;
-        [telButton setTitle:zcLibConvertToString([ZCUICore getUICore].kitInfo.helpCenterTelTitle) forState:UIControlStateNormal];
-        [telButton setTitle:zcLibConvertToString([ZCUICore getUICore].kitInfo.helpCenterTelTitle) forState:UIControlStateHighlighted];
+        [telButton setTitle:sobotConvertToString([ZCUICore getUICore].kitInfo.helpCenterTelTitle) forState:UIControlStateNormal];
+        [telButton setTitle:sobotConvertToString([ZCUICore getUICore].kitInfo.helpCenterTelTitle) forState:UIControlStateHighlighted];
         [superView addSubview:telButton];
     }
     

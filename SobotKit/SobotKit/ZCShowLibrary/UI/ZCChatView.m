@@ -9,6 +9,7 @@
 #import "ZCChatView.h"
 #import "ZCLibGlobalDefine.h"
 #import "ZCTitleView.h"
+#import "SobotDateTimes.h"
 
 //#import "ZCLeaveMsgController.h"
 #import "ZCUIAskTableController.h"
@@ -797,24 +798,28 @@
 
     dispatch_group_enter(group);
     
+    NSString *tempUid = [[ZCUICore getUICore] getTempUid];
+    if (sobotConvertToString([self getZCIMConfig].uid).length > 0) {
+        tempUid = sobotConvertToString([self getZCIMConfig].uid);
+    }
     // 加载基础模板接口
-    [[ZCLibServer getLibServer] postMsgTemplateConfigWithUid:[self getZCIMConfig].uid Templateld:templateId start:^{
+    [[ZCLibServer getLibServer] postMsgTemplateConfigWithUid:tempUid Templateld:templateId start:^{
         
     } success:^(NSDictionary *dict,NSMutableArray * typeArr, ZCNetWorkCode sendCode) {
-        leaveMessageVC.tickeTypeFlag = [ zcLibConvertToString( dict[@"data"][@"item"][@"ticketTypeFlag"] )intValue];
-        leaveMessageVC.ticketTypeId = zcLibConvertToString( dict[@"data"][@"item"][@"ticketTypeId"]);
-        leaveMessageVC.telFlag = [zcLibConvertToString( dict[@"data"][@"item"][@"telFlag"]) boolValue];
-        leaveMessageVC.telShowFlag = [zcLibConvertToString(dict[@"data"][@"item"][@"telShowFlag"]) boolValue];
-        leaveMessageVC.emailFlag = [zcLibConvertToString(dict[@"data"][@"item"][@"emailFlag"]) boolValue];
-        leaveMessageVC.emailShowFlag = [zcLibConvertToString(dict[@"data"][@"item"][@"emailShowFlag"]) boolValue];
-        leaveMessageVC.enclosureFlag = [zcLibConvertToString(dict[@"data"][@"item"][@"enclosureFlag"]) boolValue];
-        leaveMessageVC.enclosureShowFlag = [zcLibConvertToString(dict[@"data"][@"item"][@"enclosureShowFlag"]) boolValue];
-//            leaveMessageVC.ticketShowFlag = [zcLibConvertToString(dict[@"data"][@"item"][@"ticketShowFlag"]) intValue];
+        leaveMessageVC.tickeTypeFlag = [ sobotConvertToString( dict[@"data"][@"item"][@"ticketTypeFlag"] )intValue];
+        leaveMessageVC.ticketTypeId = sobotConvertToString( dict[@"data"][@"item"][@"ticketTypeId"]);
+        leaveMessageVC.telFlag = [sobotConvertToString( dict[@"data"][@"item"][@"telFlag"]) boolValue];
+        leaveMessageVC.telShowFlag = [sobotConvertToString(dict[@"data"][@"item"][@"telShowFlag"]) boolValue];
+        leaveMessageVC.emailFlag = [sobotConvertToString(dict[@"data"][@"item"][@"emailFlag"]) boolValue];
+        leaveMessageVC.emailShowFlag = [sobotConvertToString(dict[@"data"][@"item"][@"emailShowFlag"]) boolValue];
+        leaveMessageVC.enclosureFlag = [sobotConvertToString(dict[@"data"][@"item"][@"enclosureFlag"]) boolValue];
+        leaveMessageVC.enclosureShowFlag = [sobotConvertToString(dict[@"data"][@"item"][@"enclosureShowFlag"]) boolValue];
+//            leaveMessageVC.ticketShowFlag = [sobotConvertToString(dict[@"data"][@"item"][@"ticketShowFlag"]) intValue];
         leaveMessageVC.ticketShowFlag = 1;
-        leaveMessageVC.ticketTitleShowFlag = [zcLibConvertToString(dict[@"data"][@"item"][@"ticketTitleShowFlag"]) boolValue];
+        leaveMessageVC.ticketTitleShowFlag = [sobotConvertToString(dict[@"data"][@"item"][@"ticketTitleShowFlag"]) boolValue];
         
-        leaveMessageVC.msgTmp = zcLibConvertToString(dict[@"data"][@"item"][@"msgTmp"]);
-        leaveMessageVC.msgTxt = zcLibConvertToString(dict[@"data"][@"item"][@"msgTxt"]);
+        leaveMessageVC.msgTmp = sobotConvertToString(dict[@"data"][@"item"][@"msgTmp"]);
+        leaveMessageVC.msgTxt = sobotConvertToString(dict[@"data"][@"item"][@"msgTxt"]);
         if (typeArr.count) {
             if (leaveMessageVC.typeArr == nil) {
                 leaveMessageVC.typeArr = [NSMutableArray arrayWithCapacity:0];
@@ -879,7 +884,7 @@
         imageUrl = [self getZCIMConfig].companyLogo;
         placeholderName = [self getZCIMConfig].companyName;
     }else if ([[ZCLibClient getZCLibClient].libInitInfo.title_type intValue] ==2) {
-        if (![@"" isEqual:zcLibConvertToString([ZCLibClient getZCLibClient].libInitInfo.custom_title)]) {
+        if (![@"" isEqual:sobotConvertToString([ZCLibClient getZCLibClient].libInitInfo.custom_title)]) {
             // 自定义的昵称
             titleName = [ZCLibClient getZCLibClient].libInitInfo.custom_title;
             imageUrl = [ZCLibClient getZCLibClient].libInitInfo.custom_title_url;
@@ -916,7 +921,7 @@
     }
     
     // 当延迟转人工没有头像时，设置默认头像
-    if([self getZCIMConfig].invalidSessionFlag && zcLibConvertToString(imageUrl).length == 0 && zcLibConvertToString(titleName).length == 0 && [self getZCIMConfig].type == 2){
+    if([self getZCIMConfig].invalidSessionFlag && sobotConvertToString(imageUrl).length == 0 && sobotConvertToString(titleName).length == 0 && [self getZCIMConfig].type == 2){
         imageUrl = @"zcicon_useravatart_girl";
     }
     
@@ -1258,10 +1263,10 @@
         ZCLibMessage *lm=[[ZCUICore getUICore].chatMessages objectAtIndex:(indexPath.row-1)];
         if(![model.cid isEqual:lm.cid]){
             //            time=intervalSinceNow(model.ts);
-            time = zcLibDateTransformString(format, zcLibStringFormateDate(model.ts));
+            time = sobotDateTransformString(format, sobotStringFormateDate(model.ts));
         }
     }else{
-        time = zcLibDateTransformString(format, zcLibStringFormateDate(model.ts));
+        time = sobotDateTransformString(format, sobotStringFormateDate(model.ts));
     }
     
     if([self getZCIMConfig].isArtificial){// [self getZCIMConfig].isArtificial
@@ -1304,11 +1309,11 @@
         ZCLibMessage *lm=[[ZCUICore getUICore].chatMessages objectAtIndex:(indexPath.row-1)];
         if(![model.cid isEqual:lm.cid]){
             //            time=intervalSinceNow(model.ts);
-            time = zcLibDateTransformString(format, zcLibStringFormateDate(model.ts));
+            time = sobotDateTransformString(format, sobotStringFormateDate(model.ts));
         }
-        //        [ZCLogUtils logHeader:LogHeader debug:@"============\n%@\ncur=%@\nlast=%@\ntime=%@",model,model.cid,lm.cid,time];
+        //        [SobotLog logDebug:@"============\n%@\ncur=%@\nlast=%@\ntime=%@",model,model.cid,lm.cid,time];
     }else{
-        time = zcLibDateTransformString(format, zcLibStringFormateDate(model.ts));
+        time = sobotDateTransformString(format, sobotStringFormateDate(model.ts));
         //        time=intervalSinceNow(model.ts);
     }
     
@@ -1535,8 +1540,8 @@
         if (temptype == 1) {
             return;
         }
-        [ZCUICore getUICore].checkGroupId = zcLibConvertToString(dict[@"groupId"]);
-        [ZCUICore getUICore].checkGroupName = zcLibConvertToString(dict[@"groupName"]);
+        [ZCUICore getUICore].checkGroupId = sobotConvertToString(dict[@"groupId"]);
+        [ZCUICore getUICore].checkGroupName = sobotConvertToString(dict[@"groupName"]);
         [[ZCUICore getUICore] checkUserServiceWithType:ZCTurnType_CellGroupClick model:model];
     }
     
@@ -1546,15 +1551,15 @@
         NSMutableDictionary * contentDic = [NSMutableDictionary dictionaryWithCapacity:5];
         NSString *contextStr = @"";
         
-        [contentDic setObject:[NSString stringWithFormat:@"%@",zcLibConvertToString(pinfo.title)] forKey:@"title"];
+        [contentDic setObject:[NSString stringWithFormat:@"%@",sobotConvertToString(pinfo.title)] forKey:@"title"];
         
-        [contentDic setObject:[NSString stringWithFormat:@"%@",zcLibConvertToString(pinfo.desc)] forKey:@"description"];
+        [contentDic setObject:[NSString stringWithFormat:@"%@",sobotConvertToString(pinfo.desc)] forKey:@"description"];
         
-        [contentDic setObject:[NSString stringWithFormat:@"%@",zcLibConvertToString(pinfo.label)] forKey:@"label"];
+        [contentDic setObject:[NSString stringWithFormat:@"%@",sobotConvertToString(pinfo.label)] forKey:@"label"];
         
-        [contentDic setObject:[NSString stringWithFormat:@"%@",zcLibConvertToString(pinfo.link)] forKey:@"url"];
+        [contentDic setObject:[NSString stringWithFormat:@"%@",sobotConvertToString(pinfo.link)] forKey:@"url"];
         
-        [contentDic setObject:[NSString stringWithFormat:@"%@",zcLibConvertToString(pinfo.thumbUrl)] forKey:@"thumbnail"];
+        [contentDic setObject:[NSString stringWithFormat:@"%@",sobotConvertToString(pinfo.thumbUrl)] forKey:@"thumbnail"];
         // 转json
         contextStr = [ZCLocalStore DataTOjsonString:contentDic];
         
@@ -1597,9 +1602,9 @@
                 
                 // 如果返回的数据是最后一轮，当前的多轮会话的cell不可点击
                 // 记录下标
-//                if ( [zcLibConvertToString([NSString stringWithFormat:@"%d",message.richModel.answerType]) hasPrefix:@"15"]  && message.richModel.multiModel.endFlag) {
+//                if ( [sobotConvertToString([NSString stringWithFormat:@"%d",message.richModel.answerType]) hasPrefix:@"15"]  && message.richModel.multiModel.endFlag) {
 //                    for (ZCLibMessage *message in [ZCUICore getUICore].listArray) {
-//                        if ([zcLibConvertToString([NSString stringWithFormat:@"%d",message.richModel.answerType]) hasPrefix:@"15"] && !message.richModel.multiModel.endFlag && !message.richModel.multiModel.isHistoryMessages ) {
+//                        if ([sobotConvertToString([NSString stringWithFormat:@"%d",message.richModel.answerType]) hasPrefix:@"15"] && !message.richModel.multiModel.endFlag && !message.richModel.multiModel.isHistoryMessages ) {
 //                            message.richModel.multiModel.isHistoryMessages = YES;// 变成不可点击，成为历史
 //                        }
 //                    }
@@ -1659,19 +1664,19 @@
         [[ZCUICore getUICore].animateView startAnimating];
         
         // 本地文件
-        if(zcLibCheckFileIsExsis(model.richModel.msg)){
+        if(sobotCheckFileIsExsis(model.richModel.msg)){
             if(_voiceTools){
                 [_voiceTools playAudio:[NSURL fileURLWithPath:model.richModel.msg] data:nil];
             }
         }else{
             NSString *voiceURL=model.richModel.msg;
-            NSString *dataPath = zcLibGetDocumentsFilePath(@"/sobot/");
+            NSString *dataPath = sobotGetDocumentsFilePath(@"/sobot/");
             // 创建目录
-            zcLibCheckPathAndCreate(dataPath);
+            sobotCheckPathAndCreate(dataPath);
             
             // 拼接完整的地址
-            dataPath=[dataPath stringByAppendingString:[NSString stringWithFormat:@"/%@.wav",zcLibMd5(voiceURL)]];
-            if(zcLibCheckFileIsExsis(dataPath)){
+            dataPath=[dataPath stringByAppendingString:[NSString stringWithFormat:@"/%@.wav",sobotMd5(voiceURL)]];
+            if(sobotCheckFileIsExsis(dataPath)){
                 if(_voiceTools){
                     [_voiceTools playAudio:[NSURL fileURLWithPath:dataPath] data:nil];
                 }
@@ -1741,7 +1746,7 @@
             [[ZCLibServer getLibServer] insertSysMsg:[self getZCIMConfig] msg:[NSString stringWithFormat:@"%@ %@",ZCSTLocalString(@"未解决问题？点击"),ZCSTLocalString(@"转人工服务")]  start:^{
                 
             } success:^(NSDictionary *dict, ZCNetWorkCode sendCode) {
-                if ([zcLibConvertToString(dict[@"code"]) intValue] == 1 && ![self getZCIMConfig].isArtificial) {
+                if ([sobotConvertToString(dict[@"code"]) intValue] == 1 && ![self getZCIMConfig].isArtificial) {
                     [[ZCUICore getUICore] addTipTurnToArtificialMsg];
                 }
             } failed:^(NSString *errorMessage, ZCNetWorkCode errorCode) {
@@ -1813,10 +1818,10 @@
                 
                 // 如果返回的数据是最后一轮，当前的多轮会话的cell不可点击
                 // 记录下标
-//                if ( [zcLibConvertToString([NSString stringWithFormat:@"%d",message.richModel.answerType]) hasPrefix:@"15"]  && message.richModel.multiModel.endFlag) {
+//                if ( [sobotConvertToString([NSString stringWithFormat:@"%d",message.richModel.answerType]) hasPrefix:@"15"]  && message.richModel.multiModel.endFlag) {
 //                    // 便利所有多轮会话的消息 变成历史不可点
 //                    for (ZCLibMessage *message in [ZCUICore getUICore].listArray) {
-//                        if ([zcLibConvertToString([NSString stringWithFormat:@"%d",message.richModel.answerType]) hasPrefix:@"15"] && !message.richModel.multiModel.endFlag && !message.richModel.multiModel.isHistoryMessages ) {
+//                        if ([sobotConvertToString([NSString stringWithFormat:@"%d",message.richModel.answerType]) hasPrefix:@"15"] && !message.richModel.multiModel.endFlag && !message.richModel.multiModel.isHistoryMessages ) {
 //                            message.richModel.multiModel.isHistoryMessages = YES;// 变成不可点击，成为历史
 //                        }
 //                    }
@@ -1859,7 +1864,7 @@
         } progress:^(ZCLibMessage *message) {
             [ZCUICore getUICore].isSendToUser = NO;
             [ZCUICore getUICore].isSendToRobot = YES;
-            [ZCLogUtils logText:@"上传进度：%f",message.progress];
+            [SobotLog logInfo:@"上传进度：%f",message.progress];
             sendMessage.progress = message.progress;
             [safeVC.listTable reloadData];
         } failed:^(ZCLibMessage *message, ZCMessageSendCode sendCode) {
@@ -1904,7 +1909,7 @@
     
     if ([[ZCUICore getUICore] getLibConfig].announceMsgFlag == 1 && [[ZCUICore getUICore] getLibConfig].announceTopFlag == 1) {
 
-        if (!_notifitionTopView && ![@"" isEqual:zcLibConvertToString(title)]) {
+        if (!_notifitionTopView && ![@"" isEqual:sobotConvertToString(title)]) {
             _notifitionTopView = [[UIView alloc]init];
             CGFloat Y = 0;
             if (_superController.navigationController.navigationBarHidden || [ZCUICore getUICore].kitInfo.navcBarHidden) {
@@ -1921,8 +1926,8 @@
             
             // icon
             SobotImageView * icon = [[SobotImageView alloc]initWithFrame:CGRectMake(10, 10, 14,14)];
-            if (![@"" isEqual:zcLibConvertToString(icoUrl)]) {
-                [icon loadWithURL:[NSURL URLWithString:zcUrlEncodedString(icoUrl)] placeholer:[ZCUITools zcuiGetBundleImage:@"zcicon_annunciate"] showActivityIndicatorView:NO];
+            if (![@"" isEqual:sobotConvertToString(icoUrl)]) {
+                [icon loadWithURL:[NSURL URLWithString:sobotUrlEncodedString(icoUrl)] placeholer:[ZCUITools zcuiGetBundleImage:@"zcicon_annunciate"] showActivityIndicatorView:NO];
             }else{
                 [icon setImage:[ZCUITools zcuiGetBundleImage:@"zcicon_annunciate"]];
             }
@@ -1971,7 +1976,7 @@
                 [titleLab setTextAlignment:NSTextAlignmentLeft];
             }
         
-            if (zcLibConvertToString([self getZCIMConfig].announceClickUrl).length >0 && [self getZCIMConfig].announceClickFlag == 1) {
+            if (sobotConvertToString([self getZCIMConfig].announceClickUrl).length >0 && [self getZCIMConfig].announceClickFlag == 1) {
                 // arraw
 //                UIImageView * arrawIcon = [[UIImageView alloc]initWithFrame:CGRectMake(viewWidth - 30, 15, 11, 11)];
 //                arrawIcon.backgroundColor = [UIColor clearColor];
@@ -2092,7 +2097,7 @@
 
 - (void)jumpWebView:(UITapGestureRecognizer*)tap{
       [_keyboardTools hideKeyboard];
-    if (zcLibConvertToString([self getZCIMConfig].announceClickUrl).length >0 && [self getZCIMConfig].announceClickFlag == 1) {
+    if (sobotConvertToString([self getZCIMConfig].announceClickUrl).length >0 && [self getZCIMConfig].announceClickFlag == 1) {
         [self cellItemLinkClick:nil type:ZCChatCellClickTypeOpenURL obj:[self getZCIMConfig].announceClickUrl];
     }
 }
@@ -2230,7 +2235,7 @@
         _quickEntryView.quickClickBlock = ^(ZCLibCusMenu *itemModel) {
          
             if (itemModel.url.length) {
-                [safeView cellItemLinkClick:nil type:ZCChatCellClickTypeOpenURL obj:zcLibConvertToString(itemModel.url)];
+                [safeView cellItemLinkClick:nil type:ZCChatCellClickTypeOpenURL obj:sobotConvertToString(itemModel.url)];
             }
         };
     }
@@ -2288,7 +2293,7 @@
 }
 #pragma mark -- 滚动到最底部
 -(void)keyboardscrollTableToBottom{
-    [ZCLogUtils logHeader:LogHeader debug:@"滚动到底部"];
+    [SobotLog logDebug:@"滚动到底部"];
     CGFloat ch=_listTable.contentSize.height;
     CGFloat h=_listTable.bounds.size.height;
 
@@ -2417,7 +2422,7 @@
 // 监听暗黑模式变化
 -(void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection{
     [super traitCollectionDidChange:previousTraitCollection];
-    if(zcGetSystemDoubleVersion()>=13){
+    if(sobotGetSystemDoubleVersion()>=13){
         // trait发生了改变
         if ([self.traitCollection hasDifferentColorAppearanceComparedToTraitCollection:previousTraitCollection]) {
             // 执行操作
@@ -2435,11 +2440,11 @@
 
                 [self.moreButton setImage:[ZCUITools zcuiGetBundleImage:@"zcicon_btnmore"] forState:UIControlStateNormal];
                 [self.moreButton setImage:[ZCUITools zcuiGetBundleImage:@"zcicon_btnmore_press"] forState:UIControlStateHighlighted];
-                if (zcLibConvertToString([ZCUICore getUICore].kitInfo.moreBtnNolImg).length >0) {
-                    [self.moreButton setImage:[ZCUITools zcuiGetBundleImage:zcLibConvertToString([ZCUICore getUICore].kitInfo.moreBtnNolImg)]  forState:UIControlStateNormal];
+                if (sobotConvertToString([ZCUICore getUICore].kitInfo.moreBtnNolImg).length >0) {
+                    [self.moreButton setImage:[ZCUITools zcuiGetBundleImage:sobotConvertToString([ZCUICore getUICore].kitInfo.moreBtnNolImg)]  forState:UIControlStateNormal];
                 }
-                if (zcLibConvertToString([ZCUICore getUICore].kitInfo.moreBtnSelImg).length >0) {
-                    [self.moreButton setImage:[ZCUITools zcuiGetBundleImage:zcLibConvertToString([ZCUICore getUICore].kitInfo.moreBtnSelImg)]  forState:UIControlStateHighlighted];
+                if (sobotConvertToString([ZCUICore getUICore].kitInfo.moreBtnSelImg).length >0) {
+                    [self.moreButton setImage:[ZCUITools zcuiGetBundleImage:sobotConvertToString([ZCUICore getUICore].kitInfo.moreBtnSelImg)]  forState:UIControlStateHighlighted];
                 }
             }
             
@@ -2551,7 +2556,7 @@
 
 
 -(void)setTitleViewRTL{
-    if(isRTLLayout()){
+    if(sobotIsRTLLayout()){
         if(self.topView != nil){
 
             [self.backButton setFrame:CGRectMake(0, NavBarHeight-44, 64, 44)];
@@ -2620,7 +2625,7 @@
                 [ZCUICore getUICore].ZCViewControllerCloseBlock(self,ZC_PhoneCustomerService);
             }
             
-            NSString *phoneNumber = [NSString stringWithFormat:@"tel:%@",zcLibConvertToString([ZCUICore getUICore].kitInfo.customTel)];
+            NSString *phoneNumber = [NSString stringWithFormat:@"tel:%@",sobotConvertToString([ZCUICore getUICore].kitInfo.customTel)];
             [[UIApplication sharedApplication] openURL:[NSURL URLWithString:phoneNumber]];
 
         }
@@ -2694,7 +2699,7 @@
                         
                         [self getPlatformInfo].config.robotName = itemModel.robotName;
                         // 自定义喜欢有有，不设置
-                        if(zcLibConvertToString([ZCLibClient getZCLibClient].libInitInfo.robot_hello_word).length == 0){
+                        if(sobotConvertToString([ZCLibClient getZCLibClient].libInitInfo.robot_hello_word).length == 0){
                             // 切换机器人，切换每个机器人的欢迎语
                             [self getPlatformInfo].config.robotHelloWord = itemModel.robotHelloWord;
                         }
@@ -2891,7 +2896,7 @@
         [_listTable setContentInset:UIEdgeInsetsMake(0, 0, 0, 0)];
         
         // 初始化数据
-        if([self getZCIMConfig]==nil && [@"" isEqual:zcLibConvertToString([self getZCIMConfig].cid)] && ![ZCUICore getUICore].isInitLoading){
+        if([self getZCIMConfig]==nil && [@"" isEqual:sobotConvertToString([self getZCIMConfig].cid)] && ![ZCUICore getUICore].isInitLoading){
             [[ZCUICore getUICore] initConfigData:YES IsNewChat:NO];
         }
     }
@@ -2959,8 +2964,8 @@
     // 判断是否保存会话id，以判断是否重新初始化
     // 没有说过话，下次进入时判断是否需要重新初始化，如果当前时间-time,大于out_time就重新初始化
     if(![ZCUICore getUICore].isSendToUser && ![ZCUICore getUICore].isSendToRobot){
-        NSDictionary *lastChat = @{@"cid":zcLibConvertToString([self getZCIMConfig].cid),
-                                   @"time":zcLibDateTransformString(FormateTime,[NSDate new]),
+        NSDictionary *lastChat = @{@"cid":sobotConvertToString([self getZCIMConfig].cid),
+                                   @"time":sobotDateTransformString(SOBOT_FORMATE_DATETIME,[NSDate new]),
                                    @"out_time":[NSString stringWithFormat:@"%d",[self getZCIMConfig].userOutTime]
         };
         [ZCStoreConfiguration setZCParamter:KEY_ZCLASTCHAT value:lastChat];
@@ -3076,11 +3081,11 @@
     [self.backButton setImage:[ZCUITools zcuiGetBundleImage:@"zcicon_titlebar_back_normal"] forState:UIControlStateNormal];
     [self.backButton setImage:[ZCUITools zcuiGetBundleImage:@"zcicon_titlebar_back_normal"] forState:UIControlStateHighlighted];
     
-    if (zcLibConvertToString([ZCUICore getUICore].kitInfo.topBackNolImg).length >0) {
-        [self.backButton setImage:[ZCUITools zcuiGetBundleImage:zcLibConvertToString([ZCUICore getUICore].kitInfo.topBackNolImg)] forState:UIControlStateNormal];
+    if (sobotConvertToString([ZCUICore getUICore].kitInfo.topBackNolImg).length >0) {
+        [self.backButton setImage:[ZCUITools zcuiGetBundleImage:sobotConvertToString([ZCUICore getUICore].kitInfo.topBackNolImg)] forState:UIControlStateNormal];
     }
-    if (zcLibConvertToString([ZCUICore getUICore].kitInfo.topBackSelImg).length >0) {
-        [self.backButton setImage:[ZCUITools zcuiGetBundleImage:zcLibConvertToString([ZCUICore getUICore].kitInfo.topBackSelImg)] forState:UIControlStateHighlighted];
+    if (sobotConvertToString([ZCUICore getUICore].kitInfo.topBackSelImg).length >0) {
+        [self.backButton setImage:[ZCUITools zcuiGetBundleImage:sobotConvertToString([ZCUICore getUICore].kitInfo.topBackSelImg)] forState:UIControlStateHighlighted];
     }
     
     [self.backButton setBackgroundColor:[UIColor clearColor]];
@@ -3123,11 +3128,11 @@
         [self.moreButton setImageEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 15)];
         [self.moreButton setImage:[ZCUITools zcuiGetBundleImage:@"zcicon_btnmore"] forState:UIControlStateNormal];
         [self.moreButton setImage:[ZCUITools zcuiGetBundleImage:@"zcicon_btnmore_press"] forState:UIControlStateHighlighted];
-        if (zcLibConvertToString([ZCUICore getUICore].kitInfo.moreBtnNolImg).length >0) {
-            [self.moreButton setImage:[ZCUITools zcuiGetBundleImage:zcLibConvertToString([ZCUICore getUICore].kitInfo.moreBtnNolImg)]  forState:UIControlStateNormal];
+        if (sobotConvertToString([ZCUICore getUICore].kitInfo.moreBtnNolImg).length >0) {
+            [self.moreButton setImage:[ZCUITools zcuiGetBundleImage:sobotConvertToString([ZCUICore getUICore].kitInfo.moreBtnNolImg)]  forState:UIControlStateNormal];
         }
-        if (zcLibConvertToString([ZCUICore getUICore].kitInfo.moreBtnSelImg).length >0) {
-            [self.moreButton setImage:[ZCUITools zcuiGetBundleImage:zcLibConvertToString([ZCUICore getUICore].kitInfo.moreBtnSelImg)]  forState:UIControlStateHighlighted];
+        if (sobotConvertToString([ZCUICore getUICore].kitInfo.moreBtnSelImg).length >0) {
+            [self.moreButton setImage:[ZCUITools zcuiGetBundleImage:sobotConvertToString([ZCUICore getUICore].kitInfo.moreBtnSelImg)]  forState:UIControlStateHighlighted];
         }
         [self.moreButton setFrame:CGRectMake(self.frame.size.width-btnItemWidth, NavBarHeight-44, 44, 44)];
         [self.topView addSubview:self.moreButton];
@@ -3286,12 +3291,12 @@
     }
     
     // 留言转工单 先查看工单列表模板
-    [[ZCLibServer getLibServer] getWsTemplateList:[self getZCIMConfig] groupId:[[ZCUICore getUICore] getTempGroupId] start:^{
+    [[ZCLibServer getLibServer] getWsTemplateList:[self getZCIMConfig] uid:[[ZCUICore getUICore] getTempUid] groupId:[[ZCUICore getUICore] getTempGroupId] start:^{
         [[ZCUIToastTools shareToast] showProgress:@"" with:self];
     } success:^(NSDictionary *dict, ZCMessageSendCode sendCode) {
         [[ZCUIToastTools shareToast] dismisProgress];
-        [ZCLogUtils logHeader:LogHeader info:@"留言模板%@", dict];
-        if (dict != nil && [zcLibConvertToString(dict[@"code"]) intValue] == 1) {
+        [SobotLog logHeader:SobotLogHeader info:@"留言模板%@", dict];
+        if (dict != nil && [sobotConvertToString(dict[@"code"]) intValue] == 1) {
             NSArray * arr = dict[@"data"];
             if (arr.count > 0) {
                 NSMutableArray * array = [NSMutableArray arrayWithCapacity:0];
@@ -3304,7 +3309,7 @@
                 
                 if (arr.count == 1) {
                     ZCWsTemplateModel * model = [array lastObject];
-                    NSDictionary * Dic = @{@"templateId":zcLibConvertToString(model.templateId)};
+                    NSDictionary * Dic = @{@"templateId":sobotConvertToString(model.templateId)};
                     // 1个直接跳转
                     [saveSelf jumpNewPageVC:ZC_LeaveMsgPage IsExist:isExist isShowToat:NO tipMsg:@"" Dict:Dic];
                 }else{
@@ -3323,7 +3328,7 @@
                     }
                    
                     selMsgView.msgSetClickBlock = ^(ZCWsTemplateModel * _Nonnull itemModel) {
-                        NSDictionary * Dic = @{@"templateId":zcLibConvertToString(itemModel.templateId)};
+                        NSDictionary * Dic = @{@"templateId":sobotConvertToString(itemModel.templateId)};
                         [saveSelf jumpNewPageVC:ZC_LeaveMsgPage IsExist:isExist isShowToat:isShow tipMsg:msg Dict:Dic];
                     };
                 }

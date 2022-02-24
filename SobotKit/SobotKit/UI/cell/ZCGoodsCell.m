@@ -175,10 +175,10 @@ typedef NS_ENUM(NSInteger,ZCGoodsCellType){
 
 
 -(void)tapAction:(UITapGestureRecognizer*)sender{
-    if ([@"" isEqualToString:zcLibConvertToString([self getZCproductInfo].link)]) {
+    if ([@"" isEqualToString:sobotConvertToString([self getZCproductInfo].link)]) {
         return;
     }
-    if (zcLibConvertToString([self getZCproductInfo].link).length == 0) {
+    if (sobotConvertToString([self getZCproductInfo].link).length == 0) {
         return;
     }
     if(self.delegate && [self.delegate respondsToSelector:@selector(cellItemLinkClick:type:obj:)]){
@@ -199,7 +199,7 @@ typedef NS_ENUM(NSInteger,ZCGoodsCellType){
     
     // 时间
     CGFloat cellHeight = 22;
-    if(![@"" isEqual:zcLibConvertToString(showTime)]){
+    if(![@"" isEqual:sobotConvertToString(showTime)]){
         [self.lblTime setText:showTime];
         [self.lblTime setFrame:CGRectMake(0, 0, self.viewWidth, 30)];
         self.lblTime.hidden=NO;
@@ -217,11 +217,11 @@ typedef NS_ENUM(NSInteger,ZCGoodsCellType){
     
     
     ZCGoodsCellType currentCellType;
-    BOOL hasPic = [self getZCproductInfo].thumbUrl!=nil  && ![@"" isEqualToString:zcLibConvertToString([self getZCproductInfo].thumbUrl)];
-//    NSLog(@"lblTextDet002...%@",zcLibConvertToString([self getZCproductInfo].desc));
+    BOOL hasPic = [self getZCproductInfo].thumbUrl!=nil  && ![@"" isEqualToString:sobotConvertToString([self getZCproductInfo].thumbUrl)];
+//    NSLog(@"lblTextDet002...%@",sobotConvertToString([self getZCproductInfo].desc));
     
-    BOOL hasDesc = zcLibConvertToString([self getZCproductInfo].desc)!=nil && ![@"" isEqualToString:zcLibConvertToString([self getZCproductInfo].desc)];
-    //    BOOL hasLabel = zcLibConvertToString([self getZCproductInfo].label)!=nil && ![@"" isEqualToString:[self getZCproductInfo].label];
+    BOOL hasDesc = sobotConvertToString([self getZCproductInfo].desc)!=nil && ![@"" isEqualToString:sobotConvertToString([self getZCproductInfo].desc)];
+    //    BOOL hasLabel = sobotConvertToString([self getZCproductInfo].label)!=nil && ![@"" isEqualToString:[self getZCproductInfo].label];
     
     
     if (hasPic && hasDesc) {
@@ -248,7 +248,7 @@ typedef NS_ENUM(NSInteger,ZCGoodsCellType){
             
             //           标题
             _lblTextTitle.frame = CGRectMake(gap*3, gap + 10 + 10, self.viewWidth - gap*3*2, 20);
-            _lblTextTitle.text = zcLibConvertToString([self getZCproductInfo].title);
+            _lblTextTitle.text = sobotConvertToString([self getZCproductInfo].title);
             
             float h = CGRectGetMaxY(_lblTextTitle.frame) + 10;
             if (_lblTextTitle.text.length == 0) {
@@ -264,15 +264,15 @@ typedef NS_ENUM(NSInteger,ZCGoodsCellType){
             //            des
             _lblTextDet.hidden = NO;
             _lblTextDet.frame = CGRectMake(CGRectGetMaxX(_imgPhoto.frame) + gap, h, self.viewWidth - gap*3*2 - imgPhotoSize.width - gap*2, 20);
-//            NSLog(@"lblTextDet002...%@",zcLibConvertToString([self getZCproductInfo].desc));
-            _lblTextDet.text = zcLibConvertToString([self getZCproductInfo].desc);
+//            NSLog(@"lblTextDet002...%@",sobotConvertToString([self getZCproductInfo].desc));
+            _lblTextDet.text = sobotConvertToString([self getZCproductInfo].desc);
             _lblTextDet.backgroundColor = [UIColor clearColor];
             
             CGSize btnSendMsgSize = CGSizeMake(90, 30);
             //            label
             _lblTextTip.hidden = NO;
             _lblTextTip.frame = CGRectMake(CGRectGetMaxX(_imgPhoto.frame) + gap, CGRectGetMaxY(_lblTextDet.frame) + gap, self.viewWidth - gap*3*2 - 72 - gap*2 - btnSendMsgSize.width, 20);
-            _lblTextTip.text = zcLibConvertToString([self getZCproductInfo].label);
+            _lblTextTip.text = sobotConvertToString([self getZCproductInfo].label);
             
             //            发送按钮
             
@@ -291,7 +291,7 @@ typedef NS_ENUM(NSInteger,ZCGoodsCellType){
             
             //           标题
             _lblTextTitle.frame = CGRectMake(gap*3, gap + 10 + 10, self.viewWidth - gap*3*2, 20);
-            _lblTextTitle.text = zcLibConvertToString([self getZCproductInfo].title);
+            _lblTextTitle.text = sobotConvertToString([self getZCproductInfo].title);
             
             //            图片
             CGSize imgPhotoSize = CGSizeMake(72, 72);
@@ -302,15 +302,15 @@ typedef NS_ENUM(NSInteger,ZCGoodsCellType){
             //            des
             //            _lblTextDet.hidden = NO;
             //            _lblTextDet.frame = CGRectMake(CGRectGetMaxX(_imgPhoto.frame) + gap, CGRectGetMaxY(_lblTextTitle.frame) + gap, self.viewWidth - gap*3*2 - imgPhotoSize.width - gap*2, 20);
-            //            NSLog(@"lblTextDet002...%@",zcLibConvertToString([self getZCproductInfo].desc));
-            //            _lblTextDet.text = zcLibConvertToString([self getZCproductInfo].desc);
+            //            NSLog(@"lblTextDet002...%@",sobotConvertToString([self getZCproductInfo].desc));
+            //            _lblTextDet.text = sobotConvertToString([self getZCproductInfo].desc);
             //            _lblTextDet.backgroundColor = [UIColor redColor];
             //
             CGSize btnSendMsgSize = CGSizeMake(90, 30);
             //            label
             _lblTextTip.hidden = NO;
             _lblTextTip.frame = CGRectMake(CGRectGetMaxX(_imgPhoto.frame) + gap, CGRectGetMaxY(_lblTextTitle.frame) + gap*2, self.viewWidth - gap*3*2 - 72 - gap*2 - btnSendMsgSize.width, 20);
-            _lblTextTip.text = zcLibConvertToString([self getZCproductInfo].label);
+            _lblTextTip.text = sobotConvertToString([self getZCproductInfo].label);
             
             //            发送按钮
             
@@ -328,7 +328,7 @@ typedef NS_ENUM(NSInteger,ZCGoodsCellType){
             
             //           标题
             _lblTextTitle.frame = CGRectMake(gap*3, gap + 10 + 10, self.viewWidth - gap*3*2, 20);
-            _lblTextTitle.text = zcLibConvertToString([self getZCproductInfo].title);
+            _lblTextTitle.text = sobotConvertToString([self getZCproductInfo].title);
             
             //            图片
             //            CGSize imgPhotoSize = CGSizeMake(72, 72);
@@ -339,15 +339,15 @@ typedef NS_ENUM(NSInteger,ZCGoodsCellType){
             //            des
             //            _lblTextDet.hidden = NO;
             //            _lblTextDet.frame = CGRectMake(CGRectGetMaxX(_imgPhoto.frame) + gap, CGRectGetMaxY(_lblTextTitle.frame) + gap, self.viewWidth - gap*3*2 - imgPhotoSize.width - gap*2, 20);
-            //            NSLog(@"lblTextDet002...%@",zcLibConvertToString([self getZCproductInfo].desc));
-            //            _lblTextDet.text = zcLibConvertToString([self getZCproductInfo].desc);
+            //            NSLog(@"lblTextDet002...%@",sobotConvertToString([self getZCproductInfo].desc));
+            //            _lblTextDet.text = sobotConvertToString([self getZCproductInfo].desc);
             //            _lblTextDet.backgroundColor = [UIColor redColor];
             
             CGSize btnSendMsgSize = CGSizeMake(90, 30);
             //            label
             _lblTextTip.hidden = NO;
             _lblTextTip.frame = CGRectMake(gap*3, CGRectGetMaxY(_lblTextTitle.frame) + 20, self.viewWidth - gap*3*2 - gap*2 - btnSendMsgSize.width, 20);
-            _lblTextTip.text = zcLibConvertToString([self getZCproductInfo].label);
+            _lblTextTip.text = sobotConvertToString([self getZCproductInfo].label);
             
             //            发送按钮
             
@@ -365,7 +365,7 @@ typedef NS_ENUM(NSInteger,ZCGoodsCellType){
             
             //           标题
             _lblTextTitle.frame = CGRectMake(gap*3, gap + 20, self.viewWidth - gap*3*2, 20);
-            _lblTextTitle.text = zcLibConvertToString([self getZCproductInfo].title);
+            _lblTextTitle.text = sobotConvertToString([self getZCproductInfo].title);
             
             //            图片
             //            CGSize imgPhotoSize = CGSizeMake(72, 72);
@@ -376,15 +376,15 @@ typedef NS_ENUM(NSInteger,ZCGoodsCellType){
             //            des
             _lblTextDet.hidden = NO;
             _lblTextDet.frame = CGRectMake(gap*3, CGRectGetMaxY(_lblTextTitle.frame) + 2, self.viewWidth - gap*3*2 - gap*2, 20);
-//            NSLog(@"lblTextDet002...%@",zcLibConvertToString([self getZCproductInfo].desc));
-            _lblTextDet.text = zcLibConvertToString([self getZCproductInfo].desc);
+//            NSLog(@"lblTextDet002...%@",sobotConvertToString([self getZCproductInfo].desc));
+            _lblTextDet.text = sobotConvertToString([self getZCproductInfo].desc);
             _lblTextDet.backgroundColor = [UIColor clearColor];
             
             CGSize btnSendMsgSize = CGSizeMake(90, 30);
             //            label
             _lblTextTip.hidden = NO;
             _lblTextTip.frame = CGRectMake(gap*3, CGRectGetMaxY(_lblTextDet.frame) + 20, self.viewWidth - gap*3*2 - gap*2 - btnSendMsgSize.width, 20);
-            _lblTextTip.text = zcLibConvertToString([self getZCproductInfo].label);
+            _lblTextTip.text = sobotConvertToString([self getZCproductInfo].label);
             
             //            发送按钮
             
@@ -413,7 +413,7 @@ typedef NS_ENUM(NSInteger,ZCGoodsCellType){
     // 有图片
     //    [_lblTextTitle setFrame:CGRectMake(textX, cellHeight, self.maxWidth, 40)];
     //
-    //    _lblTextTitle.text = zcLibConvertToString([self getZCproductInfo].title);
+    //    _lblTextTitle.text = sobotConvertToString([self getZCproductInfo].title);
     //    [_lblTextTitle sizeToFit];
     
     
@@ -421,14 +421,14 @@ typedef NS_ENUM(NSInteger,ZCGoodsCellType){
     //    cellHeight = CGRectGetMaxY(_lblTextTitle.frame) + 10 ;
     
     // 摘要  2.7.5 去掉此项
-    //    if (zcLibConvertToString([self getZCproductInfo].desc)!=nil && ![@"" isEqualToString:[self getZCproductInfo].desc]) {
+    //    if (sobotConvertToString([self getZCproductInfo].desc)!=nil && ![@"" isEqualToString:[self getZCproductInfo].desc]) {
     //         [_lblTextDet setFrame:CGRectMake(textX, cellHeight , self.maxWidth, 0)];
     //        _lblTextDet.hidden = NO;
     //
-    //        _lblTextDet.text = zcLibConvertToString([self getZCproductInfo].desc);
+    //        _lblTextDet.text = sobotConvertToString([self getZCproductInfo].desc);
     //        // 获取摘要的内容大小
     //        CGRect textDetF = _lblTextDet.frame;
-    //        if (zcLibConvertToString([self getZCproductInfo].label)!=nil && ![@"" isEqualToString:[self getZCproductInfo].label]) {
+    //        if (sobotConvertToString([self getZCproductInfo].label)!=nil && ![@"" isEqualToString:[self getZCproductInfo].label]) {
     //            textDetF.size.height = 44;
     //            textDetF.origin.y = cellHeight - 10;
     //
@@ -445,11 +445,11 @@ typedef NS_ENUM(NSInteger,ZCGoodsCellType){
     //    }
     //
     //    // 标签
-    //    if (zcLibConvertToString([self getZCproductInfo].label)!=nil && ![@"" isEqualToString:[self getZCproductInfo].label]) {
+    //    if (sobotConvertToString([self getZCproductInfo].label)!=nil && ![@"" isEqualToString:[self getZCproductInfo].label]) {
     //        [_lblTextTip setFrame:CGRectMake(textX, cellHeight, ZCNumber(150), 18)];
     //        _lblTextTip.hidden = NO;
     //
-    //        _lblTextTip.text = zcLibConvertToString([self getZCproductInfo].label);
+    //        _lblTextTip.text = sobotConvertToString([self getZCproductInfo].label);
     //        cellHeight = CGRectGetMaxY(_lblTextTip.frame) +15;
     //    }
     //
@@ -509,17 +509,17 @@ typedef NS_ENUM(NSInteger,ZCGoodsCellType){
 
 +(CGFloat)getCellHeight:(ZCLibMessage *)model time:(NSString *)showTime viewWith:(CGFloat)width{
     CGFloat cellHeight = 12;
-    if(![@"" isEqual:zcLibConvertToString(showTime)]){
+    if(![@"" isEqual:sobotConvertToString(showTime)]){
         cellHeight = cellHeight + 30;
     }
     
     ZCGoodsCellType currentCellType;
     ZCGoodsCell *cell = [[ZCGoodsCell alloc]init];
     BOOL hasPic = [cell getZCproductInfo].thumbUrl!=nil  && ![@"" isEqualToString:[cell getZCproductInfo].thumbUrl];
-//    NSLog(@"lblTextDet002...%@",zcLibConvertToString([cell getZCproductInfo].desc));
+//    NSLog(@"lblTextDet002...%@",sobotConvertToString([cell getZCproductInfo].desc));
     
-    BOOL hasDesc = zcLibConvertToString([cell getZCproductInfo].desc)!=nil && ![@"" isEqualToString:[cell getZCproductInfo].desc];
-    //    BOOL hasLabel = zcLibConvertToString([self getZCproductInfo].label)!=nil && ![@"" isEqualToString:[self getZCproductInfo].label];
+    BOOL hasDesc = sobotConvertToString([cell getZCproductInfo].desc)!=nil && ![@"" isEqualToString:[cell getZCproductInfo].desc];
+    //    BOOL hasLabel = sobotConvertToString([self getZCproductInfo].label)!=nil && ![@"" isEqualToString:[self getZCproductInfo].label];
     
     float bgViewHeight = 0;
     

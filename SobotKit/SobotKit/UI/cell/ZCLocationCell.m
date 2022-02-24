@@ -84,7 +84,7 @@
     _model = model;
     self.ivBgView.backgroundColor = UIColor.whiteColor;
     
-    [_imgLocation loadWithURL:[NSURL URLWithString:zcUrlEncodedString(model.richModel.richmoreurl)] placeholer:nil showActivityIndicatorView:YES];
+    [_imgLocation loadWithURL:[NSURL URLWithString:sobotUrlEncodedString(model.richModel.richmoreurl)] placeholer:nil showActivityIndicatorView:YES];
     [_labFileName setText:model.richModel.localName];
     [_labFileAddress setText:model.richModel.localLabel];
     if (model.isHistory) {
@@ -197,7 +197,7 @@
 
 // 点击查看大图
 -(void) tap:(UIButton *)recognizer{
-//    [ZCLogUtils logHeader:LogHeader debug:@"查看大图：%@",self.tempModel.richModel.richmoreurl];
+//    [SobotLog logDebug:@"查看大图：%@",self.tempModel.richModel.richmoreurl];
     if(self.delegate && [self.delegate respondsToSelector:@selector(cellItemClick:type:obj:)]){
         [self.delegate cellItemClick:self.tempModel type:ZCChatCellClickTypeItemOpenLocation obj:nil];
     }
@@ -226,7 +226,7 @@
                tempLabel.numberOfLines = 0;
                tempLabel.font = ZCUIFont14;
            }
-    [tempLabel setText:zcLibConvertToString(model.richModel.localLabel)];
+    [tempLabel setText:sobotConvertToString(model.richModel.localLabel)];
     
     
     CGSize s = [tempLabel sizeThatFits:CGSizeMake(ZCNumber(240) - ZCNumber(30), LocationHeight)];

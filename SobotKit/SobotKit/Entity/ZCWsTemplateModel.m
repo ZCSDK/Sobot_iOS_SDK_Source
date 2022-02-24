@@ -7,7 +7,7 @@
 //
 
 #import "ZCWsTemplateModel.h"
-#import "ZCLibCommon.h"
+#import "SobotUtils.h"
 @implementation ZCWsTemplateModel
 
 -(id)initWithMyDict:(NSDictionary *)dict{
@@ -15,8 +15,8 @@
     if(self){
         @try {
             
-            _templateId = zcLibConvertToString(dict[@"templateId"]);
-            _templateName = zcLibConvertToString(dict[@"templateName"]);
+            _templateId = sobotConvertToString(dict[@"templateId"]);
+            _templateName = sobotConvertToString(dict[@"templateName"]);
             
         }
         @catch (NSException *exception) {

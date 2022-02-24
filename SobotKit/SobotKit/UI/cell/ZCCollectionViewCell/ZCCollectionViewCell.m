@@ -87,13 +87,13 @@ NSString *const kZCCollectionViewCellID = @"ZCCollectionViewCell";
 
 - (void)configureCellWithPostURL:(NSDictionary *)model WithIsHistory:(BOOL) isHistory{
     
-    [_posterView loadWithURL:[NSURL URLWithString:zcUrlEncodedString(model[@"thumbnail"])] placeholer:nil showActivityIndicatorView:YES];
-    [_labTitle setText:zcLibConvertToString(model[@"title"])];// [NSString stringWithFormat:@"我是标题%@",item[@"row"]]
-    [_labDesc setText:zcLibConvertToString(model[@"summary"])];// [NSString stringWithFormat:@"我是描述%@",item[@"desc"]]
+    [_posterView loadWithURL:[NSURL URLWithString:sobotUrlEncodedString(model[@"thumbnail"])] placeholer:nil showActivityIndicatorView:YES];
+    [_labTitle setText:sobotConvertToString(model[@"title"])];// [NSString stringWithFormat:@"我是标题%@",item[@"row"]]
+    [_labDesc setText:sobotConvertToString(model[@"summary"])];// [NSString stringWithFormat:@"我是描述%@",item[@"desc"]]
     if (_collectionCellType == CollectionCellType_Vertical) {
-        [_labTag setText:zcLibConvertToString(model[@"tag"])];// [NSString stringWithFormat:@"我是关键要素%@",item[@"row"]]
+        [_labTag setText:sobotConvertToString(model[@"tag"])];// [NSString stringWithFormat:@"我是关键要素%@",item[@"row"]]
     }else{
-         [_labTag setText:zcLibConvertToString(model[@"label"])];
+         [_labTag setText:sobotConvertToString(model[@"label"])];
     }
    
     

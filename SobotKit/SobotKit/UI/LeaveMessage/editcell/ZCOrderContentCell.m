@@ -106,7 +106,7 @@
         _textDesc.frame = CGRectMake(20, 20, self.tableWidth-40, DH + 20);
     }
     
-    [_textDesc setText:zcLibConvertToString(self.tempModel.ticketDesc)];
+    [_textDesc setText:sobotConvertToString(self.tempModel.ticketDesc)];
     _tipLab.attributedText = [self getOtherColorString:@"*" Color:[UIColor redColor] withString:[NSString stringWithFormat:ZCSTLocalString(@"问题描述"),@"*"]];
        _tipLab.hidden = YES;
     if (_enclosureShowFlag) {
@@ -117,7 +117,7 @@
         self.frame = CGRectMake(0, 0, self.tableWidth, CGRectGetMaxY(_textDesc.frame) + 20 );
     }
     
-    if(isRTLLayout()){
+    if(sobotIsRTLLayout()){
         [_textDesc setTextAlignment:NSTextAlignmentRight];
         [_tipLab setTextAlignment:NSTextAlignmentRight];
     }
@@ -136,7 +136,7 @@
     CGFloat heigth = 60;
     CGFloat x = 0;
     NSUInteger countX = 0;
-    if(isRTLLayout()){
+    if(sobotIsRTLLayout()){
         countX = (assetCount < 4) ? 4 : assetCount;
     }
     
@@ -145,7 +145,7 @@
         UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
         [btn setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
         x = (width + 5)*i;
-        if(isRTLLayout()){
+        if(sobotIsRTLLayout()){
             x = (width + 5)* (countX - i - 1);
         }
         
@@ -167,13 +167,13 @@
             [btn.imageView setContentMode:UIViewContentModeScaleAspectFill];
             // 就从本地取
 //            ZCUploadImageModel *model = [_imageArr objectAtIndex:i];
-            if(zcLibCheckFileIsExsis([_imagePathArr objectAtIndex:i])){
+            if(sobotCheckFileIsExsis([_imagePathArr objectAtIndex:i])){
                 UIImage *localImage=[UIImage imageWithContentsOfFile:[_imagePathArr objectAtIndex:i]];
                 [btn setImage:localImage forState:UIControlStateNormal];
             }
             
             NSDictionary *imgDic = [_imageArr objectAtIndex:i];
-            NSString *imgFileStr =  zcLibConvertToString(imgDic[@"cover"]);
+            NSString *imgFileStr =  sobotConvertToString(imgDic[@"cover"]);
             if (imgFileStr.length>0) {
                 UIImage *localImage=[UIImage imageWithContentsOfFile:imgFileStr];
                 [btn setImage:localImage forState:UIControlStateNormal];
@@ -193,7 +193,7 @@
             UIButton *btnDel = [UIButton buttonWithType:UIButtonTypeCustom];
             btnDel.imageView.contentMode = UIViewContentModeScaleAspectFit;
             x = (width + 5)*i + width - 24;
-            if(isRTLLayout()){
+            if(sobotIsRTLLayout()){
                 x = (width + 5)* (countX - i - 1) + width - 24;
             }
             
@@ -214,7 +214,7 @@
     // 设置contentSize
     self.fileScrollView.contentSize = CGSizeMake((width+5)*assetCount,self.fileScrollView.frame.size.height);
     if(assetCount > 4){
-        if(isRTLLayout()){
+        if(sobotIsRTLLayout()){
             [self.fileScrollView setContentOffset:CGPointMake(0, 0)];
             
         }else{
@@ -289,7 +289,7 @@
 }
 -(void)textViewDidChange:(ZCUIPlaceHolderTextView *)textView{
     
-    self.tempModel.ticketDesc = zcLibConvertToString(textView.text);
+    self.tempModel.ticketDesc = sobotConvertToString(textView.text);
    
     if (self.delegate && [self.delegate respondsToSelector:@selector(itemCreateCellOnClick:dictKey:model:withButton:)]) {
         

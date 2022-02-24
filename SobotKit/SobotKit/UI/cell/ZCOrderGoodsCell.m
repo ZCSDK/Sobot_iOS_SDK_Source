@@ -141,7 +141,7 @@
     if(tempModel.richModel.msg!=nil){
         @try {
             NSError * err;
-            dict=[NSJSONSerialization JSONObjectWithData:[zcLibConvertToString(tempModel.richModel.msg) dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableLeaves error:&err];
+            dict=[NSJSONSerialization JSONObjectWithData:[sobotConvertToString(tempModel.richModel.msg) dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableLeaves error:&err];
         } @catch (NSException *exception) {
             
         } @finally {
@@ -156,7 +156,7 @@
 {
     NSMutableAttributedString *str = [[NSMutableAttributedString alloc]init];
     
-    NSMutableString *temp = [NSMutableString stringWithString:zcLibConvertToString(originalString)];
+    NSMutableString *temp = [NSMutableString stringWithString:sobotConvertToString(originalString)];
     str = [[NSMutableAttributedString alloc] initWithString:temp];
     if (string.length) {
         NSRange range = [temp rangeOfString:string];
@@ -198,22 +198,22 @@
         if(goods && [goods isKindOfClass:[NSArray class]] && goods.count>0){
             NSDictionary *good = goods[0];
             goodsDesc = good[@"name"];
-            if(zcUrlEncodedString(good[@"pictureUrl"]).length > 0){
-                [_imgPhoto loadWithURL:[NSURL URLWithString:zcUrlEncodedString(good[@"pictureUrl"])] placeholer:[ZCUITools zcuiGetBundleImage:@"zcicon_default_goods"] showActivityIndicatorView:YES];
+            if(sobotUrlEncodedString(good[@"pictureUrl"]).length > 0){
+                [_imgPhoto loadWithURL:[NSURL URLWithString:sobotUrlEncodedString(good[@"pictureUrl"])] placeholer:[ZCUITools zcuiGetBundleImage:@"zcicon_default_goods"] showActivityIndicatorView:YES];
                 _imgPhoto.hidden = NO;
             }
         }
-        NSString *orderStatus = [ZCOrderGoodsModel getOrderStatusMsg:[zcLibConvertToString(dict[@"orderStatus"]) intValue]];
-        if(zcLibConvertToString(orderStatus).length == 0 && zcLibConvertToString(dict[@"statusCustom"]).length > 0){
-            orderStatus = zcLibConvertToString(dict[@"statusCustom"]);
+        NSString *orderStatus = [ZCOrderGoodsModel getOrderStatusMsg:[sobotConvertToString(dict[@"orderStatus"]) intValue]];
+        if(sobotConvertToString(orderStatus).length == 0 && sobotConvertToString(dict[@"statusCustom"]).length > 0){
+            orderStatus = sobotConvertToString(dict[@"statusCustom"]);
         }
-        NSString *orderCode = zcLibConvertToString(dict[@"orderCode"]);
-        NSString *createTime = (zcLibConvertToString(dict[@"createTime"]).length > 0) ? zcLibLongdateTransformString(FormateTime, [zcLibConvertToString(dict[@"createTime"]) longLongValue]):@"";
-//        NSString *orderUrl = zcLibConvertToString(dict[@"orderUrl"]);
-        NSString *goodsCount = zcLibConvertToString(dict[@"goodsCount"]);
-        NSString *moneySum = zcLibConvertToString(dict[@"totalFee"]);
-        if(zcLibValidateNumber(moneySum)){
-            moneySum = [NSString stringWithFormat:@"%0.2f%@",[zcLibConvertToString(dict[@"totalFee"]) floatValue]/100,ZCSTLocalString(@"元")];
+        NSString *orderCode = sobotConvertToString(dict[@"orderCode"]);
+        NSString *createTime = (sobotConvertToString(dict[@"createTime"]).length > 0) ? sobotLongdateTransformString(SOBOT_FORMATE_DATETIME, [sobotConvertToString(dict[@"createTime"]) longLongValue]):@"";
+//        NSString *orderUrl = sobotConvertToString(dict[@"orderUrl"]);
+        NSString *goodsCount = sobotConvertToString(dict[@"goodsCount"]);
+        NSString *moneySum = sobotConvertToString(dict[@"totalFee"]);
+        if(sobotValidateNumber(moneySum)){
+            moneySum = [NSString stringWithFormat:@"%0.2f%@",[sobotConvertToString(dict[@"totalFee"]) floatValue]/100,ZCSTLocalString(@"元")];
         }
         
         if(goodsDesc.length > 0 ){
@@ -254,7 +254,7 @@
         NSString *giveOrderStr = ZCSTLocalString(@"下单");
         NSString *timeStr = ZCSTLocalString(@"时间");
         
-        if(zcLibConvertToString(orderStatus).length > 0){
+        if(sobotConvertToString(orderStatus).length > 0){
             _lblStatus.hidden = NO;
             _lblStatus.attributedText = [self getOtherColorString:orderStatus Color:UIColorFromThemeColor(ZCTextNoticeLinkColor) withString:[NSString stringWithFormat:@"%@%@：%@",orderStr,statusStr,orderStatus]];
         }else{
@@ -440,7 +440,7 @@
 
 // 点击查看大图
 -(void) tap:(UITapGestureRecognizer *)recognizer{
-//    [ZCLogUtils logHeader:LogHeader debug:@"查看大图：%@",self.tempModel.richModel.richmoreurl];
+//    [SobotLog logDebug:@"查看大图：%@",self.tempModel.richModel.richmoreurl];
     [self onCellClick];
 }
 
@@ -455,7 +455,7 @@
             
         }
         if (dict) {
-            link = zcLibConvertToString(dict[@"orderUrl"]);
+            link = sobotConvertToString(dict[@"orderUrl"]);
         }
         if (link.length > 0) {
             [self.delegate cellItemLinkClick:@"" type:ZCChatCellClickTypeOpenURL obj:link];
@@ -480,10 +480,10 @@
     
     if(dict){
         
-//        NSString *orderStatus = [ZCOrderGoodsModel getOrderStatusMsg:[zcLibConvertToString(dict[@"orderStatus"]) intValue]];
-        NSString *orderCode = zcLibConvertToString(dict[@"orderCode"]);
-        NSString *createTime = zcLibConvertToString(dict[@"createTime"]);
-//        NSString *orderUrl = zcLibConvertToString(dict[@"orderUrl"]);
+//        NSString *orderStatus = [ZCOrderGoodsModel getOrderStatusMsg:[sobotConvertToString(dict[@"orderStatus"]) intValue]];
+        NSString *orderCode = sobotConvertToString(dict[@"orderCode"]);
+        NSString *createTime = sobotConvertToString(dict[@"createTime"]);
+//        NSString *orderUrl = sobotConvertToString(dict[@"orderUrl"]);
         NSString *goodsDesc = @"";
         NSArray *goods = dict[@"goods"];
               
@@ -494,10 +494,10 @@
            
            picStr = good[@"pictureUrl"];
        }
-        NSString *goodsCount = zcLibConvertToString(dict[@"goodsCount"]);
-        NSString *moneySum = zcLibConvertToString(dict[@"totalFee"]);
-        if(zcLibValidateNumber(moneySum)){
-            moneySum = [NSString stringWithFormat:@"%0.2f%@",[zcLibConvertToString(dict[@"totalFee"]) floatValue]/100,ZCSTLocalString(@"元")];
+        NSString *goodsCount = sobotConvertToString(dict[@"goodsCount"]);
+        NSString *moneySum = sobotConvertToString(dict[@"totalFee"]);
+        if(sobotValidateNumber(moneySum)){
+            moneySum = [NSString stringWithFormat:@"%0.2f%@",[sobotConvertToString(dict[@"totalFee"]) floatValue]/100,ZCSTLocalString(@"元")];
         }
         
         CGFloat msgY = cellheith + 10;

@@ -7,33 +7,33 @@
 //
 
 #import "ZCSCListModel.h"
-#import "ZCLibCommon.h"
+#import "SobotUtils.h"
 @implementation ZCSCListModel
 -(id)initWithMyDict:(NSDictionary *)dict{
     if (self = [super init]) {
         
-        _categoryId = zcLibConvertToString(dict[@"categoryId"]);
+        _categoryId = sobotConvertToString(dict[@"categoryId"]);
         
-        _appId = zcLibConvertToString(dict[@"appId"]);
+        _appId = sobotConvertToString(dict[@"appId"]);
         
-        _categoryName = zcLibConvertToString(dict[@"categoryName"]);
+        _categoryName = sobotConvertToString(dict[@"categoryName"]);
         
-        _categoryDetail = zcLibConvertToString(dict[@"categoryDetail"]);
+        _categoryDetail = sobotConvertToString(dict[@"categoryDetail"]);
         
-        _categoryUrl = zcLibConvertToString(dict[@"categoryUrl"]);
+        _categoryUrl = sobotConvertToString(dict[@"categoryUrl"]);
         
-        _sortNo = [zcLibConvertToString(dict[@"sortNo"]) intValue];
+        _sortNo = [sobotConvertToString(dict[@"sortNo"]) intValue];
         
         
         
-        _companyId = zcLibConvertToString(dict[@"companyId"]);
-        _docId = zcLibConvertToString(dict[@"docId"]);
-        _questionId = zcLibConvertToString(dict[@"questionId"]);
-        _questionTitle = zcLibConvertToString(dict[@"questionTitle"]);
+        _companyId = sobotConvertToString(dict[@"companyId"]);
+        _docId = sobotConvertToString(dict[@"docId"]);
+        _questionId = sobotConvertToString(dict[@"questionId"]);
+        _questionTitle = sobotConvertToString(dict[@"questionTitle"]);
 
         
         
-        _answerDesc = zcLibConvertToString(dict[@"answerDesc"]);
+        _answerDesc = sobotConvertToString(dict[@"answerDesc"]);
         
     }
     return self;

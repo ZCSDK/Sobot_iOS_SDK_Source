@@ -83,6 +83,9 @@ static dispatch_once_t onceToken;
 
 // 检测图片中的二维码,返回 一个URL 字符串，或者nil
 -(id )coderURLStrDetectorWith:(UIImage *)image{
+    if ([ZCUICore getUICore].kitInfo.hideQRCode) {
+        return nil;
+    }    
     NSArray *urlStrArray = [self coderDetectorWith:image];
     if (urlStrArray.count == 1) {
         NSString *urlStr = urlStrArray.firstObject;
@@ -94,7 +97,7 @@ static dispatch_once_t onceToken;
 
 
 -(void)setRTLFrame:(UIView *)view{
-    if (isRTLLayout() && view!=nil) {
+    if (sobotIsRTLLayout() && view!=nil) {
         
         CGFloat width = ScreenWidth;
         if (view.superview == nil) {
@@ -253,11 +256,11 @@ static dispatch_once_t onceToken;
 }
 
 - (void)dealWithLinkClickWithLick:(NSString *)link viewController:(UIViewController *)viewController{
-    if(zcLibConvertToString(link).length == 0){
+    if(sobotConvertToString(link).length == 0){
         return;
     }
     
-    if([[zcLibConvertToString(link) lowercaseString] hasSuffix:@".mp4"]){
+    if([[sobotConvertToString(link) lowercaseString] hasSuffix:@".mp4"]){
         UIWindow *window = [[ZCToolsCore getToolsCore] getCurWindow];
         ZCVideoPlayer *player = [[ZCVideoPlayer alloc] initWithFrame:window.bounds withShowInView:window url:[NSURL URLWithString:link] Image:nil];
         [player showControlsView];
@@ -265,7 +268,7 @@ static dispatch_once_t onceToken;
     }
     
     if([[ZCUICore getUICore] LinkClickBlock] == nil || ![ZCUICore getUICore].LinkClickBlock(link)){
-        if([link hasPrefix:@"tel:"] || zcLibValidateMobileWithRegex(link, [ZCUITools zcgetTelRegular])){
+        if([link hasPrefix:@"tel:"] || sobotValidateMobileWithRegex(link, [ZCUITools zcgetTelRegular])){
             
             if(![link hasSuffix:@"tel:"]){
                 link = [NSString stringWithFormat:@"tel:%@",link];
@@ -280,7 +283,7 @@ static dispatch_once_t onceToken;
                 // 打电话
                 [[UIApplication sharedApplication] openURL:[NSURL URLWithString:link]];
             }
-        }else if([link hasPrefix:@"mailto:"] || zcLibValidateEmail(link)){
+        }else if([link hasPrefix:@"mailto:"] || sobotValidateEmail(link)){
             if(![link hasSuffix:@"mailto:"]){
                 link = [NSString stringWithFormat:@"mailto:%@",link];
             }
@@ -288,11 +291,11 @@ static dispatch_once_t onceToken;
         }else{
             NSString *urlStr;
             
-            if (zcLibIsUrl(link,[ZCUITools zcgetUrlRegular])) {
+            if (sobotIsUrl(link,[ZCUITools zcgetUrlRegular])) {
                 if (![link hasPrefix:@"https"] && ![link hasPrefix:@"http"]) {
                     link = [@"https://" stringByAppendingString:link];
                 }
-                urlStr = zcUrlEncodedString(link);
+                urlStr = sobotUrlEncodedString(link);
             }else{
                 urlStr = link;
             }

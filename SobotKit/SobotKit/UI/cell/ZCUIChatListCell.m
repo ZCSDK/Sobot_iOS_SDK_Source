@@ -9,7 +9,7 @@
 #import "ZCUIChatListCell.h"
 #import "ZCLibGlobalDefine.h"
 #import "ZCUIColorsDefine.h"
-#import "ZCLibCommon.h"
+#import "SobotUtils.h"
 #import "ZCUICore.h"
 
 @implementation ZCUIChatListCell
@@ -80,7 +80,7 @@
 
 -(void)dataToView:(ZCPlatformInfo *)info{
     if(info){
-        NSString * text = zcLibConvertToString(info.lastMsg);
+        NSString * text = sobotConvertToString(info.lastMsg);
         // 过滤标签
         text = [text stringByReplacingOccurrencesOfString:@"<br />" withString:@"\n"];
         text = [text stringByReplacingOccurrencesOfString:@"<br/>" withString:@"\n"];
@@ -92,18 +92,18 @@
         text = [text stringByReplacingOccurrencesOfString:@"&nbsp;" withString:@" "];
         
         _lblLastMsg.text = text;
-        _lblNickName.text = zcLibConvertToString(info.platformName);
+        _lblNickName.text = sobotConvertToString(info.platformName);
 
 
-        if (zcLibConvertToString(info.lastDate).length >17) {
+        if (sobotConvertToString(info.lastDate).length >17) {
             // 处理时间，如果是当日 显示 时间 否者显示日期
-            if ([[self getCurrentTimes] isEqualToString:zcLibDateTransformString(@"YYYY-MM-dd", zcLibStringFormateDate(info.lastDate))]) {
-                _lblTime.text = zcLibDateTransformString(@"HH:mm", zcLibStringFormateDate(info.lastDate));
+            if ([[self getCurrentTimes] isEqualToString:sobotDateTransformString(@"YYYY-MM-dd", sobotStringFormateDate(info.lastDate))]) {
+                _lblTime.text = sobotDateTransformString(@"HH:mm", sobotStringFormateDate(info.lastDate));
             }else{
-                _lblTime.text = zcLibDateTransformString(ZCSTLocalString(@"MM月dd日"), zcLibStringFormateDate(info.lastDate));
+                _lblTime.text = sobotDateTransformString(ZCSTLocalString(@"MM月dd日"), sobotStringFormateDate(info.lastDate));
             }
         }else{
-            long long t = [zcLibConvertToString(info.lastDate) longLongValue];
+            long long t = [sobotConvertToString(info.lastDate) longLongValue];
             if(info.lastDate.length > 10){
                 t = t/1000;
             }
@@ -124,7 +124,7 @@
             _lblTime.text = @"";
         }
         
-        NSString *url = [zcLibConvertToString(info.avatar) stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        NSString *url = [sobotConvertToString(info.avatar) stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
         [_ivHeader loadWithURL:[NSURL URLWithString:url] placeholer:[ZCUITools zcuiGetBundleImage:@"zcicon_useravatar_nol"] showActivityIndicatorView:NO];
         _lblUnRead.hidden = YES;
         if(info.unRead>0){

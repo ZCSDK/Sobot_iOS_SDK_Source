@@ -205,7 +205,7 @@
     CGFloat cellHeight = [super getCellHeight:model time:showTime viewWith:width];
     //    CGFloat cellHeight = 22;
     CGFloat maxWidth = ScreenWidth - 160;
-    //    if(![@"" isEqual:zcLibConvertToString(showTime)]){
+    //    if(![@"" isEqual:sobotConvertToString(showTime)]){
     //        cellHeight = cellHeight + 30;
     //    }
     
@@ -284,7 +284,7 @@
     if (_isHistoryMsg) {
         return;
     }
-    NSString * question = zcLibConvertToString(model[@"question"]);
+    NSString * question = sobotConvertToString(model[@"question"]);
     // 发送点击消息
     
     NSDictionary * dict = @{@"title":question,@"ishotguide":@"1"};
@@ -305,11 +305,11 @@
     vcell.collectionCellType = CollectionCellType_Horizontal;
     
     
-    NSString * thumbnail= zcLibConvertToString(model[@"icon"]);
+    NSString * thumbnail= sobotConvertToString(model[@"icon"]);
     if ([@"" isEqualToString:thumbnail]) {
-        thumbnail = zcLibConvertToString(model[@"question"]);
+        thumbnail = sobotConvertToString(model[@"question"]);
     }
-    NSString * title = zcLibConvertToString(model[@"title"]);
+    NSString * title = sobotConvertToString(model[@"title"]);
     
     NSDictionary * dict = @{
                             @"summary":@"",

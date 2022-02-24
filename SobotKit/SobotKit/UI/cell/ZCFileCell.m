@@ -90,7 +90,7 @@
     
     [_progressView setFaceImage:[ZCUITools getFileIcon:model.richModel.url fileType:model.richModel.fileType]];
     [_labFileSize setText:model.richModel.fileSize];
-    [_labFileName setText:zcLibTrimString(model.richModel.fileName)];
+    [_labFileName setText:sobotTrimString(model.richModel.fileName)];
     if (model.isHistory) {
         model.progress = 1.0;
     }
@@ -203,7 +203,7 @@
         [self playVideo:nil];
         return;
     }
-    //        [ZCLogUtils logHeader:LogHeader debug:@"查看大图：%@",self.tempModel.richModel.richmoreurl];
+    //        [SobotLog logDebug:@"查看大图：%@",self.tempModel.richModel.richmoreurl];
     if(self.delegate && [self.delegate respondsToSelector:@selector(cellItemClick:type:obj:)]){
         [self.delegate cellItemClick:self.tempModel type:ZCChatCellClickTypeItemOpenFile obj:nil];
         //                [_delegate itemOnClick:_tempModel clickType:SobotCellClickReSend];

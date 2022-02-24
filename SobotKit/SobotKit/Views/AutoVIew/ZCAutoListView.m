@@ -87,7 +87,7 @@
 
 -(void)showWithText:(NSString *) searchText view:(UIView *) bottomView{
     
-    if(zcLibConvertToString(searchText).length == 0){
+    if(sobotConvertToString(searchText).length == 0){
         [self dissmiss];
         return;
     }
@@ -100,7 +100,7 @@
     _searchText = searchText;
     NSMutableArray *arr  = [[_dict objectForKey:searchText] mutableCopy];
     
-    if(!zcLibIs_null(arr)&& arr.count>0){
+    if(!sobotIsNull(arr)&& arr.count>0){
         if (_listArray.count>0) {
             [_listArray removeAllObjects];
         
@@ -112,7 +112,7 @@
     }else{
         
         NSMutableDictionary * dict = [NSMutableDictionary dictionaryWithCapacity:0];
-        [dict setValue:zcLibConvertToString(searchText) forKey:@"question"];
+        [dict setValue:sobotConvertToString(searchText) forKey:@"question"];
         [dict setObject:[NSString stringWithFormat:@"%d",[self getZCLibConfig].robotFlag] forKey:@"robotFlag"];
         
         
@@ -243,7 +243,7 @@
     }
     
     cell.backgroundColor = UIColorFromThemeColor(ZCBgSystemWhiteLightGrayColor);
-//    NSString * str =  zcLibConvertToString(_listArray[indexPath.row][@"question"]);
+//    NSString * str =  sobotConvertToString(_listArray[indexPath.row][@"question"]);
     
     NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithData:[_listArray[indexPath.row][@"highlight"] dataUsingEncoding:NSUnicodeStringEncoding] options:@{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType} documentAttributes:nil error:nil];
 

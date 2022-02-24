@@ -114,7 +114,7 @@
             UITapGestureRecognizer * tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(textViewBeginEditing:)];
             [_placeHolderLabel addGestureRecognizer:tap];
             [self addSubview:_placeHolderLabel];
-            if(isRTLLayout()){
+            if(sobotIsRTLLayout()){
                 [_placeHolderLabel setTextAlignment:NSTextAlignmentRight];
             }
         }
@@ -150,10 +150,10 @@
 {
     NSMutableAttributedString *str = [[NSMutableAttributedString alloc]init];
     
-    NSMutableString *temp = [NSMutableString stringWithString:zcLibConvertToString(originalString)];
+    NSMutableString *temp = [NSMutableString stringWithString:sobotConvertToString(originalString)];
     str = [[NSMutableAttributedString alloc] initWithString:temp];
     if (string.length) {
-        NSRange range = [temp rangeOfString:zcLibConvertToString(string)];
+        NSRange range = [temp rangeOfString:sobotConvertToString(string)];
         [str addAttribute:NSForegroundColorAttributeName value:Color range:range];
         return str;
         

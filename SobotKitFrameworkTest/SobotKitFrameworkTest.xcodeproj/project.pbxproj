@@ -10,7 +10,6 @@
 		590ADF6323726F2500A350C3 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 590ADF6223726F2500A350C3 /* WebKit.framework */; };
 		594E00A223910D7B0017A092 /* SobotKit.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 594E00A123910D7B0017A092 /* SobotKit.bundle */; };
 		7B18AF292576186600C7C7FF /* SobotKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 59E4A0EC23B455A900680CD7 /* SobotKit.framework */; };
-		7B18AF2A2576186600C7C7FF /* SobotKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 59E4A0EC23B455A900680CD7 /* SobotKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		7B18AF4425761A1500C7C7FF /* ZCTestSplitController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B18AF3325761A1500C7C7FF /* ZCTestSplitController.m */; };
 		7B18AF4525761A1500C7C7FF /* ZCGuideData.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B18AF3625761A1500C7C7FF /* ZCGuideData.m */; };
 		7B18AF4625761A1500C7C7FF /* ZCSectionPropertyCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B18AF3A25761A1500C7C7FF /* ZCSectionPropertyCell.m */; };
@@ -34,6 +33,7 @@
 		7BD9951B1C005DCC0006C951 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7BD9951A1C005DCC0006C951 /* SystemConfiguration.framework */; };
 		7BD9951D1C005DD10006C951 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7BD9951C1C005DD10006C951 /* AssetsLibrary.framework */; };
 		7BD9951F1C005DE00006C951 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7BD9951E1C005DE00006C951 /* AudioToolbox.framework */; };
+		ED5F131A27C7661900CA10B1 /* SobotKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 59E4A0EC23B455A900680CD7 /* SobotKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,19 +44,19 @@
 			remoteGlobalIDString = 7BB21FA01C005611003539F7;
 			remoteInfo = SobotKit;
 		};
-		7B18AF2D2576187700C7C7FF /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 59E4A0E423B455A800680CD7 /* SobotKit.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 7BB21F9F1C005611003539F7;
-			remoteInfo = SobotKit;
-		};
 		7BB220E81C005789003539F7 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 7BB220C61C005788003539F7 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 7BB220CD1C005788003539F7;
 			remoteInfo = SobotKitFrameworkTest;
+		};
+		ED5F131827C7661200CA10B1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 59E4A0E423B455A800680CD7 /* SobotKit.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 7BB21F9F1C005611003539F7;
+			remoteInfo = SobotKit;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -67,7 +67,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				7B18AF2A2576186600C7C7FF /* SobotKit.framework in Embed Frameworks */,
+				ED5F131A27C7661900CA10B1 /* SobotKit.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -295,7 +295,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				7B18AF2E2576187700C7C7FF /* PBXTargetDependency */,
+				ED5F131927C7661200CA10B1 /* PBXTargetDependency */,
 			);
 			name = SobotKitFrameworkTest;
 			productName = SobotKitFrameworkTest;
@@ -447,15 +447,15 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		7B18AF2E2576187700C7C7FF /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = SobotKit;
-			targetProxy = 7B18AF2D2576187700C7C7FF /* PBXContainerItemProxy */;
-		};
 		7BB220E91C005789003539F7 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 7BB220CD1C005788003539F7 /* SobotKitFrameworkTest */;
 			targetProxy = 7BB220E81C005789003539F7 /* PBXContainerItemProxy */;
+		};
+		ED5F131927C7661200CA10B1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = SobotKit;
+			targetProxy = ED5F131827C7661200CA10B1 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 

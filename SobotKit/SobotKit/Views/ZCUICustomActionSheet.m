@@ -363,7 +363,7 @@
                 [btn setTitle:ZCSTLocalString(@"未解决") forState:UIControlStateNormal];
                 btn.selected=NO;
             }
-            if(isRTLLayout()){
+            if(sobotIsRTLLayout()){
                 [btn setImageEdgeInsets:UIEdgeInsetsMake(0, 3, 0, 3)];
             }
             [btn.titleLabel setFont:[ZCUITools zcgetListKitTitleFont]];
@@ -671,7 +671,7 @@
                 _isMustAdd = [model.isTagMust boolValue];
                 _isInputMust = [model.isInputMust boolValue];
                 
-                if (![@"" isEqual: zcLibConvertToString(model.labelName)]) {
+                if (![@"" isEqual: sobotConvertToString(model.labelName)]) {
                     self.item.frame = CGRectMake(0, CGRectGetMaxY(stLable.frame)+ 15, viewWidth, 0);
                 }
             }
@@ -684,7 +684,7 @@
                 _isMustAdd = [model.isTagMust boolValue];
                 _isInputMust = [model.isInputMust boolValue];
                 
-                if (![@"" isEqual: zcLibConvertToString(model.labelName)]) {
+                if (![@"" isEqual: sobotConvertToString(model.labelName)]) {
                     self.item.frame = CGRectMake(0, CGRectGetMaxY(stLable.frame)+ 15, viewWidth, 0);
                 }
             }
@@ -715,10 +715,10 @@
                 ZCLibSatisfaction * model = _listArray[(int)_ratingView.rating -1];
                 
                 
-                if (![@"" isEqual: zcLibConvertToString(model.labelName)]) {
+                if (![@"" isEqual: sobotConvertToString(model.labelName)]) {
                     items = [model.labelName componentsSeparatedByString:@"," ];
                     
-                    if(zcLibConvertToString(model.tagTips).length > 0){
+                    if(sobotConvertToString(model.tagTips).length > 0){
                         [stLable setText:model.tagTips];
                         CGRect f = stLable.frame;
                         f.size.height = 30;
@@ -735,8 +735,8 @@
     }
     
     //邀请评价时，可能已经默认选择了标签，此处给默认值
-    if(currentServerType == 5 && zcLibConvertToString([ZCUICore getUICore].inviteSatisfactionCheckLabels).length > 0){
-        [self.item InitDataWithArray:items withCheckLabels:zcLibConvertToString([ZCUICore getUICore].inviteSatisfactionCheckLabels)];
+    if(currentServerType == 5 && sobotConvertToString([ZCUICore getUICore].inviteSatisfactionCheckLabels).length > 0){
+        [self.item InitDataWithArray:items withCheckLabels:sobotConvertToString([ZCUICore getUICore].inviteSatisfactionCheckLabels)];
     }else{
         
         [self.item InitDataWithArray:items];
@@ -758,7 +758,7 @@
             if (currentServerType >2 && (_listArray.count > 0 && _listArray != nil) && (_ratingView.rating>0 && _ratingView.rating<= 11) && _listArray.count >= _ratingView.rating) {
                 
                 ZCLibSatisfaction * model = _listArray[(int)_ratingView.rating -1];
-                if (![@"" isEqual: zcLibConvertToString(model.labelName)]) {
+                if (![@"" isEqual: sobotConvertToString(model.labelName)]) {
                     _textView.frame = CGRectMake(25, CGRectGetMaxY(self.item.frame) + 20, viewWidth - 50 , 74);
                     
                 }
@@ -767,7 +767,7 @@
             if (currentServerType >2 && (_listArray.count > 0 && _listArray != nil) && (_ratingView.rating>0 && _ratingView.rating<= 5) && _listArray.count >= _ratingView.rating) {
                 
                 ZCLibSatisfaction * model = _listArray[(int)_ratingView.rating -1];
-                if (![@"" isEqual: zcLibConvertToString(model.labelName)]) {
+                if (![@"" isEqual: sobotConvertToString(model.labelName)]) {
                     _textView.frame = CGRectMake(25, CGRectGetMaxY(self.item.frame) + 20, viewWidth - 50 , 74);
                     
                 }
@@ -790,7 +790,7 @@
     if (_listArray != nil && _listArray.count >0) {
         if (_ratingView.rating >0) {
             ZCLibSatisfaction * model = _listArray[(int)_ratingView.rating -1];
-            if (![@"" isEqual:zcLibConvertToString(model.inputLanguage)]) {
+            if (![@"" isEqual:sobotConvertToString(model.inputLanguage)]) {
                 if (_isInputMust) {
                     NSString *needStr = ZCSTLocalString(@"必填");
                     _textView.placeholder = [NSString stringWithFormat:@"(%@)%@",needStr,model.inputLanguage];
@@ -1109,7 +1109,7 @@
         
         __weak ZCUICustomActionSheet * saveSelf = self;
         btn.enabled = false;
-        [[[ZCUICore getUICore] getAPIServer] postAddTicketSatisfactionWith:zcLibConvertToString(self.ticketld) Uid:zcLibConvertToString(_config.uid) CompanyId:zcLibConvertToString(_config.companyID) Score:source Remark:textStr start:^{
+        [[[ZCUICore getUICore] getAPIServer] postAddTicketSatisfactionWith:sobotConvertToString(self.ticketld) Uid:sobotConvertToString(_config.uid) CompanyId:sobotConvertToString(_config.companyID) Score:source Remark:textStr start:^{
             
         } success:^(NSDictionary *dict, ZCNetWorkCode sendCode) {
             @try{
@@ -1166,7 +1166,7 @@
             return;
         }
         // 如果是必传 去除两端的 空格+换行  是否为空
-        if (_isInputMust && [@"" isEqualToString:[zcLibConvertToString(_textView.text) stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]]) {
+        if (_isInputMust && [@"" isEqualToString:[sobotConvertToString(_textView.text) stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]]) {
             
             [[ZCUIToastTools shareToast] showToast:ZCSTLocalString(@"建议为必填") duration:1.0f view:self position:ZCToastPositionCenter];
             return;
@@ -1178,8 +1178,8 @@
     [dict setObject:comment forKey:@"problem"];
     
     if(_config){
-        [dict setObject:zcLibConvertToString(_config.cid)  forKey:@"cid"];
-        [dict setObject:zcLibConvertToString(_config.uid)  forKey:@"userId"];
+        [dict setObject:sobotConvertToString(_config.cid)  forKey:@"cid"];
+        [dict setObject:sobotConvertToString(_config.uid)  forKey:@"userId"];
     }
     if (currentServerType >2) {
         [dict setObject:[NSString stringWithFormat:@"%d",1] forKey:@"type"];
@@ -1204,7 +1204,7 @@
         textStr = _textView.text;
     }
     // 去除两端的 空格+换行
-    textStr = [zcLibConvertToString(_textView.text) stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    textStr = [sobotConvertToString(_textView.text) stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     
     [dict setObject:textStr forKey:@"suggest"];
     

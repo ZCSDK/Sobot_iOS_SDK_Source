@@ -160,7 +160,7 @@ static ZCUIToastTools *_instance=nil;
     
     CGFloat w = 130;
     CGFloat h = 70;
-    if(![@"" isEqual:zcLibConvertToString(status)]){
+    if(![@"" isEqual:sobotConvertToString(status)]){
         [_textLabel setText:status];
         [_textLabel setTextAlignment:NSTextAlignmentCenter];
         [_textLabel setFrame:CGRectMake(0, h-10, w, 0)];

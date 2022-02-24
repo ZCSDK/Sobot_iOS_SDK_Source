@@ -18,7 +18,7 @@
 #import "ZCLocalStore.h"
 #import "ZCToolsCore.h"
 #import "SobotImageView.h"
-
+#import "ZCUICore.h"
 #define MidImageHeight 110
 @interface ZCChatAllRichCell()<ZCMLEmojiLabelDelegate,SobotXHImageViewerDelegate,ZCActionSheetDelegate>{
     NSString    *callURL;
@@ -543,9 +543,9 @@
         #pragma mark 标题+内容
         NSString *text = @"";
         if (model.richModel.multiModel.templateIdType == 4 && model.displayMsgAttr==nil) {
-            text = zcLibConvertToString([model getModelDisplayText:YES]);
+            text = sobotConvertToString([model getModelDisplayText:YES]);
         }else{
-            text = zcLibConvertToString([model getModelDisplayText]);
+            text = sobotConvertToString([model getModelDisplayText]);
         }
         if(text.length > 0){
             ZCMLEmojiLabel *label = nil;
@@ -583,7 +583,7 @@
     }else{
         // {type:0,1,2,3,msg:}
         // 富文本数组:0：文本，1：图片，2：音频，3：视频，4：文件
-        if([zcGetAppChannel() isEqual:@"ZhiChiSobotUni"]){
+        if([[ZCLibClient sobotGetAppChannel] isEqual:@"ZhiChiSobotUni"]){
             NSString *msg = [self getUniDisplayString:model.richModel.richMsgList];
             ZCMLEmojiLabel *label = nil;
             if(richLabel){
@@ -598,9 +598,9 @@
                 [label setTextColor:[ZCUITools zcgetLeftChatTextColor]];
                 [label setLinkColor:[ZCUITools zcgetChatLeftLinkColor]];
             }
-//            if(zcLibConvertToString(item[@"name"]).length > 0 && zcLibIsUrl(msg)){
-//                [label setText:zcLibConvertToString(item[@"name"])];
-//                [label addLinkToURL:[NSURL URLWithString:zcLibConvertToString(msg)] withRange:NSMakeRange(0, zcLibConvertToString(item[@"name"]).length)];
+//            if(sobotConvertToString(item[@"name"]).length > 0 && sobotIsUrl(msg)){
+//                [label setText:sobotConvertToString(item[@"name"])];
+//                [label addLinkToURL:[NSURL URLWithString:sobotConvertToString(msg)] withRange:NSMakeRange(0, sobotConvertToString(item[@"name"]).length)];
 //            }else{
                 [label setText:msg];
 //            }
@@ -623,7 +623,7 @@
                 NSDictionary *item =  model.richModel.richMsgList[i];
                 int type = [item[@"type"] intValue];
                 
-                NSString *msg = zcLibConvertToString(item[@"msg"]);
+                NSString *msg = sobotConvertToString(item[@"msg"]);
                 if([@"<br>" isEqual:msg] || [@"<br/>" isEqual:msg]){
                     continue;
                 }
@@ -650,13 +650,13 @@
                     
                     // 2：音频，3：视频，4：文件
                     if(type == 2|| type == 3 || type == 4){
-                        if(!zcLibIsUrl(msg,@"")){
+                        if(!sobotIsUrl(msg,@"")){
                             continue;
                         }
                     }
-                    if(zcLibConvertToString(item[@"name"]).length > 0 && zcLibIsUrl(msg,[ZCUITools zcgetUrlRegular])){
-                        [label setText:[ZCHtmlCore filterHTMLTag:zcLibConvertToString(item[@"name"])]];
-                        [label addLinkToURL:[NSURL URLWithString:zcLibConvertToString(msg)] withRange:NSMakeRange(0, [ZCHtmlCore filterHTMLTag:zcLibConvertToString(item[@"name"])].length)];
+                    if(sobotConvertToString(item[@"name"]).length > 0 && sobotIsUrl(msg,[ZCUITools zcgetUrlRegular])){
+                        [label setText:[ZCHtmlCore filterHTMLTag:sobotConvertToString(item[@"name"])]];
+                        [label addLinkToURL:[NSURL URLWithString:sobotConvertToString(msg)] withRange:NSMakeRange(0, [ZCHtmlCore filterHTMLTag:sobotConvertToString(item[@"name"])].length)];
                     }else{
                         NSMutableAttributedString *attr = item[@"attr"];
                         if(attr){
@@ -693,7 +693,7 @@
                     }
                 }
                 if(type == 1){
-                    if(!zcLibIsUrl(msg,[ZCUITools zcgetUrlRegular])){
+                    if(!sobotIsUrl(msg,[ZCUITools zcgetUrlRegular])){
                         continue;
                     }
                     h = h + imgHeight + lineSpace;
@@ -714,7 +714,7 @@
         
     }
     
-    if(zcLibConvertToString([model getModelDisplaySugestionText]).length > 0){
+    if(sobotConvertToString([model getModelDisplaySugestionText]).length > 0){
 //    if(model.displaySugestionattr){
         ZCMLEmojiLabel *label = [ZCChatBaseCell createRichLabel];
         
@@ -813,7 +813,7 @@
         NSDictionary *item =  arr[i];
 //        int type = [item[@"type"] intValue];
         
-        NSString *msg = zcLibConvertToString(item[@"msg"]);
+        NSString *msg = sobotConvertToString(item[@"msg"]);
         msg = [ZCHtmlCore filterHTMLTag:msg];
         msg = [ZCUITools removeAllHTMLTag:msg];
         
@@ -839,7 +839,7 @@
 +(CGSize ) getAuthSensitiveView:(ZCLibMessage *) message width:(CGFloat ) maxWidth with:(UIView *) superView msgLabel:(ZCMLEmojiLabel *) richLabel{
     CGFloat h = 10;
     CGFloat lineSpace = [ZCUITools zcgetChatLineSpacing];
-    NSString *text = zcLibConvertToString([message getModelDisplayText]);
+    NSString *text = sobotConvertToString([message getModelDisplayText]);
 //    text = @"阿伺服电机暗室逢灯时代峰峻卡算法发生客户水电费看哈世纪东方哈开个会电饭锅SDK啊就是导航饭卡是否打开拉黑速度快发货撒地方哈弗卡的很国风大赏咖啡馆哈第三方是否打开哈士大夫哈里斯的国风大赏时代峰峻奥克斯的附近啊是的发伺服电机是打发时间大法师打发";
     CGFloat contentWidth = maxWidth - 20;
     if(!richLabel){
@@ -858,8 +858,8 @@
         contentWidth = s.width;
     }
     
-//    NSString *warningTips = [ZCUITools removeAllHTMLTag:zcLibConvertToString(message.sentisiveExplain)];
-    NSString *warningTips = zcLibConvertToString(message.sentisiveExplain);
+//    NSString *warningTips = [ZCUITools removeAllHTMLTag:sobotConvertToString(message.sentisiveExplain)];
+    NSString *warningTips = sobotConvertToString(message.sentisiveExplain);
     if(superView){
         UIImageView *ivBg = [[UIImageView alloc] initWithFrame:CGRectMake(0, 10, contentWidth, s.height + 20)];
         if(isShowExport){

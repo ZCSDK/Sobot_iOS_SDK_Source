@@ -67,7 +67,7 @@
     [self checkLabelState:NO];
     
     self.labelName.attributedText = [self getOtherColorString:@"*" Color:[UIColor redColor] withString:dict[@"dictDesc"]];
-       if(!zcLibIs_null(dict[@"dictValue"])){
+       if(!sobotIsNull(dict[@"dictValue"])){
            [_labelContent setText:dict[@"dictValue"]];
            [_labelContent setTextColor:UIColorFromThemeColor(ZCTextMainColor)];
        }else{

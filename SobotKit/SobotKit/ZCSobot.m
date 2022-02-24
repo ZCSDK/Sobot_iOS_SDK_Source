@@ -8,7 +8,6 @@
 
 #import "ZCSobot.h"
 #import "ZCLibClient.h"
-#import "ZCLogUtils.h"
 
 #import "ZCPlatformTools.h"
 #import "ZCUICore.h"
@@ -81,7 +80,7 @@
 
 
 +(void)checkConfig:(void (^)(NSString *,int code))ResultBlock{
-    if ([@"" isEqualToString:zcLibConvertToString([ZCLibClient getZCLibClient].libInitInfo.app_key)] && [@"" isEqualToString:zcLibConvertToString([ZCLibClient getZCLibClient].libInitInfo.customer_code)]) {
+    if ([@"" isEqualToString:sobotConvertToString([ZCLibClient getZCLibClient].libInitInfo.app_key)] && [@"" isEqualToString:sobotConvertToString([ZCLibClient getZCLibClient].libInitInfo.customer_code)]) {
         if(ResultBlock){
             ResultBlock(@"appkey不能为空",1);
         }
@@ -109,25 +108,25 @@
 
 
 +(NSString *)getVersion {
-    return zcGetSDKVersion();
+    return [ZCLibClient sobotGetSDKVersion];
 }
 
 
 +(NSString *)getChannel{
-    return zcGetAppChannel();
+    return [ZCLibClient sobotGetAppChannel];
 }
 
 +(NSString *)getAppVersion{
-    return zcGetAppVersion();
+    return sobotGetAppVersion();
 }
 
 +(NSString *)getiphoneType{
-    return zcGetIphoneType();
+    return sobotGetIphoneType();
 }
 
 
 +(NSString *)getAppName{
-    return zcGetAppName();
+    return sobotGetAppName();
 }
 
 +(void)setShowDebug:(BOOL)isShowDebug{
@@ -135,7 +134,7 @@
 }
 
 +(NSString *)getsystorm{
-    return zcGetSystemVersion();
+    return sobotGetSystemVersion();
 }
 
 

@@ -30,7 +30,7 @@
 //        
 //    if(![[self getCheckConfigMsg] isEqual:[ZCStoreConfiguration getZCParamter:KEY_ZCCONFIGMESSAGE]]){
 //        // 当前是仅机器人或更换了appkey，使用户离线
-//        if ([ZCLibClient getZCLibClient].libInitInfo.serviceMode == 1 || ![zcLibConvertToString([ZCStoreConfiguration getZCParamter:KEY_ZCCONFIGMESSAGE]) hasPrefix:zcLibConvertToString([ZCLibClient getZCLibClient].libInitInfo.appKey)]){
+//        if ([ZCLibClient getZCLibClient].libInitInfo.serviceMode == 1 || ![sobotConvertToString([ZCStoreConfiguration getZCParamter:KEY_ZCCONFIGMESSAGE]) hasPrefix:sobotConvertToString([ZCLibClient getZCLibClient].libInitInfo.appKey)]){
 //            // 断开通道，重新初始化
 //            [ZCLibClient closeAndoutZCServer:YES];
 //        }
@@ -57,7 +57,7 @@
     ZCLibInitInfo *initInfo = [ZCLibClient getZCLibClient].libInitInfo;
     if(initInfo){
         // appkey，商户Id，技能组、用户id，客服id，对接机器人编号、接入模式
-        return [NSString stringWithFormat:@"%@|%@|%@|%@|%@|%@|%d|%@|%@",initInfo.app_key,zcLibConvertToString(initInfo.customer_code),initInfo.groupid,initInfo.partnerid,initInfo.choose_adminid,initInfo.robotid,initInfo.service_mode,initInfo.params,initInfo.customer_fields];
+        return [NSString stringWithFormat:@"%@|%@|%@|%@|%@|%@|%d|%@|%@",initInfo.app_key,sobotConvertToString(initInfo.customer_code),initInfo.groupid,initInfo.partnerid,initInfo.choose_adminid,initInfo.robotid,initInfo.service_mode,initInfo.params,initInfo.customer_fields];
     }
     return @"";
 }
@@ -225,8 +225,8 @@
     UIImage  *thumbnail = [self getVideoPreViewImage:videoURL];
     NSData * imageData =UIImageJPEGRepresentation(thumbnail, 0.75f);
     NSString * fname = [NSString stringWithFormat:@"/sobot/image100%ld.jpg",(long)[NSDate date].timeIntervalSince1970];
-    zcLibCheckPathAndCreate(zcLibGetDocumentsFilePath(@"/sobot/"));
-    NSString *fullPath=zcLibGetDocumentsFilePath(fname);
+    sobotCheckPathAndCreate(sobotGetDocumentsFilePath(@"/sobot/"));
+    NSString *fullPath=sobotGetDocumentsFilePath(fname);
     [imageData writeToFile:fullPath atomically:YES];
     
     finshBlock(nil,ZCMessageTypeVideo, @{@"video":videoURL,@"image":fullPath});
@@ -258,8 +258,8 @@
     if (originImage) {
         NSData * imageData =UIImageJPEGRepresentation(originImage, 0.75f);
         NSString * fname = [NSString stringWithFormat:@"/sobot/image100%ld.jpg",(long)[NSDate date].timeIntervalSince1970];
-        zcLibCheckPathAndCreate(zcLibGetDocumentsFilePath(@"/sobot/"));
-        NSString *fullPath=zcLibGetDocumentsFilePath(fname);
+        sobotCheckPathAndCreate(sobotGetDocumentsFilePath(@"/sobot/"));
+        NSString *fullPath=sobotGetDocumentsFilePath(fname);
         [imageData writeToFile:fullPath atomically:YES];
         CGFloat mb=imageData.length/1024/1024;
         if(mb>20){

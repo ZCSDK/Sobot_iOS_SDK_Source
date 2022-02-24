@@ -7,18 +7,18 @@
 //
 
 #import "ZCLibCusMenu.h"
-#import "ZCLibCommon.h"
+#import "SobotUtils.h"
 @implementation ZCLibCusMenu
 
 -(id)initWithMyDict:(NSDictionary *)dict{
     self=[super init];
     if(self){
         @try {
-            _title      = zcLibConvertToString(dict[@"lableName"]);
-            _url  = zcLibConvertToString(dict[@"lableLink"]);
-            _lableId = [zcLibConvertToString(dict[@"lableId"]) integerValue];
-            _imgName = zcLibConvertToString(dict[@"imgName"]);
-            _imgNamePress = zcLibConvertToString(dict[@"imgNamePress"]);
+            _title      = sobotConvertToString(dict[@"lableName"]);
+            _url  = sobotConvertToString(dict[@"lableLink"]);
+            _lableId = [sobotConvertToString(dict[@"lableId"]) integerValue];
+            _imgName = sobotConvertToString(dict[@"imgName"]);
+            _imgNamePress = sobotConvertToString(dict[@"imgNamePress"]);
         }
         @catch (NSException *exception) {
             

@@ -39,7 +39,7 @@
 #import "ZCZHPickView.h"
 //#import "ZCOrderCusFieldController.h"
 //#import "ZCUploadImageModel.h"
-#import "ZCLibCommon.h"
+#import "SobotUtils.h"
 #import "ZCPlatformTools.h"
 
 #import "ZCUICore.h"
@@ -148,7 +148,6 @@ typedef NS_ENUM(NSInteger,ExitType) {
     [self.mesRecordVC loadData];
     // 当从 “您的留言状态有 更新” 进入留言页面 只显示留言记录刷新时 设置选中留言记录页面
     if (self.selectedType == 2) {
-//        [self itemsClick:rightBtn];
         [self itemsClick:self.rightBtn];
     }
 }
@@ -409,7 +408,7 @@ typedef NS_ENUM(NSInteger,ExitType) {
                           @"dictName":@"ticketTitle",
                           @"dictDesc":title,
                           @"placeholder":text,
-                          @"dictValue":zcLibConvertToString(_model.ticketTitle),
+                          @"dictValue":sobotConvertToString(_model.ticketTitle),
                           @"dictType":@"1",
                           @"propertyType":@"0"
         }];
@@ -424,7 +423,7 @@ typedef NS_ENUM(NSInteger,ExitType) {
                       @"dictName":@"ticketType",
                       @"dictDesc":[NSString stringWithFormat:@"%@*",ZCSTLocalString(@"问题分类")],
                       @"placeholder":@"",
-                      @"dictValue":zcLibConvertToString(_model.ticketTypeName),
+                      @"dictValue":sobotConvertToString(_model.ticketTypeName),
                       @"dictType":@"3",
                       @"propertyType":@"0"
                       }];
@@ -438,20 +437,20 @@ typedef NS_ENUM(NSInteger,ExitType) {
         int index = 0;
         for (ZCLibOrderCusFieldsModel *cusModel in _coustomArr) {
             NSString *propertyType = @"1";
-            if ([zcLibConvertToString(cusModel.openFlag) intValue] == 0) {
+            if ([sobotConvertToString(cusModel.openFlag) intValue] == 0) {
                 propertyType = @"3";
                 cusModel.fieldType = @"3";
             }
-            NSString * titleStr = zcLibConvertToString(cusModel.fieldName);
-            if([zcLibConvertToString(cusModel.fillFlag) intValue] == 1){
+            NSString * titleStr = sobotConvertToString(cusModel.fieldName);
+            if([sobotConvertToString(cusModel.fillFlag) intValue] == 1){
                 titleStr = [NSString stringWithFormat:@"%@*",titleStr];
             }
             [arr2 addObject:@{@"code":[NSString stringWithFormat:@"%d",index],
-                              @"dictName":zcLibConvertToString(cusModel.fieldName),
-                              @"dictDesc":zcLibConvertToString(titleStr),
-                              @"placeholder":zcLibConvertToString(cusModel.fieldRemark),
-                              @"dictValue":zcLibConvertToString(cusModel.fieldValue),
-                              @"dictType":zcLibConvertToString(cusModel.fieldType),
+                              @"dictName":sobotConvertToString(cusModel.fieldName),
+                              @"dictDesc":sobotConvertToString(titleStr),
+                              @"placeholder":sobotConvertToString(cusModel.fieldRemark),
+                              @"dictValue":sobotConvertToString(cusModel.fieldValue),
+                              @"dictType":sobotConvertToString(cusModel.fieldType),
                               @"propertyType":propertyType,
                               @"model":cusModel
                               }];
@@ -480,8 +479,8 @@ typedef NS_ENUM(NSInteger,ExitType) {
         tmp=[tmp substringWithRange:NSMakeRange(1, tmp.length-1)];
     }
     
-    if(zcLibConvertToString([ZCUICore getUICore].kitInfo.leaveContentPlaceholder).length > 0){
-        tmp = ZCSTLocalString(zcLibConvertToString([ZCUICore getUICore].kitInfo.leaveContentPlaceholder));
+    if(sobotConvertToString([ZCUICore getUICore].kitInfo.leaveContentPlaceholder).length > 0){
+        tmp = ZCSTLocalString(sobotConvertToString([ZCUICore getUICore].kitInfo.leaveContentPlaceholder));
     }
     
 //    if (libConfig.enclosureShowFlag) {
@@ -490,7 +489,7 @@ typedef NS_ENUM(NSInteger,ExitType) {
                           @"dictName":@"ticketReplyContent",
                           @"dictDesc":ZCSTLocalString(@"回复内容"),
                           @"placeholder":tmp,//  libConfig.msgTmp
-                          @"dictValue":zcLibConvertToString(_model.ticketDesc),
+                          @"dictValue":sobotConvertToString(_model.ticketDesc),
                           @"dictType":@"0",
                           @"propertyType":@"0"
                           }];
@@ -514,7 +513,7 @@ typedef NS_ENUM(NSInteger,ExitType) {
                           @"dictName":@"ticketEmail",
                           @"dictDesc":title,
                           @"placeholder":text,
-                          @"dictValue":zcLibConvertToString(_model.email),
+                          @"dictValue":sobotConvertToString(_model.email),
                           @"dictType":@"1",
                           @"propertyType":@"0"
                           }];
@@ -531,7 +530,7 @@ typedef NS_ENUM(NSInteger,ExitType) {
                           @"dictName":@"ticketTel",
                           @"dictDesc":title,
                           @"placeholder":text,
-                          @"dictValue":zcLibConvertToString(_model.tel),
+                          @"dictValue":sobotConvertToString(_model.tel),
                           @"dictType":@"1",
                           @"propertyType":@"0"
                           }];
@@ -586,7 +585,7 @@ typedef NS_ENUM(NSInteger,ExitType) {
     if(sender.tag == BUTTON_MORE){
         // 标题
         if (_ticketTitleShowFlag) {
-            if (zcLibTrimString(_model.ticketTitle).length == 0) {
+            if (sobotTrimString(_model.ticketTitle).length == 0) {
                 [[ZCUIToastTools shareToast] showToast:ZCSTLocalString(@"请填写标题") duration:1.0f view:self.view position:ZCToastPositionCenter];
                 return;
             }
@@ -595,7 +594,7 @@ typedef NS_ENUM(NSInteger,ExitType) {
         
         // 工单类型
         if (_typeArr.count>0 && _tickeTypeFlag == 1) {
-            if ([@"" isEqualToString:zcLibConvertToString(_model.ticketType)]) {
+            if ([@"" isEqualToString:sobotConvertToString(_model.ticketType)]) {
                 [[ZCUIToastTools shareToast] showToast:ZCSTLocalString(@"选择分类") duration:1.0f view:self.view position:ZCToastPositionCenter];
                 return;
             }
@@ -605,18 +604,18 @@ typedef NS_ENUM(NSInteger,ExitType) {
         NSMutableArray *cusFields = [NSMutableArray arrayWithCapacity:0];
         // 自定义字段
         for (ZCLibOrderCusFieldsModel *cusModel in _coustomArr) {
-            if([cusModel.fillFlag intValue] == 1 && zcLibIs_null(cusModel.fieldValue)){
+            if([cusModel.fillFlag intValue] == 1 && sobotIsNull(cusModel.fieldValue)){
                 [[ZCUIToastTools shareToast] showToast:[NSString stringWithFormat:@"%@%@",cusModel.fieldName,ZCSTLocalString(@"不能为空")] duration:1.0f view:self.view position:ZCToastPositionCenter];
                 return;
             }
             
-            if(!zcLibIs_null(cusModel.fieldSaveValue)){
-                [cusFields addObject:@{@"id":zcLibConvertToString(cusModel.fieldId),
-                                       @"value":zcLibConvertToString(cusModel.fieldSaveValue)
+            if(!sobotIsNull(cusModel.fieldSaveValue)){
+                [cusFields addObject:@{@"id":sobotConvertToString(cusModel.fieldId),
+                                       @"value":sobotConvertToString(cusModel.fieldSaveValue)
                                        }];
             }else{
-                [cusFields addObject:@{@"id":zcLibConvertToString(cusModel.fieldId),
-                                       @"value":zcLibConvertToString(cusModel.fieldValue)
+                [cusFields addObject:@{@"id":sobotConvertToString(cusModel.fieldId),
+                                       @"value":sobotConvertToString(cusModel.fieldValue)
                                        }];
             }
             
@@ -631,8 +630,8 @@ typedef NS_ENUM(NSInteger,ExitType) {
         if (_emailShowFlag) {
             // 必填
             if (_emailFlag) {
-                if (zcLibTrimString(_model.email).length>0) {
-                     if(!zcLibValidateEmail(_model.email)){
+                if (sobotTrimString(_model.email).length>0) {
+                     if(!sobotValidateEmail(_model.email)){
                         [[ZCUIToastTools shareToast] showToast:ZCSTLocalString(@"请输入正确的邮箱") duration:1.0f view:self.view position:ZCToastPositionCenter];
                         return;
                      }
@@ -642,8 +641,8 @@ typedef NS_ENUM(NSInteger,ExitType) {
                 }
             }else{
               // 非必填
-                if(zcLibTrimString(_model.email).length>0){
-                    if(!zcLibValidateEmail(_model.email)){
+                if(sobotTrimString(_model.email).length>0){
+                    if(!sobotValidateEmail(_model.email)){
                         [[ZCUIToastTools shareToast] showToast:ZCSTLocalString(@"请输入正确的邮箱") duration:1.0f view:self.view position:ZCToastPositionCenter];
                         return;
                     }
@@ -654,7 +653,7 @@ typedef NS_ENUM(NSInteger,ExitType) {
         }
         
         // 显示 手机
-        if (_telShowFlag && _telFlag &&  zcLibTrimString(_model.tel).length==0) {
+        if (_telShowFlag && _telFlag &&  sobotTrimString(_model.tel).length==0) {
             // 必填
             [[ZCUIToastTools shareToast] showToast:ZCSTLocalString(@"手机号不能为空") duration:1.0f view:self.view position:ZCToastPositionCenter];
             return;
@@ -695,11 +694,11 @@ typedef NS_ENUM(NSInteger,ExitType) {
 
 -(BOOL)checkContentValid:(NSString *) text model:(ZCLibOrderCusFieldsModel *) model{
     
-    if(model != nil && zcLibConvertToString(text).length >0){
+    if(model != nil && sobotConvertToString(text).length >0){
         NSArray *limitOptions = nil;
         
         if([model.limitOptions isKindOfClass:[NSString class]]){
-            NSString *limitOption =  zcLibConvertToString(model.limitOptions);
+            NSString *limitOption =  sobotConvertToString(model.limitOptions);
             limitOption = [limitOption stringByReplacingOccurrencesOfString:@"[" withString:@""];
             limitOption = [limitOption stringByReplacingOccurrencesOfString:@"]" withString:@""];
             limitOptions = [limitOption componentsSeparatedByString:@","];
@@ -725,29 +724,29 @@ typedef NS_ENUM(NSInteger,ExitType) {
             }
         }
         if([limitOptions containsObject:[NSNumber numberWithInt:3]] || [limitOptions containsObject:@"3"]){
-             return zcLibValidateDecimalDouble(text);
+             return sobotValidateFloatWithNum(text,2);
         }
         if([limitOptions containsObject:[NSNumber numberWithInt:4]] || [limitOptions containsObject:@"4"]){
-             return zcLibValidateRuleNotBlank(text);
+             return sobotValidateRuleNotBlank(text);
         }
         
         if([limitOptions containsObject:[NSNumber numberWithInt:5]] || [limitOptions containsObject:@"5"]){
-             return zcLibValidateNumber(text);
+             return sobotValidateNumber(text);
         }
         
         if([limitOptions containsObject:[NSNumber numberWithInt:6]] || [limitOptions containsObject:@"6"]){
-            if(zcLibConvertToString(text).length > [model.limitChar intValue]){
+            if(sobotConvertToString(text).length > [model.limitChar intValue]){
                 return NO;
             }
         }
         
         if([limitOptions containsObject:[NSNumber numberWithInt:7]] || [limitOptions containsObject:@"7"]){
-            return zcLibValidateEmail(text);
+            return sobotValidateEmail(text);
         }
         
         if([limitOptions containsObject:[NSNumber numberWithInt:8]] || [limitOptions containsObject:@"8"]){
         
-            return zcLibValidateMobileWithRegex(text, [ZCUITools zcgetTelRegular]);
+            return sobotValidateMobileWithRegex(text, [ZCUITools zcgetTelRegular]);
         }
         
     }
@@ -762,21 +761,21 @@ typedef NS_ENUM(NSInteger,ExitType) {
     
     __weak ZCUILeaveMessageController *leaveVC = self;
     NSMutableDictionary *dic = [NSMutableDictionary dictionary];
-    [dic setValue:zcLibConvertToString(_model.ticketDesc) forKey:@"ticketContent"];
+    [dic setValue:sobotConvertToString(_model.ticketDesc) forKey:@"ticketContent"];
     
     if(_ticketTitleShowFlag){
-        [dic setValue:zcLibConvertToString(_model.ticketTitle) forKey:@"ticketTitle"];
+        [dic setValue:sobotConvertToString(_model.ticketTitle) forKey:@"ticketTitle"];
     }
     
     if(_emailFlag || _emailShowFlag){
-        [dic setValue:zcLibConvertToString(_model.email) forKey:@"customerEmail"];
+        [dic setValue:sobotConvertToString(_model.email) forKey:@"customerEmail"];
         
     }
     if ( _telFlag || _telShowFlag) {
-      [dic setValue:zcLibConvertToString(_model.tel) forKey:@"customerPhone"];
+      [dic setValue:sobotConvertToString(_model.tel) forKey:@"customerPhone"];
     }
     
-    if(!zcLibIs_null([ZCUICore getUICore].kitInfo.leaveCusFieldArray) && [ZCUICore getUICore].kitInfo.leaveCusFieldArray.count > 0){
+    if(!sobotIsNull([ZCUICore getUICore].kitInfo.leaveCusFieldArray) && [ZCUICore getUICore].kitInfo.leaveCusFieldArray.count > 0){
         if(arr == nil){
             arr = [[NSMutableArray alloc] init];
         }
@@ -787,21 +786,21 @@ typedef NS_ENUM(NSInteger,ExitType) {
     }
     // 添加自定义字段
     if (arr.count > 0) {
-         [dic setValue:zcLibConvertToString([ZCLocalStore DataTOjsonString:arr]) forKey:@"extendFields"];
+         [dic setValue:sobotConvertToString([ZCLocalStore DataTOjsonString:arr]) forKey:@"extendFields"];
     }
     
     // 2.8.6新增对接字段，可以设置订单、城市等固定字段
-    if(!zcLibIs_null([ZCUICore getUICore].kitInfo.leaveParamsExtends) && [ZCUICore getUICore].kitInfo.leaveParamsExtends.count > 0){
-        [dic setValue:zcLibConvertToString([ZCLocalStore DataTOjsonString:[ZCUICore getUICore].kitInfo.leaveParamsExtends]) forKey:@"paramsExtends"];
+    if(!sobotIsNull([ZCUICore getUICore].kitInfo.leaveParamsExtends) && [ZCUICore getUICore].kitInfo.leaveParamsExtends.count > 0){
+        [dic setValue:sobotConvertToString([ZCLocalStore DataTOjsonString:[ZCUICore getUICore].kitInfo.leaveParamsExtends]) forKey:@"paramsExtends"];
     }
     
     
     
     // 工单类型
     if ( _tickeTypeFlag == 2 ) {
-        [dic setValue:zcLibConvertToString(_ticketTypeId) forKey:@"ticketTypeId"];
+        [dic setValue:sobotConvertToString(_ticketTypeId) forKey:@"ticketTypeId"];
     }else{
-        [dic setValue:zcLibConvertToString(_model.ticketType) forKey:@"ticketTypeId"];
+        [dic setValue:sobotConvertToString(_model.ticketType) forKey:@"ticketTypeId"];
     }
     
     if(_imageArr.count>0){
@@ -810,7 +809,7 @@ typedef NS_ENUM(NSInteger,ExitType) {
             
             NSDictionary *model = _imageArr[i];
             
-            NSString *fileUrlStr = zcLibConvertToString(model[@"fileUrl"]);
+            NSString *fileUrlStr = sobotConvertToString(model[@"fileUrl"]);
             if (fileUrlStr.length > 0) {
                 fileStr = [fileStr stringByAppendingFormat:@"%@;",fileUrlStr];
             }
@@ -818,11 +817,11 @@ typedef NS_ENUM(NSInteger,ExitType) {
         }
         
         fileStr = [fileStr substringToIndex:fileStr.length-1];
-        [dic setObject:zcLibConvertToString(fileStr) forKey:@"fileStr"];
+        [dic setObject:sobotConvertToString(fileStr) forKey:@"fileStr"];
     }
     
     // 技能组ID
-    [dic setObject:zcLibConvertToString([ZCUICore getUICore].kitInfo.leaveMsgGroupId) forKey:@"groupId"];
+    [dic setObject:sobotConvertToString([ZCUICore getUICore].kitInfo.leaveMsgGroupId) forKey:@"groupId"];
     
     NSString * templateId = @"1";
     if (self.templateldIdDic != nil && [[self.templateldIdDic allKeys] containsObject:@"templateId"]) {
@@ -981,7 +980,7 @@ typedef NS_ENUM(NSInteger,ExitType) {
     _mesRecordVC.jumpMsgDetailBlock = ^(ZCRecordListModel *model) {
         ZCMsgDetailsVC * detailVC = [[ZCMsgDetailsVC alloc]init];
         detailVC.ticketId = model.ticketId;
-        detailVC.companyId = zcLibConvertToString([ZCLocalStore getLocalParamter:@"ZCKEY_COMPANYID"]);
+        detailVC.companyId = sobotConvertToString([ZCLocalStore getLocalParamter:@"ZCKEY_COMPANYID"]);
         if (saveVC.navigationController!= nil) {
             [saveVC.navigationController pushViewController:detailVC animated:YES];
         }else{
@@ -1221,8 +1220,8 @@ return [UIView new];
 
         NSString *text = _msgTxt;//[self getCurConfig].msgTxt;
         
-        if(zcLibConvertToString([ZCUICore getUICore].kitInfo.leaveMsgGuideContent).length > 0){
-            text = ZCSTLocalString(zcLibConvertToString([ZCUICore getUICore].kitInfo.leaveMsgGuideContent));
+        if(sobotConvertToString([ZCUICore getUICore].kitInfo.leaveMsgGuideContent).length > 0){
+            text = ZCSTLocalString(sobotConvertToString([ZCUICore getUICore].kitInfo.leaveMsgGuideContent));
         }
         
         [ZCHtmlCore filterHtml:text result:^(NSString * _Nonnull text1, NSMutableArray * _Nonnull arr, NSMutableArray * _Nonnull links) {
@@ -1485,18 +1484,18 @@ return [UIView new];
             temModel.fieldSaveValue = value;
             
             // 这里要重新处理数据 *
-            NSString * titleStr = zcLibConvertToString(temModel.fieldName);
-            if([zcLibConvertToString(temModel.fillFlag) intValue] == 1){
+            NSString * titleStr = sobotConvertToString(temModel.fieldName);
+            if([sobotConvertToString(temModel.fillFlag) intValue] == 1){
                 titleStr = [NSString stringWithFormat:@"%@*",titleStr];
             }
             
             NSMutableArray *arr1 = _listArray[indexPath.section][@"arr"];
             arr1[indexPath.row] = @{@"code":[NSString stringWithFormat:@"%d",index],
-                                    @"dictName":zcLibConvertToString(temModel.fieldName),
-                                    @"dictDesc":zcLibConvertToString(titleStr),
-                                    @"placeholder":zcLibConvertToString(temModel.fieldRemark),
-                                    @"dictValue":zcLibConvertToString(temModel.fieldValue),
-                                    @"dictType":zcLibConvertToString(temModel.fieldType),
+                                    @"dictName":sobotConvertToString(temModel.fieldName),
+                                    @"dictDesc":sobotConvertToString(titleStr),
+                                    @"placeholder":sobotConvertToString(temModel.fieldRemark),
+                                    @"dictValue":sobotConvertToString(temModel.fieldValue),
+                                    @"dictType":sobotConvertToString(temModel.fieldType),
                                     @"propertyType":@"1"
                                     };
         }
@@ -1517,7 +1516,7 @@ return [UIView new];
                                   @"dictName":@"ticketEmail",
                                   @"dictDesc":title,
                                   @"placeholder":text,
-                                  @"dictValue":zcLibConvertToString(_model.email),
+                                  @"dictValue":sobotConvertToString(_model.email),
                                   @"dictType":@"1",
                                   @"propertyType":@"0"
                                   };
@@ -1537,7 +1536,7 @@ return [UIView new];
                                         @"dictName":@"ticketTel",
                                         @"dictDesc":title,
                                         @"placeholder":text,
-                                        @"dictValue":zcLibConvertToString(_model.tel),
+                                        @"dictValue":sobotConvertToString(_model.tel),
                                         @"dictType":@"1",
                                         @"propertyType":@"0"
                                         };
@@ -1554,7 +1553,7 @@ return [UIView new];
                                     @"dictName":@"ticketTitle",
                                     @"dictDesc":title,
                                     @"placeholder":text,
-                                    @"dictValue":zcLibConvertToString(_model.ticketTitle),
+                                    @"dictValue":sobotConvertToString(_model.ticketTitle),
                                     @"dictType":@"1",
                                     @"propertyType":@"0"
                   };
@@ -1614,11 +1613,11 @@ return [UIView new];
                NSInteger currentInt = [key intValue];
 
                 NSString *imgPathStr;
-                if(zcLibCheckFileIsExsis([_imagePathArr objectAtIndex:currentInt])){
+                if(sobotCheckFileIsExsis([_imagePathArr objectAtIndex:currentInt])){
                     imgPathStr = [_imagePathArr objectAtIndex:currentInt];
                 }
                 NSDictionary *imgDic = [_imageArr objectAtIndex:currentInt];
-                NSString *imgFileStr =  zcLibConvertToString(imgDic[@"cover"]);
+                NSString *imgFileStr =  sobotConvertToString(imgDic[@"cover"]);
                 
                 if (imgFileStr.length>0) {
             //        视频预览
@@ -1724,10 +1723,10 @@ return [UIView new];
             } success:^(NSString *fileURL, ZCNetWorkCode code) {
 
                   [[ZCUIToastTools shareToast] dismisProgress];
-                            if (zcLibIs_null(_imageArr)) {
+                            if (sobotIsNull(_imageArr)) {
                                 _imageArr = [NSMutableArray arrayWithCapacity:0];
                             }
-                            if (zcLibIs_null(_imagePathArr)) {
+                            if (sobotIsNull(_imagePathArr)) {
                                 _imagePathArr = [NSMutableArray arrayWithCapacity:0];
                             }
                             [_imagePathArr addObject:filePath];
@@ -1780,8 +1779,8 @@ return [UIView new];
     //    [formater setDateFormat:@"yyyy-MM-dd-HH:mm:ss"];
 
     NSString * fname = [NSString stringWithFormat:@"/sobot/output-%ld.mp4",(long)[NSDate date].timeIntervalSince1970];
-    zcLibCheckPathAndCreate(zcLibGetDocumentsFilePath(@"/sobot/"));
-    NSString *resultPath=zcLibGetDocumentsFilePath(fname);
+    sobotCheckPathAndCreate(sobotGetDocumentsFilePath(@"/sobot/"));
+    NSString *resultPath=sobotGetDocumentsFilePath(fname);
     //    NSLog(@"resultPath = %@",resultPath);
     exportSession.outputURL = [NSURL fileURLWithPath:resultPath];
     exportSession.outputFileType = AVFileTypeMPEG4;
@@ -1850,10 +1849,10 @@ return [UIView new];
 
 
 -(void)tapHideKeyboard{
-    if(!zcLibIs_null(_tempTextView)){
+    if(!sobotIsNull(_tempTextView)){
         [_tempTextView resignFirstResponder];
         _tempTextView = nil;
-    }else if(!zcLibIs_null(_tempTextField)){
+    }else if(!sobotIsNull(_tempTextField)){
         [_tempTextField resignFirstResponder];
         _tempTextField  = nil;
     }else{
@@ -1867,10 +1866,10 @@ return [UIView new];
 
 
 - (void) hideKeyboard {
-    if(!zcLibIs_null(_tempTextView)){
+    if(!sobotIsNull(_tempTextView)){
         [_tempTextView resignFirstResponder];
         _tempTextView = nil;
-    }else if(!zcLibIs_null(_tempTextField)){
+    }else if(!sobotIsNull(_tempTextField)){
         [_tempTextField resignFirstResponder];
         _tempTextField  = nil;
     }else{

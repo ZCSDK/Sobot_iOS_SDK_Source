@@ -410,10 +410,10 @@
     
     if (pm.endFlag) {
         // 最后一轮会话，有外链，点击跳转外链
-        if (![@"" isEqualToString: zcLibConvertToString(detail[@"anchor"])]) {
+        if (![@"" isEqualToString: sobotConvertToString(detail[@"anchor"])]) {
             // 点击超链跳转
             if (self.delegate && [self.delegate respondsToSelector:@selector(cellItemLinkClick:type:obj:)]) {
-                [self.delegate cellItemLinkClick:nil type:ZCChatCellClickTypeOpenURL obj:zcLibConvertToString(detail[@"anchor"])];
+                [self.delegate cellItemLinkClick:nil type:ZCChatCellClickTypeOpenURL obj:sobotConvertToString(detail[@"anchor"])];
             }
         }
         return;

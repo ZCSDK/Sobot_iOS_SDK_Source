@@ -227,51 +227,53 @@
 		7BDB60DC243328F800D655C5 /* ZCUIToastTools.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB6003243328F700D655C5 /* ZCUIToastTools.h */; };
 		7BDB60DD243328F800D655C5 /* ZCSatisfactionButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB6004243328F700D655C5 /* ZCSatisfactionButton.m */; };
 		7BDB60DE243328F800D655C5 /* ZCUIColorsDefine.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BDB6006243328F800D655C5 /* ZCUIColorsDefine.h */; };
-		ED8E83822775D1FA00144B0B /* libSobotLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ED8E83632775D1FA00144B0B /* libSobotLib.a */; };
-		ED8E83832775D1FA00144B0B /* ZCLIbGlobalDefine.h in Headers */ = {isa = PBXBuildFile; fileRef = ED8E83652775D1FA00144B0B /* ZCLIbGlobalDefine.h */; };
-		ED8E83842775D1FA00144B0B /* ZCLibCommon.h in Headers */ = {isa = PBXBuildFile; fileRef = ED8E83662775D1FA00144B0B /* ZCLibCommon.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		ED8E83852775D1FA00144B0B /* ZCLibHttpConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = ED8E83672775D1FA00144B0B /* ZCLibHttpConstants.h */; };
-		ED8E83862775D1FA00144B0B /* ZCLibNetworkTools.h in Headers */ = {isa = PBXBuildFile; fileRef = ED8E83682775D1FA00144B0B /* ZCLibNetworkTools.h */; };
-		ED8E83872775D1FA00144B0B /* ZCLibRich.h in Headers */ = {isa = PBXBuildFile; fileRef = ED8E83692775D1FA00144B0B /* ZCLibRich.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		ED8E83882775D1FA00144B0B /* ZCHtmlCore.h in Headers */ = {isa = PBXBuildFile; fileRef = ED8E836A2775D1FA00144B0B /* ZCHtmlCore.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		ED8E83892775D1FA00144B0B /* ZCIMChat.h in Headers */ = {isa = PBXBuildFile; fileRef = ED8E836B2775D1FA00144B0B /* ZCIMChat.h */; };
-		ED8E838A2775D1FA00144B0B /* ZCMultiwheelModel.h in Headers */ = {isa = PBXBuildFile; fileRef = ED8E836C2775D1FA00144B0B /* ZCMultiwheelModel.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		ED8E838B2775D1FA00144B0B /* ZCLogUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = ED8E836D2775D1FA00144B0B /* ZCLogUtils.h */; };
-		ED8E838C2775D1FA00144B0B /* ZCRecordListModel.h in Headers */ = {isa = PBXBuildFile; fileRef = ED8E836E2775D1FA00144B0B /* ZCRecordListModel.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		ED8E838D2775D1FA00144B0B /* ZCPlatformInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = ED8E836F2775D1FA00144B0B /* ZCPlatformInfo.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		ED8E838E2775D1FA00144B0B /* ZCLibOrderCusFieldsModel.h in Headers */ = {isa = PBXBuildFile; fileRef = ED8E83702775D1FA00144B0B /* ZCLibOrderCusFieldsModel.h */; };
-		ED8E838F2775D1FA00144B0B /* ZCLibSkillSet.h in Headers */ = {isa = PBXBuildFile; fileRef = ED8E83712775D1FA00144B0B /* ZCLibSkillSet.h */; };
-		ED8E83902775D1FA00144B0B /* ZCLibServer.h in Headers */ = {isa = PBXBuildFile; fileRef = ED8E83722775D1FA00144B0B /* ZCLibServer.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		ED8E83912775D1FA00144B0B /* ZCLocalStore.h in Headers */ = {isa = PBXBuildFile; fileRef = ED8E83732775D1FA00144B0B /* ZCLocalStore.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		ED8E83922775D1FA00144B0B /* ZCLibClient.h in Headers */ = {isa = PBXBuildFile; fileRef = ED8E83742775D1FA00144B0B /* ZCLibClient.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		ED8E83932775D1FA00144B0B /* ZCLibHttpManager.h in Headers */ = {isa = PBXBuildFile; fileRef = ED8E83752775D1FA00144B0B /* ZCLibHttpManager.h */; };
-		ED8E83942775D1FA00144B0B /* ZCPlatformTools.h in Headers */ = {isa = PBXBuildFile; fileRef = ED8E83762775D1FA00144B0B /* ZCPlatformTools.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		ED8E83952775D1FA00144B0B /* ZCLibMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = ED8E83772775D1FA00144B0B /* ZCLibMessage.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		ED8E83962775D1FA00144B0B /* ZCLibSatisfaction.h in Headers */ = {isa = PBXBuildFile; fileRef = ED8E83782775D1FA00144B0B /* ZCLibSatisfaction.h */; };
-		ED8E83972775D1FA00144B0B /* ZCLibConfig.h in Headers */ = {isa = PBXBuildFile; fileRef = ED8E83792775D1FA00144B0B /* ZCLibConfig.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		ED8E83982775D1FA00144B0B /* UIDeviceTools.h in Headers */ = {isa = PBXBuildFile; fileRef = ED8E837A2775D1FA00144B0B /* UIDeviceTools.h */; };
-		ED8E83992775D1FA00144B0B /* ZCLibReachability.h in Headers */ = {isa = PBXBuildFile; fileRef = ED8E837B2775D1FA00144B0B /* ZCLibReachability.h */; };
-		ED8E839A2775D1FA00144B0B /* SobotLib.h in Headers */ = {isa = PBXBuildFile; fileRef = ED8E837C2775D1FA00144B0B /* SobotLib.h */; };
-		ED8E839B2775D1FA00144B0B /* ZCLibTicketTypeModel.h in Headers */ = {isa = PBXBuildFile; fileRef = ED8E837D2775D1FA00144B0B /* ZCLibTicketTypeModel.h */; };
-		ED8E839C2775D1FA00144B0B /* ZCLibInitInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = ED8E837E2775D1FA00144B0B /* ZCLibInitInfo.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		ED8E839D2775D1FA00144B0B /* ZCLibContent.h in Headers */ = {isa = PBXBuildFile; fileRef = ED8E837F2775D1FA00144B0B /* ZCLibContent.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		ED8E839E2775D1FA00144B0B /* ZCLibStatusDefine.h in Headers */ = {isa = PBXBuildFile; fileRef = ED8E83802775D1FA00144B0B /* ZCLibStatusDefine.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		ED8E839F2775D1FA00144B0B /* ZCLibMessageConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = ED8E83812775D1FA00144B0B /* ZCLibMessageConstants.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		ED8E83B12775D23E00144B0B /* SobotXHCacheManager.h in Headers */ = {isa = PBXBuildFile; fileRef = ED8E83A22775D23E00144B0B /* SobotXHCacheManager.h */; };
-		ED8E83B22775D23E00144B0B /* SobotXHZoomingImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = ED8E83A32775D23E00144B0B /* SobotXHZoomingImageView.m */; };
-		ED8E83B32775D23E00144B0B /* SobotUIImageLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = ED8E83A42775D23E00144B0B /* SobotUIImageLoader.m */; };
-		ED8E83B42775D23E00144B0B /* SobotXHFileAttribute.m in Sources */ = {isa = PBXBuildFile; fileRef = ED8E83A52775D23E00144B0B /* SobotXHFileAttribute.m */; };
-		ED8E83B52775D23E00144B0B /* SobotXHImageURLDataSource.h in Headers */ = {isa = PBXBuildFile; fileRef = ED8E83A62775D23E00144B0B /* SobotXHImageURLDataSource.h */; };
-		ED8E83B62775D23E00144B0B /* SobotXHViewState.h in Headers */ = {isa = PBXBuildFile; fileRef = ED8E83A72775D23E00144B0B /* SobotXHViewState.h */; };
-		ED8E83B72775D23E00144B0B /* SobotImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = ED8E83A82775D23E00144B0B /* SobotImageView.m */; };
-		ED8E83B82775D23E00144B0B /* SobotXHImageViewer.h in Headers */ = {isa = PBXBuildFile; fileRef = ED8E83A92775D23E00144B0B /* SobotXHImageViewer.h */; };
-		ED8E83B92775D23E00144B0B /* SobotXHZoomingImageView.h in Headers */ = {isa = PBXBuildFile; fileRef = ED8E83AA2775D23E00144B0B /* SobotXHZoomingImageView.h */; };
-		ED8E83BA2775D23E00144B0B /* SobotXHCacheManager.m in Sources */ = {isa = PBXBuildFile; fileRef = ED8E83AB2775D23E00144B0B /* SobotXHCacheManager.m */; };
-		ED8E83BB2775D23E00144B0B /* SobotXHFileAttribute.h in Headers */ = {isa = PBXBuildFile; fileRef = ED8E83AC2775D23E00144B0B /* SobotXHFileAttribute.h */; };
-		ED8E83BC2775D23E00144B0B /* SobotUIImageLoader.h in Headers */ = {isa = PBXBuildFile; fileRef = ED8E83AD2775D23E00144B0B /* SobotUIImageLoader.h */; };
-		ED8E83BD2775D23E00144B0B /* SobotXHImageViewer.m in Sources */ = {isa = PBXBuildFile; fileRef = ED8E83AE2775D23E00144B0B /* SobotXHImageViewer.m */; };
-		ED8E83BE2775D23E00144B0B /* SobotImageView.h in Headers */ = {isa = PBXBuildFile; fileRef = ED8E83AF2775D23E00144B0B /* SobotImageView.h */; };
-		ED8E83BF2775D23E00144B0B /* SobotXHViewState.m in Sources */ = {isa = PBXBuildFile; fileRef = ED8E83B02775D23E00144B0B /* SobotXHViewState.m */; };
+		ED5F12F727C7659400CA10B1 /* libSobotLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ED5F12D627C7659400CA10B1 /* libSobotLib.a */; };
+		ED5F12F827C7659400CA10B1 /* ZCLIbGlobalDefine.h in Headers */ = {isa = PBXBuildFile; fileRef = ED5F12D827C7659400CA10B1 /* ZCLIbGlobalDefine.h */; };
+		ED5F12F927C7659400CA10B1 /* SobotLocaliable.h in Headers */ = {isa = PBXBuildFile; fileRef = ED5F12D927C7659400CA10B1 /* SobotLocaliable.h */; };
+		ED5F12FA27C7659400CA10B1 /* SobotDateTimes.h in Headers */ = {isa = PBXBuildFile; fileRef = ED5F12DA27C7659400CA10B1 /* SobotDateTimes.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		ED5F12FB27C7659400CA10B1 /* ZCLibHttpConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = ED5F12DB27C7659400CA10B1 /* ZCLibHttpConstants.h */; };
+		ED5F12FC27C7659400CA10B1 /* ZCLibNetworkTools.h in Headers */ = {isa = PBXBuildFile; fileRef = ED5F12DC27C7659400CA10B1 /* ZCLibNetworkTools.h */; };
+		ED5F12FD27C7659400CA10B1 /* ZCLibRich.h in Headers */ = {isa = PBXBuildFile; fileRef = ED5F12DD27C7659400CA10B1 /* ZCLibRich.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		ED5F12FE27C7659400CA10B1 /* ZCHtmlCore.h in Headers */ = {isa = PBXBuildFile; fileRef = ED5F12DE27C7659400CA10B1 /* ZCHtmlCore.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		ED5F12FF27C7659400CA10B1 /* ZCIMChat.h in Headers */ = {isa = PBXBuildFile; fileRef = ED5F12DF27C7659400CA10B1 /* ZCIMChat.h */; };
+		ED5F130027C7659400CA10B1 /* ZCMultiwheelModel.h in Headers */ = {isa = PBXBuildFile; fileRef = ED5F12E027C7659400CA10B1 /* ZCMultiwheelModel.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		ED5F130127C7659400CA10B1 /* ZCRecordListModel.h in Headers */ = {isa = PBXBuildFile; fileRef = ED5F12E127C7659400CA10B1 /* ZCRecordListModel.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		ED5F130227C7659400CA10B1 /* ZCPlatformInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = ED5F12E227C7659400CA10B1 /* ZCPlatformInfo.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		ED5F130327C7659400CA10B1 /* ZCLibOrderCusFieldsModel.h in Headers */ = {isa = PBXBuildFile; fileRef = ED5F12E327C7659400CA10B1 /* ZCLibOrderCusFieldsModel.h */; };
+		ED5F130427C7659400CA10B1 /* ZCLibSkillSet.h in Headers */ = {isa = PBXBuildFile; fileRef = ED5F12E427C7659400CA10B1 /* ZCLibSkillSet.h */; };
+		ED5F130527C7659400CA10B1 /* ZCLibServer.h in Headers */ = {isa = PBXBuildFile; fileRef = ED5F12E527C7659400CA10B1 /* ZCLibServer.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		ED5F130627C7659400CA10B1 /* ZCLocalStore.h in Headers */ = {isa = PBXBuildFile; fileRef = ED5F12E627C7659400CA10B1 /* ZCLocalStore.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		ED5F130727C7659400CA10B1 /* ZCLibClient.h in Headers */ = {isa = PBXBuildFile; fileRef = ED5F12E727C7659400CA10B1 /* ZCLibClient.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		ED5F130827C7659400CA10B1 /* ZCLibHttpManager.h in Headers */ = {isa = PBXBuildFile; fileRef = ED5F12E827C7659400CA10B1 /* ZCLibHttpManager.h */; };
+		ED5F130927C7659400CA10B1 /* ZCPlatformTools.h in Headers */ = {isa = PBXBuildFile; fileRef = ED5F12E927C7659400CA10B1 /* ZCPlatformTools.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		ED5F130A27C7659400CA10B1 /* ZCLibMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = ED5F12EA27C7659400CA10B1 /* ZCLibMessage.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		ED5F130B27C7659400CA10B1 /* ZCLibSatisfaction.h in Headers */ = {isa = PBXBuildFile; fileRef = ED5F12EB27C7659400CA10B1 /* ZCLibSatisfaction.h */; };
+		ED5F130C27C7659400CA10B1 /* ZCLibConfig.h in Headers */ = {isa = PBXBuildFile; fileRef = ED5F12EC27C7659400CA10B1 /* ZCLibConfig.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		ED5F130D27C7659400CA10B1 /* UIDeviceTools.h in Headers */ = {isa = PBXBuildFile; fileRef = ED5F12ED27C7659400CA10B1 /* UIDeviceTools.h */; };
+		ED5F130E27C7659400CA10B1 /* ZCLibReachability.h in Headers */ = {isa = PBXBuildFile; fileRef = ED5F12EE27C7659400CA10B1 /* ZCLibReachability.h */; };
+		ED5F130F27C7659400CA10B1 /* SobotLib.h in Headers */ = {isa = PBXBuildFile; fileRef = ED5F12EF27C7659400CA10B1 /* SobotLib.h */; };
+		ED5F131027C7659400CA10B1 /* ZCLibTicketTypeModel.h in Headers */ = {isa = PBXBuildFile; fileRef = ED5F12F027C7659400CA10B1 /* ZCLibTicketTypeModel.h */; };
+		ED5F131127C7659400CA10B1 /* ZCLibInitInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = ED5F12F127C7659400CA10B1 /* ZCLibInitInfo.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		ED5F131227C7659400CA10B1 /* ZCLibContent.h in Headers */ = {isa = PBXBuildFile; fileRef = ED5F12F227C7659400CA10B1 /* ZCLibContent.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		ED5F131327C7659400CA10B1 /* ZCLibStatusDefine.h in Headers */ = {isa = PBXBuildFile; fileRef = ED5F12F327C7659400CA10B1 /* ZCLibStatusDefine.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		ED5F131427C7659400CA10B1 /* ZCLibMessageConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = ED5F12F427C7659400CA10B1 /* ZCLibMessageConstants.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		ED5F131527C7659400CA10B1 /* SobotUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = ED5F12F527C7659400CA10B1 /* SobotUtils.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		ED5F131627C7659400CA10B1 /* SobotLog.h in Headers */ = {isa = PBXBuildFile; fileRef = ED5F12F627C7659400CA10B1 /* SobotLog.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		ED5F837627C76442008A669F /* SobotXHCacheManager.h in Headers */ = {isa = PBXBuildFile; fileRef = ED5F836727C76442008A669F /* SobotXHCacheManager.h */; };
+		ED5F837727C76442008A669F /* SobotXHZoomingImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = ED5F836827C76442008A669F /* SobotXHZoomingImageView.m */; };
+		ED5F837827C76442008A669F /* SobotUIImageLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = ED5F836927C76442008A669F /* SobotUIImageLoader.m */; };
+		ED5F837927C76442008A669F /* SobotXHFileAttribute.m in Sources */ = {isa = PBXBuildFile; fileRef = ED5F836A27C76442008A669F /* SobotXHFileAttribute.m */; };
+		ED5F837A27C76442008A669F /* SobotXHImageURLDataSource.h in Headers */ = {isa = PBXBuildFile; fileRef = ED5F836B27C76442008A669F /* SobotXHImageURLDataSource.h */; };
+		ED5F837B27C76442008A669F /* SobotXHViewState.h in Headers */ = {isa = PBXBuildFile; fileRef = ED5F836C27C76442008A669F /* SobotXHViewState.h */; };
+		ED5F837C27C76442008A669F /* SobotImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = ED5F836D27C76442008A669F /* SobotImageView.m */; };
+		ED5F837D27C76442008A669F /* SobotXHImageViewer.h in Headers */ = {isa = PBXBuildFile; fileRef = ED5F836E27C76442008A669F /* SobotXHImageViewer.h */; };
+		ED5F837E27C76442008A669F /* SobotXHZoomingImageView.h in Headers */ = {isa = PBXBuildFile; fileRef = ED5F836F27C76442008A669F /* SobotXHZoomingImageView.h */; };
+		ED5F837F27C76442008A669F /* SobotXHCacheManager.m in Sources */ = {isa = PBXBuildFile; fileRef = ED5F837027C76442008A669F /* SobotXHCacheManager.m */; };
+		ED5F838027C76442008A669F /* SobotXHFileAttribute.h in Headers */ = {isa = PBXBuildFile; fileRef = ED5F837127C76442008A669F /* SobotXHFileAttribute.h */; };
+		ED5F838127C76442008A669F /* SobotUIImageLoader.h in Headers */ = {isa = PBXBuildFile; fileRef = ED5F837227C76442008A669F /* SobotUIImageLoader.h */; };
+		ED5F838227C76442008A669F /* SobotXHImageViewer.m in Sources */ = {isa = PBXBuildFile; fileRef = ED5F837327C76442008A669F /* SobotXHImageViewer.m */; };
+		ED5F838327C76442008A669F /* SobotImageView.h in Headers */ = {isa = PBXBuildFile; fileRef = ED5F837427C76442008A669F /* SobotImageView.h */; };
+		ED5F838427C76442008A669F /* SobotXHViewState.m in Sources */ = {isa = PBXBuildFile; fileRef = ED5F837527C76442008A669F /* SobotXHViewState.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -483,51 +485,53 @@
 		7BDB6003243328F700D655C5 /* ZCUIToastTools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCUIToastTools.h; sourceTree = "<group>"; };
 		7BDB6004243328F700D655C5 /* ZCSatisfactionButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCSatisfactionButton.m; sourceTree = "<group>"; };
 		7BDB6006243328F800D655C5 /* ZCUIColorsDefine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCUIColorsDefine.h; sourceTree = "<group>"; };
-		ED8E83632775D1FA00144B0B /* libSobotLib.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libSobotLib.a; sourceTree = "<group>"; };
-		ED8E83652775D1FA00144B0B /* ZCLIbGlobalDefine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCLIbGlobalDefine.h; sourceTree = "<group>"; };
-		ED8E83662775D1FA00144B0B /* ZCLibCommon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCLibCommon.h; sourceTree = "<group>"; };
-		ED8E83672775D1FA00144B0B /* ZCLibHttpConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCLibHttpConstants.h; sourceTree = "<group>"; };
-		ED8E83682775D1FA00144B0B /* ZCLibNetworkTools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCLibNetworkTools.h; sourceTree = "<group>"; };
-		ED8E83692775D1FA00144B0B /* ZCLibRich.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCLibRich.h; sourceTree = "<group>"; };
-		ED8E836A2775D1FA00144B0B /* ZCHtmlCore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCHtmlCore.h; sourceTree = "<group>"; };
-		ED8E836B2775D1FA00144B0B /* ZCIMChat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCIMChat.h; sourceTree = "<group>"; };
-		ED8E836C2775D1FA00144B0B /* ZCMultiwheelModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCMultiwheelModel.h; sourceTree = "<group>"; };
-		ED8E836D2775D1FA00144B0B /* ZCLogUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCLogUtils.h; sourceTree = "<group>"; };
-		ED8E836E2775D1FA00144B0B /* ZCRecordListModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCRecordListModel.h; sourceTree = "<group>"; };
-		ED8E836F2775D1FA00144B0B /* ZCPlatformInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCPlatformInfo.h; sourceTree = "<group>"; };
-		ED8E83702775D1FA00144B0B /* ZCLibOrderCusFieldsModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCLibOrderCusFieldsModel.h; sourceTree = "<group>"; };
-		ED8E83712775D1FA00144B0B /* ZCLibSkillSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCLibSkillSet.h; sourceTree = "<group>"; };
-		ED8E83722775D1FA00144B0B /* ZCLibServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCLibServer.h; sourceTree = "<group>"; };
-		ED8E83732775D1FA00144B0B /* ZCLocalStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCLocalStore.h; sourceTree = "<group>"; };
-		ED8E83742775D1FA00144B0B /* ZCLibClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCLibClient.h; sourceTree = "<group>"; };
-		ED8E83752775D1FA00144B0B /* ZCLibHttpManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCLibHttpManager.h; sourceTree = "<group>"; };
-		ED8E83762775D1FA00144B0B /* ZCPlatformTools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCPlatformTools.h; sourceTree = "<group>"; };
-		ED8E83772775D1FA00144B0B /* ZCLibMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCLibMessage.h; sourceTree = "<group>"; };
-		ED8E83782775D1FA00144B0B /* ZCLibSatisfaction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCLibSatisfaction.h; sourceTree = "<group>"; };
-		ED8E83792775D1FA00144B0B /* ZCLibConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCLibConfig.h; sourceTree = "<group>"; };
-		ED8E837A2775D1FA00144B0B /* UIDeviceTools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIDeviceTools.h; sourceTree = "<group>"; };
-		ED8E837B2775D1FA00144B0B /* ZCLibReachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCLibReachability.h; sourceTree = "<group>"; };
-		ED8E837C2775D1FA00144B0B /* SobotLib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SobotLib.h; sourceTree = "<group>"; };
-		ED8E837D2775D1FA00144B0B /* ZCLibTicketTypeModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCLibTicketTypeModel.h; sourceTree = "<group>"; };
-		ED8E837E2775D1FA00144B0B /* ZCLibInitInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCLibInitInfo.h; sourceTree = "<group>"; };
-		ED8E837F2775D1FA00144B0B /* ZCLibContent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCLibContent.h; sourceTree = "<group>"; };
-		ED8E83802775D1FA00144B0B /* ZCLibStatusDefine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCLibStatusDefine.h; sourceTree = "<group>"; };
-		ED8E83812775D1FA00144B0B /* ZCLibMessageConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCLibMessageConstants.h; sourceTree = "<group>"; };
-		ED8E83A22775D23E00144B0B /* SobotXHCacheManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SobotXHCacheManager.h; sourceTree = "<group>"; };
-		ED8E83A32775D23E00144B0B /* SobotXHZoomingImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SobotXHZoomingImageView.m; sourceTree = "<group>"; };
-		ED8E83A42775D23E00144B0B /* SobotUIImageLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SobotUIImageLoader.m; sourceTree = "<group>"; };
-		ED8E83A52775D23E00144B0B /* SobotXHFileAttribute.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SobotXHFileAttribute.m; sourceTree = "<group>"; };
-		ED8E83A62775D23E00144B0B /* SobotXHImageURLDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SobotXHImageURLDataSource.h; sourceTree = "<group>"; };
-		ED8E83A72775D23E00144B0B /* SobotXHViewState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SobotXHViewState.h; sourceTree = "<group>"; };
-		ED8E83A82775D23E00144B0B /* SobotImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SobotImageView.m; sourceTree = "<group>"; };
-		ED8E83A92775D23E00144B0B /* SobotXHImageViewer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SobotXHImageViewer.h; sourceTree = "<group>"; };
-		ED8E83AA2775D23E00144B0B /* SobotXHZoomingImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SobotXHZoomingImageView.h; sourceTree = "<group>"; };
-		ED8E83AB2775D23E00144B0B /* SobotXHCacheManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SobotXHCacheManager.m; sourceTree = "<group>"; };
-		ED8E83AC2775D23E00144B0B /* SobotXHFileAttribute.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SobotXHFileAttribute.h; sourceTree = "<group>"; };
-		ED8E83AD2775D23E00144B0B /* SobotUIImageLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SobotUIImageLoader.h; sourceTree = "<group>"; };
-		ED8E83AE2775D23E00144B0B /* SobotXHImageViewer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SobotXHImageViewer.m; sourceTree = "<group>"; };
-		ED8E83AF2775D23E00144B0B /* SobotImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SobotImageView.h; sourceTree = "<group>"; };
-		ED8E83B02775D23E00144B0B /* SobotXHViewState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SobotXHViewState.m; sourceTree = "<group>"; };
+		ED5F12D627C7659400CA10B1 /* libSobotLib.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libSobotLib.a; sourceTree = "<group>"; };
+		ED5F12D827C7659400CA10B1 /* ZCLIbGlobalDefine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCLIbGlobalDefine.h; sourceTree = "<group>"; };
+		ED5F12D927C7659400CA10B1 /* SobotLocaliable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SobotLocaliable.h; sourceTree = "<group>"; };
+		ED5F12DA27C7659400CA10B1 /* SobotDateTimes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SobotDateTimes.h; sourceTree = "<group>"; };
+		ED5F12DB27C7659400CA10B1 /* ZCLibHttpConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCLibHttpConstants.h; sourceTree = "<group>"; };
+		ED5F12DC27C7659400CA10B1 /* ZCLibNetworkTools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCLibNetworkTools.h; sourceTree = "<group>"; };
+		ED5F12DD27C7659400CA10B1 /* ZCLibRich.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCLibRich.h; sourceTree = "<group>"; };
+		ED5F12DE27C7659400CA10B1 /* ZCHtmlCore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCHtmlCore.h; sourceTree = "<group>"; };
+		ED5F12DF27C7659400CA10B1 /* ZCIMChat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCIMChat.h; sourceTree = "<group>"; };
+		ED5F12E027C7659400CA10B1 /* ZCMultiwheelModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCMultiwheelModel.h; sourceTree = "<group>"; };
+		ED5F12E127C7659400CA10B1 /* ZCRecordListModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCRecordListModel.h; sourceTree = "<group>"; };
+		ED5F12E227C7659400CA10B1 /* ZCPlatformInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCPlatformInfo.h; sourceTree = "<group>"; };
+		ED5F12E327C7659400CA10B1 /* ZCLibOrderCusFieldsModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCLibOrderCusFieldsModel.h; sourceTree = "<group>"; };
+		ED5F12E427C7659400CA10B1 /* ZCLibSkillSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCLibSkillSet.h; sourceTree = "<group>"; };
+		ED5F12E527C7659400CA10B1 /* ZCLibServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCLibServer.h; sourceTree = "<group>"; };
+		ED5F12E627C7659400CA10B1 /* ZCLocalStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCLocalStore.h; sourceTree = "<group>"; };
+		ED5F12E727C7659400CA10B1 /* ZCLibClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCLibClient.h; sourceTree = "<group>"; };
+		ED5F12E827C7659400CA10B1 /* ZCLibHttpManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCLibHttpManager.h; sourceTree = "<group>"; };
+		ED5F12E927C7659400CA10B1 /* ZCPlatformTools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCPlatformTools.h; sourceTree = "<group>"; };
+		ED5F12EA27C7659400CA10B1 /* ZCLibMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCLibMessage.h; sourceTree = "<group>"; };
+		ED5F12EB27C7659400CA10B1 /* ZCLibSatisfaction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCLibSatisfaction.h; sourceTree = "<group>"; };
+		ED5F12EC27C7659400CA10B1 /* ZCLibConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCLibConfig.h; sourceTree = "<group>"; };
+		ED5F12ED27C7659400CA10B1 /* UIDeviceTools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIDeviceTools.h; sourceTree = "<group>"; };
+		ED5F12EE27C7659400CA10B1 /* ZCLibReachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCLibReachability.h; sourceTree = "<group>"; };
+		ED5F12EF27C7659400CA10B1 /* SobotLib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SobotLib.h; sourceTree = "<group>"; };
+		ED5F12F027C7659400CA10B1 /* ZCLibTicketTypeModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCLibTicketTypeModel.h; sourceTree = "<group>"; };
+		ED5F12F127C7659400CA10B1 /* ZCLibInitInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCLibInitInfo.h; sourceTree = "<group>"; };
+		ED5F12F227C7659400CA10B1 /* ZCLibContent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCLibContent.h; sourceTree = "<group>"; };
+		ED5F12F327C7659400CA10B1 /* ZCLibStatusDefine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCLibStatusDefine.h; sourceTree = "<group>"; };
+		ED5F12F427C7659400CA10B1 /* ZCLibMessageConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCLibMessageConstants.h; sourceTree = "<group>"; };
+		ED5F12F527C7659400CA10B1 /* SobotUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SobotUtils.h; sourceTree = "<group>"; };
+		ED5F12F627C7659400CA10B1 /* SobotLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SobotLog.h; sourceTree = "<group>"; };
+		ED5F836727C76442008A669F /* SobotXHCacheManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SobotXHCacheManager.h; sourceTree = "<group>"; };
+		ED5F836827C76442008A669F /* SobotXHZoomingImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SobotXHZoomingImageView.m; sourceTree = "<group>"; };
+		ED5F836927C76442008A669F /* SobotUIImageLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SobotUIImageLoader.m; sourceTree = "<group>"; };
+		ED5F836A27C76442008A669F /* SobotXHFileAttribute.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SobotXHFileAttribute.m; sourceTree = "<group>"; };
+		ED5F836B27C76442008A669F /* SobotXHImageURLDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SobotXHImageURLDataSource.h; sourceTree = "<group>"; };
+		ED5F836C27C76442008A669F /* SobotXHViewState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SobotXHViewState.h; sourceTree = "<group>"; };
+		ED5F836D27C76442008A669F /* SobotImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SobotImageView.m; sourceTree = "<group>"; };
+		ED5F836E27C76442008A669F /* SobotXHImageViewer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SobotXHImageViewer.h; sourceTree = "<group>"; };
+		ED5F836F27C76442008A669F /* SobotXHZoomingImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SobotXHZoomingImageView.h; sourceTree = "<group>"; };
+		ED5F837027C76442008A669F /* SobotXHCacheManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SobotXHCacheManager.m; sourceTree = "<group>"; };
+		ED5F837127C76442008A669F /* SobotXHFileAttribute.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SobotXHFileAttribute.h; sourceTree = "<group>"; };
+		ED5F837227C76442008A669F /* SobotUIImageLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SobotUIImageLoader.h; sourceTree = "<group>"; };
+		ED5F837327C76442008A669F /* SobotXHImageViewer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SobotXHImageViewer.m; sourceTree = "<group>"; };
+		ED5F837427C76442008A669F /* SobotImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SobotImageView.h; sourceTree = "<group>"; };
+		ED5F837527C76442008A669F /* SobotXHViewState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SobotXHViewState.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -535,7 +539,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				ED8E83822775D1FA00144B0B /* libSobotLib.a in Frameworks */,
+				ED5F12F727C7659400CA10B1 /* libSobotLib.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -578,8 +582,8 @@
 		7BB21FA21C005611003539F7 /* SobotKit */ = {
 			isa = PBXGroup;
 			children = (
-				ED8E83A12775D23E00144B0B /* SobotUIImageLoader */,
-				ED8E83622775D1FA00144B0B /* SobotLib */,
+				ED5F12D527C7659400CA10B1 /* SobotLib */,
+				ED5F836627C76442008A669F /* SobotUIImageLoader */,
 				7BDB6005243328F800D655C5 /* Defines */,
 				7BDB5F8F243328F700D655C5 /* Entity */,
 				7BDB5FF4243328F700D655C5 /* Tools */,
@@ -1078,69 +1082,71 @@
 			path = Defines;
 			sourceTree = "<group>";
 		};
-		ED8E83622775D1FA00144B0B /* SobotLib */ = {
+		ED5F12D527C7659400CA10B1 /* SobotLib */ = {
 			isa = PBXGroup;
 			children = (
-				ED8E83632775D1FA00144B0B /* libSobotLib.a */,
-				ED8E83642775D1FA00144B0B /* include */,
+				ED5F12D627C7659400CA10B1 /* libSobotLib.a */,
+				ED5F12D727C7659400CA10B1 /* include */,
 			);
 			path = SobotLib;
 			sourceTree = "<group>";
 		};
-		ED8E83642775D1FA00144B0B /* include */ = {
+		ED5F12D727C7659400CA10B1 /* include */ = {
 			isa = PBXGroup;
 			children = (
-				ED8E83652775D1FA00144B0B /* ZCLIbGlobalDefine.h */,
-				ED8E83662775D1FA00144B0B /* ZCLibCommon.h */,
-				ED8E83672775D1FA00144B0B /* ZCLibHttpConstants.h */,
-				ED8E83682775D1FA00144B0B /* ZCLibNetworkTools.h */,
-				ED8E83692775D1FA00144B0B /* ZCLibRich.h */,
-				ED8E836A2775D1FA00144B0B /* ZCHtmlCore.h */,
-				ED8E836B2775D1FA00144B0B /* ZCIMChat.h */,
-				ED8E836C2775D1FA00144B0B /* ZCMultiwheelModel.h */,
-				ED8E836D2775D1FA00144B0B /* ZCLogUtils.h */,
-				ED8E836E2775D1FA00144B0B /* ZCRecordListModel.h */,
-				ED8E836F2775D1FA00144B0B /* ZCPlatformInfo.h */,
-				ED8E83702775D1FA00144B0B /* ZCLibOrderCusFieldsModel.h */,
-				ED8E83712775D1FA00144B0B /* ZCLibSkillSet.h */,
-				ED8E83722775D1FA00144B0B /* ZCLibServer.h */,
-				ED8E83732775D1FA00144B0B /* ZCLocalStore.h */,
-				ED8E83742775D1FA00144B0B /* ZCLibClient.h */,
-				ED8E83752775D1FA00144B0B /* ZCLibHttpManager.h */,
-				ED8E83762775D1FA00144B0B /* ZCPlatformTools.h */,
-				ED8E83772775D1FA00144B0B /* ZCLibMessage.h */,
-				ED8E83782775D1FA00144B0B /* ZCLibSatisfaction.h */,
-				ED8E83792775D1FA00144B0B /* ZCLibConfig.h */,
-				ED8E837A2775D1FA00144B0B /* UIDeviceTools.h */,
-				ED8E837B2775D1FA00144B0B /* ZCLibReachability.h */,
-				ED8E837C2775D1FA00144B0B /* SobotLib.h */,
-				ED8E837D2775D1FA00144B0B /* ZCLibTicketTypeModel.h */,
-				ED8E837E2775D1FA00144B0B /* ZCLibInitInfo.h */,
-				ED8E837F2775D1FA00144B0B /* ZCLibContent.h */,
-				ED8E83802775D1FA00144B0B /* ZCLibStatusDefine.h */,
-				ED8E83812775D1FA00144B0B /* ZCLibMessageConstants.h */,
+				ED5F12D827C7659400CA10B1 /* ZCLIbGlobalDefine.h */,
+				ED5F12D927C7659400CA10B1 /* SobotLocaliable.h */,
+				ED5F12DA27C7659400CA10B1 /* SobotDateTimes.h */,
+				ED5F12DB27C7659400CA10B1 /* ZCLibHttpConstants.h */,
+				ED5F12DC27C7659400CA10B1 /* ZCLibNetworkTools.h */,
+				ED5F12DD27C7659400CA10B1 /* ZCLibRich.h */,
+				ED5F12DE27C7659400CA10B1 /* ZCHtmlCore.h */,
+				ED5F12DF27C7659400CA10B1 /* ZCIMChat.h */,
+				ED5F12E027C7659400CA10B1 /* ZCMultiwheelModel.h */,
+				ED5F12E127C7659400CA10B1 /* ZCRecordListModel.h */,
+				ED5F12E227C7659400CA10B1 /* ZCPlatformInfo.h */,
+				ED5F12E327C7659400CA10B1 /* ZCLibOrderCusFieldsModel.h */,
+				ED5F12E427C7659400CA10B1 /* ZCLibSkillSet.h */,
+				ED5F12E527C7659400CA10B1 /* ZCLibServer.h */,
+				ED5F12E627C7659400CA10B1 /* ZCLocalStore.h */,
+				ED5F12E727C7659400CA10B1 /* ZCLibClient.h */,
+				ED5F12E827C7659400CA10B1 /* ZCLibHttpManager.h */,
+				ED5F12E927C7659400CA10B1 /* ZCPlatformTools.h */,
+				ED5F12EA27C7659400CA10B1 /* ZCLibMessage.h */,
+				ED5F12EB27C7659400CA10B1 /* ZCLibSatisfaction.h */,
+				ED5F12EC27C7659400CA10B1 /* ZCLibConfig.h */,
+				ED5F12ED27C7659400CA10B1 /* UIDeviceTools.h */,
+				ED5F12EE27C7659400CA10B1 /* ZCLibReachability.h */,
+				ED5F12EF27C7659400CA10B1 /* SobotLib.h */,
+				ED5F12F027C7659400CA10B1 /* ZCLibTicketTypeModel.h */,
+				ED5F12F127C7659400CA10B1 /* ZCLibInitInfo.h */,
+				ED5F12F227C7659400CA10B1 /* ZCLibContent.h */,
+				ED5F12F327C7659400CA10B1 /* ZCLibStatusDefine.h */,
+				ED5F12F427C7659400CA10B1 /* ZCLibMessageConstants.h */,
+				ED5F12F527C7659400CA10B1 /* SobotUtils.h */,
+				ED5F12F627C7659400CA10B1 /* SobotLog.h */,
 			);
 			path = include;
 			sourceTree = "<group>";
 		};
-		ED8E83A12775D23E00144B0B /* SobotUIImageLoader */ = {
+		ED5F836627C76442008A669F /* SobotUIImageLoader */ = {
 			isa = PBXGroup;
 			children = (
-				ED8E83A22775D23E00144B0B /* SobotXHCacheManager.h */,
-				ED8E83A32775D23E00144B0B /* SobotXHZoomingImageView.m */,
-				ED8E83A42775D23E00144B0B /* SobotUIImageLoader.m */,
-				ED8E83A52775D23E00144B0B /* SobotXHFileAttribute.m */,
-				ED8E83A62775D23E00144B0B /* SobotXHImageURLDataSource.h */,
-				ED8E83A72775D23E00144B0B /* SobotXHViewState.h */,
-				ED8E83A82775D23E00144B0B /* SobotImageView.m */,
-				ED8E83A92775D23E00144B0B /* SobotXHImageViewer.h */,
-				ED8E83AA2775D23E00144B0B /* SobotXHZoomingImageView.h */,
-				ED8E83AB2775D23E00144B0B /* SobotXHCacheManager.m */,
-				ED8E83AC2775D23E00144B0B /* SobotXHFileAttribute.h */,
-				ED8E83AD2775D23E00144B0B /* SobotUIImageLoader.h */,
-				ED8E83AE2775D23E00144B0B /* SobotXHImageViewer.m */,
-				ED8E83AF2775D23E00144B0B /* SobotImageView.h */,
-				ED8E83B02775D23E00144B0B /* SobotXHViewState.m */,
+				ED5F836727C76442008A669F /* SobotXHCacheManager.h */,
+				ED5F836827C76442008A669F /* SobotXHZoomingImageView.m */,
+				ED5F836927C76442008A669F /* SobotUIImageLoader.m */,
+				ED5F836A27C76442008A669F /* SobotXHFileAttribute.m */,
+				ED5F836B27C76442008A669F /* SobotXHImageURLDataSource.h */,
+				ED5F836C27C76442008A669F /* SobotXHViewState.h */,
+				ED5F836D27C76442008A669F /* SobotImageView.m */,
+				ED5F836E27C76442008A669F /* SobotXHImageViewer.h */,
+				ED5F836F27C76442008A669F /* SobotXHZoomingImageView.h */,
+				ED5F837027C76442008A669F /* SobotXHCacheManager.m */,
+				ED5F837127C76442008A669F /* SobotXHFileAttribute.h */,
+				ED5F837227C76442008A669F /* SobotUIImageLoader.h */,
+				ED5F837327C76442008A669F /* SobotXHImageViewer.m */,
+				ED5F837427C76442008A669F /* SobotImageView.h */,
+				ED5F837527C76442008A669F /* SobotXHViewState.m */,
 			);
 			path = SobotUIImageLoader;
 			sourceTree = "<group>";
@@ -1152,27 +1158,30 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				ED8E83912775D1FA00144B0B /* ZCLocalStore.h in Headers */,
-				ED8E839C2775D1FA00144B0B /* ZCLibInitInfo.h in Headers */,
-				ED8E83872775D1FA00144B0B /* ZCLibRich.h in Headers */,
-				ED8E83972775D1FA00144B0B /* ZCLibConfig.h in Headers */,
-				ED8E83952775D1FA00144B0B /* ZCLibMessage.h in Headers */,
-				ED8E83842775D1FA00144B0B /* ZCLibCommon.h in Headers */,
-				ED8E838D2775D1FA00144B0B /* ZCPlatformInfo.h in Headers */,
-				ED8E83922775D1FA00144B0B /* ZCLibClient.h in Headers */,
-				ED8E839D2775D1FA00144B0B /* ZCLibContent.h in Headers */,
-				ED8E83942775D1FA00144B0B /* ZCPlatformTools.h in Headers */,
-				ED8E838A2775D1FA00144B0B /* ZCMultiwheelModel.h in Headers */,
-				ED8E839F2775D1FA00144B0B /* ZCLibMessageConstants.h in Headers */,
-				ED8E839E2775D1FA00144B0B /* ZCLibStatusDefine.h in Headers */,
-				ED8E83902775D1FA00144B0B /* ZCLibServer.h in Headers */,
-				ED8E83882775D1FA00144B0B /* ZCHtmlCore.h in Headers */,
-				ED8E838C2775D1FA00144B0B /* ZCRecordListModel.h in Headers */,
+				ED5F12FD27C7659400CA10B1 /* ZCLibRich.h in Headers */,
+				ED5F130227C7659400CA10B1 /* ZCPlatformInfo.h in Headers */,
+				ED5F130A27C7659400CA10B1 /* ZCLibMessage.h in Headers */,
+				ED5F131227C7659400CA10B1 /* ZCLibContent.h in Headers */,
+				ED5F130727C7659400CA10B1 /* ZCLibClient.h in Headers */,
+				ED5F130C27C7659400CA10B1 /* ZCLibConfig.h in Headers */,
+				ED5F130927C7659400CA10B1 /* ZCPlatformTools.h in Headers */,
+				ED5F130027C7659400CA10B1 /* ZCMultiwheelModel.h in Headers */,
+				ED5F131427C7659400CA10B1 /* ZCLibMessageConstants.h in Headers */,
+				ED5F130527C7659400CA10B1 /* ZCLibServer.h in Headers */,
+				ED5F131327C7659400CA10B1 /* ZCLibStatusDefine.h in Headers */,
+				ED5F12FE27C7659400CA10B1 /* ZCHtmlCore.h in Headers */,
+				ED5F130127C7659400CA10B1 /* ZCRecordListModel.h in Headers */,
+				ED5F130627C7659400CA10B1 /* ZCLocalStore.h in Headers */,
+				ED5F131627C7659400CA10B1 /* SobotLog.h in Headers */,
+				ED5F131527C7659400CA10B1 /* SobotUtils.h in Headers */,
+				ED5F12FA27C7659400CA10B1 /* SobotDateTimes.h in Headers */,
+				ED5F131127C7659400CA10B1 /* ZCLibInitInfo.h in Headers */,
 				7BDB603C243328F800D655C5 /* ZCServiceCentreVC.h in Headers */,
 				7BDB6007243328F800D655C5 /* ZCUIWebController.h in Headers */,
 				7BDB6074243328F800D655C5 /* ZCTitleView.h in Headers */,
 				7BDB600A243328F800D655C5 /* ZCUIBaseController.h in Headers */,
 				7BDB6083243328F800D655C5 /* ZCProductInfo.h in Headers */,
+				ED5F837E27C76442008A669F /* SobotXHZoomingImageView.h in Headers */,
 				7BDB6042243328F800D655C5 /* ZCUIChatListController.h in Headers */,
 				7BDB6081243328F800D655C5 /* ZCOrderGoodsModel.h in Headers */,
 				7BDB5F042433283E00D655C5 /* ZCSobotApi.h in Headers */,
@@ -1180,38 +1189,34 @@
 				7BDB6063243328F800D655C5 /* ZCChatController.h in Headers */,
 				7BDB605D243328F800D655C5 /* ZCUILeaveMessageController.h in Headers */,
 				7BDB607D243328F800D655C5 /* ZCUICore.h in Headers */,
+				ED5F837D27C76442008A669F /* SobotXHImageViewer.h in Headers */,
 				7BDB608B243328F800D655C5 /* ZCKitInfo.h in Headers */,
-				ED8E83BE2775D23E00144B0B /* SobotImageView.h in Headers */,
+				ED5F12F827C7659400CA10B1 /* ZCLIbGlobalDefine.h in Headers */,
 				7BDB60CA243328F800D655C5 /* ZCUIPlaceHolderTextView.h in Headers */,
 				7BDB60C1243328F800D655C5 /* ZCSelLeaveView.h in Headers */,
-				ED8E83832775D1FA00144B0B /* ZCLIbGlobalDefine.h in Headers */,
 				7BDB6086243328F800D655C5 /* ZCLibCusMenu.h in Headers */,
 				7BDB600F243328F800D655C5 /* ZCLocationCell.h in Headers */,
-				ED8E83892775D1FA00144B0B /* ZCIMChat.h in Headers */,
 				7BDB6014243328F800D655C5 /* ZCHotGuideCell.h in Headers */,
 				7BDB6094243328F800D655C5 /* ZCZHPickView.h in Headers */,
 				7BDB60BC243328F800D655C5 /* ZCTTTAttributedLabel.h in Headers */,
 				7BDB60D4243328F800D655C5 /* ZCSatisfactionButton.h in Headers */,
-				ED8E83962775D1FA00144B0B /* ZCLibSatisfaction.h in Headers */,
 				7BDB606E243328F800D655C5 /* ZCCheckCusFieldView.h in Headers */,
+				ED5F130B27C7659400CA10B1 /* ZCLibSatisfaction.h in Headers */,
 				7BDB6085243328F800D655C5 /* ZCOrderModel.h in Headers */,
 				7BDB605E243328F800D655C5 /* ZCMsgRecordVC.h in Headers */,
 				7BDB601C243328F800D655C5 /* ZCCardCollectionViewFlowLayout.h in Headers */,
 				7BDB601F243328F800D655C5 /* ZCInfoCardCell.h in Headers */,
 				7BDB6098243328F800D655C5 /* ZCUISkillSetView.h in Headers */,
 				7BDB600E243328F800D655C5 /* ZCVoiceChatCell.h in Headers */,
+				ED5F12F927C7659400CA10B1 /* SobotLocaliable.h in Headers */,
 				7BDB60C6243328F800D655C5 /* EmojiButton.h in Headers */,
 				7BDB60A7243328F800D655C5 /* ZCObjButton.h in Headers */,
-				ED8E838B2775D1FA00144B0B /* ZCLogUtils.h in Headers */,
 				7BDB60DA243328F800D655C5 /* ZCUITools.h in Headers */,
 				7BDB60BF243328F800D655C5 /* ZCUILoading.h in Headers */,
 				7BDB60B9243328F800D655C5 /* ZCEdgeInsetsLabel.h in Headers */,
-				ED8E838F2775D1FA00144B0B /* ZCLibSkillSet.h in Headers */,
-				ED8E83BB2775D23E00144B0B /* SobotXHFileAttribute.h in Headers */,
 				7BDB60C5243328F800D655C5 /* EmojiBoardView.h in Headers */,
-				ED8E83B62775D23E00144B0B /* SobotXHViewState.h in Headers */,
 				7BDB60CB243328F800D655C5 /* ZCItemView.h in Headers */,
-				ED8E83BC2775D23E00144B0B /* SobotUIImageLoader.h in Headers */,
+				ED5F130427C7659400CA10B1 /* ZCLibSkillSet.h in Headers */,
 				7BDB60D0243328F800D655C5 /* ZCSobotCore.h in Headers */,
 				7BDB603E243328F800D655C5 /* ZCServiceDetailVC.h in Headers */,
 				7BDB6019243328F800D655C5 /* ZCCardCollectionViewCell.h in Headers */,
@@ -1221,33 +1226,32 @@
 				7BDB60D3243328F800D655C5 /* ZCStoreConfiguration.h in Headers */,
 				7BDB6039243328F800D655C5 /* ZCServiceListCell.h in Headers */,
 				7BDB604B243328F800D655C5 /* ZCOrderCheckCell.h in Headers */,
+				ED5F838027C76442008A669F /* SobotXHFileAttribute.h in Headers */,
 				7BDB6017243328F800D655C5 /* ZCMultitemHorizontaRollCell.h in Headers */,
-				ED8E838E2775D1FA00144B0B /* ZCLibOrderCusFieldsModel.h in Headers */,
 				7B18AF1D2576177C00C7C7FF /* ZCChatAllRichCell.h in Headers */,
 				7BDB60DE243328F800D655C5 /* ZCUIColorsDefine.h in Headers */,
+				ED5F130327C7659400CA10B1 /* ZCLibOrderCusFieldsModel.h in Headers */,
 				7BDB6048243328F800D655C5 /* ZCOrderEditCell.h in Headers */,
-				ED8E83862775D1FA00144B0B /* ZCLibNetworkTools.h in Headers */,
 				7BDB6036243328F800D655C5 /* ZCTipsChatCell.h in Headers */,
 				7BDB6089243328F800D655C5 /* ZCWsTemplateModel.h in Headers */,
 				7BB220BC1C005653003539F7 /* ZCSobot.h in Headers */,
 				7BDB6060243328F800D655C5 /* ZCUIKeyboard.h in Headers */,
 				7BDB60C2243328F800D655C5 /* ZCAutoListView.h in Headers */,
-				ED8E83932775D1FA00144B0B /* ZCLibHttpManager.h in Headers */,
 				7BDB600C243328F800D655C5 /* ZCChatCellDelegate.h in Headers */,
-				ED8E83B12775D23E00144B0B /* SobotXHCacheManager.h in Headers */,
 				7BDB6043243328F800D655C5 /* ZCXJAlbumController.h in Headers */,
 				7BDB6021243328F800D655C5 /* ZCGoodsCell.h in Headers */,
+				ED5F130827C7659400CA10B1 /* ZCLibHttpManager.h in Headers */,
 				7BDB6024243328F800D655C5 /* ZCChatBaseCell.h in Headers */,
+				ED5F12FB27C7659400CA10B1 /* ZCLibHttpConstants.h in Headers */,
 				7BDB6045243328F800D655C5 /* ZCOrderCreateCell.h in Headers */,
+				ED5F838327C76442008A669F /* SobotImageView.h in Headers */,
 				7BDB6076243328F800D655C5 /* ZCCheckTypeView.h in Headers */,
 				7BDB603B243328F800D655C5 /* ZCServiceListVC.h in Headers */,
-				ED8E839B2775D1FA00144B0B /* ZCLibTicketTypeModel.h in Headers */,
 				7BDB604E243328F800D655C5 /* ZCOrderContentCell.h in Headers */,
+				ED5F131027C7659400CA10B1 /* ZCLibTicketTypeModel.h in Headers */,
 				7BDB6008243328F800D655C5 /* ZCUIAskTableController.h in Headers */,
 				7BDB606D243328F800D655C5 /* ZCPageSheetView.h in Headers */,
 				7BDB6051243328F800D655C5 /* ZCReplyFileView.h in Headers */,
-				ED8E83B82775D23E00144B0B /* SobotXHImageViewer.h in Headers */,
-				ED8E83852775D1FA00144B0B /* ZCLibHttpConstants.h in Headers */,
 				7BDB6034243328F800D655C5 /* ZCMultiRichCell.h in Headers */,
 				7BDB6078243328F800D655C5 /* ZCCircleProgressView.h in Headers */,
 				7BDB6059243328F800D655C5 /* ZCReplyLeaveController.h in Headers */,
@@ -1267,20 +1271,23 @@
 				7BDB60B6243328F800D655C5 /* ZCUICustomActionSheet.h in Headers */,
 				7BDB602E243328F800D655C5 /* ZCImageChatCell.h in Headers */,
 				7BDB6031243328F800D655C5 /* ZCRichTextChatCell.h in Headers */,
+				ED5F837627C76442008A669F /* SobotXHCacheManager.h in Headers */,
+				ED5F12FC27C7659400CA10B1 /* ZCLibNetworkTools.h in Headers */,
 				7BDB6087243328F800D655C5 /* ZCLibRobotSet.h in Headers */,
 				7BDB609A243328F800D655C5 /* ZCUIRatingView.h in Headers */,
 				7BB220BF1C00566F003539F7 /* SobotKit.pch in Headers */,
-				ED8E839A2775D1FA00144B0B /* SobotLib.h in Headers */,
 				7BDB6079243328F800D655C5 /* ZCCheckCityView.h in Headers */,
+				ED5F12FF27C7659400CA10B1 /* ZCIMChat.h in Headers */,
+				ED5F130F27C7659400CA10B1 /* SobotLib.h in Headers */,
+				ED5F837A27C76442008A669F /* SobotXHImageURLDataSource.h in Headers */,
 				7BDB6088243328F800D655C5 /* ZCAddressModel.h in Headers */,
+				ED5F837B27C76442008A669F /* SobotXHViewState.h in Headers */,
 				7BDB60BA243328F800D655C5 /* ZCMLEmojiLabel.h in Headers */,
 				7BDB60DC243328F800D655C5 /* ZCUIToastTools.h in Headers */,
-				ED8E83B52775D23E00144B0B /* SobotXHImageURLDataSource.h in Headers */,
 				7BB21FA41C005611003539F7 /* SobotKit.h in Headers */,
-				ED8E83B92775D23E00144B0B /* SobotXHZoomingImageView.h in Headers */,
 				7BDB60C8243328F800D655C5 /* ZCTurnRobotView.h in Headers */,
+				ED5F130E27C7659400CA10B1 /* ZCLibReachability.h in Headers */,
 				7BDB6068243328F800D655C5 /* ZCDocumentLookController.h in Headers */,
-				ED8E83992775D1FA00144B0B /* ZCLibReachability.h in Headers */,
 				7BDB602D243328F800D655C5 /* ZCSatisfactionCell.h in Headers */,
 				7BDB6097243328F800D655C5 /* ZCQuickEntryView.h in Headers */,
 				7BDB6066243328F800D655C5 /* ZCVideoViewController.h in Headers */,
@@ -1288,7 +1295,8 @@
 				7BDB602A243328F800D655C5 /* ZCFileCell.h in Headers */,
 				7BDB6064243328F800D655C5 /* ZCLocationController.h in Headers */,
 				7BDB602C243328F800D655C5 /* ZCOrderGoodsCell.h in Headers */,
-				ED8E83982775D1FA00144B0B /* UIDeviceTools.h in Headers */,
+				ED5F130D27C7659400CA10B1 /* UIDeviceTools.h in Headers */,
+				ED5F838127C76442008A669F /* SobotUIImageLoader.h in Headers */,
 				7BDB602F243328F800D655C5 /* ZCTextGuideCell.h in Headers */,
 				7BDB6047243328F800D655C5 /* ZCOrderOnlyEditCell.h in Headers */,
 				7BDB6053243328F800D655C5 /* ZCMsgDetailsVC.h in Headers */,
@@ -1395,14 +1403,11 @@
 				7BDB6099243328F800D655C5 /* ZCUISkillSetView.m in Sources */,
 				7BDB6050243328F800D655C5 /* ZCUILeaveMessageController.m in Sources */,
 				7BDB6082243328F800D655C5 /* ZCKitInfo.m in Sources */,
-				ED8E83B32775D23E00144B0B /* SobotUIImageLoader.m in Sources */,
 				7BDB6041243328F800D655C5 /* ZCUIBaseController.m in Sources */,
 				7BDB608E243328F800D655C5 /* ZCLibCusMenu.m in Sources */,
-				ED8E83B42775D23E00144B0B /* SobotXHFileAttribute.m in Sources */,
 				7BDB60DB243328F800D655C5 /* ZCUIImageTools.m in Sources */,
 				7BDB606F243328F800D655C5 /* ZCCheckTypeView.m in Sources */,
 				7BDB6092243328F800D655C5 /* ZCWsTemplateModel.m in Sources */,
-				ED8E83BD2775D23E00144B0B /* SobotXHImageViewer.m in Sources */,
 				7BDB608C243328F800D655C5 /* ZCOrderGoodsModel.m in Sources */,
 				7BDB604F243328F800D655C5 /* ZCOrderEditCell.m in Sources */,
 				7BDB602B243328F800D655C5 /* ZCInfoCardCell.m in Sources */,
@@ -1426,6 +1431,7 @@
 				7BDB6009243328F800D655C5 /* ZCUIAskTableController.m in Sources */,
 				7BDB6040243328F800D655C5 /* ZCServiceListVC.m in Sources */,
 				7BDB60A6243328F800D655C5 /* ZCObjButton.m in Sources */,
+				ED5F837F27C76442008A669F /* SobotXHCacheManager.m in Sources */,
 				7BDB604A243328F800D655C5 /* ZCOrderCreateCell.m in Sources */,
 				7BDB6061243328F800D655C5 /* ZCUIKeyboard.m in Sources */,
 				7BDB6016243328F800D655C5 /* ZCCardCollectionViewFlowLayout.m in Sources */,
@@ -1437,7 +1443,6 @@
 				7BDB60D7243328F800D655C5 /* ZCUIVoiceTools.m in Sources */,
 				7BDB6058243328F800D655C5 /* ZCReplyFileView.m in Sources */,
 				7B18AF1C2576177C00C7C7FF /* ZCChatAllRichCell.m in Sources */,
-				ED8E83B72775D23E00144B0B /* SobotImageView.m in Sources */,
 				7BDB6070243328F800D655C5 /* ZCCircleProgressView.m in Sources */,
 				7BDB6010243328F800D655C5 /* ZCImageChatCell.m in Sources */,
 				7BDB6069243328F800D655C5 /* ZCLocationController.m in Sources */,
@@ -1445,15 +1450,19 @@
 				7BDB601B243328F800D655C5 /* ZCMultitemHorizontaRollCell.m in Sources */,
 				7BDB60C3243328F800D655C5 /* ZCAutoListView.m in Sources */,
 				7BDB603F243328F800D655C5 /* ZCServiceCentreVC.m in Sources */,
+				ED5F837927C76442008A669F /* SobotXHFileAttribute.m in Sources */,
 				7BDB6028243328F800D655C5 /* ZCLocationCell.m in Sources */,
 				7BDB6015243328F800D655C5 /* ZCCollectionViewCell.m in Sources */,
+				ED5F837C27C76442008A669F /* SobotImageView.m in Sources */,
 				7BDB6025243328F800D655C5 /* ZCMultiRichCell.m in Sources */,
 				7BDB600B243328F800D655C5 /* ZCUIChatListController.m in Sources */,
 				7BDB605A243328F800D655C5 /* ZCMsgRecordVC.m in Sources */,
+				ED5F838427C76442008A669F /* SobotXHViewState.m in Sources */,
 				7BDB60C9243328F800D655C5 /* ZCTurnRobotView.m in Sources */,
 				7BDB6093243328F800D655C5 /* ZCZHPickView.m in Sources */,
 				7BDB601E243328F800D655C5 /* ZCOrderGoodsCell.m in Sources */,
 				7BDB60BB243328F800D655C5 /* ZCTTTAttributedLabel.m in Sources */,
+				ED5F838227C76442008A669F /* SobotXHImageViewer.m in Sources */,
 				7BB220BD1C005653003539F7 /* ZCSobot.m in Sources */,
 				7BDB6038243328F800D655C5 /* ZCUIWebController.m in Sources */,
 				7BDB6067243328F800D655C5 /* ZCChatController.m in Sources */,
@@ -1477,9 +1486,9 @@
 				7BDB60D5243328F800D655C5 /* ZCUIToastTools.m in Sources */,
 				7BDB609C243328F800D655C5 /* ZCEdgeInsetsLabel.m in Sources */,
 				7BDB608D243328F800D655C5 /* ZCAddressModel.m in Sources */,
-				ED8E83BA2775D23E00144B0B /* SobotXHCacheManager.m in Sources */,
 				7BDB6027243328F800D655C5 /* ZCNoticeCell.m in Sources */,
 				7BDB606B243328F800D655C5 /* ZCLeaveMsgVC.m in Sources */,
+				ED5F837827C76442008A669F /* SobotUIImageLoader.m in Sources */,
 				7BDB60BE243328F800D655C5 /* ZCUILoading.m in Sources */,
 				7BDB603D243328F800D655C5 /* ZCServiceListCell.m in Sources */,
 				7BDB600D243328F800D655C5 /* ZCFileCell.m in Sources */,
@@ -1490,13 +1499,12 @@
 				7BDB6049243328F800D655C5 /* ZCOrderContentCell.m in Sources */,
 				7BDB60C4243328F800D655C5 /* EmojiButton.m in Sources */,
 				7BDB604C243328F800D655C5 /* ZCOrderOnlyEditCell.m in Sources */,
+				ED5F837727C76442008A669F /* SobotXHZoomingImageView.m in Sources */,
 				7BDB60BD243328F800D655C5 /* ZCMLEmojiLabel.m in Sources */,
 				7BDB6018243328F800D655C5 /* ZCMultiItemCell.m in Sources */,
-				ED8E83B22775D23E00144B0B /* SobotXHZoomingImageView.m in Sources */,
 				7BDB603A243328F800D655C5 /* ZCServiceDetailVC.m in Sources */,
 				7BDB60B8243328F800D655C5 /* ZCActionSheet.m in Sources */,
 				7BDB6055243328F800D655C5 /* ZCReplyLeaveView.m in Sources */,
-				ED8E83BF2775D23E00144B0B /* SobotXHViewState.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

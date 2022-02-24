@@ -22,7 +22,7 @@
         return  [ZCUICore getUICore].kitInfo.themeStyle;
     }
     
-    if(zcGetSystemDoubleVersion()>=13){
+    if(sobotGetSystemDoubleVersion()>=13){
         if (UITraitCollection.currentTraitCollection.userInterfaceStyle == UIUserInterfaceStyleDark) {
             return ZCThemeStyle_Dark;
         }
@@ -47,14 +47,14 @@
     }
     
     /*
-    if(zcLibConvertToString([temModel getModelDisplayText]).length > 0){
+    if(sobotConvertToString([temModel getModelDisplayText]).length > 0){
         [ZCUITools attributedStringByHTML:[temModel getModelDisplayText] textColor:textColor linkColor:linkColor result:^(NSMutableAttributedString *attr) {
             temModel.displayAttr = attr;
         }];
     }
      */
     
-    if(zcLibConvertToString([temModel getModelDisplaySugestionText]).length > 0  && temModel.displaySugestionattr==nil){
+    if(sobotConvertToString([temModel getModelDisplaySugestionText]).length > 0  && temModel.displaySugestionattr==nil){
         UIColor *textColor = [ZCUITools zcgetRightChatTextColor];
         UIColor *linkColor = [ZCUITools zcgetChatRightlinkColor];
         if(temModel.senderType > 0){
@@ -182,7 +182,7 @@
 
 +(UIColor *)getZCThemeColorAlphaByKey:(NSString *)themeColorKey alpha:(CGFloat) alpha{
     UIColor *dyColor = nil;
-    if(zcGetSystemDoubleVersion()>=13){
+    if(sobotGetSystemDoubleVersion()>=13){
         dyColor = [UIColor colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull trainCollection) {
             NSString *style = @"light";
             switch([self getZCThemeStyle]){
@@ -196,7 +196,7 @@
             }
             NSDictionary *dict = [[ZCUICore getUICore] getZCThemeColorDict:style];
             NSString *hexColor = dict[themeColorKey];
-            if(zcLibConvertToString(hexColor).length == 0){
+            if(sobotConvertToString(hexColor).length == 0){
                 dict = [[ZCUICore getUICore] getZCThemeColorDict:@"light"];
                 hexColor = dict[themeColorKey];
             }
@@ -215,7 +215,7 @@
         }
         NSDictionary *dict = [[ZCUICore getUICore] getZCThemeColorDict:style];
         NSString *hexColor = dict[themeColorKey];
-        if(zcLibConvertToString(hexColor).length > 0){
+        if(sobotConvertToString(hexColor).length > 0){
             dyColor = [ZCUITools getZCColorByHexAlpha:hexColor alpha:alpha];
         }
     }
@@ -228,10 +228,10 @@
     if(hexColor!=nil && hexColor.length>6){
         hexColor=[hexColor stringByReplacingOccurrencesOfString:@"#" withString:@""];
     }
-    if(zcLibConvertToString(hexColor).length<6){
-        int len = 6 - (int)zcLibConvertToString(hexColor).length;
+    if(sobotConvertToString(hexColor).length<6){
+        int len = 6 - (int)sobotConvertToString(hexColor).length;
         for (int i = 0; i < len; i++) {
-            hexColor = [NSString stringWithFormat:@"%@0",zcLibConvertToString(hexColor)];
+            hexColor = [NSString stringWithFormat:@"%@0",sobotConvertToString(hexColor)];
         }
     }
     
@@ -254,7 +254,7 @@
 
 
 +(UIImage *)zcuiGetBundleImage:(NSString *)imageName{
-    if(zcLibConvertToString(imageName).length == 0){
+    if(sobotConvertToString(imageName).length == 0){
         return nil;
     }
     //    NSString *bundlePath=[self zcuiFullBundlePath:imageName];
@@ -266,8 +266,8 @@
     
     // uni-app 可能使用
     if([ZCLibClient getZCLibClient].libInitInfo
-       !=nil && zcLibConvertToString([ZCLibClient getZCLibClient].libInitInfo.wwwStaticPath).length > 0){
-        defineImg = [UIImage imageWithContentsOfFile:[zcLibConvertToString([ZCLibClient getZCLibClient].libInitInfo.wwwStaticPath) stringByAppendingFormat:@"%@",imageName]];
+       !=nil && sobotConvertToString([ZCLibClient getZCLibClient].libInitInfo.wwwStaticPath).length > 0){
+        defineImg = [UIImage imageWithContentsOfFile:[sobotConvertToString([ZCLibClient getZCLibClient].libInitInfo.wwwStaticPath) stringByAppendingFormat:@"%@",imageName]];
         if (defineImg) {
             return defineImg;
         }
@@ -416,7 +416,7 @@
 
 +(NSString *) zcgetTelRegular{
     ZCKitInfo * configModel = [self getZCKitInfo];
-    if (configModel!= nil && zcLibConvertToString(configModel.telRegular).length > 0) {
+    if (configModel!= nil && sobotConvertToString(configModel.telRegular).length > 0) {
         return configModel.telRegular;
     }
     return @"0+\\d{2}-\\d{8}|0+\\d{2}-\\d{7}|0+\\d{3}-\\d{8}|0+\\d{3}-\\d{7}|1+[34578]+\\d{9}|\\+\\d{2}1+[34578]+\\d{9}|400\\d{7}|400-\\d{3}-\\d{4}|\\d{11}|\\d{10}|\\d{8}|\\d{7}";
@@ -1105,7 +1105,7 @@
 //检查是否有相册的权限
 +(void)isHasPhotoLibraryAuthorization:(void(^)(BOOL))result {
     [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {
-//        if(zcGetSystemDoubleVersion()>=14.0){
+//        if(sobotGetSystemDoubleVersion()>=14.0){
 //            if(status == PHAuthorizationStatusLimited){
 //                if(result){
 //                    result(true);
@@ -1195,7 +1195,7 @@
 + (int)IntervalDay:(NSString *)filePath
 {
     NSDictionary *attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:nil];
-    // [ZCLogUtils logHeader:LogHeader debug:@"create date:%@",[attributes fileModificationDate]];
+    // [SobotLog logDebug:@"create date:%@",[attributes fileModificationDate]];
     NSString *dateString = [NSString stringWithFormat:@"%@",[attributes fileModificationDate]];
     
     NSDateFormatter *inputFormatter = [[NSDateFormatter alloc] init];
@@ -1213,7 +1213,7 @@
     NSDateComponents *d = [cal components:unitFlags fromDate:localeDate toDate:[NSDate date] options:0];
     
     
-    // [ZCLogUtils logHeader:LogHeader debug:@"%d,%d,%d,%d",[d year],[d day],[d hour],[d minute]];
+    // [SobotLog logDebug:@"%d,%d,%d,%d",[d year],[d day],[d hour],[d minute]];
     
     int result = (int)d.day;
     
@@ -1316,8 +1316,43 @@
     }
     return newType;
 }
+
++(int) zcLibmimeWithURLType:(NSString *)filePath
+{
+    filePath = sobotConvertToString(filePath);
+    // 先从参入的路径的出URL
+    NSURL *url = [NSURL fileURLWithPath:filePath];
+    if ([filePath hasPrefix:@"file:///"]){
+        url = [NSURL URLWithString:filePath];
+    }
+    NSURLRequest *request = [NSURLRequest requestWithURL:url];
+    // 只有响应头中才有其真实属性 也就是MIME
+    NSURLResponse *response = nil;
+    [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:nil];
+    NSString *mimeType = response.MIMEType;
+    
+    int type = 8;
+    if([@"application/msword" isEqual:mimeType] || [@"application/vnd.ms-works" isEqual:mimeType]){
+        type = 0;
+    }else if([@"application/vnd.ms-powerpoint" isEqual:mimeType]){
+        type = 1;
+    }else if([@"application/vnd.ms-excel" isEqual:mimeType] || [@"application/vnd.ms-excel" isEqual:mimeType]){
+        type = 2;
+    }else if([@"application/pdf" isEqual:mimeType]){
+        type = 3;
+    }else if([@"application/zip" isEqual:mimeType] || [@"application/rar" isEqual:mimeType]){
+        type = 6;
+    }else if([mimeType hasPrefix:@"audio"]){
+        type = 4;
+    }else if([mimeType hasPrefix:@"video"]){
+        type = 5;
+    }else if([@"text/plain" isEqual:mimeType]){
+        type = 7;
+    }
+    return type;
+}
 +(UIImage *) getFileIcon:(NSString * ) filePath fileType:(int) type{
-    type  = type>0 ? [ZCUITools changeFileType:type] : zcLibmimeWithURLType(filePath);
+    type  = type>0 ? [ZCUITools changeFileType:type] : [ZCUITools zcLibmimeWithURLType:filePath];
     NSString *iconName = @"";
     if(type == 0){
         iconName = @"zcicon_file_word";
@@ -1391,7 +1426,7 @@
         NSRange range = match.range;
         NSString* substringForMatch = [originalStr substringWithRange:range];
         
-        //[ZCLogUtils logHeader:LogHeader debug:@"%@,%@",NSStringFromRange(range),substringForMatch];
+        //[SobotLog logDebug:@"%@,%@",NSStringFromRange(range),substringForMatch];
         
         NSString *funUrlStr = [NSString stringWithFormat:@"<a href=\"%@\">%@</a>",substringForMatch, substringForMatch];
         text = [text stringByReplacingCharactersInRange:NSMakeRange(range.location+len, substringForMatch.length) withString:funUrlStr];
@@ -1447,7 +1482,7 @@
         NSRange range = match.range;
         NSString* substringForMatch = [contentText substringWithRange:range];
         
-        [ZCLogUtils logHeader:LogHeader debug:@"%@,%@",NSStringFromRange(range),substringForMatch];
+        [SobotLog logDebug:@"%@,%@",NSStringFromRange(range),substringForMatch];
         
         
         NSString *funUrlStr = [NSString stringWithFormat:@"<a href=\"%@\">%@</a>",substringForMatch, substringForMatch];

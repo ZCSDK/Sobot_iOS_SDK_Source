@@ -20,7 +20,7 @@
 #import "ZCHtmlCore.h"
 #import "ZCLocalStore.h"
 #import "ZCToolsCore.h"
-
+#import "ZCUICore.h"
 
 #define MidImageHeight 110
 @interface ZCRichTextChatCell()<ZCMLEmojiLabelDelegate,SobotXHImageViewerDelegate,ZCActionSheetDelegate>{
@@ -277,14 +277,14 @@
     
     if(model.richModel.msgType == 15 && model.richModel.multiModel.templateIdType == 3){
         NSMutableDictionary * detailDict = model.richModel.multiModel.interfaceRetList.firstObject; // 多个
-        model.richModel.richpricurl = zcLibConvertToString(detailDict[@"thumbnail"]);
-        model.richModel.richmoreurl = zcLibConvertToString(detailDict[@"anchor"]);
+        model.richModel.richpricurl = sobotConvertToString(detailDict[@"thumbnail"]);
+        model.richModel.richmoreurl = sobotConvertToString(detailDict[@"anchor"]);
     }
     
 #pragma mark  -- 图片
     // 处理图片  当前的图片高度固定110
-    if(model.richModel.msgType>0 && !zcLibIs_null(model.richModel.richpricurl)){
-        [[self middleImageView] loadWithURL:[NSURL URLWithString:zcUrlEncodedString(model.richModel.richpricurl)] placeholer:[ZCUITools zcuiGetBundleImage:@"zcicon_default_goods_1"] showActivityIndicatorView:YES];
+    if(model.richModel.msgType>0 && !sobotIsNull(model.richModel.richpricurl)){
+        [[self middleImageView] loadWithURL:[NSURL URLWithString:sobotUrlEncodedString(model.richModel.richpricurl)] placeholer:[ZCUITools zcuiGetBundleImage:@"zcicon_default_goods_1"] showActivityIndicatorView:YES];
         [self middleImageView].hidden=NO;
         height = height + 15;
         [self middleImageView].userInteractionEnabled=YES;
@@ -299,7 +299,7 @@
     
     
 #pragma mark 标题+内容
-    NSString *text = zcLibConvertToString([model getModelDisplayText]);
+    NSString *text = sobotConvertToString([model getModelDisplayText]);
     if(text.length == 0){
         _lblTextMsg.text = @"";
     }else{
@@ -316,15 +316,15 @@
             [ZCHtmlCore filterHtml:text result:^(NSString * _Nonnull text1, NSMutableArray * _Nonnull arr, NSMutableArray * _Nonnull links) {
                 if (text1 != nil && text1.length > 0) {
                     NSMutableAttributedString *attr;
-//                    NSString *sugesstionText = zcLibConvertToString([model isRobotGuide]);
+//                    NSString *sugesstionText = sobotConvertToString([model isRobotGuide]);
                     UIFont *font = [ZCUITools zcgetKitChatFont];
                     if(model.isRobotGuide){
                         font = ZCUIFontBold14;
                     }
                     attr   =  [ZCHtmlFilter setHtml:text1 attrs:arr view:_lblTextMsg textColor:textColor textFont:font linkColor:linkColor];
                     
-                    if(zcLibConvertToString(model.richModel.question).length > 0){
-                        NSRange r = [text1 rangeOfString:zcLibConvertToString(model.richModel.question)];
+                    if(sobotConvertToString(model.richModel.question).length > 0){
+                        NSRange r = [text1 rangeOfString:sobotConvertToString(model.richModel.question)];
 
                         [attr addAttribute:NSForegroundColorAttributeName value:textColor range:r];
                         
@@ -347,14 +347,14 @@
         size = msgSize;
     }
 
-    if (zcLibIs_null(model.richModel.richmoreurl) && zcLibIs_null(model.richModel.richpricurl)  && [ZCChatBaseCell getStatusHeight:model] == 0) {
+    if (sobotIsNull(model.richModel.richmoreurl) && sobotIsNull(model.richModel.richpricurl)  && [ZCChatBaseCell getStatusHeight:model] == 0) {
         rw = size.width + 5;
     }
     
     // 如果显示图片，文本最多显示3行
-    if(model.richModel.msgType>0 && !zcLibIs_null(model.richModel.richpricurl)){
+    if(model.richModel.msgType>0 && !sobotIsNull(model.richModel.richpricurl)){
         // 有标题的需要显示4行，不带标题最多显示3行
-        if (zcLibConvertToString(model.richModel.question).length > 0) {
+        if (sobotConvertToString(model.richModel.question).length > 0) {
             if (size.height > 110) {
                 size.height = 110;
             }
@@ -372,8 +372,8 @@
     
     height = height + size.height + 10 + Spaceheight;
     
-    NSString *sugesstionText = zcLibConvertToString([model getModelDisplaySugestionText]);
-    if(zcLibConvertToString(sugesstionText).length > 0){
+    NSString *sugesstionText = sobotConvertToString([model getModelDisplaySugestionText]);
+    if(sobotConvertToString(sugesstionText).length > 0){
         [self sugesstionLabel].hidden = NO;
         UIColor *textColor = [ZCUITools zcgetLeftChatTextColor];
         UIColor *linkColor = [ZCUITools zcgetChatLeftLinkColor];
@@ -421,7 +421,7 @@
         }
         
 //        没有 换一组
-        if (zcLibIs_null(model.richModel.richmoreurl)) {
+        if (sobotIsNull(model.richModel.richmoreurl)) {
             height = height + 5;
             
         }
@@ -433,7 +433,7 @@
     
 #pragma mark -- 展开
     //设置线条
-    if (!zcLibIs_null(model.richModel.richmoreurl)) {
+    if (!sobotIsNull(model.richModel.richmoreurl)) {
         // 设置最大宽度
         rw = maxWidth;
         // 清理内部控件
@@ -493,7 +493,7 @@
 //    NSLog(@".....%f",height);
 
     // 如果显示图片，文本最多显示3行
-    if(model.richModel.msgType>0 && !zcLibIs_null(model.richModel.richpricurl)){
+    if(model.richModel.msgType>0 && !sobotIsNull(model.richModel.richpricurl)){
         rw = maxWidth;
     }
     
@@ -502,7 +502,7 @@
         float x = 12;
         int rx = self.viewWidth- rw  - x*2 - 15 - 5;
         msgX = rx + 15;
-        if (!zcLibIs_null(model.richModel.richpricurl)) {
+        if (!sobotIsNull(model.richModel.richpricurl)) {
             [self.ivBgView setFrame:CGRectMake(rx , bgY, rw + 30 , height)];
         }else{
             [self.ivBgView setFrame:CGRectMake(rx , bgY, rw + 30 , height)];
@@ -526,7 +526,7 @@
             
         }
         
-        if (!zcLibIs_null(model.richModel.richpricurl)) {
+        if (!sobotIsNull(model.richModel.richpricurl)) {
             [self.ivBgView setFrame:CGRectMake(x, bgY, rw+30  , height)];
         }else{
             
@@ -828,14 +828,14 @@
     //    NSLog(@"size0000112...%f %f %f",msgSize.width,msgSize.height,maxWidth);
     
     // 如果图片不为空 先放置图片
-    if (model.richModel.msgType >0 && !zcLibIs_null(model.richModel.richpricurl)) {
+    if (model.richModel.msgType >0 && !sobotIsNull(model.richModel.richpricurl)) {
 
         cellheith = cellheith + MidImageHeight + 10 + Spaceheight;
 
         // 如果显示图片，文本最多显示3行
-        if(!zcLibIs_null(model.richModel.richpricurl)){
+        if(!sobotIsNull(model.richModel.richpricurl)){
             // 有标题的需要显示4行，不带标题最多显示3行
-            if (zcLibConvertToString(model.richModel.question).length > 0) {
+            if (sobotConvertToString(model.richModel.question).length > 0) {
                 if (msgSize.height > 110) {
                     msgSize.height = 110;
                 }
@@ -850,7 +850,7 @@
     }
     
     cellheith = cellheith + msgSize.height + 10 + Spaceheight;
-    if(zcLibConvertToString([model getModelDisplaySugestionText]).length > 0){
+    if(sobotConvertToString([model getModelDisplaySugestionText]).length > 0){
         tempLabel.text = nil;
         
         if(model.displaySugestionattr!=nil){
@@ -890,7 +890,7 @@
         }
         
         //        没有 换一组
-        if (zcLibIs_null(model.richModel.richmoreurl)) {
+        if (sobotIsNull(model.richModel.richmoreurl)) {
             cellheith = cellheith + 5;
         }
     }
@@ -899,13 +899,13 @@
     // 多轮会话的富文本，消息解析错误，需要转换一次
     if(model.richModel.msgType == 15 && model.richModel.multiModel.templateIdType == 3){
         NSMutableDictionary * detailDict = model.richModel.multiModel.interfaceRetList.firstObject; // 多个
-        model.richModel.richpricurl = zcLibConvertToString(detailDict[@"thumbnail"]);
-        model.richModel.richmoreurl = zcLibConvertToString(detailDict[@"anchor"]);
+        model.richModel.richpricurl = sobotConvertToString(detailDict[@"thumbnail"]);
+        model.richModel.richmoreurl = sobotConvertToString(detailDict[@"anchor"]);
     }
     
     
     // 阅读全文
-    if(!zcLibIs_null(model.richModel.richmoreurl)){
+    if(!sobotIsNull(model.richModel.richmoreurl)){
         
         // 线条的高度
         cellheith = cellheith + 26;

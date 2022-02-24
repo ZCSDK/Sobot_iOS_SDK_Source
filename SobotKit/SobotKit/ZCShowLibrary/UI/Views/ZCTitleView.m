@@ -94,18 +94,18 @@
     _labTitle.hidden = NO;
     _imgAvatar.hidden = NO;
     if(_labTitle){
-        if(zcLibConvertToString(title).length > 0){
-            [_labTitle setText:zcLibConvertToString(title)];
+        if(sobotConvertToString(title).length > 0){
+            [_labTitle setText:sobotConvertToString(title)];
         }else{
             _labTitle.hidden = YES;
         }
         
-        if(zcLibConvertToString(imageUrl).length > 0){
+        if(sobotConvertToString(imageUrl).length > 0){
             UIImage *img = [ZCUITools zcuiGetBundleImage:imageUrl];
             if(img){
                 [_imgAvatar setImage:img];
             }else{
-                [_imgAvatar loadWithURL:[NSURL URLWithString:zcLibConvertToString(imageUrl)]];
+                [_imgAvatar loadWithURL:[NSURL URLWithString:sobotConvertToString(imageUrl)]];
             }
         }else{
             _imgAvatar.hidden = YES;
@@ -152,7 +152,7 @@
 // 监听暗黑模式变化
 -(void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection{
     [super traitCollectionDidChange:previousTraitCollection];
-    if(zcGetSystemDoubleVersion()>=13){
+    if(sobotGetSystemDoubleVersion()>=13){
         // trait发生了改变
         if ([self.traitCollection hasDifferentColorAppearanceComparedToTraitCollection:previousTraitCollection]) {
             // 执行操作
