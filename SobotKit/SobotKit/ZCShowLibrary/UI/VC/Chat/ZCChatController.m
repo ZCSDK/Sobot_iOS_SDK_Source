@@ -45,13 +45,9 @@
     
     // 从其他页面返回时，重新布局
     if(self.chatView){
-        [self viewDidLayoutSubviews];
+        [_chatView beginAniantions];
+        [_chatView setFrameForListTable];
     }
-    
-    
-    [_chatView beginAniantions];
-
-    
 }
 
 -(void)viewDidAppear:(BOOL)animated{
@@ -153,9 +149,9 @@
         self.navigationController.navigationBar.translucent = NO;
         
     }
+        
+    self.view.backgroundColor = [ZCUITools zcgetBackgroundColor]; //UIColorFromThemeColor(ZCBgSystemWhiteLightDarkColor);
     
-
-    self.view.backgroundColor = UIColorFromThemeColor(ZCBgSystemWhiteLightDarkColor);//[ZCUITools zcgetBackgroundColor];
     
     CGFloat startY = 0;
     CGFloat chatHeight = viewHeigth;

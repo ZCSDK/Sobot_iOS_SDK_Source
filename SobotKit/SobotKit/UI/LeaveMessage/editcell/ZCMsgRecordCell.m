@@ -143,7 +143,7 @@
     
 //    _titleLab.backgroundColor = [UIColor redColor];
     //    _timeLab.frame = CGRectMake(CGRectGetMaxX(_orderIdLab.frame), CGRectGetMaxY(_lineView.frame) + ZCNumber(6), CGRectGetWidth(_orderIdLab.frame), CGRectGetHeight(_orderIdLab.frame));
-        _timeLab.text = sobotConvertToString(sobotDateTransformString(@"yyyy-MM-dd HH:mm:ss", sobotStringFormateDate(model.timeStr)));// @"2019年01月11日 22:10";
+        _timeLab.text = sobotConvertToString(sobotDateTransformString(SOBOT_FORMATE_DATETIME, sobotStringFormateDate(model.timeStr)));// @"2019年01月11日 22:10";
     [_timeLab sizeToFit];
     // 显示最新处理过的工单编号 new
 

@@ -591,7 +591,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = 94K26P27D8;
 				ENABLE_BITCODE = YES;
-				EXCLUDED_ARCHS = "";
+				EXCLUDED_ARCHS = arm64;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/SobotKitFrameworkTest",
@@ -622,7 +622,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = 94K26P27D8;
 				ENABLE_BITCODE = YES;
-				EXCLUDED_ARCHS = "";
+				EXCLUDED_ARCHS = arm64;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/SobotKitFrameworkTest",

@@ -19,6 +19,9 @@
 #import "ZCToolsCore.h"
 #import "SobotImageView.h"
 #import "ZCUICore.h"
+#import "ZCVideoPlayer.h"
+#import "ZCObjButton.h"
+
 #define MidImageHeight 110
 @interface ZCChatAllRichCell()<ZCMLEmojiLabelDelegate,SobotXHImageViewerDelegate,ZCActionSheetDelegate>{
     NSString    *callURL;
@@ -202,6 +205,8 @@
             UIGestureRecognizer *tap=[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(imgTouchUpInside:)];
             [view addGestureRecognizer:tap];
             view.userInteractionEnabled = YES;
+        }else if([view isKindOfClass:[ZCObjButton class]]){
+            [((ZCObjButton *)view) addTarget:self action:@selector(playVideo:) forControlEvents:UIControlEventTouchUpInside];
         }else if([view isKindOfClass:[UIButton class]]){
             [((UIButton *)view) addTarget:self action:@selector(authSensitive:) forControlEvents:UIControlEventTouchUpInside];
         }
@@ -352,7 +357,7 @@
         }else if ([url hasPrefix:@"robot:"]){
             // 处理 机器人回复的 技能组点选事件
             
-//          3.8.0 如果当前 已转人工 ， 不可点击
+//          3.0.8 如果当前 已转人工 ， 不可点击
             if([self getZCLibConfig].isArtificial){
                 return;
             }
@@ -376,10 +381,28 @@
 }
 
 
+-(void)playVideo:(ZCObjButton *)btn{
+    if(self.delegate && [self.delegate respondsToSelector:@selector(cellItemClick:type:obj:)]){
+        //        [self.delegate touchLagerImageView:xh with:YES];
+        [self.delegate cellItemClick:self.tempModel type:ZCChatCellClickTypeTouchImageYES obj:nil];
+    }
+    
+    NSDictionary *item =  btn.objTag;
+    NSString *msg = sobotConvertToString(item[@"msg"]);
+    
+    UIWindow *window = [[ZCToolsCore getToolsCore] getCurWindow];
+    ZCVideoPlayer *player = [[ZCVideoPlayer alloc] initWithFrame:window.bounds withShowInView:window url:[NSURL URLWithString:msg] Image:nil];
+    [player showControlsView];
+}
+
 
 // 点击查看大图
 -(void) imgTouchUpInside:(UITapGestureRecognizer *)recognizer{
     UIImageView *_picView=(UIImageView*)recognizer.view;
+    // 当前显示的为视频，不支持查看封面大图
+    if(_picView.tag == 101){
+        return;
+    }
     
     CALayer *calayer = _picView.layer.mask;
     [_picView.layer.mask removeFromSuperlayer];
@@ -547,6 +570,11 @@
         }else{
             text = sobotConvertToString([model getModelDisplayText]);
         }
+        // 3.0.9兼容旧版本机器人语音显示空白问题
+        if(sobotConvertToString(text).length == 0 && sobotConvertToString(model.richModel.msgtranslation).length > 0){
+            text = sobotConvertToString(model.richModel.msgtranslation);
+            
+        }
         if(text.length > 0){
             ZCMLEmojiLabel *label = nil;
             if(richLabel){
@@ -563,7 +591,7 @@
                 [label setLinkColor:[ZCUITools zcgetChatLeftLinkColor]];
             }
             
-            if(model.displayMsgAttr == nil){
+            if(model.displayMsgAttr == nil || model.displayMsgAttr.length == 0){
                 [label setText:text];
             }else{
                 [self setDisplayAttributedString:model.displayMsgAttr label:label model:model guide:NO];
@@ -631,7 +659,7 @@
     //                msg = [msg substringFromIndex:1];
     //            }
                 
-                if(type == 0 || type == 2|| type == 3 || type == 4){
+                if(type == 0 || type == 2 || type == 4){
                     ZCMLEmojiLabel *label = nil;
                     if(model.richModel.richMsgList.count == 1 && richLabel){
                         label = richLabel;
@@ -692,7 +720,7 @@
                         [superView addSubview:label];
                     }
                 }
-                if(type == 1){
+                if(type == 1 || type == 3){
                     if(!sobotIsUrl(msg,[ZCUITools zcgetUrlRegular])){
                         continue;
                     }
@@ -707,6 +735,19 @@
                         [imgView.layer setMasksToBounds:YES];
                         [imgView loadWithURL:[NSURL URLWithString:msg] placeholer:[ZCUITools zcuiGetBundleImage:@"zcicon_default_goods_1"]];
                         [superView addSubview:imgView];
+                        
+                        if(type == 3){
+                            [imgView loadWithURL:[NSURL URLWithString:@"https://img.sobot.com/chat/common/res/83f5636f-51b7-48d6-9d63-40eba0963bda.png"] placeholer:[ZCUITools zcuiGetBundleImage:@"zcicon_default_goods_1"]];
+                            // 设置一个特殊的tag，不支持点击查看大图
+                            imgView.tag = 101;
+                            ZCObjButton *_playButton = [ZCObjButton buttonWithType:UIButtonTypeCustom];
+                            _playButton.objTag = item;
+                            [_playButton setImage:[ZCUITools zcuiGetBundleImage:@"zcicon_video_play"] forState:0];
+                            [_playButton setFrame:CGRectMake(0, 0, 30, 30)];
+                            [_playButton setBackgroundColor:UIColor.clearColor];
+                            [superView addSubview:_playButton];
+                            _playButton.center = imgView.center;
+                        }
                     }
                 }
             }

@@ -61,6 +61,14 @@ typedef NS_ENUM(NSInteger, PageClickTag) {
     [self.backButton setImage:[ZCUITools zcuiGetBundleImage:@"zcicon_titlebar_back_normal"] forState:UIControlStateHighlighted];
     
     
+    if([ZCUITools getZCThemeStyle] == ZCThemeStyle_Light){
+        if(sobotGetSystemDoubleVersion() >= 13){
+            self.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
+            
+            self.navigationController.toolbar.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
+        }
+    }
+    
     if (![@"" isEqual:sobotConvertToString([ZCUICore getUICore].kitInfo.topBackNolImg)]) {
         [self.backButton setImage:[ZCUITools zcuiGetBundleImage:sobotConvertToString([ZCUICore getUICore].kitInfo.topBackNolImg)] forState:UIControlStateNormal];
     }
@@ -404,7 +412,6 @@ typedef NS_ENUM(NSInteger, PageClickTag) {
         }
         self.navigationController.toolbar.tintColor = self.navigationController.navigationBar.tintColor;
         self.toolbarItems = items;
-        
     }
     
     

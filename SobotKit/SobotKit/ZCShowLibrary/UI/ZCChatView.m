@@ -319,7 +319,7 @@
         if(code == ZCInitStatusLoading){
             // 开始初始化
             // 展示智齿loading
-            [[ZCUILoading shareZCUILoading] showAddToSuperView:self];
+            [[ZCUILoading shareZCUILoading] showAddToSuperView:self style:NO];
         }
         if(code == ZCInitStatusLoadSuc){
             // 初始化完成
@@ -345,6 +345,13 @@
                 [ZCUICore getUICore].PageLoadBlock(self,ZCPageBlockLoadFinish);
             }
             
+        }
+        
+        if(code == ZCInitStatusFail){
+            [[ZCUILoading shareZCUILoading] createPlaceholderView:ZCSTLocalString(@"网络错误，请检查网络后重试") image:nil withView:self action:^(UIButton *button) {
+                [[ZCUILoading shareZCUILoading] dismiss];
+                [safeSelf showZCChatView:[ZCUICore getUICore].kitInfo];
+            }];
         }
        
     }];
@@ -2248,6 +2255,11 @@
 -(void)setFrameForListTable{
     
     CGRect f = _listTable.frame;
+
+    if(viewHeight < self.frame.size.height){
+        viewWidth  = self.frame.size.width;
+        viewHeight = self.frame.size.height;
+    }
     int direction = [[ZCToolsCore getToolsCore] getCurScreenDirection];
     CGFloat spaceX = 0;
     CGFloat LW = viewWidth;
@@ -2887,7 +2899,7 @@
         [_listTable setContentInset:UIEdgeInsetsMake(40, 0, 0, 0)];
         
         if([self getZCIMConfig]==nil){
-            [[ZCUILoading shareZCUILoading] showAddToSuperView:self];
+            [[ZCUILoading shareZCUILoading] showAddToSuperView:self style:NO];
         }
 //        [self insertSubview:_newWorkStatusButton aboveSubview:_notifitionTopView];
         [self bringSubviewToFront:_newWorkStatusButton];

@@ -194,6 +194,12 @@ static dispatch_once_t onceToken;
     UIAlertController  *alert = [UIAlertController alertControllerWithTitle:title
                                                                     message:message
                                                              preferredStyle:UIAlertControllerStyleAlert];
+    
+    if([ZCUITools getZCThemeStyle] == ZCThemeStyle_Light){
+        if(sobotGetSystemDoubleVersion() >= 13){
+            alert.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
+        }
+    }
     //修改title
 //    NSMutableAttributedString *alertControllerStr = [[NSMutableAttributedString alloc] initWithString:@"提示"];
 //    [alertControllerStr addAttribute:NSForegroundColorAttributeName value:[UIColor redColor] range:NSMakeRange(0, 2)];
@@ -228,7 +234,7 @@ static dispatch_once_t onceToken;
                                                                handler:^(UIAlertAction * _Nonnull action) {
                 
             [alert dismissViewControllerAnimated:NO completion:^{
-                if (confirm)confirm(0);
+                if (confirm)confirm(-1);
             }];
                                                                }];
 //        [confirmAction setValue:kL2TextFont forKey:@"titleFont"];
@@ -241,7 +247,7 @@ static dispatch_once_t onceToken;
                                                             handler:^(UIAlertAction * _Nonnull action) {
                     if (confirm)confirm(i);
                 [alert dismissViewControllerAnimated:NO completion:^{
-                    if (confirm)confirm(i);
+                    if (confirm)confirm(-1);
                 }];
                                                             }];
           //  [action setValue:kSystemBaseColor forKey:@"titleTextColor"];

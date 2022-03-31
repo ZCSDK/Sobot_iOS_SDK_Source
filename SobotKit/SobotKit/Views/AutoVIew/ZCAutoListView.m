@@ -17,7 +17,11 @@
 
 #define LineHeight 36
 
-@interface ZCAutoListView()<UITableViewDelegate,UITableViewDataSource>
+@interface ZCAutoListView()<UITableViewDelegate,UITableViewDataSource>{
+    BOOL isLoading;
+    int timeSpace;
+    NSDate *startDate;
+}
 
 @property(nonatomic,strong) NSMutableArray *listArray;
 @property(nonatomic,strong) NSMutableDictionary *dict;
@@ -95,6 +99,21 @@
         [self dissmiss];
         return;
     }
+    if(startDate == nil){
+        startDate = [NSDate date];
+    }else{
+        NSDate *currtDate = [NSDate date];
+        NSTimeInterval distanceBetweenDates = [currtDate timeIntervalSinceDate:startDate];
+//        CGFloat hours = distanceBetweenDates / 3600;
+        // 小于1秒不执行
+        if (distanceBetweenDates<1) {
+//            startDate = [NSDate date];
+            return;
+        }
+        startDate = [NSDate date];
+    }
+    
+    
     _bottomView = bottomView;
   
     _searchText = searchText;
@@ -110,15 +129,18 @@
         [self setlistTableFrameWith];
         
     }else{
-        
+        if(isLoading){
+            return;
+        }
         NSMutableDictionary * dict = [NSMutableDictionary dictionaryWithCapacity:0];
         [dict setValue:sobotConvertToString(searchText) forKey:@"question"];
         [dict setObject:[NSString stringWithFormat:@"%d",[self getZCLibConfig].robotFlag] forKey:@"robotFlag"];
         
         
         [[self getZCAPIServer] getrobotGuess:[self getZCLibConfig] Parms:dict start:^(ZCLibMessage *message) {
-
+            isLoading = YES;
         } success:^(NSDictionary *dict, ZCMessageSendCode sendCode) {
+            isLoading = NO;
             // 本地缓存 收索数据
             if(_dict.count > 10){
                 [_dict removeAllObjects];
@@ -130,7 +152,28 @@
                     if (_listArray.count>0) {
                         [_listArray removeAllObjects];
                     }
-                    _listArray = [NSMutableArray arrayWithArray:arr];
+                    
+                    for(NSDictionary *item in arr){
+                        
+                        NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithData:[item[@"highlight"]  dataUsingEncoding:NSUnicodeStringEncoding] options:@{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType} documentAttributes:nil error:nil];
+
+                        [attrStr addAttribute:NSFontAttributeName value:ZCUIFont14 range:NSMakeRange(0, attrStr.length)];
+                        
+                        [attrStr enumerateAttributesInRange:NSMakeRange(0, attrStr.length) options:NSAttributedStringEnumerationReverse usingBlock:^(NSDictionary<NSAttributedStringKey,id> * _Nonnull attrs, NSRange range, BOOL * _Nonnull stop) {
+                            if ([attrs objectForKey:@"NSColor"]) {
+                                id markColor = [attrs valueForKey:@"NSColor"];
+                                
+                                if ([self getRedFor:markColor] == 0 && [self getGreenFor:markColor] == 0 && [self getBlueFor:markColor] == 0) {
+                                    [attrStr addAttribute:NSForegroundColorAttributeName
+                                                   value:UIColorFromThemeColor(ZCTextMainColor)
+                                                   range:range];
+                                }
+                            }
+                        }];
+                        
+                        [_listArray addObject:@{@"attr":attrStr,@"item":item}];
+                    }
+//                    _listArray = [NSMutableArray arrayWithArray:arr];
                     
                     if (self.isAllowShow) {
                         [_dict setObject:_listArray forKey:searchText];
@@ -144,7 +187,8 @@
                 }
             }
         } fail:^(NSString *errorMsg, ZCMessageSendCode errorCode) {
-    
+            
+            isLoading = NO;
             if (_listArray.count == 0) {
                 [self dissmiss];
                 return;
@@ -243,25 +287,13 @@
     }
     
     cell.backgroundColor = UIColorFromThemeColor(ZCBgSystemWhiteLightGrayColor);
-//    NSString * str =  sobotConvertToString(_listArray[indexPath.row][@"question"]);
-    
-    NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithData:[_listArray[indexPath.row][@"highlight"] dataUsingEncoding:NSUnicodeStringEncoding] options:@{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType} documentAttributes:nil error:nil];
-
-    [attrStr addAttribute:NSFontAttributeName value:ZCUIFont14 range:NSMakeRange(0, attrStr.length)];
-    
-    [attrStr enumerateAttributesInRange:NSMakeRange(0, attrStr.length) options:NSAttributedStringEnumerationReverse usingBlock:^(NSDictionary<NSAttributedStringKey,id> * _Nonnull attrs, NSRange range, BOOL * _Nonnull stop) {
-        if ([attrs objectForKey:@"NSColor"]) {
-            id markColor = [attrs valueForKey:@"NSColor"];
-            
-            if ([self getRedFor:markColor] == 0 && [self getGreenFor:markColor] == 0 && [self getBlueFor:markColor] == 0) {
-                [attrStr addAttribute:NSForegroundColorAttributeName
-                               value:UIColorFromThemeColor(ZCTextMainColor)
-                               range:range];
-            }
-        }
-    }];
-    
-    cell.textLabel.attributedText = attrStr;
+    cell.textLabel.font = ZCUIFont14;
+    cell.textLabel.textColor = UIColorFromThemeColor(ZCTextMainColor);
+    if(_listArray[indexPath.row][@"attr"]){
+        cell.textLabel.attributedText = _listArray[indexPath.row][@"attr"];
+    }else{
+        cell.textLabel.text = sobotConvertToString(_listArray[indexPath.row][@"item"][@"question"]);
+    }
     
     return cell;
     
@@ -292,9 +324,10 @@
 ////    2.8.2 松果反馈： 崩溃
     if (_listArray.count > indexPath.row) {
         NSDictionary *dic = _listArray[indexPath.row];
-        if ([dic objectForKey:@"question"] && !([[dic objectForKey:@"question"] isEqual:[NSNull null]])) {
-            text = [dic objectForKey:@"question"];
-        }
+        text = sobotConvertToString(dic[@"item"][@"question"]);
+//        if ([dic objectForKey:@"question"] && !([[dic objectForKey:@"question"] isEqual:[NSNull null]])) {
+//            text = [dic objectForKey:@"question"];
+//        }
     }
     if(_delegate && [_delegate respondsToSelector:@selector(autoViewCellItemClick:)]){
         [_delegate autoViewCellItemClick:text];

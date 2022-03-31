@@ -12,6 +12,7 @@
 typedef NS_ENUM(NSUInteger,ZCThemeStyle){
     ZCThemeStyle_Default    = 0, // 默认
     ZCThemeStyle_Dark       = 1, // 暗黑模式
+    ZCThemeStyle_Light      = 2, // 暗黑模式
 };
 
 /**

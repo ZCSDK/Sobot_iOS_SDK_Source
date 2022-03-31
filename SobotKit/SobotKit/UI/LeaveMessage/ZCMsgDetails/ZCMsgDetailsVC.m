@@ -874,7 +874,7 @@ UINavigationControllerDelegate,ZCMLEmojiLabelDelegate>
     ZCRecordListModel * model = nil;
     if(_listArray.count > 0){
         model = [_listArray lastObject];
-        _headerTitleLab.text = sobotConvertToString(sobotDateTransformString(@"yyyy-MM-dd HH:mm:ss", sobotStringFormateDate(model.timeStr)));
+        _headerTitleLab.text = sobotConvertToString(sobotDateTransformString(SOBOT_FORMATE_DATETIME, sobotStringFormateDate(model.timeStr)));
         
         ZCRecordListModel *firstFlag = [_listArray firstObject];
         
@@ -989,7 +989,7 @@ UINavigationControllerDelegate,ZCMLEmojiLabelDelegate>
     ZCRecordListModel * model = nil;
     if(_listArray.count > 0){
         model = [_listArray lastObject];
-        _headerTitleLab.text = sobotConvertToString(sobotDateTransformString(@"yyyy-MM-dd HH:mm:ss", sobotStringFormateDate(model.timeStr)));
+        _headerTitleLab.text = sobotConvertToString(sobotDateTransformString(SOBOT_FORMATE_DATETIME, sobotStringFormateDate(model.timeStr)));
         
         ZCRecordListModel *firstFlag = [_listArray firstObject];
         

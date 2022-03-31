@@ -498,7 +498,7 @@
             
         }
         if(_datePicker.datePickerMode == UIDatePickerModeDateAndTime){
-            _resultString = sobotDateTransformString(@"yyyy-MM-dd HH:mm:ss", _datePicker.date);
+            _resultString = sobotDateTransformString(SOBOT_FORMATE_DATETIME, _datePicker.date);
             
         }
     }
