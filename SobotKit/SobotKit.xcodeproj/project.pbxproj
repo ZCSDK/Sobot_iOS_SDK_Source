@@ -703,16 +703,16 @@
 		7BDB5F46243328F700D655C5 /* LeaveMessage */ = {
 			isa = PBXGroup;
 			children = (
-				7BDB5F47243328F700D655C5 /* ZCXJAlbumController.h */,
 				7BDB5F48243328F700D655C5 /* editcell */,
-				7BDB5F55243328F700D655C5 /* ZCUILeaveMessageController.m */,
 				7BDB5F56243328F700D655C5 /* ZCMsgDetails */,
-				7BDB5F5F243328F700D655C5 /* ZCReplyLeaveController.h */,
+				7BDB5F64243328F700D655C5 /* ZCMsgRecordVC.h */,
 				7BDB5F60243328F700D655C5 /* ZCMsgRecordVC.m */,
-				7BDB5F61243328F700D655C5 /* ZCXJAlbumController.m */,
+				7BDB5F5F243328F700D655C5 /* ZCReplyLeaveController.h */,
 				7BDB5F62243328F700D655C5 /* ZCReplyLeaveController.m */,
 				7BDB5F63243328F700D655C5 /* ZCUILeaveMessageController.h */,
-				7BDB5F64243328F700D655C5 /* ZCMsgRecordVC.h */,
+				7BDB5F55243328F700D655C5 /* ZCUILeaveMessageController.m */,
+				7BDB5F47243328F700D655C5 /* ZCXJAlbumController.h */,
+				7BDB5F61243328F700D655C5 /* ZCXJAlbumController.m */,
 			);
 			path = LeaveMessage;
 			sourceTree = "<group>";
@@ -739,14 +739,14 @@
 		7BDB5F56243328F700D655C5 /* ZCMsgDetails */ = {
 			isa = PBXGroup;
 			children = (
-				7BDB5F57243328F700D655C5 /* ZCReplyFileView.h */,
 				7BDB5F58243328F700D655C5 /* ZCLeaveDetailCell.h */,
+				7BDB5F5D243328F700D655C5 /* ZCLeaveDetailCell.m */,
 				7BDB5F59243328F700D655C5 /* ZCMsgDetailsVC.h */,
+				7BDB5F5C243328F700D655C5 /* ZCMsgDetailsVC.m */,
+				7BDB5F57243328F700D655C5 /* ZCReplyFileView.h */,
+				7BDB5F5E243328F700D655C5 /* ZCReplyFileView.m */,
 				7BDB5F5A243328F700D655C5 /* ZCReplyLeaveView.h */,
 				7BDB5F5B243328F700D655C5 /* ZCReplyLeaveView.m */,
-				7BDB5F5C243328F700D655C5 /* ZCMsgDetailsVC.m */,
-				7BDB5F5D243328F700D655C5 /* ZCLeaveDetailCell.m */,
-				7BDB5F5E243328F700D655C5 /* ZCReplyFileView.m */,
 			);
 			path = ZCMsgDetails;
 			sourceTree = "<group>";
@@ -818,22 +818,22 @@
 		7BDB5F79243328F700D655C5 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				7BDB5F7A243328F700D655C5 /* ZCPageSheetView.h */,
-				7BDB5F7B243328F700D655C5 /* ZCCheckCusFieldView.h */,
-				7BDB5F7C243328F700D655C5 /* ZCCheckTypeView.m */,
-				7BDB5F7D243328F700D655C5 /* ZCCircleProgressView.m */,
-				7BDB5F7E243328F700D655C5 /* ZCCheckCityView.m */,
-				7BDB5F7F243328F700D655C5 /* ZCProgressView.h */,
-				7BDB5F80243328F700D655C5 /* ZCVideoPlayer.m */,
-				7BDB5F81243328F700D655C5 /* ZCTitleView.h */,
-				7BDB5F82243328F700D655C5 /* ZCPageSheetView.m */,
-				7BDB5F83243328F700D655C5 /* ZCCheckTypeView.h */,
-				7BDB5F84243328F700D655C5 /* ZCCheckCusFieldView.m */,
-				7BDB5F85243328F700D655C5 /* ZCCircleProgressView.h */,
 				7BDB5F86243328F700D655C5 /* ZCCheckCityView.h */,
+				7BDB5F7E243328F700D655C5 /* ZCCheckCityView.m */,
+				7BDB5F7B243328F700D655C5 /* ZCCheckCusFieldView.h */,
+				7BDB5F84243328F700D655C5 /* ZCCheckCusFieldView.m */,
+				7BDB5F83243328F700D655C5 /* ZCCheckTypeView.h */,
+				7BDB5F7C243328F700D655C5 /* ZCCheckTypeView.m */,
+				7BDB5F85243328F700D655C5 /* ZCCircleProgressView.h */,
+				7BDB5F7D243328F700D655C5 /* ZCCircleProgressView.m */,
+				7BDB5F7A243328F700D655C5 /* ZCPageSheetView.h */,
+				7BDB5F82243328F700D655C5 /* ZCPageSheetView.m */,
+				7BDB5F7F243328F700D655C5 /* ZCProgressView.h */,
+				7BDB5F89243328F700D655C5 /* ZCProgressView.m */,
+				7BDB5F81243328F700D655C5 /* ZCTitleView.h */,
 				7BDB5F87243328F700D655C5 /* ZCTitleView.m */,
 				7BDB5F88243328F700D655C5 /* ZCVideoPlayer.h */,
-				7BDB5F89243328F700D655C5 /* ZCProgressView.m */,
+				7BDB5F80243328F700D655C5 /* ZCVideoPlayer.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -841,9 +841,9 @@
 		7BDB5F8A243328F700D655C5 /* Core */ = {
 			isa = PBXGroup;
 			children = (
-				7BDB5F8B243328F700D655C5 /* ZCUICore.h */,
 				7BDB5F8C243328F700D655C5 /* ZCToolsCore.h */,
 				7BDB5F8D243328F700D655C5 /* ZCToolsCore.m */,
+				7BDB5F8B243328F700D655C5 /* ZCUICore.h */,
 				7BDB5F8E243328F700D655C5 /* ZCUICore.m */,
 			);
 			path = Core;
@@ -1054,22 +1054,22 @@
 		7BDB5FF4243328F700D655C5 /* Tools */ = {
 			isa = PBXGroup;
 			children = (
-				7BDB5FF5243328F700D655C5 /* ZCHtmlFilter.m */,
-				7BDB5FF6243328F700D655C5 /* ZCUIVoiceTools.h */,
-				7BDB5FF7243328F700D655C5 /* ZCSobotCore.h */,
-				7BDB5FF8243328F700D655C5 /* ZCUIImageTools.h */,
-				7BDB5FF9243328F700D655C5 /* ZCUITools.m */,
-				7BDB5FFA243328F700D655C5 /* ZCStoreConfiguration.h */,
-				7BDB5FFB243328F700D655C5 /* ZCSatisfactionButton.h */,
-				7BDB5FFC243328F700D655C5 /* ZCUIToastTools.m */,
 				7BDB5FFD243328F700D655C5 /* ZCHtmlFilter.h */,
-				7BDB5FFE243328F700D655C5 /* ZCUIVoiceTools.m */,
+				7BDB5FF5243328F700D655C5 /* ZCHtmlFilter.m */,
+				7BDB5FFB243328F700D655C5 /* ZCSatisfactionButton.h */,
+				7BDB6004243328F700D655C5 /* ZCSatisfactionButton.m */,
+				7BDB5FF7243328F700D655C5 /* ZCSobotCore.h */,
 				7BDB5FFF243328F700D655C5 /* ZCSobotCore.m */,
+				7BDB5FFA243328F700D655C5 /* ZCStoreConfiguration.h */,
 				7BDB6000243328F700D655C5 /* ZCStoreConfiguration.m */,
-				7BDB6001243328F700D655C5 /* ZCUITools.h */,
+				7BDB5FF8243328F700D655C5 /* ZCUIImageTools.h */,
 				7BDB6002243328F700D655C5 /* ZCUIImageTools.m */,
 				7BDB6003243328F700D655C5 /* ZCUIToastTools.h */,
-				7BDB6004243328F700D655C5 /* ZCSatisfactionButton.m */,
+				7BDB5FFC243328F700D655C5 /* ZCUIToastTools.m */,
+				7BDB6001243328F700D655C5 /* ZCUITools.h */,
+				7BDB5FF9243328F700D655C5 /* ZCUITools.m */,
+				7BDB5FF6243328F700D655C5 /* ZCUIVoiceTools.h */,
+				7BDB5FFE243328F700D655C5 /* ZCUIVoiceTools.m */,
 			);
 			path = Tools;
 			sourceTree = "<group>";
