@@ -204,7 +204,7 @@
     //判断显示标题
     if(![@"" isEqual:question]){
         self.lblEmojiQuestion.text  = question;
-        CGSize size = [self.lblEmojiQuestion preferredSizeWithMaxWidth:self.maxWidth];
+        CGSize size = [self.lblEmojiQuestion preferredSizeWithMaxWidth:self.maxWidth-30];
         
         questionF = CGRectMake(GetCellItemX(self.isRight), height, size.width, size.height);
         [[self lblEmojiQuestion] setFrame:questionF];
@@ -376,6 +376,7 @@
     
     
     [self setFrame:CGRectMake(0, 0, self.viewWidth, height+bgY )];
+//    NSLog(@"实际计算高度================ %f",(height+bgY + 10));
     return height+bgY + 10 ;
 }
 
@@ -471,7 +472,12 @@
         NSNumber *fontString = [ctfFont objectForKey:@"NSFontSizeAttribute"];
         tempLabel.font = [UIFont boldSystemFontOfSize:[fontString floatValue]];
         
-        tempLabel.text = sobotConvertToString(model.richModel.question);
+        NSString *question = sobotConvertToString(detailDict[@"title"]);
+        if (!question.length) {
+            tempLabel.text = sobotConvertToString(model.richModel.question);
+        }else{
+            tempLabel.text = question;
+        }
         CGSize size = [tempLabel preferredSizeWithMaxWidth:maxWidth];
         
         cellheith = cellheith + size.height +10 + Spaceheight;
@@ -537,7 +543,7 @@
     }
     
     cellheith = cellheith + 10 + 10 + 12;
-    
+//    NSLog(@"加号方法中最终计算后的高度 =============== %f",cellheith);
     return cellheith;
 }
 

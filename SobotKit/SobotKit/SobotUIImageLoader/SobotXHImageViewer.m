@@ -364,7 +364,9 @@
                              currentView.transform = CGAffineTransformIdentity;
                              currentView.frame = state.frame;
                              currentView.transform = state.transform;
-                             [state.superview addSubview:currentView];
+                             if(state.superview){
+                                 [state.superview addSubview:currentView];
+                             }
                              
                              for (UIView *view in self->_imgViews) {
                                  if ([view respondsToSelector:@selector(largePhotoURLString)]) {

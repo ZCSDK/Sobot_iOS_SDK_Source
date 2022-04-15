@@ -159,6 +159,8 @@
     BOOL isOpenNotice;// 是否展开通告
     
     BOOL isHasQuickView;// 是否有快捷入口
+    
+    BOOL isOpenNewPage;
 }
 
 
@@ -319,7 +321,7 @@
         if(code == ZCInitStatusLoading){
             // 开始初始化
             // 展示智齿loading
-            [[ZCUILoading shareZCUILoading] showAddToSuperView:self];
+            [[ZCUILoading shareZCUILoading] showAddToSuperView:self style:NO];
         }
         if(code == ZCInitStatusLoadSuc){
             // 初始化完成
@@ -345,6 +347,13 @@
                 [ZCUICore getUICore].PageLoadBlock(self,ZCPageBlockLoadFinish);
             }
             
+        }
+        
+        if(code == ZCInitStatusFail){
+            [[ZCUILoading shareZCUILoading] createPlaceholderView:ZCSTLocalString(@"网络错误，请检查网络后重试") image:nil withView:self action:^(UIButton *button) {
+                [[ZCUILoading shareZCUILoading] dismiss];
+                [safeSelf showZCChatView:[ZCUICore getUICore].kitInfo];
+            }];
         }
        
     }];
@@ -523,6 +532,8 @@
         }else if (message == nil){
             [_keyboardTools setInitConfig:(ZCLibConfig *)object];
             self.currentLibConfig = (ZCLibConfig *)object;
+        }else if([@"" isEqual:@"ZCKeyboardStatusFrameChanged"]){
+            // 仅执行设置坐标操作
         }
         [_keyboardTools hideKeyboard];
         
@@ -680,6 +691,10 @@
 
 -(void)coreOpenNewPageVC:(ZCPagesType)type IsExist:(LeaveExitType) isExist  isShowToat:(BOOL) isShow  tipMsg:(NSString *)msg  Dict:(NSDictionary*)dict Object:(id)obj trunType:(ZCTurnType) trunType{
         if (type == ZC_AskTabelPage) {
+            if(isOpenNewPage){
+                return;
+            }
+            isOpenNewPage = YES;
             ZCUIAskTableController * askVC = [[ZCUIAskTableController alloc]init];
             askVC.dict = dict[@"data"];
             if (msg !=nil && [msg isEqualToString:@"clearskillId"]) {
@@ -687,6 +702,7 @@
             }
             askVC.isNavOpen = (self.superController.navigationController!=nil ? YES: NO);
             askVC.trunServerBlock = ^(BOOL isback) {
+                isOpenNewPage = NO;
                 if (isback && [[ZCUICore getUICore] getLibConfig].type == 2) {
                     // 返回当前页面 结束会话回到启动页面
                     [self goBackIsKeep];
@@ -1612,9 +1628,9 @@
                 
                 [[ZCUICore getUICore] splitMessageModel:message Index:index weakself:[ZCUICore getUICore]];
                 
-//                [[ZCUICore getUICore].listArray insertObject:message atIndex:index+1];
-//                [_listTable reloadData];
-//                [self scrollTableToBottom];
+                
+                // 3.1.0新增，发送完语音消息，消息被遮挡
+                [self setFrameForListTable];
             }else if(sendCode == ZC_SENDMessage_Success){
                 model.sendStatus = 0;
                 model.richModel.msgtranslation = message.richModel.msgtranslation;
@@ -1833,7 +1849,8 @@
                 
                 [[ZCUICore getUICore] splitMessageModel:message Index:index weakself:[ZCUICore getUICore]];
                 
-                
+                // 3.1.0新增
+                [self setFrameForListTable];
             }else if(sendCode==ZC_SENDMessage_Success){
                 sendMessage.sendStatus=0;
                 sendMessage.richModel.msgtranslation = message.richModel.msgtranslation;
@@ -2128,13 +2145,14 @@
                 //        _isClearnHistory = YES;
                 [self.listTable reloadData];
                 //                [ZCUICore getUICore].isClearnHistory = YES;
-            }
             
-            [[ZCLibServer getLibServer] cleanHistoryMessage:[self getZCIMConfig].uid success:^(NSData *data) {
-                
-            } fail:^(ZCNetWorkCode errorCode) {
-                
-            }];
+            
+                [[ZCLibServer getLibServer] cleanHistoryMessage:[self getZCIMConfig].uid success:^(NSData *data) {
+                    
+                } fail:^(ZCNetWorkCode errorCode) {
+                    
+                }];
+            }
             
         } buttonTitles:ZCSTLocalString(@"清空"), nil];
       
@@ -2157,7 +2175,7 @@
             break;
         case ZCChatViewGoBackType_close: {
             isClickCloseBtn = YES;
-            
+
             if ([ZCUICore getUICore].kitInfo.isShowCloseSatisfaction) {
                 showEvaluation = YES;
             }
@@ -2184,9 +2202,9 @@
             && ![ZCUICore getUICore].isEvaluationService
             && [ZCUICore getUICore].isSendToUser
             && !([[self getZCIMConfig] isblack]|| [ZCUICore getUICore].isOfflineBeBlack)) {
-            // 必须评价
-            [self JumpCustomActionSheet:ServerSatisfcationBackType andDoBack:!isClickCloseBtn isInvitation:1 Rating:5 IsResolved:0];
-            
+            // 必须评价  310版本 将这里的 !isClickCloseBtn 替换成YES 这里都是点击了返回 或者关闭按钮触发的评价
+            [self JumpCustomActionSheet:ServerSatisfcationBackType andDoBack:YES isInvitation:1 Rating:5 IsResolved:0];
+        
         }else if(![ZCUICore getUICore].isEvaluationRobot
                  && [ZCUICore getUICore].isSendToRobot
                  && ![ZCUICore getUICore].isOffline
@@ -2246,8 +2264,14 @@
 
 
 -(void)setFrameForListTable{
+    isOpenNewPage = NO;
     
     CGRect f = _listTable.frame;
+
+    if(viewHeight < self.frame.size.height){
+        viewWidth  = self.frame.size.width;
+        viewHeight = self.frame.size.height;
+    }
     int direction = [[ZCToolsCore getToolsCore] getCurScreenDirection];
     CGFloat spaceX = 0;
     CGFloat LW = viewWidth;
@@ -2762,7 +2786,7 @@
     _sheet = nil;
     
     //  在isShowReturnTips 为true 切点击了暂时离开，否则下次无法评价
-    isClickCloseBtn = false;
+//    isClickCloseBtn = false;
     [ZCUICore getUICore].isDismissSheetPage = YES;
     
     
@@ -2887,7 +2911,7 @@
         [_listTable setContentInset:UIEdgeInsetsMake(40, 0, 0, 0)];
         
         if([self getZCIMConfig]==nil){
-            [[ZCUILoading shareZCUILoading] showAddToSuperView:self];
+            [[ZCUILoading shareZCUILoading] showAddToSuperView:self style:NO];
         }
 //        [self insertSubview:_newWorkStatusButton aboveSubview:_notifitionTopView];
         [self bringSubviewToFront:_newWorkStatusButton];
@@ -3028,6 +3052,7 @@
                 if (isCompleteSatisfaction) {
                     [ZCLibClient closeAndoutZCServer:YES];
                 }
+                
             }
         }
         else{

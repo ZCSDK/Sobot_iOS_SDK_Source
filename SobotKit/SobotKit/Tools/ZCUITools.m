@@ -31,7 +31,7 @@
     return  [ZCUICore getUICore].kitInfo.themeStyle;
 }
 
-// 暗黑模式是，是否使用自定义颜色
+// 暗黑模式时，是否使用自定义颜色
 +(BOOL) useDefaultThemeColor{
     if([self getZCKitInfo]!=nil && [self getZCThemeStyle] == ZCThemeStyle_Dark && [self getZCKitInfo].useDefaultDarkTheme){
         return YES;

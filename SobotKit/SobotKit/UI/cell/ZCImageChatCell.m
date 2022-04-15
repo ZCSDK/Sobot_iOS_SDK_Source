@@ -94,6 +94,7 @@
     
     
     [_ivSingleImage setBackgroundColor:self.ivBgView.backgroundColor];
+    [_ivSingleImage setBackgroundColor:[UIColor redColor]];
     [self.ivBgView setImage:nil];
     [self.ivBgView setBackgroundColor:[UIColor clearColor]];
     [_ivSingleImage setContentMode:UIViewContentModeScaleAspectFill];
@@ -167,18 +168,37 @@
         return;
     }
     //    [SobotLog logDebug:@"查看大图：%@",self.tempModel.richModel.msg];
-    UIImageView *_picView = (UIImageView*)recognizer.view;
+    UIImageView *picTempView = (UIImageView*)recognizer.view;
     
-    CALayer *calayer = _picView.layer.mask;
-    [_picView.layer.mask removeFromSuperlayer];
+//    CALayer *calayer = _picView.layer.mask;
+//    [_picView.layer.mask removeFromSuperlayer];
+    
+    CGRect f = [picTempView convertRect:picTempView.bounds toView:nil];
+    
+    UIImageView *bgView = [[UIImageView alloc] init];
+    [bgView setImage:self.ivLayerView.image];
+    // 设置尖角
+    [bgView setFrame:f];
+    CALayer *layer              = bgView.layer;
+    layer.frame                 = (CGRect){{0,0},bgView.layer.frame.size};
+        
+    SobotImageView *newPicView = [[SobotImageView alloc] init];
+    newPicView.image = picTempView.image;
+    newPicView.frame = f;
+    newPicView.layer.masksToBounds = NO;
+//    newPicView.layer.cornerRadius = 15;
+    
+    newPicView.layer.mask = layer;
+    CALayer *calayer = newPicView.layer.mask;
+    [newPicView.layer.mask removeFromSuperlayer];
     
     
     __block SobotXHImageViewer *xh = [[SobotXHImageViewer alloc] initWithImageViewerWillDismissWithSelectedViewBlock:^(SobotXHImageViewer *imageViewer, UIImageView *selectedView) {
         
     } didDismissWithSelectedViewBlock:^(SobotXHImageViewer *imageViewer, UIImageView *selectedView) {
-        
         selectedView.layer.mask = calayer;
         [selectedView setNeedsDisplay];
+        [selectedView removeFromSuperview];
         
         // 点击大图关闭
         if(self.delegate && [self.delegate respondsToSelector:@selector(cellItemClick:type:obj:)]){
@@ -189,12 +209,12 @@
     }];
     
     NSMutableArray *photos = [[NSMutableArray alloc] init];
-    [photos addObject:_picView];
+    [photos addObject:newPicView];
     
     xh.delegate = self;
     xh.disableTouchDismiss = NO;
     _imageViewer = xh;
-    [xh showWithImageViews:photos selectedView:_picView];
+    [xh showWithImageViews:photos selectedView:newPicView];
     
     // 放大图片
     if(self.delegate && [self.delegate respondsToSelector:@selector(cellItemClick:type:obj:)]){

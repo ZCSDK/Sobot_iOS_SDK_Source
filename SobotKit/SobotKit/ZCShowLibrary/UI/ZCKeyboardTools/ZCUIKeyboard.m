@@ -224,7 +224,7 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
 //        _zc_pressedButton.layer.borderWidth      = 0.75f;
         _zc_pressedButton.titleLabel.font        = [ZCUITools zcgetVoiceButtonFont];
 //        _zc_pressedButton.layer.borderColor      = [ZCUITools zcgetBackgroundBottomLineColor].CGColor;
-        [_zc_pressedButton setTitle:ZCSTLocalString(@"按住 说话") forState:UIControlStateNormal];
+        [_zc_pressedButton setTitle:ZCSTLocalString(@"按住 说话") forState:UIControlStateNormal];
         [_zc_pressedButton setTitleColor:UIColorFromThemeColor(ZCTextMainColor) forState:UIControlStateNormal];
         [_zc_pressedButton setBackgroundImage:[ZCUIImageTools zcimageWithColor:UIColorFromThemeColor(ZCBgLeftChatColor)] forState:UIControlStateNormal];
                 [_zc_pressedButton setBackgroundImage:[ZCUIImageTools zcimageWithColor:UIColorFromThemeColor(ZCTextPlaceHolderColor)] forState:UIControlStateHighlighted];
@@ -845,7 +845,7 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
             NSString *aleartMsg = @"";
             aleartMsg = ZCSTLocalString(@"请在《设置 - 隐私 - 相机》选项中，允许访问您的相机");
             [[ZCToolsCore getToolsCore] showAlert:nil message:aleartMsg cancelTitle:ZCSTLocalString(@"好的") titleArray:nil viewController:[self getCurrentVC] confirm:^(NSInteger buttonTag) {
-                if(buttonTag == 0){
+                if(buttonTag == -1){
                     NSURL *url = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
                     if ([[UIApplication sharedApplication] canOpenURL:url]) {
                        [[UIApplication sharedApplication] openURL:url];
@@ -868,7 +868,7 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
 
                     
                     [[ZCToolsCore getToolsCore] showAlert:nil message:aleartMsg cancelTitle:ZCSTLocalString(@"好的") titleArray:nil viewController:[self getCurrentVC] confirm:^(NSInteger buttonTag) {
-                        if(buttonTag == 0){
+                        if(buttonTag == -1){
                             NSURL *url = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
                             if ([[UIApplication sharedApplication] canOpenURL:url]) {
                                [[UIApplication sharedApplication] openURL:url];
@@ -1199,6 +1199,20 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
         }else{
             _zc_leaveMsgButton.hidden = YES;
             [_zc_chatTextView setFrame:CGRectMake(topGap + 10, (BottomHeight-35)/2, [self getSourceViewWidth]-58 - topGap, 35)];
+            
+            // 开启语音的功能   机器人开启语音识别
+            if ([ZCUITools zcgetOpenRecord] && [ZCUICore getUICore].kitInfo.isOpenRobotVoice) {
+                
+                [_zc_chatTextView setFrame:CGRectMake(topGap + 48 , (BottomHeight-35)/2, [self getSourceViewWidth]-48*2 - 10 - topGap, 35)];
+                _zc_chatTextView.textContainerInset =  UIEdgeInsetsMake(10, 10, 10, 10 );
+                
+                // 显示语音按钮
+                CGRect vf = _zc_voiceButton.frame;
+                vf.origin.x = 0 + topGap;
+                _zc_voiceButton.frame = vf;
+                
+                _zc_voiceButton.hidden = NO;
+            }
         }
         
         [self createMoreView];
@@ -2173,7 +2187,7 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
              aleartMsg = ZCSTLocalString(@"请在《设置 - 隐私 - 麦克风》选项中，允许访问您的麦克风");
              
              [[ZCToolsCore getToolsCore] showAlert:nil message:aleartMsg cancelTitle:ZCSTLocalString(@"好的") titleArray:nil viewController:[self getCurrentVC] confirm:^(NSInteger buttonTag) {
-                 if(buttonTag == 0){
+                 if(buttonTag == -1){
                      NSURL *url = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
                      if ([[UIApplication sharedApplication] canOpenURL:url]) {
                         [[UIApplication sharedApplication] openURL:url];
@@ -2196,7 +2210,7 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
     [_zc_recordView didChangeState:RecordStart];
     
     [_zc_pressedButton setBackgroundColor:UIColorFromThemeColor(ZCTextPlaceHolderColor)];
-    [_zc_pressedButton setTitle:ZCSTLocalString(@"松开 发送") forState:UIControlStateNormal];
+    [_zc_pressedButton setTitle:ZCSTLocalString(@"松开 发送") forState:UIControlStateNormal];
     [_zc_pressedButton.layer setBorderWidth:0.0f];
     
     _zc_voiceButton.enabled=NO;
@@ -2241,7 +2255,7 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
             [_zc_recordView didChangeState:RecordStart];
             
             [_zc_pressedButton setBackgroundColor:UIColorFromThemeColor(ZCTextPlaceHolderColor)];
-            [_zc_pressedButton setTitle:ZCSTLocalString(@"松开 发送") forState:UIControlStateNormal];
+            [_zc_pressedButton setTitle:ZCSTLocalString(@"松开 发送") forState:UIControlStateNormal];
         } else {
             // UIControlEventTouchDragInside
         }
@@ -2261,19 +2275,38 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
     }
 }
 -(void)btnTouchEnd:(UIButton *)sender withEvent:(UIEvent *)event{
+    NSLog(@"RecordCancel%@",event);
     UITouch *touch = [[event allTouches] anyObject];
     CGFloat boundsExtension = 5.0f;
     CGRect outerBounds = CGRectInset(sender.bounds, -1 * boundsExtension, -1 * boundsExtension);
     BOOL touchOutside = !CGRectContainsPoint(outerBounds, [touch locationInView:sender]);
-    if (touchOutside) {
+    int duration = (int)_zc_recordView.currentTime;
+    NSLog(@"手势事件之后 触发的 时间时长：%d",duration);
+    if (duration < 1 || touchOutside) {
         // UIControlEventTouchUpOutside
         [SobotLog logDebug:@"取消ccc"];
-        
         if(_zc_recordView){
-            // 取消发送
-            [_zc_recordView didChangeState:RecordCancel];
-            [self closeRecord:sender];
+            if (duration < 1) { // 先显示时间过短 秒点秒松开状态下
+                [_zc_recordView didChangeState:RecordComplete];
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    // 取消发送
+                    [_zc_recordView didChangeState:RecordCancel];
+#pragma mark - 这里加延迟是为了 增加弹窗 “录音时间过短” 的显示时间， closeRecord 方法会销毁掉弹窗
+                    [self closeRecord:sender];
+                });
+            }else{
+                // 取消发送
+                [_zc_recordView didChangeState:RecordCancel];
+                [self closeRecord:sender];
+            }
         }
+        // 这里处理异常情况下 录音按钮没有恢复默认状态的场景 （秒点录音按钮之后秒松开）
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            _zc_voiceButton.enabled = YES;
+            _zc_addMoreButton.enabled = YES;
+            _zc_faceButton.enabled = YES;
+            [_zc_pressedButton setTitle:ZCSTLocalString(@"按住 说话") forState:UIControlStateNormal];
+        });
     } else {
         // UIControlEventTouchUpInside
         [SobotLog logDebug:@"结束了"];
@@ -2294,7 +2327,7 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
 //    [_zc_pressedButton setBackgroundColor:[UIColor clearColor]];
     [_zc_pressedButton setBackgroundColor:UIColorFromThemeColor(ZCTextPlaceHolderColor)];
 
-    [_zc_pressedButton setTitle:ZCSTLocalString(@"按住 说话") forState:UIControlStateNormal];
+    [_zc_pressedButton setTitle:ZCSTLocalString(@"按住 说话") forState:UIControlStateNormal];
     // 设置_pressedButton边界宽度
 //    _zc_pressedButton.layer.borderWidth = 0.75f;
     _zc_voiceButton.enabled=YES;
@@ -2303,7 +2336,7 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
     if(duration<1){
         
         [SobotLog logDebug:@"当前的时长：%d",duration];
-        
+        // 当前记录的语音时间为 0秒，秒点击触发事件，关闭计时器
         sender.enabled = NO;
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.5f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             sender.enabled = YES;

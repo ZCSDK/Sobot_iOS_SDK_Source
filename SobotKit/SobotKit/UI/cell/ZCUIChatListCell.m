@@ -147,7 +147,7 @@
     
     // ----------设置你想要的格式,hh与HH的区别:分别表示12小时制,24小时制
     
-//    [formatter setDateFormat:@"YYYY-MM-dd HH:mm:ss"];
+//    [formatter setDateFormat:SOBOT_FORMATE_DATETIME];
     [formatter setDateFormat:@"YYYY-MM-dd"];
     
     //现在时间,你可以输出来看下是什么格式

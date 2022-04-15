@@ -59,7 +59,9 @@ static ZCUIToastTools *_instance=nil;
 
 -(void)showToast:(NSString *) text duration:(CGFloat) duration view:(UIView *) byView position:(ZCToastPosition)position{
     [self dismisProgress];
-    
+    if(sobotConvertToString(text).length == 0){
+        return;
+    }
     [byView addSubview:_toastView];
     _toastView.layer.cornerRadius = 6.0f;
     _toastView.layer.masksToBounds = NO;

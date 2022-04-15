@@ -149,7 +149,7 @@ static dispatch_once_t onceToken;
  *  @param message      提示内容
  *  @param cancelTitle  取消按钮(无操作,为nil则只显示一个按钮)
  *  @param vc           VC
- *  @param confirm      点击按钮的回调
+ *  @param confirm      点击按钮的回调，tag=-1为取消，其它从0开始
  *  @param buttonTitles 按钮(为nil,默认为"确定",传参数时必须以nil结尾，否则会崩溃)
  */
 - (void)showAlert:(NSString *)title
@@ -194,6 +194,12 @@ static dispatch_once_t onceToken;
     UIAlertController  *alert = [UIAlertController alertControllerWithTitle:title
                                                                     message:message
                                                              preferredStyle:UIAlertControllerStyleAlert];
+    
+    if([ZCUITools getZCThemeStyle] == ZCThemeStyle_Light){
+        if(sobotGetSystemDoubleVersion() >= 13){
+            alert.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
+        }
+    }
     //修改title
 //    NSMutableAttributedString *alertControllerStr = [[NSMutableAttributedString alloc] initWithString:@"提示"];
 //    [alertControllerStr addAttribute:NSForegroundColorAttributeName value:[UIColor redColor] range:NSMakeRange(0, 2)];
@@ -215,10 +221,10 @@ static dispatch_once_t onceToken;
         UIAlertAction  *cancelAction = [UIAlertAction actionWithTitle:cancelTitle
                                                                 style:UIAlertActionStyleCancel
                                                               handler:^(UIAlertAction * _Nonnull action) {
-                                                                  if (confirm)confirm(-1);
-                                                              }];
-//        [cancelAction setValue:kL2TextFont forKey:@"titleFont"];
-      //  [cancelAction setValue:kSystemLightGrayColor forKey:@"titleTextColor"];
+            if (confirm)confirm(-1);
+        }];
+        //        [cancelAction setValue:kL2TextFont forKey:@"titleFont"];
+        //  [cancelAction setValue:kSystemLightGrayColor forKey:@"titleTextColor"];
         [alert addAction:cancelAction];
     }
     // 确定操作
@@ -226,12 +232,12 @@ static dispatch_once_t onceToken;
         UIAlertAction  *confirmAction = [UIAlertAction actionWithTitle:ZCSTLocalString(@"确定")
                                                                  style:UIAlertActionStyleDefault
                                                                handler:^(UIAlertAction * _Nonnull action) {
-                
+            if (confirm)confirm(0);
             [alert dismissViewControllerAnimated:NO completion:^{
-                if (confirm)confirm(0);
+                //                if (confirm)confirm(-1);
             }];
-                                                               }];
-//        [confirmAction setValue:kL2TextFont forKey:@"titleFont"];
+        }];
+        //        [confirmAction setValue:kL2TextFont forKey:@"titleFont"];
         //[confirmAction setValue:kSystemBaseColor forKey:@"titleTextColor"];
         [alert addAction:confirmAction];
     } else {
@@ -239,12 +245,12 @@ static dispatch_once_t onceToken;
             UIAlertAction  *action = [UIAlertAction actionWithTitle:titleArray[i]
                                                               style:UIAlertActionStyleDefault
                                                             handler:^(UIAlertAction * _Nonnull action) {
-                    if (confirm)confirm(i);
+                if (confirm)confirm(i);
                 [alert dismissViewControllerAnimated:NO completion:^{
-                    if (confirm)confirm(i);
+                    //                    if (confirm)confirm(-1);
                 }];
-                                                            }];
-          //  [action setValue:kSystemBaseColor forKey:@"titleTextColor"];
+            }];
+            //  [action setValue:kSystemBaseColor forKey:@"titleTextColor"];
             [alert addAction:action];
         }
     }

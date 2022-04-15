@@ -7,7 +7,7 @@
 //
 #import "ZCLibClient.h"
 #import "SobotUtils.h"
-
+#import "SobotLocaliable.h"
 
 // UTF8 字符串
 #define UTF8Data(str) [str dataUsingEncoding:NSUTF8StringEncoding]
@@ -92,6 +92,15 @@
 
 // 多语言支持
 //#define ZCSTLocalString(key) NSLocalizedStringFromTable(key, @"SobotLocalizable", nil)
+
+#define ZCSTLocalString1(key) \
+({\
+[SobotLocaliable shareSobotLocaliable].absolute_language = [ZCLibClient getZCLibClient].libInitInfo.absolute_language;\
+[SobotLocaliable shareSobotLocaliable].default_language =  [ZCLibClient getZCLibClient].libInitInfo.default_language;\
+NSString  *v = [[SobotLocaliable shareSobotLocaliable] sobotGetLocalString:key];\
+(v==nil ? key : sobotConvertToString(v));\
+})
+
 #define ZCSTLocalString(key) \
 ({\
 NSString *v = nil;\

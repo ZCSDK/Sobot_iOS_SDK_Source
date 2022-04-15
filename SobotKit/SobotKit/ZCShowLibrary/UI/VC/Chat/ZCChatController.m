@@ -23,7 +23,7 @@
 #import "ZCLibClient.h"
 
 @interface ZCChatController ()<ZCChatViewDelegate>{
-    
+
 }
 
 @property (nonatomic,strong) ZCChatView * chatView;
@@ -45,13 +45,9 @@
     
     // 从其他页面返回时，重新布局
     if(self.chatView){
-        [self viewDidLayoutSubviews];
+        [_chatView beginAniantions];
+        [_chatView setFrameForListTable];
     }
-    
-    
-    [_chatView beginAniantions];
-
-    
 }
 
 -(void)viewDidAppear:(BOOL)animated{
@@ -153,9 +149,9 @@
         self.navigationController.navigationBar.translucent = NO;
         
     }
+        
+    self.view.backgroundColor = [ZCUITools zcgetBackgroundColor]; //UIColorFromThemeColor(ZCBgSystemWhiteLightDarkColor);
     
-
-    self.view.backgroundColor = UIColorFromThemeColor(ZCBgSystemWhiteLightDarkColor);//[ZCUITools zcgetBackgroundColor];
     
     CGFloat startY = 0;
     CGFloat chatHeight = viewHeigth;
@@ -209,11 +205,13 @@
         if ([ZCUICore getUICore].kitInfo.isShowReturnTips) {
            [[ZCToolsCore getToolsCore] showAlert:ZCSTLocalString(@"您是否要结束会话?") message:nil cancelTitle:ZCSTLocalString(@"暂时离开") titleArray:@[ZCSTLocalString(@"结束会话")] viewController:self  confirm:^(NSInteger buttonTag) {
 //               self.countDate = nil;
+               // 这里要如果是点击了 结束会话按钮 会触发两次点击事件，一次是
                [[ZCUICore getUICore] setclosepamasAndClearConfig];
                if(buttonTag >= 0){
                    // 点击关闭，离线用户
                    [self.chatView confimGoBackWithType:ZCChatViewGoBackType_close];
                }else{
+                   
                    [self.chatView setIsCloseNo];
                    if (self.navigationController && _isPush) {
                        // 滑动返回会调用 goBack方法

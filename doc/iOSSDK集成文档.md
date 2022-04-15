@@ -50,11 +50,11 @@
 
 普通版：
 
-下载链接：[iOS_SDK_3.0.8](https://img.sobot.com/mobile/sdk/iOS_SDK_3.0.8.zip)
+下载链接：[iOS_SDK_3.1.0](https://img.sobot.com/mobile/sdk/iOS_SDK_3.1.0.zip)
 
 电商版：
 
-下载链接：[iOS_SDK_3.0.8_电商版](https://img.sobot.com/mobile/sdk/iOS_SDK_3.0.8_MALL.zip)
+下载链接：[iOS_SDK_3.1.0_电商版](https://img.sobot.com/mobile/sdk/iOS_SDK_3.1.0_MALL.zip)
 
 解压[iOS_SDK]，添加必要文件SobotKit.framework和SobotKit.bundle到你的工程里。智齿iOS_SDK 的实现，依赖了一些系统的框架，在开发应用时需要在工程里加入这些框架。开发者首先点击工程右边的工程名，然后在工程名右边依次选择TARGETS -> BuiLd Phases -> Link Binary With Libraries，展开 LinkBinary With Libraries后点击展开后下面的 + 来添加下面的依赖项:
 
@@ -1124,9 +1124,9 @@ kitInfo.showLeaveDetailBackEvaluate = YES;
 ### 4.4.3 返回时要求用户评价，关闭时要求用户评价
 ```js
 //返回或关闭时是否开启满意度评价 默认为NO 未开启
-kitInfo.isOpenEvaluation = @"YES";
+kitInfo.isOpenEvaluation = YES;
 //评价完人工是否关闭会话（人工满意度评价后释放会话） 默认为NO 未开启
-kitInfo.isCloseAfterEvaluation = @"YES";
+kitInfo.isCloseAfterEvaluation = YES;
 
 // 是否有返回提示，默认为 NO,设置为YES，会提醒“是否结束会话”
 kitInfo.isShowReturnTips = YES;
@@ -1506,7 +1506,7 @@ initInfo.title_type = @"0";
 
 // 仅当title_type=@"2"时以下配置有效
 initInfo.custom_title = @"我是自定义标题，title_type=2是生效";
-initInfo.custom_title_url = @"我是自定义标题，title_type=2是生效";  
+initInfo.custom_title_url = @"我是自定义头像，title_type=2是生效";  
 
 ```
 
@@ -1703,7 +1703,7 @@ _kitInfo.hideManualEvaluationLabels = YES;
 ```js
 
 	ZCKitInfo *uiInfo=[ZCKitInfo new];
-	// 默认为0,跟随系统设置, 1强制使用暗黑风格
+	// 默认为0,跟随系统设置, 1强制使用暗黑风格，2强制使用高亮风格
     uiInfo.themeStyle = 1;
    
    // 默认为YES，当为暗黑模式时候自定义颜色属性将失效
@@ -1776,7 +1776,7 @@ _kitInfo.hideManualEvaluationLabels = YES;
 | hideMenuPicture   | BOOL   | 聊天页面底部加号中功能：隐藏图片   | 默认NO(不隐藏)|
 | hideMenuCamera   | BOOL   | 聊天页面底部加号中功能：隐藏拍摄   | 默认NO(不隐藏) |
 | hideMenuFile   | BOOL   | 聊天页面底部加号中功能：隐藏文件   | 默认NO(不隐藏)  |
-| themeStyle   | BOOL   | 是否设置为暗黑模式,1暗黑,0跟随系统设置   | 默认为0   |
+| themeStyle   | BOOL   | 是否设置为暗黑模式,2、普通模式，1暗黑,0跟随系统设置   | 默认为0   |
 | useDefaultDarkTheme   | BOOL   | 如果设置了自定义颜色，是否使用默认暗黑模式,如果设置为NO，当为暗黑模式时候自定义颜色属性将失效   | 默认为YES  |
 | leaveContentPlaceholder   | NSString   | 自定义留言内容预置文案   |   |
 | leaveMsgGuideContent   | NSString   |  自定义留言引导语   |   |
@@ -1992,4 +1992,4 @@ _kitInfo.hideManualEvaluationLabels = YES;
 
 
 ## 9 智齿科技SDK收集使用个人信息说明
-  [《智齿科技SDK收集使用个人信息说明》](https:/test.sobot.com/docs/clause/sdk-clause.html)
+  [《智齿科技SDK收集使用个人信息说明》](https:/www.sobot.com/docs/clause/sdk-clause.html)

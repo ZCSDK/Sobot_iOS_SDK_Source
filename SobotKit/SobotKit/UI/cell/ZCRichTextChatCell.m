@@ -674,16 +674,35 @@
 
 // 点击查看大图
 -(void) imgTouchUpInside:(UITapGestureRecognizer *)recognizer{
-    UIImageView *_picView=(UIImageView*)recognizer.view;
+    UIImageView *picTempView=(UIImageView*)recognizer.view;
     
-    CALayer *calayer = _picView.layer.mask;
-    [_picView.layer.mask removeFromSuperlayer];
+    
+    CGRect f = [picTempView convertRect:picTempView.bounds toView:nil];
+    
+    UIImageView *bgView = [[UIImageView alloc] init];
+    [bgView setImage:self.ivLayerView.image];
+    // 设置尖角
+    [bgView setFrame:f];
+    CALayer *layer              = bgView.layer;
+    layer.frame                 = (CGRect){{0,0},bgView.layer.frame.size};
+        
+    SobotImageView *newPicView = [[SobotImageView alloc] init];
+    newPicView.image = picTempView.image;
+    newPicView.frame = f;
+    newPicView.layer.masksToBounds = NO;
+//    newPicView.layer.cornerRadius = 15;
+    
+    newPicView.layer.mask = layer;
+    CALayer *calayer = newPicView.layer.mask;
+    [newPicView.layer.mask removeFromSuperlayer];
+    
     __weak ZCRichTextChatCell *weakSelf = self;
     SobotXHImageViewer *xh=[[SobotXHImageViewer alloc] initWithImageViewerWillDismissWithSelectedViewBlock:^(SobotXHImageViewer *imageViewer, UIImageView *selectedView) {
         
     } didDismissWithSelectedViewBlock:^(SobotXHImageViewer *imageViewer, UIImageView *selectedView) {
         selectedView.layer.mask = calayer;
         [selectedView setNeedsDisplay];
+        [selectedView removeFromSuperview];
         
         if(weakSelf.delegate && [weakSelf.delegate respondsToSelector:@selector(cellItemClick:type:obj:)]){
             [weakSelf.delegate cellItemClick:weakSelf.tempModel type:ZCChatCellClickTypeTouchImageNO obj:self];
@@ -694,13 +713,13 @@
     }];
     
     NSMutableArray *photos = [[NSMutableArray alloc] init];
-    [photos addObject:_picView];
+    [photos addObject:picTempView];
     
     xh.delegate = self;
     xh.disableTouchDismiss = NO;
     _imageViewer = xh;
     
-    [xh showWithImageViews:photos selectedView:_picView];
+    [xh showWithImageViews:photos selectedView:picTempView];
     
     if(self.delegate && [self.delegate respondsToSelector:@selector(cellItemClick:type:obj:)]){
         //        [self.delegate touchLagerImageView:xh with:YES];

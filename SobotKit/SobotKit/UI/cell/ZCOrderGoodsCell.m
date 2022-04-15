@@ -296,7 +296,6 @@
             }
             
             if(!_lblTextTitle.hidden){
-                
                 [_lblTextTitle setFrame:CGRectMake(msgX+(!_imgPhoto.hidden?58:0), msgY, titleSize.width - (!_imgPhoto.hidden?58:0), 22)];
                 msgY = msgY + 22 + 4;
             }
@@ -305,12 +304,27 @@
                 msgY = msgY + 22 + 15;
                 
             }
-            if((msgY - height - 10) > 22){
+            
+            // 处理特殊场景 图片url 有值，但是 _lblTextTitle和 _lblPrice 无值
+            // 处理特殊场景2 有图片URL 但是 只有 _lblPrice 或者 只有_lblTextTitle
+            if (!_imgPhoto.hidden && (_lblTextTitle.hidden || _lblPrice.hidden)) {
+                if (_lblTextTitle.hidden) {
+                    msgY = msgY + 22 + 4;
+                }
+                if (_lblPrice.hidden) {
+                    msgY = msgY + 22 + 15;
+                }
                 _lineView.hidden = NO;
                 [_lineView setFrame:CGRectMake(msgX, msgY, size.width - self.paddingWidth*2, 1)];
                 msgY  = msgY + 11;
+            }else{
+                if((msgY - height - 10) > 22){
+                    _lineView.hidden = NO;
+                    [_lineView setFrame:CGRectMake(msgX, msgY, size.width - self.paddingWidth*2, 1)];
+                    msgY  = msgY + 11;
+                }
             }
-            
+                        
             if(!_lblStatus.hidden){
                 [_lblStatus setFrame:CGRectMake(msgX, msgY, size.width, 20)];
                 msgY = msgY + 20;
@@ -369,10 +383,24 @@
                     msgY = msgY + 22 + 15;
                     
                 }
-                if((msgY - height - 10) > 22){
+               
+                // 处理特殊场景 图片url 有值，但是 _lblTextTitle和 _lblPrice 无值
+                if (!_imgPhoto.hidden && (_lblTextTitle.hidden || _lblPrice.hidden) ) {
+                    if (_lblTextTitle.hidden) {
+                        msgY = msgY + 22 + 4;
+                    }
+                    if (_lblPrice.hidden) {
+                        msgY = msgY + 22 + 15;
+                    }
                     _lineView.hidden = NO;
-                    [_lineView setFrame:CGRectMake(msgX, msgY, self.maxWidth - self.paddingWidth*2, 1)];
+                    [_lineView setFrame:CGRectMake(msgX, msgY, size.width - self.paddingWidth*2, 1)];
                     msgY  = msgY + 11;
+                }else{
+                    if((msgY - height - 10) > 22){
+                        _lineView.hidden = NO;
+                        [_lineView setFrame:CGRectMake(msgX, msgY, self.maxWidth - self.paddingWidth*2, 1)];
+                        msgY  = msgY + 11;
+                    }
                 }
                 
                 if(!_lblStatus.hidden){
@@ -520,47 +548,43 @@
         
         
         if (hasPrice || hasTitle || hasImg ) {
-             if(goodsDesc.length > 0 ){
-                       msgY = msgY + 22 + 4;
-                    }
-                    
+            if(goodsDesc.length > 0 ){
+                msgY = msgY + 22 + 4;
+            }else if(hasImg){
+                msgY = msgY + 22 + 4; //  // 处理特殊情况 只要有图片 那么
+            }
             //        if(moneySum.length > 0 || goodsCount.length > 0){
-                        msgY = msgY + 22 + 15;
+            msgY = msgY + 22 + 15;
             //        }
-                    if((msgY - cellheith - 10) > 22){
-                        msgY  = msgY + 11;
-                    }
-                    
-                    // 状态肯定有数据
-                     msgY = msgY + 20;
-                    
-                    if(orderCode.length > 0 ){
-                      msgY = msgY + 20;
-                    }
-                    
-                    if(createTime.length > 0 ){
-                         msgY = msgY + 20;
-                    }
-                    
-                    cellheith= msgY+26;
+            
+            if((msgY - cellheith - 10) > 22){
+                msgY  = msgY + 11;
+            }
+            
+            // 状态肯定有数据
+            msgY = msgY + 20;
+            
+            if(orderCode.length > 0 ){
+                msgY = msgY + 20;
+            }
+            
+            if(createTime.length > 0 ){
+                msgY = msgY + 20;
+            }
+            cellheith= msgY+26;
         }else{
-                        // 状态肯定有数据
-                         msgY = msgY + 20;
-                        
-                        if(orderCode.length > 0 ){
-                          msgY = msgY + 20;
-                        }
-                        
-                        if(createTime.length > 0 ){
-                             msgY = msgY + 20;
-                        }
-                        
-                        cellheith= msgY+26;
+            // 状态肯定有数据
+            msgY = msgY + 20;
+            
+            if(orderCode.length > 0 ){
+                msgY = msgY + 20;
+            }
+            
+            if(createTime.length > 0 ){
+                msgY = msgY + 20;
+            }
+            cellheith= msgY+26;
         }
-        
-       
-
-        
     }
     return cellheith;
 }

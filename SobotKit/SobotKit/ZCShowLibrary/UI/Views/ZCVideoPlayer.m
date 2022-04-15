@@ -12,6 +12,7 @@
 
 #import <AVFoundation/AVFoundation.h>
 #import "ZCUIImageTools.h"
+#import "ZCUILoading.h"
 
 @interface ZCVideoPlayer ()
 
@@ -284,6 +285,8 @@
     [self addAVPlayerNtf:self.player.currentItem];
     if (self.player.rate == 0) {
         [self.player play];
+        
+        [[ZCUILoading shareZCUILoading] showAddToSuperView:self style:YES];
     }
 }
 
@@ -322,8 +325,8 @@
     if ([keyPath isEqualToString:@"status"]) {
         AVPlayerStatus status= [[change objectForKey:@"new"] intValue];
         if(status==AVPlayerStatusReadyToPlay){
-//            NSLog(@"正在播放...，视频总长度:%.2f",CMTimeGetSeconds(playerItem.duration));
-
+            NSLog(@"正在播放...，视频总长度:%.2f",CMTimeGetSeconds(playerItem.duration));
+            [[ZCUILoading shareZCUILoading] dismiss];
             [_labEndTime setText:[self getSOBOT_FORMATE_DATETIME:playerItem.duration]];
         }
     }else if([keyPath isEqualToString:@"loadedTimeRanges"]){

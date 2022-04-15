@@ -335,13 +335,12 @@
 
         [[ZCUIToastTools shareToast] showToast:ZCSTLocalString(@"提交成功") duration:1.0f view:self.view position:ZCToastPositionCenter Image:[ZCUITools zcuiGetBundleImage:@"zcicon_successful"]];
       
-        
-         _isSend = NO;
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.2f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             [self backAction];
             if (_trunServerBlock) {
                 _trunServerBlock(NO);
             }
+            _isSend = NO;
         });
     } failed:^(NSString *errorMessage, ZCNetWorkCode errorCode) {
          _isSend = NO;

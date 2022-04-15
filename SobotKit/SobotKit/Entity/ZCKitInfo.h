@@ -21,7 +21,7 @@
 @property (nonatomic,assign) NSInteger lineSpacing;
 
 /**
- *  是否设置为暗黑模式 默认为0,跟随系统设置, 1暗黑
+ *  是否设置为暗黑模式 默认为0,跟随系统设置, 1暗黑，2普通模式
  */
 @property (nonatomic,assign) NSInteger themeStyle;
 
@@ -182,7 +182,7 @@
 @property (nonatomic,assign) BOOL isUseImagesxcassets;
 
 /**
- *针对关闭按钮，单独设置是否显示评价界面，默认不显示
+ *针对关闭按钮，单独设置是否显示评价界面，默认不显示  (同isShowReturnTips 一起设置起效)
  */
 @property (nonatomic,assign) BOOL isShowCloseSatisfaction;
 

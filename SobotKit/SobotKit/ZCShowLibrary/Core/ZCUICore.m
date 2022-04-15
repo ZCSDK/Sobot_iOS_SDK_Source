@@ -228,17 +228,19 @@ static dispatch_once_t onceToken;
         } error:^(ZCNetWorkCode status,NSString *errorMessage) {
             isLoadingConfig = NO;
             
-            if(sobotConvertToString(errorMessage).length > 0 && self.delegate!=nil){
-                [[ZCUIToastTools shareToast] showToast:errorMessage duration:2.0f view:((UIView *)self.delegate).window position:ZCToastPositionCenter];
-            }
+            // 3.0.9版本不发布失败提醒，显示失败页面
+//            if(self.delegate!=nil){
+//                [[ZCUIToastTools shareToast] showToast:ZCSTLocalString(@"网络错误，请检查网络后重试") duration:2.0f view:((UIView *)self.delegate).window position:ZCToastPositionCenter];
+//            }
+//            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//                if (safeCore.delegate && [safeCore.delegate respondsToSelector:@selector(onPageStatusChanged:message:obj:)]) {
+//                    [safeCore.delegate onPageStatusChanged:ZCShowStatusGoBack message:nil obj:nil];
+//                }
+//            });
+            
             if(safeCore.ResultBlock){
                 safeCore.ResultBlock(ZCInitStatusFail,safeCore.listArray,sobotConvertToString(errorMessage).length > 0 ? errorMessage : @"初始化失败");
             }
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                if (safeCore.delegate && [safeCore.delegate respondsToSelector:@selector(onPageStatusChanged:message:obj:)]) {
-                    [safeCore.delegate onPageStatusChanged:ZCShowStatusGoBack message:nil obj:nil];
-                }
-            });
             safeCore.isInitLoading = NO;
         } appIdIncorrect:^(NSString *appId) {
             isLoadingConfig = NO;
@@ -1168,11 +1170,17 @@ static dispatch_once_t onceToken;
             if(message.transferFlag == 1){
                 // queueFlag=1:展示提示语，不展示机器人回复，触发转人工逻辑
                 if(message.queueFlag == 1){
+                    if(message.onlineFlag == 1){
+                        //关键字转人工 直接转人工
+                        _checkGroupId = sobotConvertToString(trunModel.groupId);
+                        _checkGroupName = @"";
+                    }
                     //关键字转人工 直接转人工
                     [self doConnectUserService:trunModel connectType:ZCTurnType_KeyWordNoGroup];
                 }else{
                     if(message.onlineFlag == 1 || message.onlineFlag == 2){
                         //关键字转人工 直接转人工
+                        // 这里当onlineFlag==2时，groupId应该是空的，所以没有单独做onlineFlag==1判断
                         _checkGroupId = sobotConvertToString(trunModel.groupId);
                         _checkGroupName = @"";
                         [self doConnectUserService:trunModel connectType:ZCTurnType_KeyWord];
@@ -1279,7 +1287,7 @@ static dispatch_once_t onceToken;
         if ([self getPlatfromInfo].config.msgFlag == 0) {
             //  跳转到留言不直接退出SDK
             if (self.delegate && [self.delegate respondsToSelector:@selector(coreOpenNewPageVC:IsExist:isShowToat:tipMsg: Dict:Object:trunType:)]) {
-                [self.delegate coreOpenNewPageVC:ZC_LeaveMsgPage  IsExist:LeaveExitTypeISNOCOLSE isShowToat:YES tipMsg:sobotConvertToString(dict[@"msg"]) Dict:nil Object:nil trunType:ZCTurnType_BtnClick];
+                [self.delegate coreOpenNewPageVC:ZC_LeaveMsgPage  IsExist:LeaveExitTypeISNOCOLSE isShowToat:YES tipMsg:sobotConvertToString(dict[@"data"][@"msg"]) Dict:nil Object:nil trunType:ZCTurnType_BtnClick];
             }
             
         }
@@ -2790,6 +2798,10 @@ static dispatch_once_t onceToken;
             
             [self splitMessageModel:message Index:index weakself:safeVC];
             
+            // 3.1.0新增，发送完语音消息，消息被遮挡
+            if(self.delegate && [self.delegate respondsToSelector:@selector(onPageStatusChanged:message:obj:)]){
+                [self.delegate onPageStatusChanged:ZCSetKeyBoardStatus message:@"ZCKeyboardStatusFrameChanged" obj:safeVC.listArray];
+            }
             
         }else if(sendCode==ZC_SENDMessage_Success){
             sendMessage.sendStatus=0;

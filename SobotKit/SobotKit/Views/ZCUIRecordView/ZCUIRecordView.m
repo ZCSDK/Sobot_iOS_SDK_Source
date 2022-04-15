@@ -143,10 +143,11 @@
 -(void)didChangeState:(RecordState) state{
     switch (state) {
         case RecordStart:
-             [[NSNotificationCenter defaultCenter] postNotificationName:@"ZCRecordPlayer_start" object:nil];
-            if(_delegate && [_delegate respondsToSelector:@selector(recordCompleteType:videoDuration:)]){
-                
-                [_delegate recordCompleteType:RecordStart videoDuration:0];
+            if(voiceTimer==nil){
+                [timeLablel setText:[NSString stringWithFormat:@"0″"]];
+                voiceTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(timerDiscount) userInfo:nil repeats:YES];
+            }else{
+                [voiceTimer setFireDate:[NSDate date]];
             }
            
             topView.hidden   = NO;
@@ -154,7 +155,6 @@
             [tipLabel setText:ZCSTLocalString(@"手指上滑，取消发送")];
             [tipLabel setBackgroundColor:UIColorFromThemeColorAlpha(ZCKeepWhiteColor, 0.1)];
             [anniminView startAnimating];
-            
             
             if (!recording) {
                 recording = YES;
@@ -173,15 +173,10 @@
                 [recorder record];
             }
             
-            if(voiceTimer==nil){
-                [timeLablel setText:[NSString stringWithFormat:@"0″"]];
-                
-                voiceTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(timerDiscount) userInfo:nil repeats:YES];
-            }else{
-                [voiceTimer setFireDate:[NSDate date]];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"ZCRecordPlayer_start" object:nil];
+            if(_delegate && [_delegate respondsToSelector:@selector(recordCompleteType:videoDuration:)]){
+                [_delegate recordCompleteType:RecordStart videoDuration:0];
             }
-            
-
             break;
 
         case RecordPause:
@@ -207,14 +202,15 @@
                 [recorder stop];
                 [anniminView stopAnimating];
                 [[AVAudioSession sharedInstance] setActive:NO withOptions:AVAudioSessionSetActiveOptionNotifyOthersOnDeactivation error:nil];
-
             }
             // 取消发送，删除文件
             sobotDeleteFileOrPath([tmpFile path]);
             
             if(_delegate && [_delegate respondsToSelector:@selector(recordCompleteType:videoDuration:)]){
-                
-                [_delegate recordCompleteType:RecordCancel videoDuration:[self currentTime]];
+#pragma mark - 这里加延时的原因  当用户秒点 “按住 说话” 之后秒释放 创建的闪烁语音cell还没有在主线程上UI刷新完成，这时候销毁的事件已经触发，导致语音闪烁cell并没有真正的移除掉
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    [_delegate recordCompleteType:RecordCancel videoDuration:[self currentTime]];
+                });
             }
              [[NSNotificationCenter defaultCenter] postNotificationName:@"ZCRecordPlayer_stop" object:nil];
             break;
@@ -252,12 +248,14 @@
                     [tipLabel setBackgroundColor:UIColorFromRGB(BgVoiceRedColor)];
                     [timeLablel setText:[NSString stringWithFormat:@"00:00"]];
                     // 删除发送的空语音
+#pragma mark - 这里加延时的原因  当用户秒点 “按住 说话” 之后秒释放 创建的闪烁语音cell还没有在主线程上UI刷新完成，这时候销毁的事件已经触发，导致语音闪烁cell并没有真正的移除掉
                     if (_delegate && [_delegate respondsToSelector:@selector(recordCompleteType:videoDuration:)]) {
-                        [_delegate recordCompleteType:RecordCancel videoDuration:0];
+                        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                            [_delegate recordCompleteType:RecordCancel videoDuration:0];
+                        });
                     }
                 }
                 [[NSNotificationCenter defaultCenter] postNotificationName:@"ZCRecordPlayer_stop" object:nil];
-
             }
             break;
         default:
@@ -275,7 +273,6 @@
 //动态显示时间
 -(void)timerDiscount{
     int duration=(int)recorder.currentTime;
-   // NSLog(@"当前的时间为：%d",duration);
     // 当时间大于1s的时候
     if (duration == 1) {
      //   NSLog(@"当前时间为1s");
