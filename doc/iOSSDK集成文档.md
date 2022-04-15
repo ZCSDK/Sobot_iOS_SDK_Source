@@ -50,11 +50,19 @@
 
 普通版：
 
+<<<<<<< HEAD
 下载链接：[iOS_SDK_3.1.0](https://img.sobot.com/mobile/sdk/iOS_SDK_3.1.0.zip)
 
 电商版：
 
 下载链接：[iOS_SDK_3.1.0_电商版](https://img.sobot.com/mobile/sdk/iOS_SDK_3.1.0_MALL.zip)
+=======
+下载链接：[iOS_SDK_3.0.9](https://img.sobot.com/mobile/sdk/iOS_SDK_3.0.9.zip)
+
+电商版：
+
+下载链接：[iOS_SDK_3.0.9_电商版](https://img.sobot.com/mobile/sdk/iOS_SDK_3.0.9_MALL.zip)
+>>>>>>> 410172541eff22ba04301a168b7eb58f7a12b306
 
 解压[iOS_SDK]，添加必要文件SobotKit.framework和SobotKit.bundle到你的工程里。智齿iOS_SDK 的实现，依赖了一些系统的框架，在开发应用时需要在工程里加入这些框架。开发者首先点击工程右边的工程名，然后在工程名右边依次选择TARGETS -> BuiLd Phases -> Link Binary With Libraries，展开 LinkBinary With Libraries后点击展开后下面的 + 来添加下面的依赖项:
 
