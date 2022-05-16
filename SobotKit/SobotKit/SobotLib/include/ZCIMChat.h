@@ -68,6 +68,7 @@ typedef NS_ENUM(NSInteger,ZCSendActionType) {
  @param isOnlyType 是否唯一指定方式
  */
 -(void)startLoopRequest:(BOOL) isOnlyType;
+-(void)startLoopRequest:(BOOL)isOnlyType config:(ZCLibConfig *) config;
 
 
 /**

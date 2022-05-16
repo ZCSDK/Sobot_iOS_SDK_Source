@@ -245,6 +245,7 @@
     return cellHeight;
 }
 
+
 +(BOOL) isRightChat:(ZCLibMessage *) model{
     // 0,自己，1机器人，2客服
     if(model.senderType==0){
@@ -494,9 +495,10 @@
                 
             }else if (arr.count == 2){
                 // 只有顶踩
-                self.btnTheTop.frame = CGRectMake(CGRectGetMaxX(backgroundF1)+10, CGRectGetMaxY(backgroundF1) - 32*2 - 8, 32, 32);
+                self.btnTheTop.frame = CGRectMake(CGRectGetMaxX(backgroundF1)+10,  CGRectGetMaxY(backgroundF1) - 32*2 - 8, 32, 32);
                 if (isOneLine) {
-                    self.btnTheTop.frame = CGRectMake(CGRectGetMaxX(backgroundF1)+10, CGRectGetMaxY(backgroundF1) - 32*2 - 3, 32, 32);
+                    // 当显示文本内容只有1行或者两行时，设置按钮的位置
+                    self.btnTheTop.frame = CGRectMake(CGRectGetMaxX(backgroundF1)+10, CGRectGetMaxY(backgroundF1) - CGRectGetHeight(backgroundF1) - 16 , 32, 32);
                 }
                 
                 NSDictionary * dict = arr[0];
@@ -559,7 +561,8 @@
                 
                 self.btnTheTop.frame = CGRectMake(CGRectGetMaxX(backgroundF1)+10, CGRectGetMaxY(backgroundF1) - 32*2 - 8, 32, 32);
                 if (isOneLine) {
-                    self.btnTheTop.frame = CGRectMake(CGRectGetMaxX(backgroundF1)+10, CGRectGetMaxY(backgroundF1) - 32*2 - 8 , 32, 32);
+                    // 当显示文本内容只有1行或者两行时，设置按钮的位置
+                    self.btnTheTop.frame = CGRectMake(CGRectGetMaxX(backgroundF1)+10, CGRectGetMaxY(backgroundF1) - CGRectGetHeight(backgroundF1) - 16 , 32, 32);
                 }
                 NSDictionary * dict1 = arr[1];
                 

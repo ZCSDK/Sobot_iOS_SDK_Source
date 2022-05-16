@@ -186,7 +186,7 @@
 
             ZCUILeaveMessageController *leaveMessageVC = [[ZCUILeaveMessageController alloc]init];
             leaveMessageVC.hidesBottomBarWhenPushed = YES;
-            leaveMessageVC.exitType = 2;
+            leaveMessageVC.isExitSDK = NO;
         //    leaveMessageVC.isShowToat = isShow;
         //    leaveMessageVC.tipMsg = msg;
             leaveMessageVC.isNavOpen = (byController.navigationController!=nil ? YES: NO);
@@ -202,7 +202,7 @@
             leaveMessageVC.msgTmp =  config.msgTmp;
             leaveMessageVC.msgTxt = config.msgTxt;
             
-            [leaveMessageVC setCloseBlock:^{
+            [leaveMessageVC setBackRefreshPageblock:^(id  _Nonnull object) {
                 if(CloseBlock){
                     CloseBlock(@"关闭留言页面",0);
                 }

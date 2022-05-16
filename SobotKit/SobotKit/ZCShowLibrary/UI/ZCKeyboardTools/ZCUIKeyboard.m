@@ -166,8 +166,8 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
         _zc_bottomView = [[UIView alloc] initWithFrame:CGRectMake(0, BY, [self getSourceViewWidth], BottomHeight)];
         // 在ZCChatView中坐标，适配横竖屏切换时键盘位置
 //        [_zc_bottomView setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleTopMargin];
-        [_zc_bottomView setAutoresizingMask:UIViewAutoresizingFlexibleTopMargin];
-        [_zc_bottomView setAutoresizesSubviews:YES];
+//        [_zc_bottomView setAutoresizingMask:UIViewAutoresizingFlexibleTopMargin];
+//        [_zc_bottomView setAutoresizesSubviews:YES];
         [_zc_bottomView setBackgroundColor:[ZCUITools zcgetBackgroundBottomColor]];
 
         _zc_bottomView.userInteractionEnabled=YES;

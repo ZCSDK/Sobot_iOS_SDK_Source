@@ -241,11 +241,15 @@
             // 如果>25就可以直接追加在后面，小于25在底部
             if(height < (32*2 + 3)){
                 msgTextisOneOrTwoLine = YES;
-                height = 66;
-            
+//                height = 66; // 这里先不设置 height的高度
             }
         }
-        [self.ivBgView setFrame:CGRectMake(x, bgY, rw , height)];
+        if (msgTextisOneOrTwoLine) {   // 要显示顶踩 但是高度不够66时 整体内容 居中显示
+            [self.ivBgView setFrame:CGRectMake(x, bgY + (66 - richFrame.size.height )/2  , rw, height)];
+            richFrame.origin.y = bgY + (66 - richFrame.size.height)/2 + 12;
+        }else{
+            [self.ivBgView setFrame:CGRectMake(x, bgY, rw , height)];
+        }
         
         richFrame.origin.x = msgX;
         self.richContentView.frame = richFrame;
@@ -270,9 +274,9 @@
         //设置尖角
         [self.ivLayerView setImage:bgImage];
     }
-    if([ZCUITools getZCThemeStyle] == ZCThemeStyle_Dark){
-        self.ivBgView.backgroundColor = UIColorFromThemeColor(ZCBgSystemWhiteLightGrayColor);
-    }
+//    if([ZCUITools getZCThemeStyle] == ZCThemeStyle_Dark){
+//        self.ivBgView.backgroundColor = UIColorFromThemeColor(ZCBgSystemWhiteLightGrayColor);
+//    }
 
     self.ivBgView.contentMode = UIViewContentModeScaleToFill;
 
@@ -283,6 +287,17 @@
     layer.frame                 = (CGRect){{0,0},self.ivLayerView.layer.frame.size};
     self.ivBgView.layer.mask = layer;
     [self.ivBgView setNeedsDisplay];
+    
+    // 在画完边界view 之后在设置 实际高度位置
+    if (!self.isRight) {
+        if (model.senderType == 1 && (model.commentType == 1 || model.commentType == 2||model.commentType == 3|| model.commentType == 4)) {
+            // 如果>25就可以直接追加在后面，小于25在底部
+            if(height < (32*2 + 3)){
+                msgTextisOneOrTwoLine = YES;
+                height = 66;
+            }
+        }
+    }
     
     [self setFrame:CGRectMake(0, 0, self.viewWidth, height+bgY + sh + 10)];
     return height+bgY + 10 + sh;

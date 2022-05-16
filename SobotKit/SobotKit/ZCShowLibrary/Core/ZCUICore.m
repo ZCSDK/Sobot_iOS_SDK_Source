@@ -277,7 +277,6 @@ static dispatch_once_t onceToken;
                 _listArray = [NSMutableArray arrayWithCapacity:0];
             }
             [_listArray removeAllObjects];
-            
             [_listArray addObjectsFromArray:[self getPlatfromInfo].messageArr];
         }
         
@@ -1044,13 +1043,24 @@ static dispatch_once_t onceToken;
     // 如果返回的数据是最后一轮，当前的多轮会话的cell不可点击
     // 记录下标
     if ( [sobotConvertToString([NSString stringWithFormat:@"%d",message.richModel.answerType]) hasPrefix:@"15"]  && message.richModel.multiModel.endFlag) {
-        for (ZCLibMessage *message in _listArray) {
-            if ([sobotConvertToString([NSString stringWithFormat:@"%d",message.richModel.answerType]) hasPrefix:@"15"] && !message.richModel.multiModel.endFlag && !message.richModel.multiModel.isHistoryMessages ) {
-                // 2.9.0屏蔽
+        // 2.9.0屏蔽
+//        for (ZCLibMessage *message in _listArray) {
+//            if ([sobotConvertToString([NSString stringWithFormat:@"%d",message.richModel.answerType]) hasPrefix:@"15"] && !message.richModel.multiModel.endFlag && !message.richModel.multiModel.isHistoryMessages ) {
 //                message.richModel.multiModel.isHistoryMessages = YES;// 变成不可点击，成为历史
-            }
+//            }
+//        }
+        // 3.1.1新增需求
+        if(message.richModel.multiModel.leaveTemplateId.length > 0 || message.richModel.answerType == 1525){
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                 if (self.delegate && [self.delegate respondsToSelector:@selector(onPageStatusChanged:message:obj:)]) {
+                    [self.delegate onPageStatusChanged:ZCShowLeaveEditViewWithTempleteId message:message.richModel.multiModel.leaveTemplateId obj:message];
+                }
+                
+            });
+
         }
     }
+    
     ZCLibMessage *model  = [ZCLibMessage new];
     [model getNewMessageModel:message isShowGroup:NO];
     model.commentType = message.commentType;

@@ -283,7 +283,7 @@ UINavigationControllerDelegate,ZCMLEmojiLabelDelegate>
         return;
     }
     
-    if (self.presentingViewController) {
+    if (self.leaveMsgController.navigationController == nil) {
         [self dismissViewControllerAnimated:YES completion:nil];
     }else{
         [self.navigationController popViewControllerAnimated:YES];

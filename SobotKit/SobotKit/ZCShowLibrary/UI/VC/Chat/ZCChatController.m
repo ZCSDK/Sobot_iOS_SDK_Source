@@ -363,7 +363,6 @@
     [super viewDidLayoutSubviews];
     
     
-    
     CGRect vf = self.chatView.frame;
     vf.size.height = [self getCurViewHeight];
     
@@ -400,8 +399,13 @@
     
     vf.origin.y = startY;
     vf.size.height = chatHeight;
-    _chatView.frame = vf;
-    
+    if (!CGRectEqualToRect(vf,self.chatView.frame)) {
+        _chatView.frame = vf;
+        NSLog(@"viewDidLayoutSubviews 方法  chatView.frame 发生变化");
+        [self.chatView setFrameForListTable];
+        // iphone8 14.2的手机系统在横竖屏切换的时候 需要刷新一下输入框的位置
+        [self.chatView hiddenKeyBoard];
+    }
     [_chatView setNeedsLayout];
 }
 

@@ -246,6 +246,7 @@ static dispatch_once_t onceToken;
                                                               style:UIAlertActionStyleDefault
                                                             handler:^(UIAlertAction * _Nonnull action) {
                 if (confirm)confirm(i);
+                
                 [alert dismissViewControllerAnimated:NO completion:^{
                     //                    if (confirm)confirm(-1);
                 }];

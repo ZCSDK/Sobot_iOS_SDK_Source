@@ -138,7 +138,7 @@
         [_listArray removeAllObjects];
     }
     _partnerid = [ZCLibClient getZCLibClient].libInitInfo.partnerid;
-    _listArray = [[ZCPlatformTools sharedInstance] getPlatformList:_partnerid];
+    _listArray = [[ZCPlatformTools sharedInstance] getPlatformList:[[ZCPlatformTools sharedInstance] getPlatformUserId]];
 //    if(_listArray.count == 0){
     
     __weak ZCUIChatListController * listVC = self;

@@ -35,7 +35,7 @@
         }
         
         self.frame = CGRectMake(0, 0, viewWidth, 50);
-        self.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+//        self.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         self.autoresizesSubviews = YES;
         
         [self createSubviews];
@@ -61,7 +61,7 @@
     _scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, viewWidth, 50)];
     _scrollView.showsHorizontalScrollIndicator = NO;
     _scrollView.bounces = NO;
-    _scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+//    _scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     _scrollView.backgroundColor = UIColorFromThemeColor(ZCBgSystemWhiteColor);
     [self addSubview:_scrollView];
     
