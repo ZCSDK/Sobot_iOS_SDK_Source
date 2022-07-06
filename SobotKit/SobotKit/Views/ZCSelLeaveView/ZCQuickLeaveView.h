@@ -1,7 +1,7 @@
 //
 //  ZCQuickLeaveView.h
 //  SobotKit
-// 多伦会话，触发留言，直接弹出留言记录
+// 多轮会话，触发留言，直接弹出留言记录
 //  Created by zhangxy on 2022/4/20.
 //  Copyright © 2022 zhichi. All rights reserved.
 //

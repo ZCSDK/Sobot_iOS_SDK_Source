@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-// 多伦触发留言是，回显留言信息
+// 多轮触发留言是，回显留言信息
 @interface ZCChatLeaveCell : ZCChatBaseCell
 
 @end

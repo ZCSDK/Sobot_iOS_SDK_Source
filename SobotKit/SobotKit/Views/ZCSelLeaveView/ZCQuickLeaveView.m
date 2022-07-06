@@ -130,7 +130,7 @@
             [safeSelf tappedCancel];
         }
         
-        if(code == 2){
+        if(code == 3001 || code == 3002){
             [safeSelf tappedCancel];
         }
         

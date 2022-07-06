@@ -40,6 +40,7 @@
 #import "ZCCheckCusFieldView.h"
 #import "ZCPageSheetView.h"
 #import "ZCCheckCityView.h"
+#import "ZCCheckMulCusFieldView.h"
 
 #import "ZCToolsCore.h"
 
@@ -292,7 +293,16 @@
             
             if(!sobotIsNull(cusModel.fieldSaveValue)){
                 if (![@"city" isEqualToString:sobotConvertToString(cusModel.fieldId)]) {
-                     [cusFields setObject:sobotConvertToString(cusModel.fieldSaveValue) forKey:sobotConvertToString(cusModel.fieldId)];
+                    if([cusModel.fieldType intValue] == 9){
+                        [cusFields setObject:@{@"id":sobotConvertToString(cusModel.fieldId),
+                                               @"text":sobotConvertToString(cusModel.fieldValue),
+                                               @"value":sobotConvertToString(cusModel.fieldSaveValue)
+                                               } forKey:sobotConvertToString(cusModel.fieldId)];
+                    
+                    }else{
+                        [cusFields setObject:sobotConvertToString(cusModel.fieldSaveValue) forKey:sobotConvertToString(cusModel.fieldId)];
+                        
+                    }
                 }else if([@"city" isEqualToString:sobotConvertToString(cusModel.fieldId)]){
                     [cusFields setObject:sobotConvertToString(_addressModel.provinceId) forKey:@"proviceId"];
                     [cusFields setObject:sobotConvertToString(_addressModel.provinceName) forKey:@"proviceName"];
@@ -748,6 +758,26 @@
             pickView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin;
             pickView.delegate = self;
             [pickView show];
+        }
+        if(fieldType == 9){
+            __block ZCUIAskTableController *myself = self;
+            ZCCheckMulCusFieldView *typeVC = [[ZCCheckMulCusFieldView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 0)];
+            
+            ZCPageSheetView *sheetView = [[ZCPageSheetView alloc] initWithTitle:ZCSTLocalString(@"选择") superView:self showView:typeVC type:ZCPageSheetTypeLong];
+            typeVC.parentDataId = @"";
+            typeVC.parentView = nil;
+            typeVC.allArray = curEditModel.detailArray;
+            typeVC.orderCusFiledCheckBlock = ^(ZCLibOrderCusFieldsDetailModel *model, NSString *dataIds,NSString *dataNames) {
+                curEditModel.fieldValue = dataNames;
+                curEditModel.fieldSaveValue = dataIds;
+                
+                [myself refreshViewData];
+                [sheetView dissmisPageSheet];
+            };
+            [sheetView showSheet:typeVC.frame.size.height animation:YES block:^{
+                
+            }];
+            return;
         }
         
         if(fieldType == 6 || fieldType == 7 || fieldType == 8){

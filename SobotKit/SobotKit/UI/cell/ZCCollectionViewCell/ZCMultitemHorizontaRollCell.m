@@ -38,7 +38,7 @@
 
 @property (nonatomic,assign) NSUInteger  collectionViewCellHeight;
 
-@property (nonatomic,assign) NSUInteger  cellContentViewHeight;
+@property (nonatomic,assign) CGFloat  cellContentViewHeight;
 
 @property (nonatomic,assign) NSUInteger  collectionViewCellGap;
 @property (nonatomic,assign) NSInteger cellNumOnPageInt;
@@ -169,7 +169,7 @@ static const float gap = 15;
     // 提示语
     CGFloat height = 0;
     NSString * text = sobotConvertToString(model.richModel.multiModel.msg);
-    
+   
     [ZCHtmlCore filterHtml:text result:^(NSString * _Nonnull text1, NSMutableArray * _Nonnull arr, NSMutableArray * _Nonnull links) {
         if (self.isRight) {
             if (text1 != nil && text1.length > 0) {
@@ -201,7 +201,6 @@ static const float gap = 15;
    
     
     float titleMaxWidth = self.maxWidth - gap*3*2;
-    
     CGSize size = [self.titleLab preferredSizeWithMaxWidth:titleMaxWidth];
     CGRect msgF;
     msgF = CGRectMake(gap*2, 20, size.width, size.height);
@@ -268,6 +267,7 @@ static const float gap = 15;
         CGRect CF = _collectionView.frame;
         CF.origin.y = CGRectGetMaxY(self.titleLab.frame) + 10;
         CF.size.height = self.cellContentViewHeight;
+//        CF.size.height = self.collectionViewCellHeight;
         CF.size.width  = self.maxWidth;
         [_collectionView setFrame:CF];
 
@@ -325,7 +325,6 @@ static const float gap = 15;
     
     
    BOOL hasBottomView = [self isAddBottomBgView:self.bgView.frame msgIsOneLine:NO];
-
     //    NSLog(@"self.pageControl...%f .. %f",self.pageControl.frame.size.width,ScreenWidth);
     if (hasBottomView) {
         return self.cellContentViewHeight +  cellHeight + size.height + 60 + 40;
@@ -367,10 +366,8 @@ static const float gap = 15;
         }
     }];
     
-    float titleMaxWidth = width - 90 - gap*3*2;
-    
+    float titleMaxWidth = width - 70 - gap*3*2;
     CGSize size = [titleLab preferredSizeWithMaxWidth:titleMaxWidth];
-    
     //    数据整理
     
     NSMutableArray *temListArray = [NSMutableArray arrayWithCapacity:0];
@@ -452,7 +449,7 @@ static const float gap = 15;
     
     
     if (numberOfPages == 1) {
-        cellHeight = cellContentViewHeight + cellHeight + size.height + 40;
+        cellHeight = cellContentViewHeight + cellHeight + size.height + 40 + 26 ;
     }else{
         cellHeight = cellContentViewHeight + cellHeight + size.height + 60;
     }
@@ -460,8 +457,6 @@ static const float gap = 15;
     if (model.showTurnUser) {
         cellHeight = cellHeight + 30;
     }
-
-    
     return  cellHeight + 10;
 }
 

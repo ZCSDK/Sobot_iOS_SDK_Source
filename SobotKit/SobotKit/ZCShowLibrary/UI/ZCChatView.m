@@ -164,6 +164,9 @@
     BOOL isHasQuickView;// 是否有快捷入口
     
     BOOL isOpenNewPage;
+    
+    // 刷新table滚动到底部是，记录上一次消息的数量，消息数量变化了才滚动
+    int lastMsgCount;
 }
 
 
@@ -251,8 +254,8 @@
     [_listTable setBackgroundColor:[UIColor clearColor]];
     _listTable.clipsToBounds=NO;
     _listTable.estimatedRowHeight = 0;
+    _listTable.estimatedSectionHeaderHeight = 0;
     _listTable.estimatedSectionFooterHeight = 0;
-    
     //一定要插入到最底部，不然自定义导航会被覆盖
     [self insertSubview:_listTable atIndex:0];
     
@@ -301,6 +304,24 @@
     
     // 转屏通知
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(didChangeRotate:) name:UIApplicationDidChangeStatusBarFrameNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(stopPlayVideo) name:@"ZCSDKSTOPPLAY" object:nil];
+}
+
+#pragma mark - 录音是先关闭正在播放的语音
+-(void)stopPlayVideo{
+    if([ZCUICore getUICore].animateView){
+        [[ZCUICore getUICore].animateView stopAnimating];
+    }
+    
+    // 已经有播放的，关闭当前播放的
+    if(_voiceTools){
+        [_voiceTools stopVoice];
+    }
+    
+    if([ZCUICore getUICore].playModel){
+        [ZCUICore getUICore].playModel.isPlaying=NO;
+        [ZCUICore getUICore].playModel=nil;
+    }
 }
 
 -(instancetype)initWithFrame:(CGRect)frame WithSuperController:(UIViewController *)superController customNav:(BOOL)isCreated{
@@ -373,7 +394,7 @@
  @param object  预留参数
  */
 -(void)onPageStatusChanged:(ZCShowStatus)status message:(NSString *)message obj:(id)object{
-    // 3.1.1 版本，多伦最后一轮触发留言跳转
+    // 3.1.1 版本，多轮最后一轮触发留言跳转
     if(status == ZCShowLeaveEditViewWithTempleteId){
         if(_leaveEditView){
             [_leaveEditView tappedCancel:YES];
@@ -526,18 +547,13 @@
             
             isScrollBtm = true;
         }else{
-//            isScrollBtm = true;
-//            // 解决频繁刷新白屏问题
-//            if ([ZCUICore getUICore].chatMessages.count > 1){
-//                // 动画之前先滚动到倒数第二个消息
-//                [self.listTable scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:[ZCUICore getUICore].chatMessages.count - 2 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:NO];
-//            }
-//            self.listTable.hidden = NO;
-//            // 添加向上顶出最后一个消息的动画
-//            [self.listTable scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:[ZCUICore getUICore].chatMessages.count - 1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+            if([ZCUICore getUICore].chatMessages.count != lastMsgCount){
+                lastMsgCount = [ZCUICore getUICore].chatMessages.count;
+                // 添加向上顶出最后一个消息的动画
+//                [self.listTable scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:[ZCUICore getUICore].chatMessages.count - 1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
 
-            // 上面代码替换
-            [self scrollTableToBottom];
+                [self keyboardscrollTableToBottom];
+            }
         }
         
         return;
@@ -639,11 +655,12 @@
         }else if([@"" isEqual:@"ZCKeyboardStatusFrameChanged"]){
             // 仅执行设置坐标操作
         }
-        [_keyboardTools hideKeyboard];
         
-        // 键盘状态发生变化了，需要重新设置table的高度，因为新会话的键盘高度变化了
-        [self setFrameForListTable];
-
+        if(![message isEqual:@"ZCKeyboardStatusFrameChanged"]){
+            [_keyboardTools hideKeyboard];
+            // 键盘状态发生变化了，需要重新设置table的高度，因为新会话的键盘高度变化了
+            [self setFrameForListTable];
+        }
     }
     
     if (status == ZCShowStatusUserStyle) {
@@ -1104,21 +1121,12 @@
  */
 -(void)scrollTableToBottom{
     isScrollBtm = false;
-    if (sobotGetSystemDoubleVersion()>15.3) {
-        if(!isScrollBtm){
-            [self keyboardscrollTableToBottom];
-        }
-        isScrollBtm = true;
-    }else{
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.08 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            
-            if(!isScrollBtm){
-                [self keyboardscrollTableToBottom];
-                
-            }
-            isScrollBtm = true;
-        });
+
+    if(!isScrollBtm){
+        [self keyboardscrollTableToBottom];
+        
     }
+    isScrollBtm = true;
 }
 
 // 加载历史消息
@@ -1452,6 +1460,10 @@
     if ([ZCUICore getUICore].chatMessages == nil || indexPath.row > [ZCUICore getUICore].chatMessages.count -1) {
         return 0;
     }
+    // 这里处理多次联系点击重新会话按钮 并且是清空聊天记录的前提场景下 造成的数组越界的问题（在刷新过程中连续点击测试）
+    if ([ZCUICore getUICore].chatMessages.count == 0) {
+        return 0;
+    }
     
     ZCLibMessage *model =[[ZCUICore getUICore].chatMessages objectAtIndex:indexPath.row];
     NSString *time=@"";
@@ -1680,7 +1692,6 @@
         if(dict==nil || dict[@"question"]==nil){
             return;
         }
-//        [[ZCUICore getUICore] sendMessage:[NSString stringWithFormat:@"%d.%@",[object intValue]+1,dict[@"question"]] questionId:dict[@"docId"] type:ZCMessageTypeText duration:@""];
         [[ZCUICore getUICore] sendMessage:[NSString stringWithFormat:@"%@",dict[@"question"]] questionId:dict[@"docId"] type:ZCMessageTypeText duration:@""];
     }
     
@@ -1755,6 +1766,7 @@
             model.sendStatus = message.sendStatus;
             model.includeSensitive = 0;
             
+            
             if(![self getZCIMConfig].isArtificial && sendCode == ZC_SENDMessage_New){
                 NSInteger index = [[ZCUICore getUICore].listArray indexOfObject:model];
                 
@@ -1776,7 +1788,10 @@
             }else if(sendCode == ZC_SENDMessage_Success){
                 model.sendStatus = 0;
                 model.richModel.msgtranslation = message.richModel.msgtranslation;
-                
+                if(model.richModel.msgType == ZCMessageTypeText){
+                    model.richModel.msg = message.richModel.msg;
+                    model.displayMsgAttr = message.displayMsgAttr;
+                }
                 [_listTable reloadData];
             }else{
                 model.sendStatus = 2;
@@ -1794,6 +1809,12 @@
     }
     
     if(type==ZCChatCellClickTypePlayVoice  || type == ZCChatCellClickTypeReceiverPlayVoice){
+        
+        // 新增逻辑 如果当前是正在录音的时候 不能播放语音消息，会影响录音结果
+        if ([self.keyboardTools getZC_RecordView]) {
+            return;
+        }
+        
         if([ZCUICore getUICore].animateView){
             [[ZCUICore getUICore].animateView stopAnimating];
         }
@@ -1842,6 +1863,7 @@
             }
             
             // 下载，播放网络声音
+            // 注意 *这里不能使用 本地路径 需要使用服务端返回的路径
             [[ZCLibServer getLibServer] downFileWithURL:model.richModel.msg start:^{
                 
             } success:^(NSData *data) {
@@ -2339,7 +2361,6 @@
         //  4.和人工讲过话
         //  5.仅人工模式，不能评价机器人
         //        [[ZCUICore getUICore] keyboardOnClickSatisfacetion:YES];
-        
         if (([self getZCIMConfig].isArtificial || [ZCUICore getUICore].isOffline)
             && ![ZCUICore getUICore].isEvaluationService
             && [ZCUICore getUICore].isSendToUser
@@ -2451,8 +2472,6 @@
     navTableY = f.origin.y;
     [_listTable setFrame:f];
     [_keyboardTools setTableStartY:navTableY];
-    
-
 }
 #pragma mark -- 滚动到最底部
 -(void)keyboardscrollTableToBottom{
@@ -2460,42 +2479,43 @@
     CGFloat ch=_listTable.contentSize.height;
     CGFloat h=_listTable.bounds.size.height;
 
+    // 获取底部输入框区域高度
+    CGFloat defaultHeight = BottomHeight;
+    if([_keyboardTools getKeyBoardViewStatus] == ZCKeyboardStatusNewSession){
+        defaultHeight = ZCConnectBottomHeight;
+    }
+    
+    CGRect tf = _listTable.frame;
     if(ch > h){
-
-        CGRect tf = _listTable.frame;
-
-        CGFloat defaultHeight = BottomHeight;
-        if([_keyboardTools getKeyBoardViewStatus] == ZCKeyboardStatusNewSession){
-            defaultHeight = ZCConnectBottomHeight;
-        }
-
+        // 根据键盘高度，和输入框高度，计算Table的位置
         if([_keyboardTools getKeyboardHeight] == 0){
             tf.origin.y   = navTableY - [_keyboardTools getKeyboardHeight] - (_keyboardTools.zc_bottomView.frame.size.height - defaultHeight);
         }else{
+            // 由于键盘高度是从底部弹起，所以这里要计算XBottomBarHeight高度
             tf.origin.y   = navTableY - [_keyboardTools getKeyboardHeight] - (_keyboardTools.zc_bottomView.frame.size.height - defaultHeight) + XBottomBarHeight;
         }
+        // 坐标发生改变，重新设置
         if(!CGRectEqualToRect(tf,_listTable.frame)){
             _listTable.frame  = tf;
         }
-        if (sobotGetSystemDoubleVersion() > 15.3) {
-            [_listTable setContentOffset:CGPointMake(0, ch-h) animated:NO];
-        }else{
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.05 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [_listTable setContentOffset:CGPointMake(0, ch-h) animated:NO];
-            });
-        }
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            if([ZCUICore getUICore].chatMessages != nil && [ZCUICore getUICore].chatMessages.count > 0){
+//                [_listTable setContentOffset:CGPointMake(0, ch - h) animated:NO];
+                [self.listTable scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:[ZCUICore getUICore].chatMessages.count - 1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+            }
+        });
     }else{
-        CGRect tf = _listTable.frame;
-        if((h - ch) > ([_keyboardTools getKeyboardHeight] + (_keyboardTools.zc_bottomView.frame.size.height-BottomHeight))){
+        // 如果剩余空间大于键盘高度，就不用移动table坐标
+        if((h - ch) > ([_keyboardTools getKeyboardHeight] + (_keyboardTools.zc_bottomView.frame.size.height-defaultHeight))){
             tf.origin.y   = navTableY;
         }else{
-            tf.origin.y   = navTableY - [_keyboardTools getKeyboardHeight] - (_keyboardTools.zc_bottomView.frame.size.height-BottomHeight) + XBottomBarHeight + (h - ch);
+            // 移动剩余空间不够的坐标
+            tf.origin.y   = navTableY - ([_keyboardTools getKeyboardHeight] - (h - ch)) + XBottomBarHeight + (_keyboardTools.zc_bottomView.frame.size.height - defaultHeight);
         }
         if(!CGRectEqualToRect(tf,_listTable.frame)){
             _listTable.frame  = tf;
         }
-
-        [_listTable setContentOffset:CGPointMake(0, 0) animated:NO];
     }
 }
 
@@ -2760,6 +2780,7 @@
             }
             // 返回提醒开关
             if ([ZCUICore getUICore].kitInfo.isShowReturnTips) {
+                [_keyboardTools hideKeyboard];
                [[ZCToolsCore getToolsCore] showAlert:ZCSTLocalString(@"您是否要结束会话?") message:nil cancelTitle:ZCSTLocalString(@"暂时离开") titleArray:@[ZCSTLocalString(@"结束会话")] viewController:_superController 
                                              confirm:^(NSInteger buttonTag) {
                    if(buttonTag >= 0){
@@ -3072,7 +3093,7 @@
     // 连接中
     if(status == ZC_CONNECT_START){
         UIButton *btn = [self socketStatusButton];
-        [btn setTitle:[NSString stringWithFormat:@"  %@",ZCSTLocalString(@"收取中...")] forState:UIControlStateNormal];
+        [btn setTitle:[NSString stringWithFormat:@"  %@",ZCSTLocalString(@"连接中...")] forState:UIControlStateNormal];
         UIActivityIndicatorView *activityView  = [btn viewWithTag:1];
         btn.hidden = NO;
         activityView.hidden = NO;
@@ -3187,15 +3208,13 @@
             //  如果打开 关闭弹出评价开关，需要判断是否已经评价，如果没有评价，则不关闭会话
             if (isClickCloseBtn) {
                 [ZCLibClient closeAndoutZCServer:YES];
+            }else{
+                // 这里设置有问题 用户主动点击评价 之后 点击返回 触发弹窗提示， 如果是会话保持的逻辑（点的是暂时离开）是不能离线用户的
+//                if (isCompleteSatisfaction) {
+//                    [ZCLibClient closeAndoutZCServer:YES];
+//                }
             }
-            else{
-                if (isCompleteSatisfaction) {
-                    [ZCLibClient closeAndoutZCServer:YES];
-                }
-                
-            }
-        }
-        else{
+        }else{
             if(isClickCloseBtn){
             [ZCLibClient closeAndoutZCServer:YES];
             }

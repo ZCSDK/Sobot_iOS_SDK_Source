@@ -305,29 +305,29 @@
     return 1;
 }
 
-// 返回section高度
--(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
-    if(section==0){
-        return 0;
-    }else{
-        return 25;
-    }
-}
-
-// 返回section 的View
--(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
-    if(section==1){
-        UIView *view=[[UIView alloc] initWithFrame:CGRectMake(0, 0, ScreenWidth, 25)];
-        [view setBackgroundColor:UIColorFromThemeColor(ZCBgSystemWhiteLightDarkColor)];
-        
-        UILabel *label=[[UILabel alloc] initWithFrame:CGRectMake(12, 0, ScreenWidth-24, 25)];
-        [label setFont:ZCUIFont12];
-        [label setTextAlignment:NSTextAlignmentLeft];
-        [view addSubview:label];
-        return view;
-    }
-    return nil;
-}
+//// 返回section高度
+//-(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
+//    if(section==0){
+//        return 0;
+//    }else{
+//        return 25;
+//    }
+//}
+//
+//// 返回section 的View
+//-(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
+//    if(section==1){
+//        UIView *view=[[UIView alloc] initWithFrame:CGRectMake(0, 0, ScreenWidth, 25)];
+//        [view setBackgroundColor:UIColorFromThemeColor(ZCBgSystemWhiteLightDarkColor)];
+//        
+//        UILabel *label=[[UILabel alloc] initWithFrame:CGRectMake(12, 0, ScreenWidth-24, 25)];
+//        [label setFont:ZCUIFont12];
+//        [label setTextAlignment:NSTextAlignmentLeft];
+//        [view addSubview:label];
+//        return view;
+//    }
+//    return nil;
+//}
 
 // 返回section下得行数
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{

@@ -153,7 +153,10 @@
     if(model.richModel.multiModel.endFlag && sobotConvertToString(model.richModel.multiModel.msg).length > 0){
         [self.lblEmojiAnswerStrip setTextColor:[ZCUITools zcgetLeftChatTextColor]];
         [self.lblEmojiAnswerStrip setLinkColor:[ZCUITools zcgetChatLeftLinkColor]];
-        self.lblEmojiAnswerStrip.text = sobotConvertToString(model.richModel.multiModel.msg);
+        NSString *showMsg = sobotConvertToString(model.richModel.multiModel.msg);
+        showMsg = [showMsg stringByReplacingOccurrencesOfString:@"<p>" withString:@""];
+        showMsg = [showMsg stringByReplacingOccurrencesOfString:@"</p>" withString:@""];
+        self.lblEmojiAnswerStrip.text = showMsg;
         CGSize size = [self.lblEmojiAnswerStrip preferredSizeWithMaxWidth:self.maxWidth-30];
         CGFloat msgX = GetCellItemX(self.isRight)+15;
         if(self.isRight){

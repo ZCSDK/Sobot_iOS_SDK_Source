@@ -176,6 +176,9 @@ static dispatch_once_t onceToken;
         self.isAddNotice = NO;
         self.delegate = delegate;
         _isCidLoading = NO;
+        if ([[ZCPlatformTools sharedInstance] getPlatformInfo].waitintMessage != nil) {
+            [[ZCPlatformTools sharedInstance] getPlatformInfo].waitintMessage = nil;// 走了重新初始化 清理掉之前的排队数据，（仅人工模式下 之前用户正在排队的场景 要显示排队个数）
+        }
         __weak ZCUICore * safeCore = self;
         [ZCLibClient getZCLibClient].libInitInfo.isFirstEntry = 1;
         [[ZCUICore getUICore] saveGroupIdWith:@""];
@@ -672,6 +675,7 @@ static dispatch_once_t onceToken;
     
     __weak ZCUICore *safeVC = self;
     [_apiServer connectOnlineCustomer:paramter config:[self getLibConfig] start:^{
+        safeVC.isTurnLoading = YES;
         //开始转人工
         if (safeVC.delegate && [self.delegate respondsToSelector:@selector(onPageStatusChanged:message:obj:)]) {
             [safeVC.delegate onPageStatusChanged:ZCShowStatusConnectingUser message:@"" obj:nil];
@@ -683,7 +687,6 @@ static dispatch_once_t onceToken;
         }
         
         safeVC.isTurnLoading = NO;
-        
         
         [[ZCUIToastTools shareToast] dismisProgress];
         
@@ -1023,15 +1026,14 @@ static dispatch_once_t onceToken;
                 [self checkUserServiceWithType:type model:nil];
             }
         }else{
-            ZCLibMessage *message = [ZCLibServer setLocalDataToArr:ZCTipMessageAdminHelloWord type:0 duration:@"" style:0 send:NO name:self.receivedName content:nil config:[self getLibConfig]];
-            message.senderFace = sobotConvertToString([self getLibConfig].face);
-            [message getModelDisplayText:YES];// 处理欢迎语中带有富文本标签
-            
-            [self addReceivedNameMessageToList:message IsAdminHelloWord:NO];
-        
-            [self addGoodMsg];
+            if ([[ZCUICore getUICore] getLibConfig].isArtificial) {
+                ZCLibMessage *message = [ZCLibServer setLocalDataToArr:ZCTipMessageAdminHelloWord type:0 duration:@"" style:0 send:NO name:self.receivedName content:nil config:[self getLibConfig]];
+                message.senderFace = sobotConvertToString([self getLibConfig].face);
+                [message getModelDisplayText:YES];// 处理欢迎语中带有富文本标签
+                [self addReceivedNameMessageToList:message IsAdminHelloWord:NO];
+                [self addGoodMsg];
+            }
         }
-        
         return YES;
     }
     return NO;
@@ -1051,13 +1053,10 @@ static dispatch_once_t onceToken;
 //        }
         // 3.1.1新增需求
         if(message.richModel.multiModel.leaveTemplateId.length > 0 || message.richModel.answerType == 1525){
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                 if (self.delegate && [self.delegate respondsToSelector:@selector(onPageStatusChanged:message:obj:)]) {
-                    [self.delegate onPageStatusChanged:ZCShowLeaveEditViewWithTempleteId message:message.richModel.multiModel.leaveTemplateId obj:message];
-                }
-                
-            });
-
+            // 3.1.2 去掉延迟3秒，直接弹出
+            if (self.delegate && [self.delegate respondsToSelector:@selector(onPageStatusChanged:message:obj:)]) {
+               [self.delegate onPageStatusChanged:ZCShowLeaveEditViewWithTempleteId message:message.richModel.multiModel.leaveTemplateId obj:message];
+           }
         }
     }
     
@@ -1664,7 +1663,9 @@ static dispatch_once_t onceToken;
     if ([self getPlatfromInfo].config.type == 2 && ![self getPlatfromInfo].config.isArtificial) {
         // 设置昵称
         if(self.delegate && [self.delegate respondsToSelector:@selector(onPageStatusChanged:message:obj:)]){
-            [self.delegate onPageStatusChanged:ZCShowStatusChangedTitle message:ZCSTLocalString(@"暂无客服在线") obj:nil];
+//            [self.delegate onPageStatusChanged:ZCShowStatusChangedTitle message:ZCSTLocalString(@"暂无客服在线") obj:nil];
+            // 仅人工，结束会话，标题显示空白3.1.3修改
+            [self.delegate onPageStatusChanged:ZCShowStatusChangedTitle message:nil obj:nil];
         }
     }
     
@@ -1712,7 +1713,9 @@ static dispatch_once_t onceToken;
        type==ZCReceivedMessageOfflineByAdmin ||
        type==ZCReceivedMessageOfflineByClose ||
        type== ZCReceivedMessageOfflineToLong ||
-       type == ZCReceivedMessageToNewWindow){
+       type == ZCReceivedMessageToNewWindow||
+       type == ZCReceivedMessageOfflineToWaiting ||
+       type == ZCReceivedMessageOfflineUnknown){
         
         if (sobotConvertToString(obj[@"aname"]).length) {
             _receivedName = sobotConvertToString(obj[@"aname"]);
@@ -1895,6 +1898,8 @@ static dispatch_once_t onceToken;
                     indexs = [indexs stringByAppendingFormat:@",%d",i];
                 }else if([sobotConvertToString(libMassage.sysTips) hasPrefix:ZCSTLocalString(@"未解决问题？点击")]){
                     libMassage.isHistory = YES;
+                    indexs = [indexs stringByAppendingFormat:@",%d",i];
+                }else if([sobotConvertToString(libMassage.sysTips) hasSuffix:ZCSTLocalString(@"接受了您的请求")]){
                     indexs = [indexs stringByAppendingFormat:@",%d",i];
                 }
             }
@@ -2336,7 +2341,6 @@ static dispatch_once_t onceToken;
     } appIdIncorrect:^(NSString *appId) {
         isLoadingConfig = NO;
         if(!isFrist){
- 
             if (self.delegate && [self.delegate respondsToSelector:@selector(onPageStatusChanged:message:obj:)]) {
                 [self.delegate onPageStatusChanged:ZCSetKeyBoardStatus message:@"ZCKeyboardStatusNewSession" obj:nil];
             }
@@ -3773,7 +3777,15 @@ static dispatch_once_t onceToken;
 -(void)setclosepamasAndClearConfig{
     if ([ZCUICore getUICore].currtChatOver) {
         [ZCUICore getUICore].currtChatOver = NO;
-        [[ZCPlatformTools sharedInstance] getPlatformInfo].config = nil;
+        // 暂不处理 如果在这里处理 会有返回评价 评价没有弹窗（记录是否可以评价的参数被回置了）
+//        [[ZCPlatformTools sharedInstance] getPlatformInfo].config = nil;
     }
+}
+
+-(BOOL)getRecordModel{
+    if (recordModel != nil) {
+        return YES;
+    }
+    return NO;
 }
 @end

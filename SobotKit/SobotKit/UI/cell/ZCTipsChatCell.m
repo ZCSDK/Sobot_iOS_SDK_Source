@@ -311,15 +311,16 @@
             tempLabel.backgroundColor = [UIColor clearColor];
             tempLabel.lineBreakMode = NSLineBreakByTruncatingTail;
             tempLabel.textColor = [UIColor whiteColor];
-            tempLabel.isNeedAtAndPoundSign = YES;
+            tempLabel.isNeedAtAndPoundSign = NO;
             tempLabel.disableEmoji = NO;
             tempLabel.lineSpacing = 3.0f;
             tempLabel.verticalAlignment = ZCTTTAttributedLabelVerticalAlignmentCenter;
         }
         
         // 处理HTML标签
-        NSString  *text = [ZCTipsChatCell getSysTipsText:model];
-        
+        NSString  *text = [ZCUITools removeAllHTMLTag:[ZCTipsChatCell getSysTipsText:model]];
+        text = [text stringByReplacingOccurrencesOfString:@"\n" withString:@""];
+
         tempLabel.text = text;
         
         CGSize optimalSize = [tempLabel preferredSizeWithMaxWidth:viewWidth - 40];

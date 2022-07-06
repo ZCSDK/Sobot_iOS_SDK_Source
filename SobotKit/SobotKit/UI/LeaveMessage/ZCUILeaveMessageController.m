@@ -305,14 +305,16 @@ typedef NS_ENUM(NSInteger,ExitType) {
 -(void) itemsClick:(UIButton *)sender{
     if(lmsView!=nil){
         lmsView.hidden = YES;
-        if(sender.tag == self.rightBtn.tag){
-            [_mesRecordVC loadData];
-        }
     }
     
     if (btnTag == sender.tag) {
         return;
     }
+    
+    if(sender.tag == self.rightBtn.tag){
+        [_mesRecordVC loadData];
+    }
+    
     if(sender.tag == self.leftBtn.tag){
         _leftBtn.selected = YES;
         _rightBtn.selected = NO;
@@ -510,12 +512,12 @@ typedef NS_ENUM(NSInteger,ExitType) {
     __block ZCUILeaveMessageController *safeSelf = self;
     [_leaveEditView setPageChangedBlock:^(id  _Nonnull object, int code) {
         //code==1 添加成功,code == 2点击完成，跳转页面
-        if(code == 1 && _selectedType!=2){
+        if(code == 3001 && _selectedType!=2){
             [safeSelf goBack];
         }
         
-        if(code == 2){
-            [safeSelf itemsClick:self->_rightBtn];
+        if(code == 3002){
+            [safeSelf itemsClick:safeSelf->_rightBtn];
         }
     }];
     
@@ -532,7 +534,7 @@ typedef NS_ENUM(NSInteger,ExitType) {
     [_rightView addSubview:_mesRecordVC.view];
     [_mainScrollView addSubview:_rightView];
     
-    [_mesRecordVC updataWithHeight:scrollHeight];
+    [_mesRecordVC updataWithHeight:scrollHeight viewWidth:self.view.frame.size.width];
     
     __weak ZCUILeaveMessageController * saveVC = self;
     _mesRecordVC.jumpMsgDetailBlock = ^(ZCRecordListModel *model) {
@@ -650,7 +652,7 @@ typedef NS_ENUM(NSInteger,ExitType) {
 
 
     _rightView.frame = CGRectMake([self getCurViewWidth]+spaceX,0, LW, scrollHeight);
-    [_mesRecordVC updataWithHeight:scrollHeight];
+    [_mesRecordVC updataWithHeight:scrollHeight viewWidth:LW];
     
     
     // 1.获取当前的页面

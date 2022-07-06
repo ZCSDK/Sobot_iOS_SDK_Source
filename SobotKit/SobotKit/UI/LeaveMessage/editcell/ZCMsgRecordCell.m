@@ -129,7 +129,7 @@
     
     
     //@"问题描述lsakl阿里速度快缴费拉卡掉了金风科技埃里克森的家乐福卡拉伸的开发";
-    _titleLab.frame = CGRectMake(ZCNumber(20),ZCNumber(47), CGRectGetWidth(_bgView.frame) -ZCNumber(122), ZCNumber(20));
+    _titleLab.frame = CGRectMake(ZCNumber(20),ZCNumber(47), width -ZCNumber(122), ZCNumber(20));
 //    _titleLab.backgroundColor = [UIColor blueColor];
     // 计算文本的宽度
     CGSize titleSize = [self sizeWithText:_titleLab.text withFont:_titleLab.font];
@@ -156,7 +156,7 @@
     
 //    [_picLab sizeToFit];
     
-    _statusLab.frame = CGRectMake(CGRectGetWidth(_bgView.frame) - ZCNumber(92), CGRectGetHeight(_bgView.frame) - ZCNumber(30) - ZCNumber(24), ZCNumber(72), ZCNumber(30));
+    _statusLab.frame = CGRectMake(width - ZCNumber(92), CGRectGetHeight(_bgView.frame) - ZCNumber(30) - ZCNumber(24), ZCNumber(72), ZCNumber(30));
     _statusLab.text = ZCSTLocalString(@"已创建");
     
     switch (model.flag) {
@@ -179,12 +179,25 @@
     
     CGSize s = [_statusLab.text sizeWithAttributes:@{NSFontAttributeName:_statusLab.font}];
     if(s.width > 72){
-        _statusLab.frame = CGRectMake(CGRectGetWidth(_bgView.frame) - 10 - s.width-10, _titleLab.frame.origin.y, s.width+10, ZCNumber(20));
+        _statusLab.frame = CGRectMake( width - 10 - s.width-10, _titleLab.frame.origin.y, s.width+10, ZCNumber(20));
     }
     
     
     _topLineView.frame = CGRectMake(0, 0, _bgView.frame.size.width, 0.5);
     _bottomLineView.frame = CGRectMake(0, _bgView.frame.size.height - 0.5, _bgView.frame.size.width, 0.5);
+
+}
+
+-(void)layoutSubviews{
+    [super layoutSubviews];
+//    CGSize s = [_statusLab.text sizeWithAttributes:@{NSFontAttributeName:_statusLab.font}];
+    if (ScreenWidth < ScreenHeight) {
+        _statusLab.frame = CGRectMake(CGRectGetWidth(_bgView.frame) - ZCNumber(92), CGRectGetHeight(_bgView.frame) - ZCNumber(30) - ZCNumber(24), ZCNumber(72), ZCNumber(30));
+        _titleLab.frame = CGRectMake(ZCNumber(20),ZCNumber(47), CGRectGetWidth(_bgView.frame) -ZCNumber(122), ZCNumber(20));
+    }else{
+        _statusLab.frame = CGRectMake(ScreenWidth - ZCNumber(92)- ZCNumber(72), _titleLab.frame.origin.y, ZCNumber(72), ZCNumber(30));
+        _titleLab.frame = CGRectMake(ZCNumber(20),ZCNumber(47), CGRectGetWidth(_bgView.frame) -ZCNumber(122) - ZCNumber(60), ZCNumber(20));
+    }
 
 }
 

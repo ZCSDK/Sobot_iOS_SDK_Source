@@ -166,4 +166,7 @@ typedef NS_ENUM(NSUInteger,ZCKeyboardViewStatus){
 
 // chatview页面旋转切换时触发 重新布局键盘UIUI相关
 -(void)setLaySubViewUI;
+
+// 获取当前的录音view 是否存在
+-(BOOL)getZC_RecordView;
 @end

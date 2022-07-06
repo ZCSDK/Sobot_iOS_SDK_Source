@@ -203,16 +203,16 @@
     if (sender.tag == BUTTON_BACK) {
         // 返回提醒开关
         if ([ZCUICore getUICore].kitInfo.isShowReturnTips) {
+            [self.view endEditing:YES];
            [[ZCToolsCore getToolsCore] showAlert:ZCSTLocalString(@"您是否要结束会话?") message:nil cancelTitle:ZCSTLocalString(@"暂时离开") titleArray:@[ZCSTLocalString(@"结束会话")] viewController:self  confirm:^(NSInteger buttonTag) {
-//               self.countDate = nil;
-               // 这里要如果是点击了 结束会话按钮 会触发两次点击事件，一次是
-               [[ZCUICore getUICore] setclosepamasAndClearConfig];
                if(buttonTag >= 0){
                    // 点击关闭，离线用户
                    [self.chatView confimGoBackWithType:ZCChatViewGoBackType_close];
+                   [[ZCUICore getUICore] setclosepamasAndClearConfig];
                }else{
                    
                    [self.chatView setIsCloseNo];
+                   [[ZCUICore getUICore] setclosepamasAndClearConfig];
                    if (self.navigationController && _isPush) {
                        // 滑动返回会调用 goBack方法
                        [self.navigationController popViewControllerAnimated:YES];
@@ -401,7 +401,6 @@
     vf.size.height = chatHeight;
     if (!CGRectEqualToRect(vf,self.chatView.frame)) {
         _chatView.frame = vf;
-        NSLog(@"viewDidLayoutSubviews 方法  chatView.frame 发生变化");
         [self.chatView setFrameForListTable];
         // iphone8 14.2的手机系统在横竖屏切换的时候 需要刷新一下输入框的位置
         [self.chatView hiddenKeyBoard];

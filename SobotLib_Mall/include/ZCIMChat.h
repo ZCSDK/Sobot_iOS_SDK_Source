@@ -130,8 +130,10 @@ typedef NS_ENUM(NSInteger,ZCSendActionType) {
 
  @param isServer 是否为服务端下推消息(例外:转人工/给机器人发消息/获取技能组)
  */
--(void)userOfflineByLongTimeIsServer:(BOOL )isServer config:(ZCLibConfig *) _libConfig appkey:(NSString *) appkey;
+-(void)userOfflineByReciveType:(ZCReceivedMessageType ) type from:(BOOL )isServerMessage config:(ZCLibConfig *) _libConfig appkey:(NSString *) appkey;
 //-(void)userOfflineByLongTimeIsServer:(BOOL )isServer;
+
+-(void)userOfflineByLongTimeIsServer:(BOOL)isServerMessage config:(ZCLibConfig *) _libConfig appkey:(NSString *) appkey;
 
 
 ///////////////////////////////////////////////////////////

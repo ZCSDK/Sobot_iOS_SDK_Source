@@ -136,3 +136,10 @@ if(sourcePath.length > 0){\
 }\
 (v==nil ? key : sobotConvertToString(v));\
 })
+
+#define SobotWeakSelf(var) __weak typeof(var) XYWeak_##var = var;
+#define SobotStrogSelf(var) \
+_Pragma("clang diagnostic push") \
+_Pragma("clang diagnostic ignored \"-Wshadow\"") \
+__strong typeof(var) var = XYWeak_##var; \
+_Pragma("clang diagnostic pop")

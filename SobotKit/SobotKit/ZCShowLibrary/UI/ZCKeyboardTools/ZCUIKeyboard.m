@@ -1422,7 +1422,7 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
             [self showStatusView];
             _zc_againAccessBtn.hidden = NO;
             _zc_sessionBgView.hidden  = NO;
-            
+            _zc_againAccessBtn.enabled = YES;// 设置新会话键盘样式时可点
             if ([ZCUICore getUICore].delegate && [[ZCUICore getUICore].delegate respondsToSelector:@selector(onPageStatusChanged: message: obj:)]) {
                 [[ZCUICore getUICore].delegate onPageStatusChanged:ZCShowTurnRobotBtn message:@"1" obj:nil];
             }
@@ -1686,6 +1686,7 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
         return;
     }
     
+    // 此处不需要关心XBottomBarHeight，因为bottomView在ChatView上，ChatView已经处理了高度
     footFrame.origin.y       = [self getSourceViewHeight] - footFrame.size.height - _zc_keyBoardHeight + XBottomBarHeight;
     // 必须是animated YES
     [_zc_chatTextView setContentOffset:CGPointMake(0,textContentSizeHeight-textFrame.size.height) animated:YES];
@@ -1695,35 +1696,11 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
         _zc_bottomView.frame = footFrame;
         _zc_chatTextView.frame = textFrame;
         
-        CGFloat ch=_zc_listTable.contentSize.height;
-        CGFloat h=_zc_listTable.bounds.size.height;
-        //        [SobotLog logDebug:@"当前滚动的高度：%f,%f",ch,h];
-        CGRect tf         = _zc_listTable.frame;
-        
-        CGFloat tx = _zc_listTable.contentSize.height - tf.size.height;
-        
-        // 解决滑动问题
-        if((h - ch) > (_zc_keyBoardHeight + (footFrame.size.height - BottomHeight))){
-            tf.origin.y   = startTableY;
-        }else{
-            if(tx>0){
-                tf.origin.y   = startTableY - _zc_keyBoardHeight - (footFrame.size.height - BottomHeight) + XBottomBarHeight ;
-            }else{
-
-                tf.origin.y   = startTableY - _zc_keyBoardHeight - (footFrame.size.height - BottomHeight) + XBottomBarHeight - tx ;
-            }
-        }
-        _zc_listTable.frame  = tf;
-        if(ch > h){
-            [_zc_listTable setContentOffset:CGPointMake(0, ch-h) animated:NO];
-        }else{
-            [_zc_listTable setContentOffset:CGPointMake(0, 0) animated:NO];
-        }
+        [self showTableFrameByKeyboardChanged];
         
         [[ZCUICore getUICore] keyboardOnClick:ZCShowTextHeightChanged];
         
         
-        [self addAutoListView];
     }];
 }
 
@@ -1888,41 +1865,8 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
     // get a rect for the view frame
     
     {
-        CGFloat bh         = _zc_bottomView.frame.size.height;
-        CGRect tf          = _zc_listTable.frame;
         
-        CGFloat xbottomh = XBottomBarHeight;// (isLandspace?12:XBottomBarHeight);
-        CGFloat x = _zc_listTable.contentSize.height - tf.size.height;
-        // 根据控件的位置，判断键盘的高度，说明控件不是全屏的，不一定要上提那么多
-        if(x > 0){
-            tf.origin.y   = startTableY - _zc_keyBoardHeight - (bh-BottomHeight) + xbottomh;
-        }else{
-            tf.origin.y   = startTableY - _zc_keyBoardHeight - (bh-BottomHeight) + xbottomh - x;
-            if(tf.origin.y > startTableY){
-                tf.origin.y = startTableY;
-            }
-        }
-        
-        _zc_listTable.frame  = tf;
-        if(x>0 && !isLandspace){
-//            if([ZCUICore getUICore].kitInfo.navcBarHidden){
-                [_zc_listTable setContentOffset:CGPointMake(0, x) animated:NO];
-//            }
-        }
-        
-
-        
-        CGRect bf         = _zc_bottomView.frame;
-        
-        bf.origin.y       = [self getSourceViewHeight] - bh - _zc_keyBoardHeight + xbottomh;
-        
-        
-        bf.size.height    = bh;
-        _zc_bottomView.frame = bf;
-        
-        // 2.8.5版本移到此处，以前写在键盘隐藏处，不符合逻辑
-        [self addAutoListView];
-        
+        [self showTableFrameByKeyboardChanged];
         
         if ([ZCUICore getUICore].delegate && [[ZCUICore getUICore].delegate respondsToSelector:@selector(onPageStatusChanged: message: obj:)]) {
             [[ZCUICore getUICore].delegate onPageStatusChanged:ZCTurnRobotFramChange message:@"" obj:nil];
@@ -1938,6 +1882,43 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
 //        _scrollTableToBottomBlock();
     }
     
+}
+
+-(void)showTableFrameByKeyboardChanged{
+    CGFloat bh         = _zc_bottomView.frame.size.height;
+    CGRect tf          = _zc_listTable.frame;
+    
+    CGFloat xbottomh = XBottomBarHeight;// (isLandspace?12:XBottomBarHeight);
+    CGFloat x = _zc_listTable.contentSize.height - tf.size.height;
+    // 根据控件的位置，判断键盘的高度，说明控件不是全屏的，不一定要上提那么多
+    if(x > 0){
+        tf.origin.y   = startTableY - _zc_keyBoardHeight - (bh-BottomHeight) + xbottomh;
+    }else{
+        tf.origin.y   = startTableY - _zc_keyBoardHeight - (bh-BottomHeight) + xbottomh - x;
+        if(tf.origin.y > startTableY){
+            tf.origin.y = startTableY;
+        }
+    }
+    
+    _zc_listTable.frame  = tf;
+    if(x>0 && !isLandspace){
+//            if([ZCUICore getUICore].kitInfo.navcBarHidden){
+            [_zc_listTable setContentOffset:CGPointMake(0, x) animated:NO];
+//            }
+    }
+    
+    
+    CGRect bf         = _zc_bottomView.frame;
+    
+    bf.origin.y       = [self getSourceViewHeight] - bh - _zc_keyBoardHeight + xbottomh;
+    
+    
+    bf.size.height    = bh;
+    _zc_bottomView.frame = bf;
+    
+    
+    // 2.8.5版本移到此处，以前写在键盘隐藏处，不符合逻辑
+    [self addAutoListView];
 }
 
 //屏幕点击事件
@@ -2175,8 +2156,10 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
 
 #pragma 录音相关事件触发
 -(void)btnTouchDown:(id)sender{
-    
     [SobotLog logDebug:@"按下了"];
+    
+    // 这里要处理 在录音前关闭上一个还没有播放完的录音消息，以免造成录音是空的没有声音的问题
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"ZCSDKSTOPPLAY" object:nil];
     
      AVAuthorizationStatus authStatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeAudio];
     
@@ -2273,48 +2256,90 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
         //停止录音
         [self closeRecord:sender];
     }
+    
 }
 -(void)btnTouchEnd:(UIButton *)sender withEvent:(UIEvent *)event{
-    NSLog(@"RecordCancel%@",event);
+//    NSLog(@"RecordCancel%@",event);
     UITouch *touch = [[event allTouches] anyObject];
     CGFloat boundsExtension = 5.0f;
     CGRect outerBounds = CGRectInset(sender.bounds, -1 * boundsExtension, -1 * boundsExtension);
     BOOL touchOutside = !CGRectContainsPoint(outerBounds, [touch locationInView:sender]);
     int duration = (int)_zc_recordView.currentTime;
-    NSLog(@"手势事件之后 触发的 时间时长：%d",duration);
-    if (duration < 1 || touchOutside) {
+//    NSLog(@"手势事件之后 触发的 时间时长：%d",duration);
+    // 这里还要看是不是闪烁的空cell 如果是才走，如果不是 是录制完成达到上限60秒，是不能走RecordCancel的代理事件的
+//    if (duration < 1 || touchOutside) {
+//        // UIControlEventTouchUpOutside
+//        [SobotLog logDebug:@"取消ccc"];
+//        if(_zc_recordView){
+//            if (duration < 1 && [[ZCUICore getUICore] getRecordModel]) { // 先显示时间过短 秒点秒松开状态下
+//                [_zc_recordView didChangeState:RecordComplete];
+//                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//                    // 取消发送
+//                    [_zc_recordView didChangeState:RecordCancel];
+//#pragma mark - 这里加延迟是为了 增加弹窗 “录音时间过短” 的显示时间， closeRecord 方法会销毁掉弹窗
+//                    [self closeRecord:sender];
+//                });
+//            }else{
+//                // 取消发送
+//                if (touchOutside) {
+//                    [_zc_recordView didChangeState:RecordCancel];
+//                    [self closeRecord:sender];
+//                }
+//            }
+//        }
+//        // 这里处理异常情况下 录音按钮没有恢复默认状态的场景 （秒点录音按钮之后秒松开）
+//        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//            _zc_voiceButton.enabled = YES;
+//            _zc_addMoreButton.enabled = YES;
+//            _zc_faceButton.enabled = YES;
+//            [_zc_pressedButton setTitle:ZCSTLocalString(@"按住 说话") forState:UIControlStateNormal];
+//        });
+//    } else {
+//        // UIControlEventTouchUpInside
+//        [SobotLog logDebug:@"结束了"];
+//
+//        // 发送
+//        [_zc_recordView didChangeState:RecordComplete];
+//        [self closeRecord:sender];
+//    }
+    
+    
+    if (touchOutside) {
         // UIControlEventTouchUpOutside
         [SobotLog logDebug:@"取消ccc"];
+        
         if(_zc_recordView){
-            if (duration < 1) { // 先显示时间过短 秒点秒松开状态下
-                [_zc_recordView didChangeState:RecordComplete];
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                    // 取消发送
-                    [_zc_recordView didChangeState:RecordCancel];
-#pragma mark - 这里加延迟是为了 增加弹窗 “录音时间过短” 的显示时间， closeRecord 方法会销毁掉弹窗
-                    [self closeRecord:sender];
-                });
-            }else{
-                // 取消发送
-                [_zc_recordView didChangeState:RecordCancel];
-                [self closeRecord:sender];
-            }
+            // 取消发送
+            [_zc_recordView didChangeState:RecordCancel];
+            [self closeRecord:sender];
         }
-        // 这里处理异常情况下 录音按钮没有恢复默认状态的场景 （秒点录音按钮之后秒松开）
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            _zc_voiceButton.enabled = YES;
-            _zc_addMoreButton.enabled = YES;
-            _zc_faceButton.enabled = YES;
-            [_zc_pressedButton setTitle:ZCSTLocalString(@"按住 说话") forState:UIControlStateNormal];
-        });
     } else {
         // UIControlEventTouchUpInside
         [SobotLog logDebug:@"结束了"];
         
-        // 发送
-        [_zc_recordView didChangeState:RecordComplete];
-        [self closeRecord:sender];
+        if (duration < 1 && [[ZCUICore getUICore] getRecordModel]) { // 先显示时间过短 秒点秒松开状态下
+            [_zc_recordView didChangeState:RecordComplete];
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                // 取消发送
+                [_zc_recordView didChangeState:RecordCancel];
+#pragma mark - 这里加延迟是为了 增加弹窗 “录音时间过短” 的显示时间， closeRecord 方法会销毁掉弹窗
+                [self closeRecord:sender];
+            });
+            // 这里处理异常情况下 录音按钮没有恢复默认状态的场景 （秒点录音按钮之后秒松开）
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                _zc_voiceButton.enabled = YES;
+                _zc_addMoreButton.enabled = YES;
+                _zc_faceButton.enabled = YES;
+                [_zc_pressedButton setTitle:ZCSTLocalString(@"按住 说话") forState:UIControlStateNormal];
+            });
+        }else{
+            // 发送
+            [_zc_recordView didChangeState:RecordComplete];
+            [self closeRecord:sender];
+        }
+    
     }
+    
 }
 
 -(void)closeRecord:(UIButton *) sender{
@@ -2323,7 +2348,7 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
     int duration = (int)_zc_recordView.currentTime;
     [_zc_recordView dismissRecordView];
     _zc_recordView = nil;
-    
+
 //    [_zc_pressedButton setBackgroundColor:[UIColor clearColor]];
     [_zc_pressedButton setBackgroundColor:UIColorFromThemeColor(ZCTextPlaceHolderColor)];
 
@@ -2360,6 +2385,7 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
         [[ZCUICore getUICore] sendMessage:@"" questionId:@"" type:ZCMessagetypeCancelSound duration:[NSString stringWithFormat:@"%d",(int)duration]];
     }
 }
+
 
 
 #pragma mark -- 发送文本消息
@@ -2649,6 +2675,7 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
         // 调评价页面
         [[ZCUICore getUICore] keyboardOnClickSatisfacetion:NO];
     }else if (sender.tag == BUTTON_RECONNECT_USER){
+        sender.enabled = NO;// 防止连续点击造成其他异常问题 ，在设置新会话键盘样式时在设置可点
         [_zc_activityView startAnimating];
         [[ZCUICore getUICore] setclosepamasAndClearConfig];
         //  要去初始化啊
@@ -2763,5 +2790,13 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
         // 新会话键盘样式 重新布局UI  在横竖屏切换的时候
         [self showStatusView];
     }
+}
+
+-(BOOL)getZC_RecordView{
+    if (self.zc_recordView != nil) {
+//        NSLog(@"语音记录的 wiew ******************* %@",self.zc_recordView);
+        return YES;
+    }
+    return NO;
 }
 @end

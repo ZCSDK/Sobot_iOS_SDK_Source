@@ -231,10 +231,12 @@
 		ED86F296282CA7A60061EE46 /* ZCLeaveEditView.m in Sources */ = {isa = PBXBuildFile; fileRef = ED86F294282CA7A60061EE46 /* ZCLeaveEditView.m */; };
 		ED86F299282CA8040061EE46 /* ZCChatLeaveCell.h in Headers */ = {isa = PBXBuildFile; fileRef = ED86F297282CA8040061EE46 /* ZCChatLeaveCell.h */; };
 		ED86F29A282CA8040061EE46 /* ZCChatLeaveCell.m in Sources */ = {isa = PBXBuildFile; fileRef = ED86F298282CA8040061EE46 /* ZCChatLeaveCell.m */; };
-		ED86F2A0282CA8C50061EE46 /* ZCQuickLeaveView.h in Headers */ = {isa = PBXBuildFile; fileRef = ED86F29C282CA8C50061EE46 /* ZCQuickLeaveView.h */; };
-		ED86F2A1282CA8C50061EE46 /* ZCSelLeaveView.m in Sources */ = {isa = PBXBuildFile; fileRef = ED86F29D282CA8C50061EE46 /* ZCSelLeaveView.m */; };
-		ED86F2A2282CA8C50061EE46 /* ZCQuickLeaveView.m in Sources */ = {isa = PBXBuildFile; fileRef = ED86F29E282CA8C50061EE46 /* ZCQuickLeaveView.m */; };
-		ED86F2A3282CA8C50061EE46 /* ZCSelLeaveView.h in Headers */ = {isa = PBXBuildFile; fileRef = ED86F29F282CA8C50061EE46 /* ZCSelLeaveView.h */; };
+		EDCB7735287573BC00DA1320 /* ZCQuickLeaveView.m in Sources */ = {isa = PBXBuildFile; fileRef = EDCB7731287573BC00DA1320 /* ZCQuickLeaveView.m */; };
+		EDCB7736287573BC00DA1320 /* ZCQuickLeaveView.h in Headers */ = {isa = PBXBuildFile; fileRef = EDCB7732287573BC00DA1320 /* ZCQuickLeaveView.h */; };
+		EDCB7737287573BC00DA1320 /* ZCSelLeaveView.m in Sources */ = {isa = PBXBuildFile; fileRef = EDCB7733287573BC00DA1320 /* ZCSelLeaveView.m */; };
+		EDCB7738287573BC00DA1320 /* ZCSelLeaveView.h in Headers */ = {isa = PBXBuildFile; fileRef = EDCB7734287573BC00DA1320 /* ZCSelLeaveView.h */; };
+		EDCB773B287574AF00DA1320 /* ZCCheckMulCusFieldView.h in Headers */ = {isa = PBXBuildFile; fileRef = EDCB7739287574AF00DA1320 /* ZCCheckMulCusFieldView.h */; };
+		EDCB773C287574AF00DA1320 /* ZCCheckMulCusFieldView.m in Sources */ = {isa = PBXBuildFile; fileRef = EDCB773A287574AF00DA1320 /* ZCCheckMulCusFieldView.m */; };
 		EDEEF941280923BD005AFF2F /* libSobotLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EDEEF920280923BD005AFF2F /* libSobotLib.a */; };
 		EDEEF942280923BD005AFF2F /* ZCLIbGlobalDefine.h in Headers */ = {isa = PBXBuildFile; fileRef = EDEEF922280923BD005AFF2F /* ZCLIbGlobalDefine.h */; };
 		EDEEF943280923BD005AFF2F /* SobotLocaliable.h in Headers */ = {isa = PBXBuildFile; fileRef = EDEEF923280923BD005AFF2F /* SobotLocaliable.h */; };
@@ -497,10 +499,12 @@
 		ED86F294282CA7A60061EE46 /* ZCLeaveEditView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCLeaveEditView.m; sourceTree = "<group>"; };
 		ED86F297282CA8040061EE46 /* ZCChatLeaveCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCChatLeaveCell.h; sourceTree = "<group>"; };
 		ED86F298282CA8040061EE46 /* ZCChatLeaveCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCChatLeaveCell.m; sourceTree = "<group>"; };
-		ED86F29C282CA8C50061EE46 /* ZCQuickLeaveView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCQuickLeaveView.h; sourceTree = "<group>"; };
-		ED86F29D282CA8C50061EE46 /* ZCSelLeaveView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCSelLeaveView.m; sourceTree = "<group>"; };
-		ED86F29E282CA8C50061EE46 /* ZCQuickLeaveView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCQuickLeaveView.m; sourceTree = "<group>"; };
-		ED86F29F282CA8C50061EE46 /* ZCSelLeaveView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCSelLeaveView.h; sourceTree = "<group>"; };
+		EDCB7731287573BC00DA1320 /* ZCQuickLeaveView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ZCQuickLeaveView.m; path = SobotKit/Views/ZCSelLeaveView/ZCQuickLeaveView.m; sourceTree = SOURCE_ROOT; };
+		EDCB7732287573BC00DA1320 /* ZCQuickLeaveView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZCQuickLeaveView.h; path = SobotKit/Views/ZCSelLeaveView/ZCQuickLeaveView.h; sourceTree = SOURCE_ROOT; };
+		EDCB7733287573BC00DA1320 /* ZCSelLeaveView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ZCSelLeaveView.m; path = SobotKit/Views/ZCSelLeaveView/ZCSelLeaveView.m; sourceTree = SOURCE_ROOT; };
+		EDCB7734287573BC00DA1320 /* ZCSelLeaveView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZCSelLeaveView.h; path = SobotKit/Views/ZCSelLeaveView/ZCSelLeaveView.h; sourceTree = SOURCE_ROOT; };
+		EDCB7739287574AF00DA1320 /* ZCCheckMulCusFieldView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCCheckMulCusFieldView.h; sourceTree = "<group>"; };
+		EDCB773A287574AF00DA1320 /* ZCCheckMulCusFieldView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZCCheckMulCusFieldView.m; sourceTree = "<group>"; };
 		EDEEF920280923BD005AFF2F /* libSobotLib.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libSobotLib.a; sourceTree = "<group>"; };
 		EDEEF922280923BD005AFF2F /* ZCLIbGlobalDefine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZCLIbGlobalDefine.h; sourceTree = "<group>"; };
 		EDEEF923280923BD005AFF2F /* SobotLocaliable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SobotLocaliable.h; sourceTree = "<group>"; };
@@ -838,6 +842,8 @@
 		7BDB5F79243328F700D655C5 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				EDCB7739287574AF00DA1320 /* ZCCheckMulCusFieldView.h */,
+				EDCB773A287574AF00DA1320 /* ZCCheckMulCusFieldView.m */,
 				7BDB5F86243328F700D655C5 /* ZCCheckCityView.h */,
 				7BDB5F7E243328F700D655C5 /* ZCCheckCityView.m */,
 				7BDB5F7B243328F700D655C5 /* ZCCheckCusFieldView.h */,
@@ -1114,10 +1120,10 @@
 		ED86F29B282CA8C50061EE46 /* ZCSelLeaveView */ = {
 			isa = PBXGroup;
 			children = (
-				ED86F29C282CA8C50061EE46 /* ZCQuickLeaveView.h */,
-				ED86F29E282CA8C50061EE46 /* ZCQuickLeaveView.m */,
-				ED86F29F282CA8C50061EE46 /* ZCSelLeaveView.h */,
-				ED86F29D282CA8C50061EE46 /* ZCSelLeaveView.m */,
+				EDCB7732287573BC00DA1320 /* ZCQuickLeaveView.h */,
+				EDCB7731287573BC00DA1320 /* ZCQuickLeaveView.m */,
+				EDCB7734287573BC00DA1320 /* ZCSelLeaveView.h */,
+				EDCB7733287573BC00DA1320 /* ZCSelLeaveView.m */,
 			);
 			path = ZCSelLeaveView;
 			sourceTree = "<group>";
@@ -1257,7 +1263,7 @@
 				7BDB60C5243328F800D655C5 /* EmojiBoardView.h in Headers */,
 				7BDB60CB243328F800D655C5 /* ZCItemView.h in Headers */,
 				7BDB60D0243328F800D655C5 /* ZCSobotCore.h in Headers */,
-				ED86F2A3282CA8C50061EE46 /* ZCSelLeaveView.h in Headers */,
+				EDCB7738287573BC00DA1320 /* ZCSelLeaveView.h in Headers */,
 				7BDB603E243328F800D655C5 /* ZCServiceDetailVC.h in Headers */,
 				7BDB6019243328F800D655C5 /* ZCCardCollectionViewCell.h in Headers */,
 				7BDB60A2243328F800D655C5 /* ZCUIRecordView.h in Headers */,
@@ -1303,7 +1309,7 @@
 				7BDB60D1243328F800D655C5 /* ZCUIImageTools.h in Headers */,
 				7BDB6032243328F800D655C5 /* ZCNoticeCell.h in Headers */,
 				7BDB6091243328F800D655C5 /* ZCSCListModel.h in Headers */,
-				ED86F2A0282CA8C50061EE46 /* ZCQuickLeaveView.h in Headers */,
+				EDCB7736287573BC00DA1320 /* ZCQuickLeaveView.h in Headers */,
 				7BDB604D243328F800D655C5 /* ZCMsgRecordCell.h in Headers */,
 				7BDB6012243328F800D655C5 /* ZCMultiItemCell.h in Headers */,
 				7BDB6052243328F800D655C5 /* ZCLeaveDetailCell.h in Headers */,
@@ -1316,6 +1322,7 @@
 				ED86F299282CA8040061EE46 /* ZCChatLeaveCell.h in Headers */,
 				7BDB60B6243328F800D655C5 /* ZCUICustomActionSheet.h in Headers */,
 				7BDB602E243328F800D655C5 /* ZCImageChatCell.h in Headers */,
+				EDCB773B287574AF00DA1320 /* ZCCheckMulCusFieldView.h in Headers */,
 				EDEEF97C28092433005AFF2F /* SobotXHFileAttribute.h in Headers */,
 				7BDB6031243328F800D655C5 /* ZCRichTextChatCell.h in Headers */,
 				EDEEF946280923BD005AFF2F /* ZCLibNetworkTools.h in Headers */,
@@ -1444,6 +1451,7 @@
 				7BDB60A8243328F800D655C5 /* ZCButton.m in Sources */,
 				7BDB607A243328F800D655C5 /* ZCTitleView.m in Sources */,
 				7BDB6080243328F800D655C5 /* ZCUICore.m in Sources */,
+				EDCB773C287574AF00DA1320 /* ZCCheckMulCusFieldView.m in Sources */,
 				7BDB6099243328F800D655C5 /* ZCUISkillSetView.m in Sources */,
 				7BDB6050243328F800D655C5 /* ZCUILeaveMessageController.m in Sources */,
 				7BDB6082243328F800D655C5 /* ZCKitInfo.m in Sources */,
@@ -1459,7 +1467,9 @@
 				7BDB6023243328F800D655C5 /* ZCTipsChatCell.m in Sources */,
 				7BDB60CC243328F800D655C5 /* ZCItemView.m in Sources */,
 				7BDB60CD243328F800D655C5 /* ZCUIPlaceHolderTextView.m in Sources */,
+				EDCB7735287573BC00DA1320 /* ZCQuickLeaveView.m in Sources */,
 				7BDB607C243328F800D655C5 /* ZCProgressView.m in Sources */,
+				EDCB7737287573BC00DA1320 /* ZCSelLeaveView.m in Sources */,
 				7BDB6044243328F800D655C5 /* ZCOrderCheckCell.m in Sources */,
 				7BDB60A1243328F800D655C5 /* ZCUIRecordView.m in Sources */,
 				7BDB6057243328F800D655C5 /* ZCLeaveDetailCell.m in Sources */,
@@ -1513,14 +1523,12 @@
 				7BDB6038243328F800D655C5 /* ZCUIWebController.m in Sources */,
 				7BDB6067243328F800D655C5 /* ZCChatController.m in Sources */,
 				7BDB6062243328F800D655C5 /* ZCChatView.m in Sources */,
-				ED86F2A1282CA8C50061EE46 /* ZCSelLeaveView.m in Sources */,
 				7BDB60A3243328F800D655C5 /* ZCPieChartView.m in Sources */,
 				7BDB6084243328F800D655C5 /* ZCSCListModel.m in Sources */,
 				7BDB6030243328F800D655C5 /* ZCGoodsCell.m in Sources */,
 				7BDB6077243328F800D655C5 /* ZCCheckCusFieldView.m in Sources */,
 				7BDB6022243328F800D655C5 /* ZCTextGuideCell.m in Sources */,
 				7BDB607F243328F800D655C5 /* ZCToolsCore.m in Sources */,
-				ED86F2A2282CA8C50061EE46 /* ZCQuickLeaveView.m in Sources */,
 				7BDB6029243328F800D655C5 /* ZCVoiceChatCell.m in Sources */,
 				7BDB6075243328F800D655C5 /* ZCPageSheetView.m in Sources */,
 				7BDB6020243328F800D655C5 /* ZCRichTextChatCell.m in Sources */,

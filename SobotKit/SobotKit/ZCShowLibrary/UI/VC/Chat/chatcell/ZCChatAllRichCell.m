@@ -758,10 +758,40 @@
                     if(!sobotIsUrl(msg,[ZCUITools zcgetUrlRegular])){
                         continue;
                     }
+                    
+                    // 设置图片的高度
+//                    if (type == 3) {
+//                        imgHeight = MidImageHeight;
+//                    }
+//
+//                    if (type == 1) {
+//                        if ([ZCUICore getUICore].kitInfo.richImgHeight > 0) {
+//                            imgHeight = [ZCUICore getUICore].kitInfo.richImgHeight;
+//                        }
+//                    }
+                                    
                     h = h + imgHeight + lineSpace;
+                    
+                    // 这里需要处理宽度 这里有可能是动态传入的宽度
+//                    CGFloat imgW = maxWidth;
+//                    if (type == 1) {
+//                        if ([ZCUICore getUICore].kitInfo.richImgWidth >0 && [ZCUICore getUICore].kitInfo.richImgWidth<= maxWidth) {
+//                            imgW = [ZCUICore getUICore].kitInfo.richImgWidth;
+//                        }
+//
+//                        if(contentWidth < imgW){
+//                            contentWidth = imgW; // 这里可能要加 间距 需要测试验证
+//                        }
+//                    }
+//                    if (type == 3) {
+//                        if(contentWidth < maxWidth){
+//                            contentWidth = maxWidth; // 这里可能要加 间距 需要测试验证
+//                        }
+//                    }
                     if(contentWidth < maxWidth){
-                        contentWidth = maxWidth;
+                        contentWidth = maxWidth; 
                     }
+                    
                     if(superView){
                         SobotImageView *imgView = [[SobotImageView alloc] initWithFrame:CGRectMake(0, h -imgHeight - lineSpace, maxWidth, imgHeight)];
                         [imgView setContentMode:UIViewContentModeScaleAspectFill];

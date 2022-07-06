@@ -51,6 +51,7 @@
 #import "ZCCheckTypeView.h"
 #import "ZCCheckCusFieldView.h"
 #import <AVFoundation/AVFoundation.h>
+#import "ZCCheckMulCusFieldView.h"
 
 @interface ZCLeaveEditView()<UITableViewDataSource,UITableViewDelegate,ZCZHPickViewDelegate,ZCMLEmojiLabelDelegate,ZCOrderCreateCellDelegate,UINavigationControllerDelegate, UIImagePickerControllerDelegate,ZCActionSheetDelegate>{
     // 呼叫的电话号码
@@ -317,21 +318,24 @@
                 return;
             }
             
-            if(!sobotIsNull(cusModel.fieldSaveValue)){
-                [cusFields addObject:@{@"id":sobotConvertToString(cusModel.fieldId),
-                                       @"value":sobotConvertToString(cusModel.fieldSaveValue)
-                                       }];
-            }else{
-                [cusFields addObject:@{@"id":sobotConvertToString(cusModel.fieldId),
-                                       @"value":sobotConvertToString(cusModel.fieldValue)
-                                       }];
-            }
-            
 
             if(![self checkContentValid:cusModel.fieldSaveValue model:cusModel]){
                 [[ZCUIToastTools shareToast] showToast:[NSString stringWithFormat:@"%@%@",cusModel.fieldName,ZCSTLocalString(@"格式不正确")] duration:1.0f view:self position:ZCToastPositionCenter];
                 return;
             }
+            if(!sobotIsNull(cusModel.fieldSaveValue) || sobotConvertToString(cusModel.fieldValue).length > 0){
+                if(!sobotIsNull(cusModel.fieldSaveValue)){
+                    [cusFields addObject:@{@"id":sobotConvertToString(cusModel.fieldId),
+                                           @"text":sobotConvertToString(cusModel.fieldValue),
+                                           @"value":sobotConvertToString(cusModel.fieldSaveValue)
+                                           }];
+                }else{
+                    [cusFields addObject:@{@"id":sobotConvertToString(cusModel.fieldId),
+                                           @"value":sobotConvertToString(cusModel.fieldValue)
+                                           }];
+                }
+            }
+            
         }
         
          // 显示邮箱
@@ -635,7 +639,7 @@
 #pragma mark -- 留言创建成功弹层
 -(void)completionBackAction:(UIButton *) button{
     if(_pageChangedBlock){
-        _pageChangedBlock(self,2);
+        _pageChangedBlock(self,(int)button.tag);
     }
 }
 
@@ -1082,6 +1086,26 @@ return [UIView new];
             [_pickView show];
 
         }
+        if(fieldType == 9){
+            __block ZCLeaveEditView *myself = self;
+            ZCCheckMulCusFieldView *typeVC = [[ZCCheckMulCusFieldView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, 0)];
+            
+            ZCPageSheetView *sheetView = [[ZCPageSheetView alloc] initWithTitle:ZCSTLocalString(@"选择") superView:self showView:typeVC type:ZCPageSheetTypeLong];
+            typeVC.parentDataId = @"";
+            typeVC.parentView = nil;
+            typeVC.allArray = curEditModel.detailArray;
+            typeVC.orderCusFiledCheckBlock = ^(ZCLibOrderCusFieldsDetailModel *model, NSString *dataIds,NSString *dataNames) {
+                curEditModel.fieldValue = dataNames;
+                curEditModel.fieldSaveValue = dataIds;
+                
+                [myself refreshViewData];
+                [sheetView dissmisPageSheet];
+            };
+            [sheetView showSheet:typeVC.frame.size.height animation:YES block:^{
+                
+            }];
+            return;
+        }
         if(fieldType == 3){
             _pickView = [[ZCZHPickView alloc] initWithFrame:self.frame DatePickWithDate:[NSDate new]  datePickerMode:UIDatePickerModeDate isHaveNavControler:NO];
             [_pickView setTitle:ZCSTLocalString(@"日期")];
@@ -1091,7 +1115,6 @@ return [UIView new];
         }
         if(fieldType == 6 || fieldType == 7 || fieldType == 8){
             ZCCheckCusFieldView *vc = [[ZCCheckCusFieldView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, 0)];
-//            ZCOrderCusFieldController *vc = [[ZCOrderCusFieldController alloc] init];
             vc.preModel = curEditModel;
             vc.orderCusFiledCheckBlock = ^(ZCLibOrderCusFieldsDetailModel *model, NSMutableArray *arr) {
                 curEditModel.fieldValue = model.dataName;

@@ -180,11 +180,11 @@
 
 
 #pragma mark -- 刷新数据
--(void)updataWithHeight:(CGFloat)height{
+-(void)updataWithHeight:(CGFloat)height viewWidth:(CGFloat)w{
 //    self.listView = array;
     CGRect lf = self.listView.frame;
     lf.size.height = height;
-    [self.view setFrame:CGRectMake(0,0, self.view.frame.size.width, height)];
+    [self.view setFrame:CGRectMake(0,0, w, height)];
     self.listView.frame = lf;
     [self.listView reloadData];
 }

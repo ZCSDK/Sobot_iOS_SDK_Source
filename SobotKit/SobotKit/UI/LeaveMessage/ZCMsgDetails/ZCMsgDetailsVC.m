@@ -1647,5 +1647,10 @@ UINavigationControllerDelegate,ZCMLEmojiLabelDelegate>
     
 
 }
+// 链接点击
+-(void)ZCMLEmojiLabel:(ZCMLEmojiLabel *)emojiLabel didSelectLink:(NSString *)link withType:(ZCMLEmojiLabelLinkType)type{
+    //        链接处理：
+    [[ZCToolsCore getToolsCore] dealWithLinkClickWithLick:link viewController:self];
+}
 
 @end

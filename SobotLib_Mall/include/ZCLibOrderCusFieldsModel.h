@@ -65,6 +65,8 @@
 
 @interface ZCLibOrderCusFieldsDetailModel :NSObject
 
+@property(nonatomic,strong) NSString *parentDataId;
+
 @property (nonatomic,copy) NSString *dataId;
 @property (nonatomic,copy) NSString *dataName; // 分类名称
 @property (nonatomic,copy) NSString *fieldId; // 分类的ID

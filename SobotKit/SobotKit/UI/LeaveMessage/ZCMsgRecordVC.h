@@ -17,7 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface ZCMsgRecordVC : ZCUIBaseController
 
 @property (nonatomic,copy) JumpMsgDetailVCBlock  jumpMsgDetailBlock;
--(void)updataWithHeight:(CGFloat)height;
+-(void)updataWithHeight:(CGFloat)height viewWidth:(CGFloat)w;
 
 -(void)loadData;// 刷新数据
 
