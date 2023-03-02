@@ -129,4 +129,8 @@
     }
 }
 
+-(void) dealloc{
+    NSLog(@"快捷菜单dealloc");
+}
+
 @end

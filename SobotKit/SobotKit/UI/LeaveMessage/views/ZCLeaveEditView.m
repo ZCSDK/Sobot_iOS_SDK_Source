@@ -106,7 +106,9 @@
 }
 
 #pragma mark create Views
-
+-(void)dealloc{
+//    NSLog(@"销毁提交留言页面");
+}
 
 #pragma mark -- 数据刷新
 -(void)loadCustomFields{
@@ -114,26 +116,27 @@
     if (self.templateldIdDic != nil && [[self.templateldIdDic allKeys] containsObject:@"templateId"]) {
         templateId = self.templateldIdDic[@"templateId"];
     }
-    
+
+    __weak ZCLeaveEditView *safeView = self;
     // 加载自定义字段接口
     [[ZCLibServer getLibServer] postTemplateFieldInfoWithUid:[[ZCUICore getUICore] getLibConfig].uid Templateld:templateId start:^{
-        
+
     } success:^(NSDictionary *dict,NSMutableArray * cusFieldArray, ZCNetWorkCode sendCode) {
         @try{
             if (cusFieldArray.count) {
-                self.coustomArr = [NSMutableArray arrayWithCapacity:0];
-                self.coustomArr = cusFieldArray;
+                safeView.coustomArr = [NSMutableArray arrayWithCapacity:0];
+                safeView.coustomArr = cusFieldArray;
             }
             // 布局子页面
-            [self refreshViewData];
+            [safeView refreshViewData];
         } @catch (NSException *exception) {
-            
+
         } @finally {
-            
+
         }
     } failed:^(NSString *errorMessage, ZCNetWorkCode errorCode) {
         // 布局子页面
-        [self refreshViewData];
+        [safeView refreshViewData];
     }];
 }
 
@@ -657,7 +660,7 @@
     _successView = [[UIView alloc] initWithFrame:self.bounds];
     _successView.backgroundColor = [ZCUITools zcgetLightGrayBackgroundColor];
     
-    
+
     UIImageView * img = [[UIImageView alloc]initWithFrame:CGRectMake(viewWidth/2 - ZCNumber(60/2), ZCNumber(60), ZCNumber(60), ZCNumber(60))];
     if(isLandspace){
         img.frame = CGRectMake(viewWidth/2 - ZCNumber(60/2), ZCNumber(40), ZCNumber(60), ZCNumber(60));
@@ -1388,7 +1391,11 @@ return [UIView new];
     _zc_imagepicker = [[UIImagePickerController alloc]init];
     _zc_imagepicker.delegate = self;
     _zc_imagepicker.mediaTypes = [NSArray arrayWithObjects:@"public.movie", @"public.image", nil];
-    _zc_imagepicker.modalPresentationStyle = UIModalPresentationFullScreen;
+//    _zc_imagepicker.modalPresentationStyle = UIModalPresentationFullScreen;
+    if (![ZCUICore getUICore].kitInfo.imagepickerStyleUnFull) {
+            _zc_imagepicker.modalPresentationStyle = UIModalPresentationFullScreen;
+        }
+    _zc_imagepicker.view.backgroundColor = UIColorFromThemeColor(ZCBgSystemWhiteColor);
     [ZCSobotCore getPhotoByType:buttonIndex byUIImagePickerController:_zc_imagepicker Delegate:_exController];
 }
 #pragma mark - UIImagePickerControllerDelegate
@@ -1586,6 +1593,17 @@ return [UIView new];
         // 隐藏键盘，还原偏移量
         [_listTable setContentOffset:contentoffset];
     }
+}
+
+-(void)destoryViews{
+    [self hideKeyboard];
+    
+    [_coustomArr removeAllObjects];
+    _coustomArr = nil;
+    [self.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+//    self.pageChangedBlock = nil;
+    _exController = nil;
+    [self removeFromSuperview];
 }
 
 

@@ -81,6 +81,7 @@
 
 @property (nonatomic,strong) ZCAddressModel * addressModel;
 
+@property (nonatomic,assign)  BOOL isCommitSuccess;// 是否提交成功
 @end
 
 @implementation ZCUIAskTableController
@@ -338,11 +339,11 @@
     }
     
     // 调用接口
-    
+    __weak ZCUIAskTableController *weakSelf = self;
     [[self getZCAPIServer] postAskTabelWithUid:[self getZCLibConfig].uid Parms:dic start:^{
         
     } success:^(NSDictionary *dict, ZCNetWorkCode sendCode) {
-
+        weakSelf.isCommitSuccess = YES;
         [[ZCUIToastTools shareToast] showToast:ZCSTLocalString(@"提交成功") duration:1.0f view:self.view position:ZCToastPositionCenter Image:[ZCUITools zcuiGetBundleImage:@"zcicon_successful"]];
       
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.2f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -760,23 +761,50 @@
             [pickView show];
         }
         if(fieldType == 9){
-            __block ZCUIAskTableController *myself = self;
-            ZCCheckMulCusFieldView *typeVC = [[ZCCheckMulCusFieldView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 0)];
-            
-            ZCPageSheetView *sheetView = [[ZCPageSheetView alloc] initWithTitle:ZCSTLocalString(@"选择") superView:self showView:typeVC type:ZCPageSheetTypeLong];
-            typeVC.parentDataId = @"";
-            typeVC.parentView = nil;
-            typeVC.allArray = curEditModel.detailArray;
-            typeVC.orderCusFiledCheckBlock = ^(ZCLibOrderCusFieldsDetailModel *model, NSString *dataIds,NSString *dataNames) {
-                curEditModel.fieldValue = dataNames;
-                curEditModel.fieldSaveValue = dataIds;
+            __weak  ZCUIAskTableController *weakSelf = self;
+            // 城市 级联字段
+            if ([itemDict[@"dictfiledId"] isEqualToString:@"city"]) {
+                ZCCheckCityView *cityVC = [[ZCCheckCityView alloc] initWithFrame:CGRectMake(0, 0, [self getCurViewWidth], 0)];
                 
-                [myself refreshViewData];
-                [sheetView dissmisPageSheet];
-            };
-            [sheetView showSheet:typeVC.frame.size.height animation:YES block:^{
+                ZCPageSheetView *sheetView = [[ZCPageSheetView alloc] initWithTitle:ZCSTLocalString(@"选择") superView:self.view showView:cityVC type:ZCPageSheetTypeLong];
                 
-            }];
+    //            ZCUIAskCityController * cityVC = [[ZCUIAskCityController alloc]init];
+                cityVC.pageTitle = itemDict[@"dictDesc"];
+                cityVC.parentView = nil;
+                cityVC.levle = 1;
+                cityVC.orderTypeCheckBlock = ^(ZCAddressModel *model) {
+                    weakSelf.addressModel = model;
+                    // 刷新 城市
+                    [self refreshViewData];
+                    
+                    [sheetView dissmisPageSheet];
+                };
+                
+                
+                [sheetView showSheet:cityVC.frame.size.height animation:YES block:^{
+                    
+                }];
+                return;
+    //            [self.navigationController pushViewController:cityVC animated:YES];
+            }else{
+                __block ZCUIAskTableController *myself = self;
+                ZCCheckMulCusFieldView *typeVC = [[ZCCheckMulCusFieldView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 0)];
+                
+                ZCPageSheetView *sheetView = [[ZCPageSheetView alloc] initWithTitle:ZCSTLocalString(@"选择") superView:self showView:typeVC type:ZCPageSheetTypeLong];
+                typeVC.parentDataId = @"";
+                typeVC.parentView = nil;
+                typeVC.allArray = curEditModel.detailArray;
+                typeVC.orderCusFiledCheckBlock = ^(ZCLibOrderCusFieldsDetailModel *model, NSString *dataIds,NSString *dataNames) {
+                    curEditModel.fieldValue = dataNames;
+                    curEditModel.fieldSaveValue = dataIds;
+                    
+                    [myself refreshViewData];
+                    [sheetView dissmisPageSheet];
+                };
+                [sheetView showSheet:typeVC.frame.size.height animation:YES block:^{
+                    
+                }];
+            }
             return;
         }
         
@@ -821,35 +849,6 @@
 //            }
             
         }
-        
-        
-        __weak  ZCUIAskTableController *weakSelf = self;
-        // 城市 级联字段
-        if ([itemDict[@"dictfiledId"] isEqualToString:@"city"]) {
-            ZCCheckCityView *cityVC = [[ZCCheckCityView alloc] initWithFrame:CGRectMake(0, 0, [self getCurViewWidth], 0)];
-            
-            ZCPageSheetView *sheetView = [[ZCPageSheetView alloc] initWithTitle:ZCSTLocalString(@"选择") superView:self.view showView:cityVC type:ZCPageSheetTypeLong];
-            
-//            ZCUIAskCityController * cityVC = [[ZCUIAskCityController alloc]init];
-            cityVC.pageTitle = itemDict[@"dictDesc"];
-            cityVC.parentView = nil;
-            cityVC.levle = 1;
-            cityVC.orderTypeCheckBlock = ^(ZCAddressModel *model) {
-                weakSelf.addressModel = model;
-                // 刷新 城市
-                [self refreshViewData];
-                
-                [sheetView dissmisPageSheet];
-            };
-            
-            
-            [sheetView showSheet:cityVC.frame.size.height animation:YES block:^{
-                
-            }];
-            return;
-//            [self.navigationController pushViewController:cityVC animated:YES];
-        }
-        
     }
 }
 
@@ -1129,6 +1128,20 @@
     // 移除键盘的监听
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
+
+
+-(void)didMoveToParentViewController:(UIViewController *)parent{
+    [super didMoveToParentViewController:parent];
+    if(!parent){
+        if (!self.isCommitSuccess) {
+            // 没有提交成功 侧滑返回了，也要回置
+//            NSLog(@"页面侧滑返回：%@",parent);
+            [ZCUICore getUICore].isShowForm = NO;
+        }
+    }
+}
+
+
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

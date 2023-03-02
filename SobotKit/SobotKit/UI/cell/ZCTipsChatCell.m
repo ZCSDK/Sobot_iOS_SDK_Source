@@ -263,6 +263,10 @@
             if(self.delegate && [self.delegate respondsToSelector:@selector(cellItemClick:type:obj:)]){
                 [self.delegate cellItemClick:self.tempModel type:ZCChatCellClickTypeInsterTurn obj:@""];
             }
+        }else if([url hasPrefix:@"sobot://continueWaiting"]){
+            if(self.delegate && [self.delegate respondsToSelector:@selector(cellItemClick:type:obj:)]){
+                [self.delegate cellItemClick:self.tempModel type:ZCChatCellClickTypeItemContinueWaiting obj:@""];
+            }
         }else if([url hasPrefix:@"sobot:"]){
             int tag=[[url stringByReplacingOccurrencesOfString:@"sobot://" withString:@""] intValue];
             if(self.delegate && [self.delegate respondsToSelector:@selector(cellItemClick:type:obj:)]){
@@ -405,6 +409,13 @@
         if (!model.isHistory) {
             // 转人工客服处理
             text = [text stringByReplacingOccurrencesOfString:ZCSTLocalString(@"转人工服务") withString:[NSString stringWithFormat:@"<a href='sobot://insterTrunMsg'>%@</a>",ZCSTLocalString(@"转人工服务")]];
+        }
+    }
+    
+    if ([sobotConvertToString(text) hasSuffix:ZCSTLocalString(@"继续排队")]) {
+        if (!model.isHistory) {
+            // 转人工客服处理
+            text = [text stringByReplacingOccurrencesOfString:ZCSTLocalString(@"继续排队") withString:[NSString stringWithFormat:@"<a href='sobot://continueWaiting'>%@</a>",ZCSTLocalString(@"继续排队")]];
         }
     }
     

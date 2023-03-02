@@ -72,6 +72,7 @@ typedef void(^ZCLeaveEditViewBlock)(id _Nonnull object,int code);
 
 - (void) hideKeyboard;
 
+-(void)destoryViews;
 @end
 
 NS_ASSUME_NONNULL_END

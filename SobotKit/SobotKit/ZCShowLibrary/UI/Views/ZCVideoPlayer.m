@@ -142,7 +142,7 @@
     _sliderProgress.minimumValue = 0;
     _sliderProgress.maximumValue = 1;
     _sliderProgress.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-    
+    [_sliderProgress addTarget:self action:@selector(sliderValueChange:) forControlEvents:UIControlEventValueChanged];
     UIImage *img = [ZCUIImageTools zcimageWithColor:UIColorFromThemeColor(ZCKeepWhiteColor)];
     img = [ZCUIImageTools zcScaleToSize:CGSizeMake(12, 12) with:img];
     img = [self imageWihtSize:img.size radius:6 img:img];
@@ -325,7 +325,7 @@
     if ([keyPath isEqualToString:@"status"]) {
         AVPlayerStatus status= [[change objectForKey:@"new"] intValue];
         if(status==AVPlayerStatusReadyToPlay){
-            NSLog(@"正在播放...，视频总长度:%.2f",CMTimeGetSeconds(playerItem.duration));
+//            NSLog(@"正在播放...，视频总长度:%.2f",CMTimeGetSeconds(playerItem.duration));
             [[ZCUILoading shareZCUILoading] dismiss];
             [_labEndTime setText:[self getSOBOT_FORMATE_DATETIME:playerItem.duration]];
         }
@@ -358,6 +358,30 @@
     
     [_labStartTime setText:@"00:00"];
     _sliderProgress.value = 0;
+}
+
+-(void)sliderValueChange:(UISlider*)sender{
+//    NSLog(@"===== %f",sender.value);
+    if (self.player) {
+        [self.player pause];
+    }
+
+    CGFloat seconds = CMTimeGetSeconds(self.player.currentItem.duration);
+//    NSLog(@"seconds == %f",seconds);
+    int current = sender.value * seconds;
+//    NSLog(@"current == %d",current);
+    [self.player seekToTime:CMTimeMake(current, 1) toleranceBefore:CMTimeMake(1, 1000) toleranceAfter:CMTimeMake(1, 1000) completionHandler:^(BOOL finished) {
+        [self->_player play];
+        self->_labStartTime.text = [self getSOBOT_FORMATE_DATETIME:self.player.currentItem.currentTime];
+        self->_sliderProgress.value = CMTimeGetSeconds(self->_player.currentTime) / CMTimeGetSeconds(self->_player.currentItem.duration);
+        if (self->_sliderProgress.value >0) {
+            if (self->_imgView != nil) {
+                [self->_imgView removeFromSuperview];
+                self->_imgView = nil;
+            }
+        }
+    }];
+
 }
 /*
 // Only override drawRect: if you perform custom drawing.

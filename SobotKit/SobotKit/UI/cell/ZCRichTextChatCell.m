@@ -152,10 +152,12 @@
     if (recognizer.state != UIGestureRecognizerStateBegan) {
         return;
     }
-    
     [self didChangeBgColorWithsIsSelect:YES];
     
+    
     [self becomeFirstResponder];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(menuControllerWillHideWithClick) name:UIMenuControllerDidHideMenuNotification object:nil];
     menuController = [UIMenuController sharedMenuController];
     UIMenuItem *copyItem = [[UIMenuItem alloc]initWithTitle:ZCSTLocalString(@"复制") action:@selector(doCopy)];
     [menuController setMenuItems:@[copyItem]];
@@ -167,6 +169,10 @@
     [menuController setTargetRect:rect inView:self];
     
     [menuController setMenuVisible:YES animated:YES];
+}
+
+-(void)menuControllerWillHideWithClick{
+    [self didChangeBgColorWithsIsSelect:NO];
 }
 
 - (void)willHideEditMenu:(id)sender{
@@ -190,6 +196,7 @@
             [self.ivBgView setBackgroundColor:[ZCUITools zcgetLeftChatColor]];
         }
         [menuController setTargetRect:CGRectMake(0, 0, 0, 0) inView:nil];
+        [menuController setMenuVisible:NO animated:YES];
     }
     [self.ivBgView setNeedsDisplay];
     
@@ -231,6 +238,10 @@
  */
 
 -(CGFloat) InitDataToView:(ZCLibMessage *)model time:(NSString *)showTime{
+    if (model.richModel.msgType == ZCMessageTypeText && sobotIsUrl(sobotConvertToString(model.richModel.msg),[ZCUITools zcgetUrlRegular])) {
+        // 是纯文本 并且符合超链的正则 显示链接卡片
+        model.richModel.isShowLinkCard = YES;
+    }
     
     CGFloat bgY=[super InitDataToView:model time:showTime];
     

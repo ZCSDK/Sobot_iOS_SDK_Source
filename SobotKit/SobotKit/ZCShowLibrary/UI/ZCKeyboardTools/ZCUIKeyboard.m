@@ -126,7 +126,8 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
 /** 机器人录音功能提示语*/
 @property (nonatomic,strong) UILabel * vioceTipLabel;
 
-
+/** 机器人录音功能提示语 背景*/
+@property (nonatomic,strong) UIView *vioceTipBgView;
 
 @end
 
@@ -222,6 +223,7 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
         _zc_pressedButton.layer.cornerRadius     = 16;
         _zc_pressedButton.layer.masksToBounds    = YES;
 //        _zc_pressedButton.layer.borderWidth      = 0.75f;
+        _zc_pressedButton.titleLabel.numberOfLines =  2;
         _zc_pressedButton.titleLabel.font        = [ZCUITools zcgetVoiceButtonFont];
 //        _zc_pressedButton.layer.borderColor      = [ZCUITools zcgetBackgroundBottomLineColor].CGColor;
         [_zc_pressedButton setTitle:ZCSTLocalString(@"按住 说话") forState:UIControlStateNormal];
@@ -452,16 +454,42 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
 
 -(UIView *)createVioceTipLabel{
     if (!_vioceTipLabel) {
-        _vioceTipLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(self.zc_bottomView.frame) - CGRectGetHeight(self.zc_bottomView.frame) -30, CGRectGetWidth(self.zc_bottomView.frame), 30)];
-//        _vioceTipLabel.backgroundColor = UIColorFromRGBAlpha(0xa1a6b3, 0.9);
-        _vioceTipLabel.backgroundColor = UIColorFromThemeColorAlpha(ZCTextSubColor, 0.9);
-        [_vioceTipLabel setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleTopMargin];
+        _vioceTipBgView = [[UIView alloc]init];
+        [self.zc_sourceView addSubview:_vioceTipBgView];
+        _vioceTipBgView.backgroundColor = UIColorFromThemeColorAlpha(ZCTextSubColor, 0.9);
+        _vioceTipBgView.frame = CGRectMake(0, CGRectGetMaxY(self.zc_bottomView.frame) - CGRectGetHeight(self.zc_bottomView.frame) -30, CGRectGetWidth(self.zc_bottomView.frame), 30);
+        [_vioceTipBgView setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleTopMargin];
+        
+        _vioceTipLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, 5, CGRectGetWidth(self.vioceTipBgView.frame)-20, 20)];
+//        _vioceTipLabel.backgroundColor = UIColorFromThemeColorAlpha(ZCTextSubColor, 0.9);
+        [_vioceTipLabel setAutoresizingMask:UIViewAutoresizingFlexibleWidth];
         _vioceTipLabel.textColor = UIColorFromThemeColor(ZCKeepWhiteColor);
         _vioceTipLabel.font = ZCUIFont12;
         _vioceTipLabel.textAlignment = NSTextAlignmentCenter;
         _vioceTipLabel.text = ZCSTLocalString(@"机器人咨询模式下，语音将自动转化为文字发送");
-        [self.zc_sourceView addSubview:_vioceTipLabel];
+        _vioceTipLabel.numberOfLines = 0;
+        [_vioceTipLabel sizeToFit];
+        CGRect vf = _vioceTipLabel.frame;
+        if (vf.size.height > 25) {
+            vf.size.height = vf.size.height;
+            vf.origin.y = 5;
+            vf.size.width = CGRectGetWidth(self.zc_bottomView.frame)-12;
+            _vioceTipLabel.frame = vf;
+        }else{
+            if (vf.size.height <20) {
+                vf.size.height = 20;
+            }
+            vf.size.width = CGRectGetWidth(self.zc_bottomView.frame)-12;
+            _vioceTipLabel.frame = vf;
+        }
+        [self.vioceTipBgView addSubview:_vioceTipLabel];
         _vioceTipLabel.hidden = YES;
+        _vioceTipBgView.hidden = YES;
+        CGRect bgF = _vioceTipBgView.frame;
+        bgF.size.height = vf.size.height+10;
+        bgF.origin.y = CGRectGetMaxY(self.zc_bottomView.frame) - bgF.size.height -40;
+        _vioceTipBgView.frame = bgF;
+        
     }
     return _vioceTipLabel;
 }
@@ -989,6 +1017,7 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
         [_zc_faceButton setImage:[ZCUITools zcuiGetBundleImage:@"zcicon_expression_pressed"] forState:UIControlStateHighlighted];
         [_zc_chatTextView becomeFirstResponder];
         self.vioceTipLabel.hidden = YES;
+        _vioceTipBgView.hidden = YES;
         [self textChanged:_zc_chatTextView];
     }else if(sender.tag == BUTTON_ADDVOICE){
         //        2.8.2 _zc_pressedButton 高度固定
@@ -1013,7 +1042,7 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
         [_zc_faceButton setImage:[ZCUITools zcuiGetBundleImage:@"zcicon_expression_pressed"] forState:UIControlStateHighlighted];
         if (![self getZCLibConfig].isArtificial) {
             self.vioceTipLabel.hidden = NO;
-            
+            _vioceTipBgView.hidden = NO;
             // 当前是否是仅人工排队   2. 当前是否开启 机器人语音转文字
             if ([self getZCLibConfig].type == 2 && [ZCUICore getUICore].kitInfo.isOpenRobotVoice && curKeyBoardStatus == ZCKeyboardStatusWaiting) {
                 self.zc_waitLabel.hidden = YES;
@@ -1288,8 +1317,7 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
                 _zc_voiceButton.frame = vf;
                 
                 _zc_voiceButton.hidden = NO;
-            }
-            else{
+            }else{
                 // 不开启语音的功能   机器人不开启语音识别
                 [_zc_chatTextView setFrame:CGRectMake(topGap + 48 , (BottomHeight-35)/2, [self getSourceViewWidth] - 48*2 - 5 - topGap, 35)];
                 _zc_chatTextView.textContainerInset =  UIEdgeInsetsMake(10, 10, 10, 10 );
@@ -1363,6 +1391,8 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
             _zc_chatTextView.hidden   = NO;
             _zc_addMoreButton.hidden  = NO;
             _vioceTipLabel.hidden = YES;
+            _vioceTipBgView.hidden = YES;
+            _vioceTipBgView.hidden = YES;
             // 是否显示表情按钮
             CGFloat buttonX = 48;
             if([ZCUITools allExpressionArray] && [ZCUITools allExpressionArray].count > 0){
@@ -1483,6 +1513,11 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
             _zc_turnButton.hidden     = NO;
             _zc_chatTextView.hidden   = NO;
             _zc_addMoreButton.hidden    = NO;
+            
+            // 这里还需要考虑 转人工排队时，设置了未知回复次数并且不显示转人工按钮的场景下，继续保持不显示转人工按钮的键盘样式
+            [self setServiceModeView:3];
+            
+            
             if ([ZCUICore getUICore].delegate && [[ZCUICore getUICore].delegate respondsToSelector:@selector(onPageStatusChanged: message: obj:)]) {
                 [[ZCUICore getUICore].delegate onPageStatusChanged:ZCShowTurnRobotBtn message:@"0" obj:nil];
             }
@@ -1807,9 +1842,14 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
         _zc_listTable.frame  = tf;
 //        NSLog(@"startTableY === %lf  frame ===== %@    _zc_bottomView.frame.size.height === %f   BottomHeight =====%d" ,startTableY,NSStringFromCGRect(_zc_listTable.frame) ,_zc_bottomView.frame.size.height ,BottomHeight);
         if (!_vioceTipLabel.hidden) {
-            CGRect TF = _vioceTipLabel.frame;
-            TF.origin.y =  _zc_bottomView.frame.origin.y - _vioceTipLabel.frame.size.height;
-            _vioceTipLabel.frame = TF;
+//            CGRect TF = _vioceTipLabel.frame;
+//            TF.origin.y =  _zc_bottomView.frame.origin.y - _vioceTipLabel.frame.size.height;
+//            _vioceTipLabel.frame = TF;
+            
+            CGRect TF = _vioceTipBgView.frame;
+            TF.origin.y =  _zc_bottomView.frame.origin.y - _vioceTipBgView.frame.size.height;
+            _vioceTipBgView.frame = TF;
+            
         }
         
         
@@ -1894,10 +1934,19 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
     if(x > 0){
         tf.origin.y   = startTableY - _zc_keyBoardHeight - (bh-BottomHeight) + xbottomh;
     }else{
-        tf.origin.y   = startTableY - _zc_keyBoardHeight - (bh-BottomHeight) + xbottomh - x;
-        if(tf.origin.y > startTableY){
-            tf.origin.y = startTableY;
+        // 如果剩余空间大于键盘高度，就不用移动table坐标
+        if((tf.size.height - _zc_listTable.contentSize.height ) > ([self getKeyboardHeight] + (self.zc_bottomView.frame.size.height-BottomHeight))){
+            tf.origin.y   = startTableY;
+        }else{
+            // 这里要处理一个特殊情况 使用自定义导航的时候 需要考虑 导航栏的高度
+            CGFloat navh = 0;
+            if ([ZCUICore getUICore].kitInfo.navcBarHidden) {
+                navh = NavBarHeight;
+            }
+            // 移动剩余空间不够的坐标
+            tf.origin.y   = startTableY - ([self getKeyboardHeight] - (tf.size.height - _zc_listTable.contentSize.height)) + XBottomBarHeight + (self.zc_bottomView.frame.size.height - BottomHeight) -navh;
         }
+
     }
     
     _zc_listTable.frame  = tf;
@@ -1993,8 +2042,12 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
     _zc_imagepicker = nil;
     _zc_imagepicker = [[UIImagePickerController alloc]init];
     _zc_imagepicker.delegate = self;
-    _zc_imagepicker.modalPresentationStyle = UIModalPresentationFullScreen;
+//    _zc_imagepicker.modalPresentationStyle = UIModalPresentationFullScreen;
+    if (![ZCUICore getUICore].kitInfo.imagepickerStyleUnFull) {
+            _zc_imagepicker.modalPresentationStyle = UIModalPresentationFullScreen;
+        }
     _zc_imagepicker.mediaTypes = [NSArray arrayWithObjects:@"public.movie", @"public.image", nil];
+    _zc_imagepicker.view.backgroundColor = UIColorFromThemeColor(ZCBgSystemWhiteColor);
     [ZCSobotCore getPhotoByType:buttonIndex byUIImagePickerController:_zc_imagepicker Delegate:[self getCurrentVC]];
 }
 #pragma mark UIImagePickerControllerDelegate
@@ -2009,6 +2062,7 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
     __weak  ZCUIKeyboard *keyboardSelf  = self;
     [ZCSobotCore imagePickerController:_zc_imagepicker didFinishPickingMediaWithInfo:info WithView:_zc_sourceView Delegate:_ppView.window.rootViewController block:^(NSString *filePath, ZCMessageType type, NSDictionary *dict) {
         if(type == ZCMessageTypePhoto){
+//            NSLog(@"准备上传图片 文件路径： %@",filePath);
             [keyboardSelf sendMessageOrFile:filePath type:type duration:@""];
         }else{
             [keyboardSelf converToMp4:dict];
@@ -2569,9 +2623,13 @@ typedef NS_ENUM(NSInteger, BottomButtonClickTag) {
         _zc_bottomView.frame = bf;
         
         if (!_vioceTipLabel.hidden) {
-            CGRect TF = _vioceTipLabel.frame;
-            TF.origin.y =  _zc_bottomView.frame.origin.y - _vioceTipLabel.frame.size.height;
-            _vioceTipLabel.frame = TF;
+//            CGRect TF = _vioceTipLabel.frame;
+//            TF.origin.y =  _zc_bottomView.frame.origin.y - _vioceTipLabel.frame.size.height;
+//            _vioceTipLabel.frame = TF;
+            
+            CGRect TF = _vioceTipBgView.frame;
+            TF.origin.y =  _zc_bottomView.frame.origin.y - _vioceTipBgView.frame.size.height;
+            _vioceTipBgView.frame = TF;
         }
         
         

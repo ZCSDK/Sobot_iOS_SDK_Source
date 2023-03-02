@@ -29,6 +29,8 @@
 @property(nonatomic,strong)UITableView      *listTable;
 @property(nonatomic,strong)NSMutableArray   *listArray;
 @property (nonatomic,assign) BOOL isHiddenNav;
+
+@property(nonatomic,assign) BOOL isloading;
 @end
 
 
@@ -59,6 +61,7 @@
     }
     self.moreButton.hidden = YES;
     [self createTableView];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadMoreData) name:@"ZCSobotChatlistLoadData" object:nil];
 }
 
 
@@ -126,7 +129,7 @@
     [_listTable setSeparatorStyle:UITableViewCellSeparatorStyleSingleLine];
     [self setTableSeparatorInset];
     
-    [ZCIMChat getZCIMChat].delegate = self;
+//    [ZCIMChat getZCIMChat].delegate = self;
 }
 
 
@@ -134,6 +137,10 @@
  加载更多
  */
 -(void)loadMoreData{
+    if (self.isloading ) {
+        return;
+    }
+    self.isloading = YES;
     if (_listArray) {
         [_listArray removeAllObjects];
     }
@@ -146,7 +153,7 @@
         [[ZCLibServer getLibServer] getPlatformMemberNews:_partnerid start:^{
             
         } success:^(NSMutableArray *news, NSDictionary *dictionary, ZCNetWorkCode sendCode) {
-            
+            listVC.isloading = NO;
             // 对比appkey是否相同 相同用本地的替换 接口的
             //找到news中有,_listArray中没有的数据
             [news enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -183,6 +190,7 @@
             [listVC sortedListArray];
         } failed:^(NSString *errorMessage, ZCNetWorkCode errorCode) {
             [listVC sortedListArray];
+            listVC.isloading = NO;
         }];
 //    }else{
 //        [_listTable reloadData];
@@ -339,7 +347,6 @@
     if(_OnItemClickBlock){
         _OnItemClickBlock(self,info);
     }else{
-     
         [ZCSobotApi openZCChat:_kitInfo with:self pageBlock:nil];
     }
     
@@ -389,6 +396,10 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+-(void)dealloc{
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"ZCSobotChatlistLoadData" object:nil];
 }
 
 /*

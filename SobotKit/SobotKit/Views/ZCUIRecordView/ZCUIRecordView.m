@@ -100,9 +100,10 @@
     [self addSubview:timeLablel];
     
     
-    tipLabel=[[UILabel alloc] initWithFrame:CGRectMake(25, 135, RecordViewWidth-50, 25)];
+    tipLabel=[[UILabel alloc] initWithFrame:CGRectMake(25, 135, RecordViewWidth-55, 30)];
     [tipLabel setBackgroundColor:[UIColor lightGrayColor]];
     [tipLabel setFont:ZCUIFont12];
+    tipLabel.numberOfLines = 2;
     tipLabel.layer.cornerRadius  = 3.0f;
     tipLabel.layer.masksToBounds = YES;
     [tipLabel setTextAlignment:NSTextAlignmentCenter];

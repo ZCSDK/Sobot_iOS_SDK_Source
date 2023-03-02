@@ -534,6 +534,14 @@
     return ZCUIFont14;
 }
 
++(UIFont *)zcgetTopBtnFont{
+    ZCKitInfo *configModel = [self getZCKitInfo];
+    if (configModel != nil && configModel.topBtnFont) {
+        return  configModel.topBtnFont;
+    }
+    return ZCUIFont18;
+}
+
 +(UIFont *)zcgetscTopTextFont{
     ZCKitInfo *configModel = [self getZCKitInfo];
     if (configModel != nil && configModel.scTopTextFont && ![self useDefaultThemeColor]) {
@@ -612,13 +620,37 @@
     return UIColorFromThemeColor(ZCTextMainColor);
 }
 
++(UIColor *)zcgetTopBtnLayerColor{
+    ZCKitInfo *configModel = [self getZCKitInfo];
+    if (configModel != nil && configModel.topBtnLayerNolColor !=nil && ![self useDefaultThemeColor]) {
+        return configModel.topBtnLayerNolColor;
+    }
+    return UIColorFromThemeColor(ZCBgLineColor);
+}
+
++(UIColor *)zcgetTopBtnLayerSelColor{
+    ZCKitInfo *configModel = [self getZCKitInfo];
+    if (configModel != nil && configModel.topBtnLayerSelColor !=nil && ![self useDefaultThemeColor]) {
+        return configModel.topBtnLayerSelColor;
+    }
+    return UIColorFromThemeColorAlpha(ZCThemeColor, 0.3);
+}
+
++(UIColor *)zcgetTopBtnBgSelColor{
+    ZCKitInfo *configModel = [self getZCKitInfo];
+    if (configModel != nil && configModel.topBtnBgSelColor !=nil && ![self useDefaultThemeColor]) {
+        return configModel.topBtnBgSelColor;
+    }
+    return UIColorFromThemeColorAlpha(ZCThemeColor, 0.15);
+}
+
 
 +( UIColor *) zcgetTopBtnSelColor{
     ZCKitInfo *configModel=[self getZCKitInfo];
     if(configModel!=nil && configModel.topBtnSelColor!=nil && ![self useDefaultThemeColor]){
         return configModel.topBtnSelColor;
     }
-    return UIColorFromThemeColor(ZCTextLinkBlueColor);
+    return UIColorFromThemeColor(ZCThemeColor);
 }
 
 
@@ -868,6 +900,14 @@
     return UIColorFromThemeColor(ZCTextMainColor); //UIColorFromRGB(TextUnPlaceHolderColor);
 }
 
++(UIColor *)zcgetLeaveMsgTextColor{
+    ZCKitInfo *configModel = [self getZCKitInfo];
+    if (configModel != nil && configModel.leaveMsgTextColor && ![self useDefaultThemeColor]) {
+        return configModel.leaveMsgTextColor;
+    }
+    return UIColorFromThemeColor(ZCTextMainColor);
+}
+
 
 +(UIColor *)zcgetLeftChatTextColor{
     ZCKitInfo *configModel = [self getZCKitInfo];
@@ -956,6 +996,7 @@
     }
     return UIColorFromThemeColor(ZCTextMainColor);
 }
+
 
 
 +(UIColor *)zcgetNoSatisfactionTextColor{
@@ -1332,21 +1373,21 @@
     NSString *mimeType = response.MIMEType;
     
     int type = 8;
-    if([@"application/msword" isEqual:mimeType] || [@"application/vnd.ms-works" isEqual:mimeType]){
+    if([@"application/msword" isEqual:mimeType] || [@"application/vnd.ms-works" isEqual:mimeType] || [filePath hasSuffix:@".docx"] || [filePath hasSuffix:@".doc"]){
         type = 0;
-    }else if([@"application/vnd.ms-powerpoint" isEqual:mimeType]){
+    }else if([@"application/vnd.ms-powerpoint" isEqual:mimeType] || [filePath hasSuffix:@".ppt"] || [filePath hasSuffix:@".pptx"]){
         type = 1;
-    }else if([@"application/vnd.ms-excel" isEqual:mimeType] || [@"application/vnd.ms-excel" isEqual:mimeType]){
+    }else if([@"application/vnd.ms-excel" isEqual:mimeType] || [@"application/vnd.ms-excel" isEqual:mimeType] || [filePath hasSuffix:@".xls"] || [filePath hasSuffix:@".xlsx"]){
         type = 2;
-    }else if([@"application/pdf" isEqual:mimeType]){
+    }else if([@"application/pdf" isEqual:mimeType] || [filePath hasSuffix:@".pdf"]){
         type = 3;
     }else if([@"application/zip" isEqual:mimeType] || [@"application/rar" isEqual:mimeType]){
         type = 6;
-    }else if([mimeType hasPrefix:@"audio"]){
+    }else if([mimeType hasPrefix:@"audio"] || [filePath hasSuffix:@".mp3"]){
         type = 4;
-    }else if([mimeType hasPrefix:@"video"]){
+    }else if([mimeType hasPrefix:@"video"] || [filePath hasSuffix:@".mp4"]){
         type = 5;
-    }else if([@"text/plain" isEqual:mimeType]){
+    }else if([@"text/plain" isEqual:mimeType] || [filePath hasSuffix:@".txt"]){
         type = 7;
     }
     return type;

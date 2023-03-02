@@ -86,23 +86,16 @@ typedef NS_ENUM(NSInteger, PageClickTag) {
     self.moreButton.enabled = NO;
     [self.moreButton setImage:[ZCUITools zcuiGetBundleImage:@""] forState:UIControlStateNormal];
     
-    //    _webView = [[UIWebView alloc]initWithFrame:CGRectMake(0, NavBarHeight, self.view.frame.size.width, self.view.frame.size.height-NavBarHeight-44)];
-    //    _webView.opaque = NO;
-    //    _webView.backgroundColor = [UIColor clearColor];
-    //    [_webView scalesPageToFit];
-    //    [_webView setScalesPageToFit:YES];
-    //    [_webView setDelegate:self];
-    
     _webView = [[WKWebView alloc]initWithFrame:CGRectMake(0, NavBarHeight, self.view.frame.size.width, self.view.frame.size.height-NavBarHeight-44)];
     _webView.navigationDelegate = self;
     [_webView setOpaque:NO];
     _webView.backgroundColor = [ZCUITools zcgetLightGrayBackgroundColor];
-    
+    _webView.autoresizingMask = UIViewAutoresizingFlexibleWidth |UIViewAutoresizingFlexibleHeight;
     [self.view addSubview:_webView];
     
-    //    NSURL *url=[[ NSURL alloc ] initWithString:pageURL];
-    //    [_webView loadRequest:[ NSURLRequest requestWithURL:url]];
-    [self checkTxtEncode];
+        NSURL *url=[[ NSURL alloc ] initWithString:pageURL];
+        [_webView loadRequest:[ NSURLRequest requestWithURL:url]];
+//    [self checkTxtEncode];
     
     [self updateToolbarItems];
     
@@ -234,18 +227,12 @@ typedef NS_ENUM(NSInteger, PageClickTag) {
     self=[super init];
     if(self){
         if (sobotIsUrl(url,@"")) {
-            
             pageURL=url;
-            
         }else{
-            
             self.htmlString = url;
             self.titleLabel.text = ZCSTLocalString(@"详细信息");
-            
         }
-        
         //        _htmlString = @"<p><strong>我是加粗</strong></p><p><em><strong>我是加粗斜体</strong></em></p><p><em>我是斜体</em></p><p><img src=\"https://sobot-test.oss-cn-beijing.aliyuncs.com/console/402921fbb4514fd2b2e573d1febf9b67/kb/image/60e8d5daf1c94ef8b42c1d3c4a65a96c.png\" title=\"60e8d5daf1c94ef8b42c1d3c4a65a96c.png\" alt=\"bitcode设置.png\"/></p><p><br/></p><p><em>哈哈<strong>哈哈</strong></em></p>";
-        
     }
     return self;
 }

@@ -113,6 +113,13 @@
 
 #import "ZCToolsCore.h"
 #import "SobotUtils.h"
+
+#import "ZCAppletCell.h"
+#define cellAppletIndentifier @"ZCAppletCell"
+#import "ZCArticleCell.h"
+#define cellArticleIndentifier @"ZCArticleCell"
+
+
 #define TableSectionHeight 44
 
 
@@ -161,7 +168,6 @@
     
     BOOL isOpenNotice;// 是否展开通告
     
-    BOOL isHasQuickView;// 是否有快捷入口
     
     BOOL isOpenNewPage;
     
@@ -187,6 +193,7 @@
 @property (nonatomic,strong) UIButton *goUnReadButton;
 @property (nonatomic,strong) UITableView * listTable;
 @property (nonatomic,assign) BOOL isNoMore;
+
 // 通告view
 @property (nonatomic,strong)  UIView           *notifitionTopView;
 
@@ -343,11 +350,11 @@
 -(void)showZCChatView:(ZCKitInfo *)kitInfo{
 //    [ZCUICore getUICore].chatView = self;
     __weak ZCChatView *safeSelf = self;
-    [[ZCUICore getUICore] openSDKWith:[ZCLibClient getZCLibClient].libInitInfo uiInfo:kitInfo Delegate:self  blcok:^(ZCInitStatus code, NSMutableArray *arr, NSString *result) {
+    [[ZCUICore getUICore] openSDKWith:[ZCLibClient getZCLibClient].libInitInfo uiInfo:kitInfo Delegate:safeSelf  blcok:^(ZCInitStatus code, NSMutableArray *arr, NSString *result) {
         if(code == ZCInitStatusLoading){
             // 开始初始化
             // 展示智齿loading
-            [[ZCUILoading shareZCUILoading] showAddToSuperView:self style:NO];
+            [[ZCUILoading shareZCUILoading] showAddToSuperView:safeSelf style:NO];
         }
         if(code == ZCInitStatusLoadSuc){
             // 初始化完成
@@ -355,33 +362,25 @@
             // 智齿loading消失
             [[ZCUILoading shareZCUILoading] dismiss];
             [safeSelf configShowNotifion];
-        
+
             [[ZCIMChat getZCIMChat] setChatPageState:ZCChatPageStateActive];
-            
-            [[ZCUICore getUICore] loadSatisfactionDictlock:^(int code) {
-                if(code == 0 && [self getZCIMConfig].isArtificial){
-                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 ), dispatch_get_main_queue(), ^{
-                        [self.listTable reloadData];
-                    });
-                }
-                
-            }];
-            
-            
+
+            // 此处去掉加载评价标签接口，改为转人工成功时加载
+
             if([[ZCUICore getUICore] PageLoadBlock]){
                 // 通知外部可以更新UI
-                [ZCUICore getUICore].PageLoadBlock(self,ZCPageBlockLoadFinish);
+                [ZCUICore getUICore].PageLoadBlock(safeSelf,ZCPageBlockLoadFinish);
             }
-            
+
         }
-        
+
         if(code == ZCInitStatusFail){
-            [[ZCUILoading shareZCUILoading] createPlaceholderView:ZCSTLocalString(@"网络错误，请检查网络后重试") image:nil withView:self action:^(UIButton *button) {
+            [[ZCUILoading shareZCUILoading] createPlaceholderView:ZCSTLocalString(@"网络错误，请检查网络后重试") image:nil withView:safeSelf action:^(UIButton *button) {
                 [[ZCUILoading shareZCUILoading] dismiss];
                 [safeSelf showZCChatView:[ZCUICore getUICore].kitInfo];
             }];
         }
-       
+
     }];
 }
 
@@ -544,7 +543,7 @@
         
         if(self.refreshControl.refreshing){
             [self.refreshControl endRefreshing];
-            
+
             isScrollBtm = true;
         }else{
             if([ZCUICore getUICore].chatMessages.count != lastMsgCount){
@@ -611,6 +610,7 @@
         [_listTable reloadData];
 //        _isHadLoadHistory = NO;
         _isNoMore = NO;
+        // 将仅人工模式 如果是延迟转人工开启 参数回执
         [_keyboardTools setKeyBoardStatus:ZCKeyboardStatusNewSession];
         
         // 键盘状态发生变化了，需要重新设置table的高度，因为新会话的键盘高度变化了
@@ -723,23 +723,23 @@
     if (status == ZCShowQuickEntryView) {
         // 加载快捷入口标签
         if ([self getZCIMConfig].quickEntryFlag == 1) {
-             NSMutableArray * array = [NSMutableArray arrayWithCapacity:0];
+            __weak ZCChatView * chatView = self;
             [[ZCLibServer getLibServer] getLableInfoList:[self getZCIMConfig] start:^{
                 
             } success:^(NSDictionary *dict, ZCMessageSendCode sendCode) {
                 @try{
                     if (dict) {
                         NSArray * listArr = dict[@"data"][@"list"];
+                        NSMutableArray * array = [NSMutableArray arrayWithCapacity:0];
                         if (listArr.count > 0) {
                             for (NSDictionary *Dic in listArr) {
                                 ZCLibCusMenu * model = [[ZCLibCusMenu alloc]initWithMyDict:Dic];
                                 [array addObject:model];
                             }
-                            [self quickEntryViewWithArray:array];
-                           
-                            if ([self getZCIMConfig].quickEntryFlag == 1 && [message intValue] == 0) {
-                                isHasQuickView = YES;
-                                [self setFrameForListTable];
+                            [chatView quickEntryViewWithArray:array];
+
+                            if ([chatView getZCIMConfig].quickEntryFlag == 1 && [message intValue] == 0) {
+                                [chatView setFrameForListTable];
                             }
                         }else{
                             if ([ZCUICore getUICore].kitInfo.cusMenuArray.count > 0 ) {
@@ -747,13 +747,12 @@
                                     ZCLibCusMenu * model = [[ZCLibCusMenu alloc]initWithMyDict:Dic];
                                     [array addObject:model];
                                 }
-                                [self quickEntryViewWithArray:array];
-                                if ([self getZCIMConfig].quickEntryFlag == 1 && [message intValue] == 0) {
-                                    isHasQuickView = YES;
-                                    [self setFrameForListTable];
+                                [chatView quickEntryViewWithArray:array];
+                                if ([chatView getZCIMConfig].quickEntryFlag == 1 && [message intValue] == 0) {
+                                    [chatView setFrameForListTable];
                                 }
                             }else{
-                                [self getZCIMConfig].quickEntryFlag = 0;
+                                [chatView getZCIMConfig].quickEntryFlag = 0;
                                 return ;
                             }
                         }
@@ -786,7 +785,7 @@
         }
         self.closeButton.hidden = YES;
     }
-    [self setTitleViewRTL];
+//    [self setTitleViewRTL];
 }
 
 - (void)setQuickViewFrame{
@@ -873,12 +872,13 @@
     
     
     __weak ZCChatView * chatView = self;
-    ZCUILeaveMessageController *leaveMessageVC = [[ZCUILeaveMessageController alloc]init];
+    __block ZCUILeaveMessageController *leaveMessageVC = [[ZCUILeaveMessageController alloc]init];
     leaveMessageVC.isExitSDK = (isExist==1 || isExist==3)?YES:NO;
     leaveMessageVC.isShowToat = isShow;
     leaveMessageVC.tipMsg = msg;
     leaveMessageVC.isNavOpen = (self.superController.navigationController!=nil ? YES: NO);
     [leaveMessageVC setBackRefreshPageblock:^(id  _Nonnull object) {
+        leaveMessageVC = nil;
         switch (isExist) {
             case 1:
                 // 退出SDK
@@ -1384,7 +1384,17 @@
             cell = [[ZCLocationCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellLocationIndentifier];
         }
     }else if(model.richModel.msgType == ZCMessageTypeRichTextJson){
-        if (model.richModel.multiModel.templateIdType == 0 || model.richModel.multiModel.templateIdType== 1|| model.richModel.multiModel.templateIdType== 2){
+        if (model.richModel.richType == ZCMessageRichTypeApplet) {
+            cell = (ZCAppletCell*)[tableView dequeueReusableCellWithIdentifier:cellAppletIndentifier];
+            if (cell == nil) {
+                cell =  [[ZCAppletCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellAppletIndentifier];
+            }
+        }else if (model.richModel.richType == ZCMessageRichTypeArticle){
+            cell = (ZCArticleCell*)[tableView dequeueReusableCellWithIdentifier:cellArticleIndentifier];
+            if (cell == nil) {
+                cell = [[ZCArticleCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellArticleIndentifier];
+            }
+        }else if(model.richModel.multiModel.templateIdType == 0 || model.richModel.multiModel.templateIdType== 1|| model.richModel.multiModel.templateIdType== 2){
             // 横向的collection
             cell = (ZCMultitemHorizontaRollCell*)[tableView dequeueReusableCellWithIdentifier:cellMultitemHorizontaRollIndentifier];
             if (cell == nil) {
@@ -1404,6 +1414,7 @@
 //            }
 //        }
     }
+    
     if(cell == nil){
         cell = (ZCChatAllRichCell *)[tableView dequeueReusableCellWithIdentifier:cellRichAllTextIdentifier];
         if (cell == nil) {
@@ -1464,8 +1475,13 @@
     if ([ZCUICore getUICore].chatMessages.count == 0) {
         return 0;
     }
+    ZCLibMessage *model = [[ZCLibMessage alloc]init];
+    if (indexPath.row < [ZCUICore getUICore].chatMessages.count) {
+        model =[[ZCUICore getUICore].chatMessages objectAtIndex:indexPath.row];
+    }else{
+        return 0;
+    }
     
-    ZCLibMessage *model =[[ZCUICore getUICore].chatMessages objectAtIndex:indexPath.row];
     NSString *time=@"";
     NSString *format=@"MM-dd HH:mm";
     if([model.cid isEqual:[self getZCIMConfig].cid]){// [self getZCIMConfig].cid
@@ -1528,10 +1544,13 @@
     }else if (model.richModel.msgType == ZCMessageTypeOrder){
         cellheight = [ZCOrderGoodsCell getCellHeight:model time:time viewWith:viewWidth];
     }else if(model.richModel.msgType==ZCMessageTypeRichTextJson){
-        if (model.richModel.multiModel.templateIdType == 0 || model.richModel.multiModel.templateIdType == 1|| model.richModel.multiModel.templateIdType == 2){
+        if (model.richModel.richType == ZCMessageRichTypeApplet) {
+            cellheight = [ZCAppletCell getCellHeight:model time:time viewWith:viewWidth];
+        }else if (model.richModel.richType == ZCMessageRichTypeArticle){
+            cellheight = [ZCArticleCell getCellHeight:model time:time viewWith:viewWidth];
+        }else if(model.richModel.multiModel.templateIdType == 0 || model.richModel.multiModel.templateIdType == 1|| model.richModel.multiModel.templateIdType == 2){
             cellheight = [ZCMultitemHorizontaRollCell getCellHeight:model time:time viewWith:viewWidth];
-        }
-        else if (model.richModel.multiModel.templateIdType == 3){
+        }else if (model.richModel.multiModel.templateIdType == 3){
             cellheight = [ZCMultiRichCell getCellHeight:model time:time viewWith:viewWidth];
         }
 //        else if(model.richModel.multiModel.templateIdType == 5){
@@ -1552,6 +1571,25 @@
 
 #pragma mark table cell delegate start  cell点击的代理事件
 -(void)cellItemClick:(ZCLibMessage *)model type:(ZCChatCellClickType)type obj:(id)object{
+    if (type == ZCChatCellClickTypeOpenAudio) {
+        // 打开音频文件
+        NSString *url = (NSString *)object;
+        [[ZCToolsCore getToolsCore] dealWithLinkClickWithLick:sobotConvertToString(url) viewController:self.superController];
+        return;
+    }
+    if (type == ZCChatCellClickTypeOpenFile) {
+        ZCDocumentLookController *leaveMessageVC = [[ZCDocumentLookController alloc]init];
+        leaveMessageVC.message = model;
+        [self openNewPage:leaveMessageVC];
+        return;
+    }
+    
+    if (type == ZCChatCellClickTypeAppletAction) {
+        if ( [[ZCUICore getUICore] AppletClickBlock] == nil || ![ZCUICore getUICore].AppletClickBlock(object)) {
+            [[ZCUIToastTools shareToast] showToast:ZCSTLocalString(@"小程序只能通过微信打开") duration:2 view:[UIApplication sharedApplication].keyWindow position:ZCToastPositionCenter];
+        }
+        return;
+    }
     if(type == ZCChatCellClickTypeShowSensitive){
         model.showAllMessage = YES;
         [self.listTable reloadData];
@@ -1608,7 +1646,11 @@
         [[ZCUICore getUICore] cancelSendFileMsg:model];
         return;
     }
-    
+    if (type == ZCChatCellClickTypeItemContinueWaiting) {
+        // 继续排队
+        [[ZCUICore getUICore] continueWaiting:model];
+        return;
+    }
     if(type == ZCChatCellClickTypeItemOpenLocation){
         NSString *linkUrl = [NSString stringWithFormat:@"sobot://openlocation?latitude=%@&longitude=%@&address=%@",model.richModel.latitude,model.richModel.longitude,model.richModel.localLabel];
         
@@ -1741,6 +1783,7 @@
         //        [self.zcKeyboardView getKeyBoardViewStatus] == AGAINACCESSASTATUS
         if ([_keyboardTools getKeyBoardViewStatus] == ZCKeyboardStatusNewSession) {
             [_listTable reloadData];
+            [self scrollTableToBottom];
             return;
         }
         NSDictionary *dict = nil;
@@ -1905,7 +1948,7 @@
         
         
         int status = (type == ZCChatCellClickTypeStepOn)?-1:1;
-        
+#pragma mark - 机器人点踩调用接口
         [[ZCLibServer getLibServer] rbAnswerComment:[self getZCIMConfig] message:model status:status start:^{
             
         } success:^(ZCNetWorkCode code) {
@@ -2129,6 +2172,7 @@
             // 处理换行
             
             NSString * text = title;
+            text = [text stringByReplacingOccurrencesOfString:@"\n" withString:@" "];
             text = [text stringByReplacingOccurrencesOfString:@"<br />" withString:@""];
             text = [text stringByReplacingOccurrencesOfString:@"<br/>" withString:@""];
             text = [text stringByReplacingOccurrencesOfString:@"<br>" withString:@""];
@@ -2331,7 +2375,8 @@
         case ZCChatViewGoBackType_normal:
         {
             isClickCloseBtn = NO;
-            if ([ZCUICore getUICore].kitInfo.isOpenEvaluation) {
+            // 3.1.8 新增，当前是人工，并且PC端设置开启了评价（结束会话的时候）点击返回要触发评价
+            if ([ZCUICore getUICore].kitInfo.isOpenEvaluation ||([self getZCIMConfig].commentFlag ==1 && [self getZCIMConfig].isArtificial)) {
                 showEvaluation = YES;
             }
             
@@ -2410,15 +2455,15 @@
         _quickEntryView = [[ZCQuickEntryView alloc]initCustomViewWith:array WithView:self];
         [self insertSubview:_quickEntryView aboveSubview:_listTable];
         _quickEntryView.frame = CGRectMake(0,CGRectGetMaxY(_keyboardTools.zc_bottomView.frame) - CGRectGetHeight(_keyboardTools.zc_bottomView.frame)- 50, viewWidth, 50);
-        __weak ZCChatView * safeView = self;
         _quickEntryView.autoresizingMask =  UIViewAutoresizingFlexibleBottomMargin;
+        
+        __weak ZCChatView * safeView = self;
         _quickEntryView.quickClickBlock = ^(ZCLibCusMenu *itemModel) {
             if (itemModel.url.length) {
                 [safeView cellItemLinkClick:nil type:ZCChatCellClickTypeOpenURL obj:sobotConvertToString(itemModel.url)];
             }
         };
     }
-//        [ZCUICore getUICore].isDismissRobotPage = NO;
     return  _quickEntryView;
 }
 
@@ -2508,10 +2553,18 @@
     }else{
         // 如果剩余空间大于键盘高度，就不用移动table坐标
         if((h - ch) > ([_keyboardTools getKeyboardHeight] + (_keyboardTools.zc_bottomView.frame.size.height-defaultHeight))){
+//        if((h - ch) > ([_keyboardTools getKeyboardHeight] + (_keyboardTools.zc_bottomView.frame.size.height-defaultHeight))){
             tf.origin.y   = navTableY;
         }else{
+            // 这里要处理一个特殊情况 使用自定义导航的时候 需要考虑 导航栏的高度
+            CGFloat navh = 0;
+            if ([ZCUICore getUICore].kitInfo.navcBarHidden) {
+                navh = NavBarHeight;
+            }
+
             // 移动剩余空间不够的坐标
-            tf.origin.y   = navTableY - ([_keyboardTools getKeyboardHeight] - (h - ch)) + XBottomBarHeight + (_keyboardTools.zc_bottomView.frame.size.height - defaultHeight);
+//            tf.origin.y   = navTableY - ([_keyboardTools getKeyboardHeight] - (h - ch)) + XBottomBarHeight + (_keyboardTools.zc_bottomView.frame.size.height - defaultHeight);
+            tf.origin.y   = navTableY - ([_keyboardTools getKeyboardHeight] - (h - ch)) + XBottomBarHeight + (_keyboardTools.zc_bottomView.frame.size.height - defaultHeight) -navh;
         }
         if(!CGRectEqualToRect(tf,_listTable.frame)){
             _listTable.frame  = tf;
@@ -2959,7 +3012,7 @@
 -(void)actionSheetClick:(int)isCommentType{
     if (isCommentType != 4) {
         // 此处使用window rootView,解决提前返回导致的如法显示，特殊情况可能需要延迟1秒展示，因为当前页面会提前释放
-        [[ZCUIToastTools shareToast] showToast:ZCSTLocalString(@"感谢您的评价！") duration:1.5f view:[[ZCToolsCore getToolsCore] getCurWindow].rootViewController.view position:ZCToastPositionCenter Image:[ZCUITools zcuiGetBundleImage:@"zcicon_successful"]];
+        [[ZCUIToastTools shareToast] showToast:ZCSTLocalString(@"感谢您的评价!") duration:1.5f view:[[ZCToolsCore getToolsCore] getCurWindow].rootViewController.view position:ZCToastPositionCenter Image:[ZCUITools zcuiGetBundleImage:@"zcicon_successful"]];
     }
     
     if(isCommentType == 1){
@@ -3171,6 +3224,10 @@
         _netWorkTools = nil;
     }
     
+    if(_quickEntryView){
+        _quickEntryView.quickClickBlock = nil;
+        _quickEntryView = nil;
+    }
     if ([ZCUICore getUICore].lineModel) {
         [[ZCUICore getUICore].listArray removeObject:[ZCUICore getUICore].lineModel];
     }
@@ -3402,7 +3459,7 @@
 
 
 -(void)dealloc{
-    NSLog(@"chatView页面销毁");
+    NSLog(@"chatView页面销毁dealloc");
     
     [[ZCIMChat getZCIMChat] setChatPageState:ZCChatPageStateBack];
 }
@@ -3417,7 +3474,6 @@
 -(void)changeLeaveMsgType:(LeaveExitType) isExist showToast:(BOOL) isShow msg:(NSString *) msg{
     
     [_keyboardTools hideKeyboard];
-    
     //先判定 留言的方式 转离线留言
     if ([self getZCIMConfig].msgToTicketFlag == 2) {
         if (_delegate && [_delegate respondsToSelector:@selector(onLeaveMsgClick:)] && _isJumpCustomLeaveVC) {
@@ -3474,6 +3530,7 @@
         return;
     }
     
+     __weak ZCChatView * saveSelf = self;
     // 留言转工单 先查看工单列表模板
     [[ZCLibServer getLibServer] getWsTemplateList:[self getZCIMConfig] uid:[[ZCUICore getUICore] getTempUid] groupId:[[ZCUICore getUICore] getTempGroupId] start:^{
         [[ZCUIToastTools shareToast] showProgress:@"" with:self];
@@ -3489,7 +3546,6 @@
                     ZCWsTemplateModel * model = [[ZCWsTemplateModel alloc]initWithMyDict:item];
                     [array addObject:model];
                 }
-                 __weak ZCChatView * saveSelf = self;
                 
                 if (arr.count == 1) {
                     ZCWsTemplateModel * model = [array lastObject];

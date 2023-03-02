@@ -141,4 +141,5 @@ typedef NS_ENUM(NSInteger,ZCSendActionType) {
 -(void)uploadLogMsg;
 -(void)uploadLogMsg:(BOOL) updateWithOutFlag;
 
+-(BOOL)getIsChatPageActive;
 @end

@@ -249,7 +249,7 @@
 -(void)changeDownStatus{
     dispatch_async(dispatch_get_main_queue(), ^{
         //本地文件已经存在并且是下载完成的,那么就不去下载
-        if(self.currentSize == self.fileSize || [_message.richModel.richmoreurl hasPrefix:@"file:///"]){
+        if(self.currentSize == self.fileSize  || [_message.richModel.richmoreurl hasPrefix:@"file:///"]){
             
             _viewProgress.hidden = YES;
             _btnDown.hidden = NO;

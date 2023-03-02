@@ -102,7 +102,7 @@
         Y = NavBarHeight;
     }
     
-    titleLab = [[UILabel alloc]initWithFrame:CGRectMake(ZCNumber(10), Y + ZCNumber(20), ScreenWidth -ZCNumber(20), 20)];
+    titleLab = [[UILabel alloc]initWithFrame:CGRectMake(ZCNumber(10), Y + 20, ScreenWidth -ZCNumber(20), 20)];
     titleLab.textColor = [ZCUITools zcgetscTopTextColor];
     titleLab.numberOfLines = 0;
     titleLab.font = ZCUIFont20;

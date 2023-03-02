@@ -187,6 +187,9 @@ typedef void(^initResultBlock)(ZCInitStatus code,NSMutableArray *arr,NSString *r
 @property(nonatomic,copy) initResultBlock ResultBlock;
 
 @property(nonatomic,copy) BOOL (^LinkClickBlock)(NSString *linkUrl); // 1129
+
+@property(nonatomic,copy) BOOL (^AppletClickBlock)(ZCLibMessage *model);
+
 @property(nonatomic,copy) void (^PageLoadBlock)(id object,ZCPageBlockType type);
 
 @property(nonatomic,copy) void (^ZCViewControllerCloseBlock)(id object,ZCPageCloseType type); // 1129
@@ -462,6 +465,11 @@ typedef void(^initResultBlock)(ZCInitStatus code,NSMutableArray *arr,NSString *r
  *
  **/
 -(void)cancelSendFileMsg:(ZCLibMessage *)fileMsg;
+
+
+-(void)continueWaiting:(ZCLibMessage *)tipsModel;
+
+-(void)removeListModelWithType:(ZCMessageType ) type tips:(ZCTipMessageType) tips;
 
 // 当前是否显示客服欢迎语
 -(BOOL)showChatAdminHello;

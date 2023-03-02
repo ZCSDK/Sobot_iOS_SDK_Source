@@ -98,8 +98,16 @@
         }
         [self setNavigationBarStyle];
         self.title = ZCSTLocalString(@"留言消息");
-        [self.navigationController.navigationBar setTitleTextAttributes:@{NSFontAttributeName:[ZCUITools zcgetTitleFont],NSForegroundColorAttributeName:[ZCUITools zcgetTopViewTextColor]}];
-
+        [self.navigationController.navigationBar setTitleTextAttributes:@{NSFontAttributeName:[ZCUITools zcgetTitleFont],NSForegroundColorAttributeName:[ZCUITools zcgetLeaveMsgTextColor]}];
+        if (@available(iOS 15.0, *)) {
+            NSDictionary *dic = @{NSForegroundColorAttributeName : [ZCUITools zcgetLeaveMsgTextColor],
+                                  NSFontAttributeName : [ZCUITools zcgetTitleFont]};
+            UINavigationBarAppearance *barApp = [UINavigationBarAppearance new];
+            barApp.titleTextAttributes = dic;
+            self.navigationController.navigationBar.scrollEdgeAppearance = barApp;
+            self.navigationController.navigationBar.standardAppearance = barApp;
+        }
+        
         //    2.8.0 增加导航栏下面 细线
         UIView *lineView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 0.5)];
         lineView.backgroundColor = [ZCUITools zcgetCommentButtonLineColor];

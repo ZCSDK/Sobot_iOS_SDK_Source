@@ -129,9 +129,10 @@ typedef void(^ZCPropertyChangeBlock)(AVCaptureDevice *captureDevice);
     _imgRecord.autoresizingMask = UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin;
     
     
-    _labelTipTitle = [[UILabel alloc] initWithFrame:CGRectMake(0, ScreenHeight - 68 - 50 - 36, ScreenWidth, 21)];
+    _labelTipTitle = [[UILabel alloc] initWithFrame:CGRectMake(10, ScreenHeight - 68 - 50 - 46, ScreenWidth-20, 36)];
     [_labelTipTitle setTextColor:UIColorFromThemeColor(ZCKeepWhiteColor)];
     [_labelTipTitle setTextAlignment:NSTextAlignmentCenter];
+    _labelTipTitle.numberOfLines = 2;
     [_labelTipTitle setFont:ZCUIFont14];
     [_labelTipTitle setText:ZCSTLocalString(@"轻触拍照，按住摄像")];
     _labelTipTitle.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleTopMargin;
@@ -177,7 +178,9 @@ typedef void(^ZCPropertyChangeBlock)(AVCaptureDevice *captureDevice);
     [super viewWillAppear:animated];
     [[UIApplication sharedApplication] setStatusBarHidden:YES];
     [self customCamera];
-    [self.session startRunning];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [self.session startRunning];
+    });
 }
 
 
@@ -217,9 +220,7 @@ typedef void(^ZCPropertyChangeBlock)(AVCaptureDevice *captureDevice);
         }
     }
     [captureDevice unlockForConfiguration];
-    
-
-    
+        
     //初始化输入设备
     NSError *error = nil;
     self.captureDeviceInput = [[AVCaptureDeviceInput alloc] initWithDevice:captureDevice error:&error];
@@ -573,18 +574,26 @@ typedef void(^ZCPropertyChangeBlock)(AVCaptureDevice *captureDevice);
 
 - (void)videoHandlePhoto:(NSURL *)url {
     self.takeImage = [self createVideoImage:url];//[UIImage imageWithCGImage:cgImage];
-    
-    [[NSFileManager defaultManager] removeItemAtURL:url error:nil];
+    if(self.takeImageView){
+        [self.takeImageView removeFromSuperview];
+        self.takeImageView = nil;
+    }
     
     if (!self.takeImageView) {
         self.takeImageView = [[UIImageView alloc] initWithFrame:self.view.frame];
+        self.takeImageView.backgroundColor = [UIColor blackColor];
+        self.takeImageView.contentMode = UIViewContentModeScaleAspectFit;
         [self.bgView addSubview:self.takeImageView];
     }
     self.takeImageView.hidden = NO;
     self.takeImageView.image = self.takeImage;
+//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//        [[NSFileManager defaultManager] removeItemAtURL:url error:nil];
+//    });
 }
 
 -(UIImage *)createVideoImage:(NSURL *) url{
+    NSLog(@"url === %@",url);
     AVURLAsset *urlSet = [AVURLAsset assetWithURL:url];
     AVAssetImageGenerator *imageGenerator = [AVAssetImageGenerator assetImageGeneratorWithAsset:urlSet];
     imageGenerator.appliesPreferredTrackTransform = YES;    // 截图的时候调整到正确的方向
@@ -867,8 +876,10 @@ typedef void(^ZCPropertyChangeBlock)(AVCaptureDevice *captureDevice);
         [self.player stopPlayer];
         self.player.hidden = YES;
     }
-    [self.session startRunning];
-    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [self.session startRunning];
+    });
+        
     if (!self.takeImageView.hidden) {
         self.takeImageView.hidden = YES;
     }

@@ -71,6 +71,14 @@ typedef NS_ENUM(NSInteger,ZCChatCellClickType) {
     ZCChatCellClickTypeRefuseSend        = 29,
     // 同意发送敏感信息
     ZCChatCellClickTypeAgreeSend         = 30,
+    //点击了小程序事件
+    ZCChatCellClickTypeAppletAction      = 31,
+    // 打开富文本消息中的文件
+    ZCChatCellClickTypeOpenFile          = 32,
+    // 打开富文本中的音频
+    ZCChatCellClickTypeOpenAudio         = 33,
+    // 继续排队
+    ZCChatCellClickTypeItemContinueWaiting = 34,
 };
 
 /**

@@ -37,6 +37,8 @@ FOUNDATION_EXPORT NSString * const SobotLocaliablePathInBundle;
 // 语言文件名称
 @property (strong, nonatomic) NSString * table_name;
 
+// 是否关闭镜像功能 默认支持 如果设置YES 在阿拉伯文的场景下将关闭镜像设置
+@property (assign,nonatomic) BOOL isCloseSystemRTL;
 
 +(SobotLocaliable *)shareSobotLocaliable;
 

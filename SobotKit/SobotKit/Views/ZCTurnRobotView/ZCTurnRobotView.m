@@ -48,7 +48,6 @@
         }
         
         
-        
         self.frame = CGRectMake(0, 0, viewWidth, viewHeight);
         self.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
         self.autoresizesSubviews = YES;
@@ -66,7 +65,6 @@
 - (void)createSubviews{
     CGFloat bw=viewWidth;
     
-    
     self.backGroundView = [[UIView alloc] initWithFrame:CGRectMake((viewWidth - bw) / 2.0, viewHeight, bw, 0)];
     self.backGroundView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleWidth;
     self.backGroundView.autoresizesSubviews = YES;
@@ -74,7 +72,6 @@
     //    [self.backGroundView.layer setCornerRadius:5.0f];
 //    self.backGroundView.layer.masksToBounds = YES;
     [self addSubview:self.backGroundView];
-    
     
     UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 18, bw, 24)];
     [titleLabel setText:ZCSTLocalString(@"请选择要咨询的业务")];
@@ -90,7 +87,6 @@
     lineView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     [self.backGroundView addSubview:lineView];
 
-    
     
     // 左上角的删除按钮
     UIButton *cannelButton = [[UIButton alloc]init];
@@ -116,8 +112,25 @@
     CGFloat itemW = (bw-50)/2.0f;
     
     int index = listArray.count%2==0?round(listArray.count/2):round(listArray.count/2)+1;
-    
+    CGFloat maxh = 0;
     for (int i=0; i<listArray.count; i++) {
+        
+        ZCLibRobotSet *skillmodel = listArray[i];
+        ZCLibRobotSet *nextModel;
+        if ( i%2 == 0) {
+            // 处理样式0
+            if (i+1 <listArray.count) {
+                nextModel = listArray[i+1];
+            }
+            CGFloat leftH = [self getItemMaxHWith:skillmodel withW:itemW];
+            CGFloat rightH = 0;
+            if (!sobotIsNull(nextModel)) {
+                rightH = [self getItemMaxHWith:nextModel withW:itemW];
+            }
+            itemH = leftH >rightH ? leftH :rightH;
+            maxh = maxh + itemH + 20;
+        }
+        
         UIButton *itemView = [self addItemView:listArray[i] withX:x withY:y withW:itemW withH:itemH];
 
         itemView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleRightMargin;
@@ -133,12 +146,14 @@
         }
         [self.scrollView addSubview:itemView];
     }
-    CGFloat h = index*(itemH) + (index + 1) * 20;
+//    CGFloat h = index*(itemH) + (index + 1) * 20;
+    CGFloat h = maxh;
     if(h > viewHeight*0.6){
         h = viewHeight*0.6;
     }
     [self.scrollView setFrame:CGRectMake(0, 60, bw, h)];
-    [self.scrollView setContentSize:CGSizeMake(bw, index*itemH + (index+1)*20)];
+//    [self.scrollView setContentSize:CGSizeMake(bw, index*itemH + (index+1)*20)];
+    [self.scrollView setContentSize:CGSizeMake(bw, maxh)];
     
     [UIView animateWithDuration:0.25f animations:^{
         [self.backGroundView setFrame:CGRectMake(self.backGroundView.frame.origin.x, viewHeight - h - 60 - XBottomBarHeight - 20 ,self.backGroundView.frame.size.width, h + 60 + XBottomBarHeight + 20)];
@@ -146,8 +161,26 @@
 //
     }];
 //    self.backGroundView.hidden = YES;
-    
 }
+
+#pragma mark - 机器人切换弹窗样式 获取最终高度
+-(CGFloat)getItemMaxHWith:(ZCLibRobotSet *)model withW:(CGFloat)w{
+
+    UILabel *itemName = [[UILabel alloc] initWithFrame:CGRectZero];
+    [itemName setFont:ZCUIFont14];
+    [itemName setText:sobotConvertToString(model.operationRemark)];
+    itemName.numberOfLines = 0;
+    // 单个的高度
+    [itemName setFrame:CGRectMake(8, 8, w-2*8, 36)];
+    [itemName sizeToFit];
+    CGRect NF = itemName.frame;
+    if (NF.size.height >(36 -2*8)) {
+        return NF.size.height + 2*8;
+    }
+    
+    return 36;
+}
+
 -(void)addBorderWithColor:(UIColor *)color isBottom:(BOOL) isBottom with:(UIView *) view{
     CGFloat borderWidth = 0.75f;
     CALayer *border = [CALayer layer];
@@ -185,19 +218,30 @@
     
     itemView.titleLabel.font = ZCUIFont14;
     itemView.titleLabel.textColor = UIColorFromThemeColor(ZCTextMainColor);
-    itemView.layer.cornerRadius = h/2;
+    itemView.layer.cornerRadius = 18;
+//    itemView.layer.cornerRadius = h/2;
     itemView.layer.masksToBounds = YES;
     
-    [itemView setTitle:sobotConvertToString(model.operationRemark) forState:UIControlStateNormal];
-    [itemView setTitle:sobotConvertToString(model.operationRemark) forState:UIControlStateHighlighted];
+//    [itemView setTitle:sobotConvertToString(model.operationRemark) forState:UIControlStateNormal];
+//    [itemView setTitle:sobotConvertToString(model.operationRemark) forState:UIControlStateHighlighted];
     itemView.titleLabel.textAlignment = NSTextAlignmentCenter;
     
     [itemView setTitleColor:UIColorFromThemeColor(ZCTextMainColor) forState:UIControlStateNormal];
     [itemView setTitleColor:UIColorFromThemeColor(ZCKeepWhiteColor) forState:UIControlStateHighlighted];
     [itemView setTitleColor:UIColorFromThemeColor(ZCKeepWhiteColor) forState:UIControlStateSelected];
     
+    
+    UILabel *tipLab = [[UILabel alloc]initWithFrame:CGRectMake(8, 0, w-2*8, h)];
+    [itemView addSubview:tipLab];
+    tipLab.numberOfLines = 0;
+    tipLab.textAlignment = NSTextAlignmentCenter;
+    tipLab.text = sobotConvertToString(model.operationRemark);
+    tipLab.font = ZCUIFont14;
+    tipLab.textColor = [ZCUITools zcgetThemeToWhiteColor];
+    
     if ([sobotConvertToString(model.robotFlag) intValue] == _robotid) {
         itemView.selected = YES;
+        tipLab.textColor = UIColorFromThemeColor(ZCKeepWhiteColor);
     }
     
     return itemView;

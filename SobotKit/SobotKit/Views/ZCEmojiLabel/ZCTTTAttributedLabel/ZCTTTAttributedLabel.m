@@ -712,7 +712,8 @@ static inline CGSize CTFramesetterSuggestFrameSizeForAttributedStringWithConstra
         return nil;
     }
     
-    NSEnumerator *enumerator = [self.linkModels reverseObjectEnumerator];
+//    NSEnumerator *enumerator = [self.linkModels reverseObjectEnumerator];
+    NSEnumerator *enumerator = [self.linkModels objectEnumerator];
     ZCTTTAttributedLabelLink *link = nil;
     while ((link = [enumerator nextObject])) {
         if (NSLocationInRange((NSUInteger)idx, link.result.range)) {

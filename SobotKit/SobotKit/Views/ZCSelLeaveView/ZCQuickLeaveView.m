@@ -66,7 +66,7 @@
     
     
     UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, bw, 60)];
-    [titleLabel setText:ZCSTLocalString(@"留言")];
+    [titleLabel setText:ZCSTLocalString(@"填写信息")];
     titleLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     [titleLabel setTextAlignment:NSTextAlignmentCenter];
     self.backGroundView.backgroundColor = UIColorFromThemeColor(ZCBgSystemWhiteLightDarkColor);

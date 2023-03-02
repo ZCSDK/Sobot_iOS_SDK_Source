@@ -107,8 +107,23 @@
     CGFloat itemH = 36;
     CGFloat itemW = (bw-50)/2.0f;
     
-    
+    CGFloat styleH1 = 20;// 记录格式1 的初始高度 和最终scrollView需要内容视图高度
     for (int i=0; i<listArray.count; i++) {
+        ZCWsTemplateModel *skillmodel = listArray[i];
+        ZCWsTemplateModel *nextModel;
+        if ( i%2 == 0) {
+            // 处理样式0
+            if (i+1 <listArray.count) {
+                nextModel = listArray[i+1];
+            }
+            CGFloat leftH = [self getItemMaxHWith:skillmodel withW:itemW];
+            CGFloat rightH = 0;
+            if (!sobotIsNull(nextModel)) {
+                rightH = [self getItemMaxHWith:nextModel withW:itemW];
+            }
+            itemH = leftH >rightH ? leftH :rightH;
+            styleH1 =  styleH1 + itemH + 20;
+        }
         UIButton *itemView = [self addItemView:listArray[i] withX:x withY:y withW:itemW withH:itemH];
         itemView.autoresizingMask = UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleLeftMargin;
         [itemView setBackgroundColor:[UIColor whiteColor]];
@@ -126,13 +141,14 @@
     
     int index = listArray.count%2==0?round(listArray.count/2):round(listArray.count/2)+1;
     
-    CGFloat h = index*(itemH) + (index + 1) * 20;
+//    CGFloat h = index*(itemH) + (index + 1) * 20;
+    CGFloat h = styleH1;
     if(h > viewHeight*0.6){
         h = viewHeight*0.6;
     }
     [self.scrollView setFrame:CGRectMake(0, 61, bw, h)];
-    [self.scrollView setContentSize:CGSizeMake(bw, index*itemH + (index+1)*20)];
-    
+//    [self.scrollView setContentSize:CGSizeMake(bw, index*itemH + (index+1)*20)];
+    [self.scrollView setContentSize:CGSizeMake(bw, styleH1)];
     
     
     
@@ -166,11 +182,28 @@
     [view.layer addSublayer:border];
 }
 
+#pragma mark - 留言选择弹窗样式 获取最终高度
+-(CGFloat)getItemMaxHWith:(ZCWsTemplateModel *)model withW:(CGFloat)w{
+    UILabel *itemName = [[UILabel alloc] initWithFrame:CGRectZero];
+    [itemName setFont:ZCUIFont14];
+    [itemName setText:sobotConvertToString(model.templateName)];
+    itemName.numberOfLines = 0;
+    // 单个的高度
+    [itemName setFrame:CGRectMake(8, 8, w-2*8, 36)];
+    [itemName sizeToFit];
+    CGRect NF = itemName.frame;
+    if (NF.size.height >(36 -2*8)) {
+        return NF.size.height + 2*8;
+    }
+    return 36;
+}
+
 
 -(UIButton *)addItemView:(ZCWsTemplateModel *) model withX:(CGFloat )x withY:(CGFloat) y withW:(CGFloat) w withH:(CGFloat) h{
     UIButton *itemView = [[UIButton alloc] initWithFrame:CGRectMake(x, y, w,h)];
     [itemView setFrame:CGRectMake(x, y, w, h)];
-    itemView.layer.cornerRadius = h/2;
+//    itemView.layer.cornerRadius = h/2;
+    itemView.layer.cornerRadius = 18;
     itemView.layer.masksToBounds = YES;
     [itemView.titleLabel setFont:ZCUIFont14];
     
@@ -183,13 +216,20 @@
     // 设置文字长度 最多20个字 1行显示
     itemView.titleLabel.numberOfLines = 1;
     
-    [itemView setTitle:sobotConvertToString(model.templateName) forState:UIControlStateNormal];
-    [itemView setTitle:sobotConvertToString(model.templateName) forState:UIControlStateHighlighted];
+//    [itemView setTitle:sobotConvertToString(model.templateName) forState:UIControlStateNormal];
+//    [itemView setTitle:sobotConvertToString(model.templateName) forState:UIControlStateHighlighted];
     itemView.titleLabel.textAlignment = NSTextAlignmentCenter;
     // 设置选中的状态
 //    if ([sobotConvertToString(model.robotFlag) intValue] == _msgId) {
 //        itemView.selected = YES;
 //    }
+    UILabel *tipLab = [[UILabel alloc]initWithFrame:CGRectMake(8, 0, w-2*8, h)];
+    [itemView addSubview:tipLab];
+    tipLab.numberOfLines = 0;
+    tipLab.textAlignment = NSTextAlignmentCenter;
+    tipLab.text = sobotConvertToString(model.templateName);
+    tipLab.font = ZCUIFont14;
+    tipLab.textColor = [ZCUITools zcgetThemeToWhiteColor];
     
     return itemView;
 }

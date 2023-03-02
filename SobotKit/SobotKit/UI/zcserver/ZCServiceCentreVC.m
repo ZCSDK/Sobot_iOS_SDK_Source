@@ -45,15 +45,15 @@ typedef void (^PageLoadBlock)(id object,ZCPageBlockType type);
     
     UIButton      *serviceBtn;// 客服入口
     
-    NSMutableArray   *_listArray;
-    
+   
+    UIButton *lastBtn;
     UIView *serviceBtnBgView;
 }
 
 //当页面的list数据为空时，给它一个带提示的占位图。
 @property(nonatomic,strong) UIView *placeholderView;
 
-
+@property (nonatomic,strong)  NSMutableArray   *listArray;
 @property (nonatomic,assign) id<ZCChatControllerDelegate> delegate;
 
 @end
@@ -126,8 +126,12 @@ typedef void (^PageLoadBlock)(id object,ZCPageBlockType type);
     }
     [scrollView setFrame:CGRectMake(spaceX, Y, LW, scrollHeight)];
     
-    
-    serviceBtnBgView.frame = CGRectMake(0, viewHeigth - 80, viewWidth, ZCNumber(80));
+    // 重新布局
+    serviceBtnBgView.frame = CGRectMake(0, viewHeigth - 80, viewWidth, 80);
+    for (UIButton *btn in serviceBtnBgView.subviews) {
+        [btn removeFromSuperview];
+    }
+    serviceBtn = [self createHelpCenterButtons:10 sView:serviceBtnBgView];
     
     if (_listArray.count > 0) {
         [self removePlaceholderView];
@@ -153,12 +157,7 @@ typedef void (^PageLoadBlock)(id object,ZCPageBlockType type);
          self.navigationController.navigationBarHidden = NO;
      }
      self.navigationController.navigationBar.translucent = NO;
-
-    
-    
     [self createSubviews];
-    
-    
     [self loadData];
 }
 
@@ -190,17 +189,15 @@ typedef void (^PageLoadBlock)(id object,ZCPageBlockType type);
 //    }
     
     
-    serviceBtnBgView = [[UIView alloc]initWithFrame:CGRectMake(0, viewHeigth - 80, viewWidth, ZCNumber(80))];
-    
+    serviceBtnBgView = [[UIView alloc]initWithFrame:CGRectMake(0, viewHeigth - 80, viewWidth, 80)];
     serviceBtnBgView.backgroundColor = UIColorFromThemeColor(ZCBgLightGrayDarkColor);
     [serviceBtnBgView setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleTopMargin];
     [self.view addSubview:serviceBtnBgView];
-    
     serviceBtn = [self createHelpCenterButtons:10 sView:serviceBtnBgView];
     serviceBtn.titleLabel.adjustsFontSizeToFitWidth = YES;
-    
-    
 }
+
+
 
 // borderColor必须这么设置才起效
 - (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection{
@@ -217,35 +214,35 @@ typedef void (^PageLoadBlock)(id object,ZCPageBlockType type);
     
     __weak ZCServiceCentreVC *weakself = self;
     [[ZCLibServer getLibServer] getCategoryWith:[ZCLibClient getZCLibClient].libInitInfo.app_key start:^{
-        
+
     } success:^(NSDictionary *dict, ZCNetWorkCode sendCode) {
-        
+
         @try{
             if (dict) {
                 NSArray * dataArr = dict[@"data"];
                 if ([dataArr isKindOfClass:[NSArray class]] && dataArr.count > 0) {
-                   
+
                     for (NSDictionary *item in dataArr) {
                         ZCSCListModel * listModel = [[ZCSCListModel alloc]initWithMyDict:item];
-                        [_listArray addObject:listModel];
+                        [weakself.listArray addObject:listModel];
                     }
-                    
-                    if (_listArray.count > 0) {
+
+                    if (weakself.listArray.count > 0) {
                         [weakself removePlaceholderView];
-                        [weakself layoutItemWith:_listArray];
+                        [weakself layoutItemWith:weakself.listArray];
                     }
-                    
+
                 }
             }
-            
+
         } @catch (NSException *exception) {
-            
+
         } @finally {
-            
+
         }
-        
+
     } failed:^(NSString *errorMessage, ZCNetWorkCode errorCode) {
-        
+
     }];
     
 }
@@ -258,6 +255,7 @@ typedef void (^PageLoadBlock)(id object,ZCPageBlockType type);
     CGFloat itemW = (bw-0.25 - 30)/2.0f;
     
     int index = _listArray.count%2==0?round(_listArray.count/2):round(_listArray.count/2)+1;
+    UIView *lastView;
     for (int i =0; i<_listArray.count; i++) {
         UIView * itemView = [self addItemView:_listArray[i] withX:x withY:y withW:itemW withH:itemH Tag:i];
         itemView.layer.borderColor = UIColorFromThemeColor(ZCBgLineColor).CGColor;
@@ -268,31 +266,38 @@ typedef void (^PageLoadBlock)(id object,ZCPageBlockType type);
         itemView.userInteractionEnabled = YES;
         itemView.tag = i;
         if(i%2==1){
-            // 单数添加 右边的线条和下边的线条
-//            UIView * rline = [[UIView alloc]initWithFrame:CGRectMake(CGRectGetMaxX(itemView.frame), y, 0.5, itemH)];
-//            rline.backgroundColor = UIColorFromRGB(0xE3E3E3); // CGRectMake(x, CGRectGetMaxY(itemView.frame), itemW+0.25, 0.5)
-//            UIView * bLine = [[UIView alloc]initWithFrame:CGRectMake(x, CGRectGetMaxY(itemView.frame), itemW+0.25, 0.5)];
-//            bLine.backgroundColor = UIColorFromRGB(0xE3E3E3);
-////            [scrollView addSubview:rline];
-//            [scrollView addSubview:bLine];
-            
-//            [self setLineOffset:LineVertical withView:itemView];
-            
+            // 右边的按钮
             x = 12;
-            y = y + itemH + 6;
+//            y = y + itemH + 6;
+
+            if (itemView.frame.size.height >= lastView.frame.size.height) {
+                CGRect lastF = lastView.frame;
+                lastF.size.height = itemView.frame.size.height;
+                lastView.frame = lastF;
+                y = y + 6 + lastF.size.height;
+            }else{
+                CGRect itemF = itemView.frame;
+                itemF.size.height = lastView.frame.size.height;
+                itemView.frame = itemF;
+                y = y + 6 + itemF.size.height;
+            }
             
+            UIButton * btn = [UIButton buttonWithType:UIButtonTypeCustom];
+            btn.tag = i;
+            btn.frame = CGRectMake(0, 0, CGRectGetWidth(itemView.frame),CGRectGetHeight(itemView.frame));
+            btn.backgroundColor = [UIColor clearColor];
+            [btn addTarget:self action:@selector(tapItemAction:) forControlEvents:UIControlEventTouchUpInside];
+            [itemView addSubview:btn];
             
-        }else if(i%2==0){// CGRectMake(x, CGRectGetMaxY(itemView.frame), itemW+0.25, 0.25)
-//            UIView * bLine = [[UIView alloc]initWithFrame:CGRectMake(x, CGRectGetMaxY(itemView.frame), itemW+0.25, 0.5)];
-//            bLine.backgroundColor = UIColorFromRGB(0xE3E3E3);
-//            [scrollView addSubview:bLine];
-////            if (i == 0) {
-//                UIView * rline = [[UIView alloc]initWithFrame:CGRectMake(CGRectGetMaxX(itemView.frame) + 6, y, 0.5, itemH)];
-//                rline.backgroundColor = UIColorFromRGB(0xE3E3E3);
-//                [scrollView addSubview:rline];
-////            }
+        }else if(i%2==0){
             x = itemW + 12 + 6;
-           
+            lastView = itemView;
+            UIButton * btn = [UIButton buttonWithType:UIButtonTypeCustom];
+            btn.tag = i;
+            btn.frame = CGRectMake(0, 0, CGRectGetWidth(itemView.frame),CGRectGetHeight(itemView.frame));
+            btn.backgroundColor = [UIColor clearColor];
+            [btn addTarget:self action:@selector(tapItemAction:) forControlEvents:UIControlEventTouchUpInside];
+            [itemView addSubview:btn];
         }
         [scrollView addSubview:itemView];
     }
@@ -305,7 +310,6 @@ typedef void (^PageLoadBlock)(id object,ZCPageBlockType type);
         return image;
     }
     UIGraphicsBeginImageContextWithOptions(image.size, NO, [UIScreen mainScreen].scale);
-    
     [image drawInRect:CGRectMake(0, 0, image.size.width, image.size.height)
                    blendMode:kCGBlendModeDarken
                        alpha:1.0];
@@ -325,7 +329,6 @@ typedef void (^PageLoadBlock)(id object,ZCPageBlockType type);
     int height = image.size.height;
     //第一步:创建颜色空间(说白了就是 开辟一块颜色内存空间)
     //图片灰度处理(创建灰度空间)
-    
     CGColorSpaceRef colorRef = CGColorSpaceCreateDeviceGray();
     //第二步:颜色空间的上下文(保存图像数据信息)
     //参数1:内存大小(指向这块内存区域的地址)(内存地址)
@@ -336,7 +339,6 @@ typedef void (^PageLoadBlock)(id object,ZCPageBlockType type);
     //参数6:颜色空间
     //参数7:图片是否包含A通道(ARGB通道)
     CGContextRef context = CGBitmapContextCreate(nil, width, height, 8, 0, colorRef, kCGImageAlphaNone);
-    
     //释放内存
     CGColorSpaceRelease(colorRef);
     if (context == nil) {
@@ -347,19 +349,17 @@ typedef void (^PageLoadBlock)(id object,ZCPageBlockType type);
     //参数2:渲染区域
     //参数3:源文件(原图片)(说白了现在是一个C/C++的内存区域)
     CGContextDrawImage(context, CGRectMake(0, 0, width, height), image.CGImage);
-    
     //第四步:将绘制颜色空间转成CGImage(转成可识别图片类型)
     CGImageRef grayImageRef = CGBitmapContextCreateImage(context);
-    
     //第五步:将C/C++ 的图片CGImage转成面向对象的UIImage(转成iOS程序认识的图片类型)
     UIImage* dstImage = [UIImage imageWithCGImage:grayImageRef];
-
     //释放内存
     CGContextRelease(context);
     CGImageRelease(grayImageRef);
     return dstImage;
 }
 
+#pragma mark - 创建单个的itemView
 -(UIView *)addItemView:(ZCSCListModel *) model withX:(CGFloat )x withY:(CGFloat) y withW:(CGFloat) w withH:(CGFloat) h Tag:(int)i{
     UIView *itemView = [[UIView alloc] initWithFrame:CGRectMake(x, y, w,h)];
     [itemView setFrame:CGRectMake(x, y, w, h)];
@@ -378,8 +378,8 @@ typedef void (^PageLoadBlock)(id object,ZCPageBlockType type);
     [img setBackgroundColor:UIColorFromThemeColor(ZCBgLeftChatColor)];
     [itemView addSubview:img];
     
-    UILabel *titlelab = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(img.frame) + ZCNumber(10), 20, w - 60, 20)];
-    titlelab.numberOfLines = 1;
+    UILabel *titlelab = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(img.frame) + ZCNumber(10), 20, w - 65, 20)];
+    titlelab.numberOfLines = 0;
     [titlelab setTextAlignment:NSTextAlignmentLeft];
     [titlelab setTextColor:UIColorFromThemeColor(ZCTextSubColor)];
     [titlelab setText:sobotConvertToString(model.categoryName)];
@@ -387,33 +387,41 @@ typedef void (^PageLoadBlock)(id object,ZCPageBlockType type);
     [itemView addSubview:titlelab];
     [titlelab sizeToFit];
     
+    CGSize ts = titlelab.frame.size;
+    CGRect tf = titlelab.frame;
+    tf.size = ts;
+    titlelab.frame = tf;
     
     UILabel *detailLab = [[UILabel alloc] initWithFrame:CGRectZero];
-    detailLab.frame = CGRectMake(CGRectGetMaxX(img.frame) +ZCNumber(10), CGRectGetMaxY(titlelab.frame) +ZCNumber(2), w - 60, 40);
+    detailLab.frame = CGRectMake(CGRectGetMaxX(img.frame) +ZCNumber(10), CGRectGetMaxY(titlelab.frame) +ZCNumber(2), w - 70, 40);
     [detailLab setTextAlignment:NSTextAlignmentLeft];
-    detailLab.numberOfLines = 2;
+    detailLab.numberOfLines = 0;
     [detailLab setTextColor:UIColorFromThemeColor(ZCTextSubColor)];
     [detailLab setText:sobotConvertToString(model.categoryDetail)];
     [detailLab setFont:ZCUIFont12];
     [itemView addSubview:detailLab];
-    CGSize s = [detailLab sizeThatFits:CGSizeMake(w - 70, 40)];
     
-    [titlelab setFrame:CGRectMake(CGRectGetMaxX(img.frame) + ZCNumber(6), (h - 20 - s.height - 2)/2, w - 70, 20)];
-    detailLab.frame = CGRectMake(CGRectGetMaxX(img.frame) +ZCNumber(6), CGRectGetMaxY(titlelab.frame) +ZCNumber(2), w - 70, s.height);
+    // 原UI展示规则
+//    CGSize s = [detailLab sizeThatFits:CGSizeMake(w - 70, 40)];
+//    [titlelab setFrame:CGRectMake(CGRectGetMaxX(img.frame) + ZCNumber(6), (h - 20 - s.height - 2)/2, w - 70, 20)];
+//    detailLab.frame = CGRectMake(CGRectGetMaxX(img.frame) +ZCNumber(6), CGRectGetMaxY(titlelab.frame) +ZCNumber(2), w - 70, s.height);
     
+//    3.1.9海外版新增
+    [detailLab sizeToFit];
+    CGSize ds = detailLab.frame.size;
+    CGRect df = detailLab.frame;
+    df.size = ds;
+    detailLab.frame = df;
     
+    CGRect vf = itemView.frame;
     
-    UIButton * btn = [UIButton buttonWithType:UIButtonTypeCustom];
-    btn.tag = i;
-    btn.frame = CGRectMake(0, 0, CGRectGetWidth(itemView.frame),CGRectGetHeight(itemView.frame));
-    btn.backgroundColor = [UIColor clearColor];
-    [btn addTarget:self action:@selector(tapItemAction:) forControlEvents:UIControlEventTouchUpInside];
-    [itemView addSubview:btn];
+    if ((ds.height + ts.height + 35) >76) {
+        vf.size.height = ds.height + ts.height + 35;
+    }
+    itemView.frame = vf;
 
-    
     return itemView;
 }
-
 
 -(void)tapItemAction:(UIButton *)sender{
  
@@ -596,7 +604,7 @@ typedef void (^PageLoadBlock)(id object,ZCPageBlockType type);
 
 
 -(void)dealloc{
-//        NSLog(@" 客户帮助中心 释放了");
+        NSLog(@" 客户帮助中心 释放了");
 }
 
 /*

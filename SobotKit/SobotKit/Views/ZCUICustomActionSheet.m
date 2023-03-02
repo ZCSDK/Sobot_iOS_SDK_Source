@@ -334,7 +334,14 @@
         nicklab.font = ZCUIFont15;
         nicklab.numberOfLines = 0;
         nicklab.textColor = UIColorFromThemeColor(ZCTextMainColor);
-        nicklab.text = [NSString stringWithFormat:@"%@ %@",_name,ZCSTLocalString(@"是否解决了您的问题？")];
+        
+        if ([[ZCLibClient getZCLibClient].libInitInfo.absolute_language hasPrefix:@"zh-"] || (sobotConvertToString([ZCLibClient getZCLibClient].libInitInfo.absolute_language).length == 0 && [sobotGetLanguagePrefix() hasPrefix:@"zh-"])) {
+            
+            nicklab.text = [NSString stringWithFormat:@"%@ %@",_name,ZCSTLocalString(@"是否解决了您的问题？")];
+        }else{
+            
+            nicklab.text = [NSString stringWithFormat:@"%@",ZCSTLocalString(@"是否解决了您的问题？")];
+        }
         nicklab.textAlignment = NSTextAlignmentCenter;
         nicklab.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         [self.backGroundView addSubview:nicklab];

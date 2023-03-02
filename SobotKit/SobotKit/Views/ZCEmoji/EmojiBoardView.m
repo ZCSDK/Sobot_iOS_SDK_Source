@@ -139,7 +139,7 @@
         //发送键
         UIButton *sendButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [sendButton setTitle:ZCSTLocalString(@"发送") forState:UIControlStateNormal];
-        [sendButton.titleLabel setFont:ZCUIFont14];
+        [sendButton.titleLabel setFont:ZCUIFont12];
         [sendButton.layer setCornerRadius:4.0f];
         [sendButton.layer setMasksToBounds:YES];
 //        [sendButton setImage:[ZCUITools zcuiGetBundleImage:@"zcicon_emoji_send"] forState:UIControlStateNormal];

@@ -102,7 +102,12 @@ typedef NS_ENUM(NSInteger,ZCTipMessageType) {
     /**
      * 用户排队超时离线提醒
      */
-    ZCTipMessageChat_WaitingOutTips = 47
+    ZCTipMessageChat_WaitingOutTips = 47,
+    /**
+     * 用户排队超时离线提醒,继续排队
+     */
+    ZCTipMessageChat_WaitingContinueTips = 48,
+    ZCTipMessageChat_WaitingContinueMsg = 49
    
 };
 
@@ -408,6 +413,12 @@ typedef NS_ENUM(NSInteger,ZCTipMessageType) {
 // 临时使用，查询数据时赋值
 @property (nonatomic,strong) NSMutableAttributedString * displayMsgAttr;
 @property (nonatomic,strong) NSMutableAttributedString * displaySugestionattr;
+@property (nonatomic,strong) NSMutableAttributedString * displayMsgStripeattr;
+// 存一问多答的数据
+@property (nonatomic,strong) NSMutableArray *answersList;
+
+@property (nonatomic,assign) BOOL isInAnswerslist; // 是否在answerslist中
+@property (nonatomic,assign) BOOL isAnswerslistLast;// 当前是否是list中最后一个对象，最后一个对象才能有顶踩、转人工的功能
 
 /**
  获取显示的组合内容
@@ -424,4 +435,8 @@ typedef NS_ENUM(NSInteger,ZCTipMessageType) {
 
 -(NSString *)getLastMessage;
 - (NSString *)getHtmlAttrStringWithText:(NSString *)text;
+
+// 多轮引导语
+-(NSString *) getModelDisplayMsgStripeText;
+-(NSString *) getModelDisplayMsgStripeText:(BOOL) createAttr;
 @end

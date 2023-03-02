@@ -833,6 +833,7 @@
     _zc_imagepicker = [[UIImagePickerController alloc]init];
     _zc_imagepicker.mediaTypes = [NSArray arrayWithObjects:@"public.movie", @"public.image", nil];
     _zc_imagepicker.delegate = self;
+    _zc_imagepicker.view.backgroundColor = UIColorFromThemeColor(ZCBgSystemWhiteColor);
     [ZCSobotCore getPhotoByType:buttonIndex byUIImagePickerController:_zc_imagepicker Delegate:self];
 }
 #pragma mark UIImagePickerControllerDelegate

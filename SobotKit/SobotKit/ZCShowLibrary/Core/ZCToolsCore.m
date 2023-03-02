@@ -13,7 +13,7 @@
 #import "ZCUITools.h"
 #import "ZCVideoPlayer.h"
 
-#define RootVC  [[UIApplication sharedApplication] keyWindow].rootViewController
+#define RootVC  [[ZCToolsCore getToolsCore] getCurrentVC]
 
 @implementation ZCToolsCore
 
@@ -401,4 +401,40 @@ static dispatch_once_t onceToken;
     return window;
 }
 
+
+- (UIViewController *)getCurrentVC
+{
+    UIViewController *rootViewController = [self getCurWindow].rootViewController;
+    
+    UIViewController *currentVC = [self getCurrentVCFrom:rootViewController];
+    
+    return currentVC;
+}
+
+- (UIViewController *)getCurrentVCFrom:(UIViewController *)rootVC
+{
+    UIViewController *currentVC;
+    
+    if ([rootVC isKindOfClass:[UITabBarController class]]) {
+        // 根视图为UITabBarController
+        
+        currentVC = [self getCurrentVCFrom:[(UITabBarController *)rootVC selectedViewController]];
+        
+    } else if ([rootVC isKindOfClass:[UINavigationController class]]){
+        // 根视图为UINavigationController
+        
+        currentVC = [self getCurrentVCFrom:[(UINavigationController *)rootVC visibleViewController]];
+        
+    } else {
+        // 根视图为非导航类
+        if ([rootVC presentedViewController]) {
+            // 视图是被presented出来的
+            rootVC = [self getCurrentVCFrom:[rootVC presentedViewController]];
+        }else{
+            currentVC = rootVC;
+        }
+    }
+    
+    return currentVC;
+}
 @end

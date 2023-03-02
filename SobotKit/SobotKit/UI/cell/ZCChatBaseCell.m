@@ -100,6 +100,10 @@
         [_btnTurnUser setImage:[ZCUITools zcuiGetBundleImage:@"zcicon_turnserver_nol"] forState:UIControlStateHighlighted];
         _btnTurnUser.imageEdgeInsets = UIEdgeInsetsMake(0,-10.0, 0, 0);
         _btnTurnUser.titleEdgeInsets = UIEdgeInsetsMake(0, 15.0, 0, 0);
+        if ([sobotConvertToString([SobotLocaliable shareSobotLocaliable].absolute_language) hasPrefix:@"ar"]) {
+            _btnTurnUser.imageEdgeInsets = UIEdgeInsetsMake(0,0, 0, -10);
+            _btnTurnUser.titleEdgeInsets = UIEdgeInsetsMake(0, 0, 0, 15);
+        }
         
         
         [_btnTurnUser.titleLabel setFont:ZCUIFont14];
@@ -116,6 +120,10 @@
         _btnStepOn.layer.shadowColor = UIColorFromThemeColorAlpha(ZCTextMainColor, 0.15).CGColor;
         _btnStepOn.layer.shadowOffset = CGSizeZero;//投影偏移
         _btnStepOn.layer.shadowRadius = 2;
+        _btnStepOn.layer.borderColor = [ZCUITools zcgetTopBtnLayerColor].CGColor;
+        _btnStepOn.layer.borderWidth = 1;
+        _btnStepOn.layer.masksToBounds = YES;
+        _btnStepOn.titleLabel.font = [ZCUITools zcgetTopBtnFont];
         
         //        [_btnStepOn setTitle:@"无用" forState:UIControlStateNormal]; zcicon_useless_nol zcicon_useless_sel
         _btnStepOn.tag = ZCChatCellClickTypeStepOn;
@@ -137,35 +145,37 @@
         _btnTheTop.layer.shadowColor = UIColorFromThemeColorAlpha(ZCTextMainColor, 0.15).CGColor;
         _btnTheTop.layer.shadowOffset = CGSizeZero;//投影偏移
         _btnTheTop.layer.shadowRadius = 2;
-        
-
         [_btnTheTop setImage:[ZCUITools zcuiGetBundleImage:@"zcicon_useless_sel"] forState:UIControlStateNormal];
         [_btnTheTop setImage:[ZCUITools zcuiGetBundleImage:@"zcicon_useful_sel"] forState:UIControlStateHighlighted];
         _btnTheTop.tag = ZCChatCellClickTypeTheTop;
         [_btnTheTop addTarget:self action:@selector(connectWithStepOnWithTheTop:) forControlEvents:UIControlEventTouchUpInside];
         [self.contentView addSubview:_btnTheTop];
         _btnTheTop.hidden=YES;
+        _btnTheTop.layer.borderColor = [ZCUITools zcgetTopBtnLayerColor].CGColor;
+        _btnTheTop.layer.borderWidth = 1;
+        _btnTheTop.layer.masksToBounds = YES;
+        _btnTheTop.titleLabel.font = [ZCUITools zcgetTopBtnFont];
         
-        // 2.6.5改版 不在显示 当前控件 使用tost 显示
-//        _lblRobotCommentResult =[[UILabel alloc] init];
-//        [_lblRobotCommentResult setBackgroundColor:[UIColor clearColor]];
-//        [_lblRobotCommentResult setTextAlignment:NSTextAlignmentLeft];
-//        [_lblRobotCommentResult setFont:[ZCUITools zcgetListKitDetailFont]];
-//        [_lblRobotCommentResult setTextColor:[ZCUITools zcgetTimeTextColor]];
-//        [_lblRobotCommentResult setBackgroundColor:[UIColor clearColor]];
-//        //        [self.contentView addSubview:_lblRobotCommentResult];
-//        _lblRobotCommentResult.hidden=YES;
-        
-        
+        if ([self getCurConfig].realuateStyle) {
+            self.btnTheTop.imageEdgeInsets = UIEdgeInsetsMake(0,-10.0, 0, 0);
+            self.btnTheTop.titleEdgeInsets = UIEdgeInsetsMake(0, 15.0, 0, 0);
+            if ([sobotConvertToString([SobotLocaliable shareSobotLocaliable].absolute_language) hasPrefix:@"ar"]) {
+                self.btnTheTop.imageEdgeInsets = UIEdgeInsetsMake(0,0, 0, -10);
+                self.btnTheTop.titleEdgeInsets = UIEdgeInsetsMake(0, 0, 0, 15);
+            }
+            self.btnStepOn.imageEdgeInsets = UIEdgeInsetsMake(0,-10.0, 0, 0);
+            self.btnStepOn.titleEdgeInsets = UIEdgeInsetsMake(0, 15.0, 0, 0);
+            if ([sobotConvertToString([SobotLocaliable shareSobotLocaliable].absolute_language) hasPrefix:@"ar"]) {
+                self.btnStepOn.imageEdgeInsets = UIEdgeInsetsMake(0,0, 0, -10);
+                self.btnStepOn.titleEdgeInsets = UIEdgeInsetsMake(0, 0, 0, 15);
+            }
+            [self.btnTheTop setBackgroundColor:[UIColor clearColor]];
+            [self.btnStepOn setBackgroundColor:[UIColor clearColor]];
+        }
         
         _activityView=[[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-//        _activityView.hidden=YES;
-//        _activityView.hidesWhenStopped = YES;
         [self.contentView addSubview:_activityView];
-        
-        
         _ivLayerView = [[UIImageView alloc] init];
-        
         self.userInteractionEnabled=YES;
     }
     return self;
@@ -330,6 +340,23 @@
     return showheight;
 }
 
+
+/**
+ 计算Label高度
+ 
+ @param label 要计算的label，设置了值
+ @param width label的最大宽度
+ @param type 是否从新设置宽，1设置，0不设置
+ */
+- (CGSize )getLabelSize:(UILabel *)label with:(CGFloat )width{
+    //Calculate the expected size based on the font and linebreak mode of your label
+    // FLT_MAX here simply means no constraint in height
+    NSDictionary *attribute = @{NSFontAttributeName:label.font};
+     
+    CGSize size = [label.text boundingRectWithSize:CGSizeMake(width, MAXFLOAT) options: NSStringDrawingTruncatesLastVisibleLine | NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading attributes:attribute context:nil].size;
+    return size;
+}
+
 -(BOOL)isAddBottomBgView:(CGRect )backgroundF1 msgIsOneLine:(BOOL)isOneLine{
     self.btnTurnUser.hidden = YES;
     self.btnStepOn.hidden = YES;
@@ -363,10 +390,8 @@
             easyui = @"1";
         }
         
-        
         if(_tempModel.showTurnUser && ![self getCurConfig].isArtificial &&  temptype != 1){
-            
-            
+        
             NSDictionary * dict1 = @{@"title":ZCSTLocalString(@"转人工"),
                                      @"selImg":@"zcicon_turnserver_nol",
                                      @"nolImg":@"zcicon_turnserver_nol",
@@ -377,19 +402,20 @@
             [arr addObject:dict1];
             self.btnTurnUser.hidden = NO;
             //            self.bottomBgView.hidden = NO;
-            showheight = 40.0f;
+            showheight = 40.0f;  // 显示转人工按钮
         }
-        
+#pragma mark - 显示点踩 点赞，和已踩 已赞的场景
         if(self.tempModel.commentType > 0){
+            
             self.btnTheTop.hidden = NO;
             self.btnStepOn.hidden = NO;
             self.bottomBgView.hidden = NO;
-            
             self.btnTheTop.enabled = YES;
             self.btnStepOn.enabled = YES;
+            [self.btnTheTop setBackgroundColor:[UIColor clearColor]];
+            [self.btnStepOn setBackgroundColor:[UIColor clearColor]];
             
             if(self.tempModel.commentType == 1){
-                
                 NSDictionary * dict2 = @{@"title":ZCSTLocalString(@"YES"),
                                          @"selImg":@"zcicon_useful_sel",
                                          @"nolImg":@"zcicon_useful_nol",
@@ -397,7 +423,6 @@
                                          @"isEnabled":@"1",
                                          @"easyui":easyui
                                          };
-                
                 NSDictionary * dict3 = @{@"title":ZCSTLocalString(@"NoUse"),
                                          @"selImg":@"zcicon_useless_sel",
                                          @"nolImg":@"zcicon_useless_nol",
@@ -408,6 +433,7 @@
                 
                 [arr addObject:dict2];
                 [arr addObject:dict3];
+                
             }else{
                 // 已赞
                 if(self.tempModel.commentType == 2){
@@ -418,7 +444,6 @@
                                              @"isEnabled":@"0",
                                              @"easyui":easyui
                                              };
-                    
                     NSDictionary * dict3 = @{@"title":ZCSTLocalString(@"NoUse"),
                                              @"selImg":@"zcicon_useless_sel",
                                              @"nolImg":@"zcicon_useless_nol",
@@ -426,7 +451,6 @@
                                              @"isEnabled":@"0",
                                              @"easyui":@"1"
                                              };
-                    
                     [arr addObject:dict2];
                     [arr addObject:dict3];
                     self.btnTheTop.enabled = NO;
@@ -439,7 +463,6 @@
                                              @"isEnabled":@"0",
                                              @"easyui":@"1"
                                              };
-                    
                     NSDictionary * dict3 = @{@"title":ZCSTLocalString(@"NoUse"),
                                              @"selImg":@"zcicon_useless_sel",
                                              @"nolImg":@"zcicon_useless_nol",
@@ -451,7 +474,7 @@
                     self.btnStepOn.enabled = NO;
                     [arr addObject:dict2];
                     [arr addObject:dict3];
-                }else if (self.tempModel.commentType == 4){
+                }else if (self.tempModel.commentType == 4){ // 超时置灰 不可点
                     NSDictionary * dict2 = @{@"title":ZCSTLocalString(@"YES"),
                                              @"selImg":@"zcicon_useful_sel",
                                              @"nolImg":@"zcicon_useful_nol",
@@ -459,7 +482,6 @@
                                              @"isEnabled":@"0",
                                              @"easyui":easyui
                                              };
-                    
                     NSDictionary * dict3 = @{@"title":ZCSTLocalString(@"NoUse"),
                                              @"selImg":@"zcicon_useless_sel",
                                              @"nolImg":@"zcicon_useless_nol",
@@ -479,152 +501,260 @@
         
         // 要显示顶踩 和转人工
         if (showheight >0) {
-//            CGFloat W = CGRectGetWidth(self.bottomBgView.frame);
+            CGSize trunSize= [self getLabelSize:self.btnTurnUser.titleLabel with:self.maxWidth];
+            if(trunSize.width < 60){
+                trunSize.width = 60;
+            }
+            trunSize.width = trunSize.width + 40;
             
             // 布局 bottomBGView
             if (arr.count == 1) {
-                // 只有 转人工
-                self.btnTurnUser.frame = CGRectMake(backgroundF1.origin.x, CGRectGetMaxY(backgroundF1) + 10, 100 , 30);
+#pragma mark - // 1 只有 转人工
                 NSDictionary * dict = arr[0];
                 [self.btnTurnUser setTitleColor:[ZCUITools zcgetTopBtnNolColor] forState:UIControlStateNormal];
                 [self.btnTurnUser setTitle:ZCSTLocalString(@"转人工") forState:UIControlStateNormal];
-                
                 if ([dict[@"easyui"] intValue] ==1) {
                     [self.btnTurnUser setTitleColor:[ZCUITools zcgetTopBtnGreyColor] forState:UIControlStateNormal];
                 }
                 
+                
+                
+                self.btnTurnUser.frame = CGRectMake(backgroundF1.origin.x, CGRectGetMaxY(backgroundF1) + 10, trunSize.width , 30);
             }else if (arr.count == 2){
-                // 只有顶踩
-                self.btnTheTop.frame = CGRectMake(CGRectGetMaxX(backgroundF1)+10,  CGRectGetMaxY(backgroundF1) - 32*2 - 8, 32, 32);
-                if (isOneLine) {
-                    // 当显示文本内容只有1行或者两行时，设置按钮的位置
-                    self.btnTheTop.frame = CGRectMake(CGRectGetMaxX(backgroundF1)+10, CGRectGetMaxY(backgroundF1) - CGRectGetHeight(backgroundF1) - 16 , 32, 32);
-                }
-                
-                NSDictionary * dict = arr[0];
-                
-                [self.btnTheTop setImage:[ZCUITools zcuiGetBundleImage:dict[@"nolImg"]] forState:UIControlStateNormal];
-                [self.btnTheTop setImage:[ZCUITools zcuiGetBundleImage:dict[@"selImg"]] forState:UIControlStateHighlighted];
-                if ([dict[@"easyui"] intValue] ==1) {
-                }
-                
-                // 选中
-                if ([dict[@"status"] intValue] == 1) {
-                    [self.btnTheTop setImage:[ZCUITools zcuiGetBundleImage:dict[@"selImg"]] forState:UIControlStateNormal];
+#pragma mark -  // 2 只有顶踩 两个按钮
+                if ([self getCurConfig].realuateStyle) {
+#pragma mark -  // 2.1按钮在下面
+                    self.btnTheTop.frame = CGRectMake(backgroundF1.origin.x,  CGRectGetMaxY(backgroundF1) + 10, 90, 32);
+                    NSDictionary * dict = arr[0];
+                    [self.btnTheTop setImage:[ZCUITools zcuiGetBundleImage:dict[@"nolImg"]] forState:UIControlStateNormal];
                     [self.btnTheTop setImage:[ZCUITools zcuiGetBundleImage:dict[@"selImg"]] forState:UIControlStateHighlighted];
-                    [self.btnTheTop setImage:[ZCUITools zcuiGetBundleImage:dict[@"selImg"]] forState:UIControlStateDisabled];
-
-                    if (isOneLine) {
-                        self.btnTheTop.frame = CGRectMake(CGRectGetMaxX(backgroundF1)+10 , CGRectGetMaxY(backgroundF1) - 32   , 32, 32);
-                    }else{
-                        self.btnTheTop.frame = CGRectMake(CGRectGetMaxX(backgroundF1)+10 , CGRectGetMaxY(backgroundF1) - 32  , 32, 32);
+                    [self.btnTheTop setTitle:ZCSTLocalString(@"顶") forState:UIControlStateNormal];
+                    [self.btnTheTop setTitle:ZCSTLocalString(@"顶") forState:UIControlStateHighlighted];
+                    self.btnTheTop.layer.cornerRadius = 16;
+                    self.btnTheTop.layer.masksToBounds = YES;
+                    self.btnTheTop.layer.borderColor = [ZCUITools zcgetTopBtnLayerColor].CGColor;
+                    self.btnTheTop.layer.borderWidth = 1;
+                    [self.btnTheTop setTitleColor:[ZCUITools zcgetTopBtnNolColor] forState:UIControlStateNormal];
+                    if ([dict[@"easyui"] intValue] ==1) {
                     }
-                    
-                    self.btnStepOn.hidden = YES;
-                }
-                
-                self.btnStepOn.frame = CGRectMake(CGRectGetMaxX(backgroundF1)+10 , CGRectGetMaxY(self.btnTheTop.frame) + 8, 32, 32);
-                NSDictionary * dict1 = arr[1];
-                
-                [self.btnStepOn setImage:[ZCUITools zcuiGetBundleImage:dict1[@"nolImg"]] forState:UIControlStateNormal];
-                [self.btnStepOn setImage:[ZCUITools zcuiGetBundleImage:dict1[@"selImg"]] forState:UIControlStateHighlighted];
-                
-                if ([dict1[@"easyui"] intValue] ==1) {
-                    //                    [self.btnStepOn setTitleColor:[ZCUITools zcgetTopBtnGreyColor] forState:UIControlStateNormal];
-                }
-                
-                // 选中
-                if ([dict1[@"status"] intValue] == 1) {
-                    [self.btnStepOn setImage:[ZCUITools zcuiGetBundleImage:dict1[@"selImg"]] forState:UIControlStateNormal];
+                    // 选中顶
+                    if ([dict[@"status"] intValue] == 1) {
+                        [self.btnTheTop setImage:[ZCUITools zcuiGetBundleImage:dict[@"selImg"]] forState:UIControlStateNormal];
+                        [self.btnTheTop setImage:[ZCUITools zcuiGetBundleImage:dict[@"selImg"]] forState:UIControlStateHighlighted];
+                        [self.btnTheTop setImage:[ZCUITools zcuiGetBundleImage:dict[@"selImg"]] forState:UIControlStateDisabled];
+                        [self.btnTheTop setTitleColor:[ZCUITools zcgetTopBtnSelColor] forState:UIControlStateNormal];
+                        self.btnTheTop.layer.borderColor = [ZCUITools zcgetTopBtnLayerSelColor].CGColor;
+                        [self.btnTheTop setBackgroundColor:[ZCUITools zcgetTopBtnBgSelColor]];
+                        // 需要选中的背景颜色
+                        self.btnStepOn.hidden = YES;
+                        // 顶的位置不变
+                    }
+                    self.btnStepOn.frame = CGRectMake(CGRectGetMaxX(self.btnTheTop.frame)+10 , CGRectGetMaxY(backgroundF1) + 10, 90, 32);
+                    NSDictionary * dict1 = arr[1];
+                    [self.btnStepOn setImage:[ZCUITools zcuiGetBundleImage:dict1[@"nolImg"]] forState:UIControlStateNormal];
                     [self.btnStepOn setImage:[ZCUITools zcuiGetBundleImage:dict1[@"selImg"]] forState:UIControlStateHighlighted];
-                    [self.btnStepOn setImage:[ZCUITools zcuiGetBundleImage:dict1[@"selImg"]] forState:UIControlStateDisabled];
-
+                    [self.btnStepOn setTitle:ZCSTLocalString(@"踩") forState:UIControlStateNormal];
+                    [self.btnStepOn setTitle:ZCSTLocalString(@"踩") forState:UIControlStateHighlighted];
+                    self.btnStepOn.layer.cornerRadius = 16;
+                    self.btnStepOn.layer.masksToBounds = YES;
+                    self.btnStepOn.layer.borderColor = [ZCUITools zcgetTopBtnLayerColor].CGColor;
+                    self.btnStepOn.layer.borderWidth = 1;
+                    [self.btnStepOn setTitleColor:[ZCUITools zcgetTopBtnNolColor] forState:UIControlStateNormal];
+                    
+                    // 选中 踩
+                    if ([dict1[@"status"] intValue] == 1) {
+                        [self.btnStepOn setImage:[ZCUITools zcuiGetBundleImage:dict1[@"selImg"]] forState:UIControlStateNormal];
+                        [self.btnStepOn setImage:[ZCUITools zcuiGetBundleImage:dict1[@"selImg"]] forState:UIControlStateHighlighted];
+                        [self.btnStepOn setImage:[ZCUITools zcuiGetBundleImage:dict1[@"selImg"]] forState:UIControlStateDisabled];
+                        [self.btnStepOn setTitleColor:[ZCUITools zcgetTopBtnSelColor] forState:UIControlStateNormal];
+                        self.btnStepOn.layer.borderColor = [ZCUITools zcgetTopBtnLayerSelColor].CGColor;
+                        [self.btnStepOn setBackgroundColor:[ZCUITools zcgetTopBtnBgSelColor]];
+                        self.btnTheTop.hidden = YES;
+                        self.btnStepOn.frame = CGRectMake(backgroundF1.origin.x , CGRectGetMaxY(backgroundF1) + 10, 90, 32);
+                    }
+                }else{
+#pragma mark -    2.2//按钮在右侧
+                    self.btnTheTop.frame = CGRectMake(CGRectGetMaxX(backgroundF1)+10,  CGRectGetMaxY(backgroundF1) - 32*2 - 8, 32, 32);
                     if (isOneLine) {
-                        self.btnStepOn.frame = CGRectMake(CGRectGetMaxX(backgroundF1)+10 , CGRectGetMaxY(backgroundF1) - 32   , 32, 32);
-                    }else{
-                        self.btnStepOn.frame = CGRectMake(CGRectGetMaxX(backgroundF1)+10 , CGRectGetMaxY(backgroundF1) - 32   , 32, 32);
-
+                        // 当显示文本内容只有1行或者两行时，设置按钮的位置
+                        self.btnTheTop.frame = CGRectMake(CGRectGetMaxX(backgroundF1)+10, CGRectGetMaxY(backgroundF1) - CGRectGetHeight(backgroundF1) - 16 , 32, 32);
+                    }
+                    NSDictionary * dict = arr[0];
+                    [self.btnTheTop setImage:[ZCUITools zcuiGetBundleImage:dict[@"nolImg"]] forState:UIControlStateNormal];
+                    [self.btnTheTop setImage:[ZCUITools zcuiGetBundleImage:dict[@"selImg"]] forState:UIControlStateHighlighted];
+                    // 选中
+                    if ([dict[@"status"] intValue] == 1) {
+                        [self.btnTheTop setImage:[ZCUITools zcuiGetBundleImage:dict[@"selImg"]] forState:UIControlStateNormal];
+                        [self.btnTheTop setImage:[ZCUITools zcuiGetBundleImage:dict[@"selImg"]] forState:UIControlStateHighlighted];
+                        [self.btnTheTop setImage:[ZCUITools zcuiGetBundleImage:dict[@"selImg"]] forState:UIControlStateDisabled];
+                        if (isOneLine) {
+                            self.btnTheTop.frame = CGRectMake(CGRectGetMaxX(backgroundF1)+10 , CGRectGetMaxY(backgroundF1) - 32   , 32, 32);
+                        }else{
+                            self.btnTheTop.frame = CGRectMake(CGRectGetMaxX(backgroundF1)+10 , CGRectGetMaxY(backgroundF1) - 32  , 32, 32);
+                        }
+                        self.btnTheTop.layer.borderColor = [ZCUITools zcgetTopBtnLayerSelColor].CGColor;
+                        [self.btnTheTop setBackgroundColor:[ZCUITools zcgetTopBtnBgSelColor]];
+                        self.btnStepOn.hidden = YES;
                     }
                     
-                    self.btnTheTop.hidden = YES;
+                    self.btnStepOn.frame = CGRectMake(CGRectGetMaxX(backgroundF1)+10 , CGRectGetMaxY(self.btnTheTop.frame) + 8, 32, 32);
+                    NSDictionary * dict1 = arr[1];
+                    [self.btnStepOn setImage:[ZCUITools zcuiGetBundleImage:dict1[@"nolImg"]] forState:UIControlStateNormal];
+                    [self.btnStepOn setImage:[ZCUITools zcuiGetBundleImage:dict1[@"selImg"]] forState:UIControlStateHighlighted];
+                    // 选中
+                    if ([dict1[@"status"] intValue] == 1) {
+                        [self.btnStepOn setImage:[ZCUITools zcuiGetBundleImage:dict1[@"selImg"]] forState:UIControlStateNormal];
+                        [self.btnStepOn setImage:[ZCUITools zcuiGetBundleImage:dict1[@"selImg"]] forState:UIControlStateHighlighted];
+                        [self.btnStepOn setImage:[ZCUITools zcuiGetBundleImage:dict1[@"selImg"]] forState:UIControlStateDisabled];
+                        if (isOneLine) {
+                            self.btnStepOn.frame = CGRectMake(CGRectGetMaxX(backgroundF1)+10 , CGRectGetMaxY(backgroundF1) - 32   , 32, 32);
+                        }else{
+                            self.btnStepOn.frame = CGRectMake(CGRectGetMaxX(backgroundF1)+10 , CGRectGetMaxY(backgroundF1) - 32   , 32, 32);
+                        }
+                        self.btnStepOn.layer.borderColor = [ZCUITools zcgetTopBtnLayerSelColor].CGColor;
+                        [self.btnStepOn setBackgroundColor:[ZCUITools zcgetTopBtnBgSelColor]];
+                        self.btnTheTop.hidden = YES;
+                    }
                 }
-                
             }else if (arr.count == 3){
-                // 三者都有
-                self.btnTurnUser.frame = CGRectMake(backgroundF1.origin.x, CGRectGetMaxY(backgroundF1) + 10, 100 , 30);
-                NSDictionary * dict = arr[0];
-                [self.btnTurnUser setTitleColor:[ZCUITools zcgetTopBtnNolColor] forState:UIControlStateNormal];
-                
-                if ([dict[@"easyui"] intValue] ==1) {
-                    [self.btnTurnUser setTitleColor:[ZCUITools zcgetTopBtnGreyColor] forState:UIControlStateNormal];
-                }
-                
-                self.btnTheTop.frame = CGRectMake(CGRectGetMaxX(backgroundF1)+10, CGRectGetMaxY(backgroundF1) - 32*2 - 8, 32, 32);
-                if (isOneLine) {
-                    // 当显示文本内容只有1行或者两行时，设置按钮的位置
-                    self.btnTheTop.frame = CGRectMake(CGRectGetMaxX(backgroundF1)+10, CGRectGetMaxY(backgroundF1) - CGRectGetHeight(backgroundF1) - 16 , 32, 32);
-                }
-                NSDictionary * dict1 = arr[1];
-                
-                [self.btnTheTop setImage:[ZCUITools zcuiGetBundleImage:dict1[@"nolImg"]] forState:UIControlStateNormal];
-                [self.btnTheTop setImage:[ZCUITools zcuiGetBundleImage:dict1[@"selImg"]] forState:UIControlStateHighlighted];
-                
-                if ([dict1[@"easyui"] intValue] ==1) {
-                    [self.btnTheTop setTitleColor:[ZCUITools zcgetTopBtnGreyColor] forState:UIControlStateNormal];
-                }
-                
-                // 选中
-                if ([dict1[@"status"] intValue] == 1) {
-                    [self.btnTheTop setTitleColor:[ZCUITools zcgetTopBtnSelColor] forState:UIControlStateNormal];
-                    [self.btnTheTop setImage:[ZCUITools zcuiGetBundleImage:dict1[@"selImg"]] forState:UIControlStateNormal];
+#pragma mark -  //3 三者都有
+                if ([self getCurConfig].realuateStyle) {
+#pragma mark - 3.1 都在下方
+                    self.btnTheTop.frame = CGRectMake(backgroundF1.origin.x, CGRectGetMaxY(backgroundF1)+10, 90, 32);
+                    NSDictionary * dict1 = arr[1];
+                    [self.btnTheTop setImage:[ZCUITools zcuiGetBundleImage:dict1[@"nolImg"]] forState:UIControlStateNormal];
                     [self.btnTheTop setImage:[ZCUITools zcuiGetBundleImage:dict1[@"selImg"]] forState:UIControlStateHighlighted];
-                                    [self.btnTheTop setImage:[ZCUITools zcuiGetBundleImage:dict1[@"selImg"]] forState:UIControlStateDisabled];
-                    if (isOneLine) {
-                        self.btnTheTop.frame = CGRectMake(CGRectGetMaxX(backgroundF1)+10 , CGRectGetMaxY(backgroundF1) - 32   , 32, 32);
-                    }else{
-                        self.btnTheTop.frame = CGRectMake(CGRectGetMaxX(backgroundF1)+10 , CGRectGetMaxY(backgroundF1) - 32   , 32, 32);
-
+                    [self.btnTheTop setTitle:ZCSTLocalString(@"顶") forState:UIControlStateNormal];
+                    [self.btnTheTop setTitle:ZCSTLocalString(@"顶") forState:UIControlStateHighlighted];
+                    self.btnTheTop.layer.cornerRadius = 16;
+                    self.btnTheTop.layer.masksToBounds = YES;
+                    self.btnTheTop.layer.borderColor = [ZCUITools zcgetTopBtnLayerColor].CGColor;
+                    self.btnTheTop.layer.borderWidth = 1;
+                    [self.btnTheTop setTitleColor:[ZCUITools zcgetTopBtnNolColor] forState:UIControlStateNormal];
+                    if ([dict1[@"easyui"] intValue] ==1) {
+                        [self.btnTheTop setTitleColor:[ZCUITools zcgetTopBtnGreyColor] forState:UIControlStateNormal];
                     }
-                    
-                    self.btnStepOn.hidden = YES;
-                }
-                
-                self.btnStepOn.frame = CGRectMake(CGRectGetMaxX(backgroundF1)+10 , CGRectGetMaxY(self.btnTheTop.frame) + 8, 32, 32);
-                NSDictionary * dict2 = arr[2];
-                
-                [self.btnStepOn setImage:[ZCUITools zcuiGetBundleImage:dict2[@"nolImg"]] forState:UIControlStateNormal];
-                [self.btnStepOn setImage:[ZCUITools zcuiGetBundleImage:dict2[@"selImg"]] forState:UIControlStateHighlighted];
-                
-                if ([dict2[@"easyui"] intValue] ==1) {
-                    [self.btnStepOn setTitleColor:[ZCUITools zcgetTopBtnGreyColor] forState:UIControlStateNormal];
-                }
-                
-                // 选中
-                if ([dict2[@"status"] intValue] == 1) {
-                    [self.btnStepOn setTitleColor:[ZCUITools zcgetTopBtnSelColor] forState:UIControlStateNormal];
-                    [self.btnStepOn setImage:[ZCUITools zcuiGetBundleImage:dict2[@"selImg"]] forState:UIControlStateNormal];
+                   
+                    self.btnStepOn.frame = CGRectMake(CGRectGetMaxX(self.btnTheTop.frame)+10 , CGRectGetMaxY(backgroundF1) + 10, 90, 32);
+                    NSDictionary * dict2 = arr[2];
+                    [self.btnStepOn setImage:[ZCUITools zcuiGetBundleImage:dict2[@"nolImg"]] forState:UIControlStateNormal];
                     [self.btnStepOn setImage:[ZCUITools zcuiGetBundleImage:dict2[@"selImg"]] forState:UIControlStateHighlighted];
-                    [self.btnStepOn setImage:[ZCUITools zcuiGetBundleImage:dict2[@"selImg"]] forState:UIControlStateDisabled];
-
-                    
-                    if (isOneLine) {
-                        self.btnStepOn.frame = CGRectMake(CGRectGetMaxX(backgroundF1)+10 , CGRectGetMaxY(backgroundF1) - 32   , 32, 32);
-                    }else{
-                        self.btnStepOn.frame = CGRectMake(CGRectGetMaxX(backgroundF1)+10 , CGRectGetMaxY(backgroundF1) - 32   , 32, 32);
-
+                    [self.btnStepOn setTitle:ZCSTLocalString(@"踩") forState:UIControlStateNormal];
+                    [self.btnStepOn setTitle:ZCSTLocalString(@"踩") forState:UIControlStateHighlighted];
+                    self.btnStepOn.layer.cornerRadius = 16;
+                    self.btnStepOn.layer.masksToBounds = YES;
+                    self.btnStepOn.layer.borderColor = [ZCUITools zcgetTopBtnLayerColor].CGColor;
+                    self.btnStepOn.layer.borderWidth = 1;
+                    [self.btnStepOn setTitleColor:[ZCUITools zcgetTopBtnNolColor] forState:UIControlStateNormal];
+                    if ([dict2[@"easyui"] intValue] ==1) {
+                        [self.btnStepOn setTitleColor:[ZCUITools zcgetTopBtnGreyColor] forState:UIControlStateNormal];
+                    }
+                    // 选中踩按钮
+                    if ([dict2[@"status"] intValue] == 1) {
+                        [self.btnStepOn setTitleColor:[ZCUITools zcgetTopBtnSelColor] forState:UIControlStateNormal];
+                        [self.btnStepOn setImage:[ZCUITools zcuiGetBundleImage:dict2[@"selImg"]] forState:UIControlStateNormal];
+                        [self.btnStepOn setImage:[ZCUITools zcuiGetBundleImage:dict2[@"selImg"]] forState:UIControlStateHighlighted];
+                        [self.btnStepOn setImage:[ZCUITools zcuiGetBundleImage:dict2[@"selImg"]] forState:UIControlStateDisabled];
+                        self.btnStepOn.frame = CGRectMake(backgroundF1.origin.x , CGRectGetMaxY(backgroundF1)+10 ,90, 32);
+                        self.btnTheTop.hidden = YES;
+                        self.btnTheTop.frame = CGRectMake(backgroundF1.origin.x, CGRectGetMaxY(backgroundF1)+10, 0, 32);
+                        self.btnStepOn.layer.borderColor = [ZCUITools zcgetTopBtnLayerSelColor].CGColor;
+                        [self.btnStepOn setBackgroundColor:[ZCUITools zcgetTopBtnBgSelColor]];
                     }
                     
-                    self.btnTheTop.hidden = YES;
+                    // 选中顶按钮
+                    if ([dict1[@"status"] intValue] == 1) {
+                        [self.btnTheTop setTitleColor:[ZCUITools zcgetTopBtnSelColor] forState:UIControlStateNormal];
+                        [self.btnTheTop setImage:[ZCUITools zcuiGetBundleImage:dict1[@"selImg"]] forState:UIControlStateNormal];
+                        [self.btnTheTop setImage:[ZCUITools zcuiGetBundleImage:dict1[@"selImg"]] forState:UIControlStateHighlighted];
+                        [self.btnTheTop setImage:[ZCUITools zcuiGetBundleImage:dict1[@"selImg"]] forState:UIControlStateDisabled];
+                        [self.btnTheTop setTitleColor:[ZCUITools zcgetTopBtnSelColor] forState:UIControlStateNormal];
+                        self.btnTheTop.layer.borderColor = [ZCUITools zcgetTopBtnLayerSelColor].CGColor;
+                        [self.btnTheTop setBackgroundColor:[ZCUITools zcgetTopBtnBgSelColor]];
+                        // 选中的话位置不变
+                        self.btnStepOn.hidden = YES;
+                        self.btnStepOn.frame = CGRectMake(CGRectGetMaxX(self.btnTheTop.frame) , CGRectGetMaxY(backgroundF1)+10 ,0, 32);
+                    }
+                    
+                    
+                    // 转人工按钮在最右侧
+                    self.btnTurnUser.frame = CGRectMake(CGRectGetMaxX(self.btnStepOn.frame)+10, CGRectGetMaxY(backgroundF1) + 10, trunSize.width , 30);
+                    if (self.btnStepOn.hidden && !self.btnTheTop.hidden) {
+                        self.btnTurnUser.frame = CGRectMake(CGRectGetMaxX(self.btnTheTop.frame)+10, CGRectGetMaxY(backgroundF1) + 10, trunSize.width , 30);
+                    }
+                    NSDictionary * dict = arr[0];
+                    [self.btnTurnUser setTitleColor:[ZCUITools zcgetTopBtnNolColor] forState:UIControlStateNormal];
+                    if ([dict[@"easyui"] intValue] ==1) {
+                        [self.btnTurnUser setTitleColor:[ZCUITools zcgetTopBtnGreyColor] forState:UIControlStateNormal];
+                    }
+                }else{
+#pragma mark - 3.2 点踩在右侧 转人工按钮在下方
+                    
+                    self.btnTurnUser.frame = CGRectMake(backgroundF1.origin.x, CGRectGetMaxY(backgroundF1) + 10, trunSize.width , 30);
+                    NSDictionary * dict = arr[0];
+                    [self.btnTurnUser setTitleColor:[ZCUITools zcgetTopBtnNolColor] forState:UIControlStateNormal];
+                    if ([dict[@"easyui"] intValue] ==1) {
+                        [self.btnTurnUser setTitleColor:[ZCUITools zcgetTopBtnGreyColor] forState:UIControlStateNormal];
+                    }
+                    self.btnTheTop.frame = CGRectMake(CGRectGetMaxX(backgroundF1)+10, CGRectGetMaxY(backgroundF1) - 32*2 - 8, 32, 32);
+                    if (isOneLine) {
+                        // 当显示文本内容只有1行或者两行时，设置按钮的位置
+                        self.btnTheTop.frame = CGRectMake(CGRectGetMaxX(backgroundF1)+10, CGRectGetMaxY(backgroundF1) - CGRectGetHeight(backgroundF1) - 16 , 32, 32);
+                    }
+                    NSDictionary * dict1 = arr[1];
+                    [self.btnTheTop setImage:[ZCUITools zcuiGetBundleImage:dict1[@"nolImg"]] forState:UIControlStateNormal];
+                    [self.btnTheTop setImage:[ZCUITools zcuiGetBundleImage:dict1[@"selImg"]] forState:UIControlStateHighlighted];
+                    if ([dict1[@"easyui"] intValue] ==1) {
+                        [self.btnTheTop setTitleColor:[ZCUITools zcgetTopBtnGreyColor] forState:UIControlStateNormal];
+                    }
+                    // 选中
+                    if ([dict1[@"status"] intValue] == 1) {
+                        [self.btnTheTop setTitleColor:[ZCUITools zcgetTopBtnSelColor] forState:UIControlStateNormal];
+                        [self.btnTheTop setImage:[ZCUITools zcuiGetBundleImage:dict1[@"selImg"]] forState:UIControlStateNormal];
+                        [self.btnTheTop setImage:[ZCUITools zcuiGetBundleImage:dict1[@"selImg"]] forState:UIControlStateHighlighted];
+                        [self.btnTheTop setImage:[ZCUITools zcuiGetBundleImage:dict1[@"selImg"]] forState:UIControlStateDisabled];
+                        if (isOneLine) {
+                            self.btnTheTop.frame = CGRectMake(CGRectGetMaxX(backgroundF1)+10 , CGRectGetMaxY(backgroundF1) - 32   , 32, 32);
+                        }else{
+                            self.btnTheTop.frame = CGRectMake(CGRectGetMaxX(backgroundF1)+10 , CGRectGetMaxY(backgroundF1) - 32   , 32, 32);
+                        }
+                        self.btnTheTop.layer.borderColor = [ZCUITools zcgetTopBtnLayerSelColor].CGColor;
+                        [self.btnTheTop setBackgroundColor:[ZCUITools zcgetTopBtnBgSelColor]];
+                        self.btnStepOn.hidden = YES;
+                    }
+                    self.btnStepOn.frame = CGRectMake(CGRectGetMaxX(backgroundF1)+10 , CGRectGetMaxY(self.btnTheTop.frame) + 8, 32, 32);
+                    NSDictionary * dict2 = arr[2];
+                    [self.btnStepOn setImage:[ZCUITools zcuiGetBundleImage:dict2[@"nolImg"]] forState:UIControlStateNormal];
+                    [self.btnStepOn setImage:[ZCUITools zcuiGetBundleImage:dict2[@"selImg"]] forState:UIControlStateHighlighted];
+                    if ([dict2[@"easyui"] intValue] ==1) {
+                        [self.btnStepOn setTitleColor:[ZCUITools zcgetTopBtnGreyColor] forState:UIControlStateNormal];
+                    }
+                    // 选中
+                    if ([dict2[@"status"] intValue] == 1) {
+                        [self.btnStepOn setTitleColor:[ZCUITools zcgetTopBtnSelColor] forState:UIControlStateNormal];
+                        [self.btnStepOn setImage:[ZCUITools zcuiGetBundleImage:dict2[@"selImg"]] forState:UIControlStateNormal];
+                        [self.btnStepOn setImage:[ZCUITools zcuiGetBundleImage:dict2[@"selImg"]] forState:UIControlStateHighlighted];
+                        [self.btnStepOn setImage:[ZCUITools zcuiGetBundleImage:dict2[@"selImg"]] forState:UIControlStateDisabled];
+                        if (isOneLine) {
+                            self.btnStepOn.frame = CGRectMake(CGRectGetMaxX(backgroundF1)+10 , CGRectGetMaxY(backgroundF1) - 32   , 32, 32);
+                        }else{
+                            self.btnStepOn.frame = CGRectMake(CGRectGetMaxX(backgroundF1)+10 , CGRectGetMaxY(backgroundF1) - 32   , 32, 32);
+                        }
+                        self.btnStepOn.layer.borderColor = [ZCUITools zcgetTopBtnSelColor].CGColor;
+                        [self.btnStepOn setBackgroundColor:[ZCUITools zcgetTopBtnBgSelColor]];
+                        self.btnTheTop.hidden = YES;
+                    }
                 }
-                
             }
-            
         }
     }
     
     if(arr.count == 1 ||arr.count == 3){
         return YES;
     }else{
+        if ([self getCurConfig].realuateStyle) {
+            return YES;
+        }
         return NO;
     }
     
@@ -744,6 +874,10 @@
         
         // 显示转人工按钮，并且当前不是仅人工模式和人工接待状态
         if(messageModel.showTurnUser && ![[ZCPlatformTools sharedInstance] getPlatformInfo].config.isArtificial &&  temptype != 1){
+            showheight = 20.0f;
+        }
+        // 高度 底部显示点踩
+        if ([[ZCPlatformTools sharedInstance] getPlatformInfo].config.realuateStyle && messageModel.commentType> 0) {
             showheight = 20.0f;
         }
         

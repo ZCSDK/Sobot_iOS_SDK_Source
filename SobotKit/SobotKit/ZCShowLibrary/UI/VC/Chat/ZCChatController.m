@@ -28,8 +28,6 @@
 
 @property (nonatomic,strong) ZCChatView * chatView;
 
-//@property (nonatomic,strong)NSDate *countDate;
-
 @end
 
 @implementation ZCChatController
@@ -41,7 +39,6 @@
     }else{
         [self setNavigationBarStyle];
     }
-
     
     // 从其他页面返回时，重新布局
     if(self.chatView){
@@ -52,9 +49,7 @@
 
 -(void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
-    
     [ZCAutoListView getAutoListView].isAllowShow = YES;
-    
     // 如果多级返回的，此数据为空
     if([ZCUICore getUICore].listArray == nil){
         // 多级跳转的时候，需要重新初始化一次UI
@@ -152,7 +147,6 @@
         
     self.view.backgroundColor = [ZCUITools zcgetBackgroundColor]; //UIColorFromThemeColor(ZCBgSystemWhiteLightDarkColor);
     
-    
     CGFloat startY = 0;
     CGFloat chatHeight = viewHeigth;
     
@@ -168,7 +162,6 @@
     }
     
     chatHeight = chatHeight - XBottomBarHeight ;//(isLandspace?0:XBottomBarHeight);
-
     
     // 创建聊天视图
     _chatView = [[ZCChatView alloc]initWithFrame:CGRectMake(0, startY, self.view.frame.size.width, chatHeight) WithSuperController:self customNav:!self.navigationController.navigationBarHidden];
@@ -183,9 +176,10 @@
     [_chatView showZCChatView:[ZCUICore getUICore].kitInfo];
     
     // 用户在自己的页面关闭智齿页面
+    __weak ZCChatController *weakSelf = self;
     [ZCUICore getUICore].ZCClosePageBlock = ^(ZCPagesType type) {
         if (type == ZC_UserClosePage) {
-            [self closePage];
+            [weakSelf closePage];
         }
     };
 }
@@ -204,21 +198,22 @@
         // 返回提醒开关
         if ([ZCUICore getUICore].kitInfo.isShowReturnTips) {
             [self.view endEditing:YES];
+            __weak ZCChatController *weakSelf = self;
            [[ZCToolsCore getToolsCore] showAlert:ZCSTLocalString(@"您是否要结束会话?") message:nil cancelTitle:ZCSTLocalString(@"暂时离开") titleArray:@[ZCSTLocalString(@"结束会话")] viewController:self  confirm:^(NSInteger buttonTag) {
                if(buttonTag >= 0){
                    // 点击关闭，离线用户
-                   [self.chatView confimGoBackWithType:ZCChatViewGoBackType_close];
+                   [weakSelf.chatView confimGoBackWithType:ZCChatViewGoBackType_close];
                    [[ZCUICore getUICore] setclosepamasAndClearConfig];
                }else{
                    
-                   [self.chatView setIsCloseNo];
+                   [weakSelf.chatView setIsCloseNo];
                    [[ZCUICore getUICore] setclosepamasAndClearConfig];
-                   if (self.navigationController && _isPush) {
+                   if (weakSelf.navigationController && weakSelf.isPush) {
                        // 滑动返回会调用 goBack方法
-                       [self.navigationController popViewControllerAnimated:YES];
+                       [weakSelf.navigationController popViewControllerAnimated:YES];
                    }else{
-                       [self goBack];
-                       [self dismissViewControllerAnimated:YES completion:nil];
+                       [weakSelf goBack];
+                       [weakSelf dismissViewControllerAnimated:YES completion:nil];
                    }
                }
            }];
@@ -251,9 +246,10 @@
 }
 
 -(void)goBack{
-     NSLog(@"页面清理了数据啊");
+     NSLog(@"清理了页面数据");
     if(self.chatView !=nil){
        [self.chatView dismissZCChatView];
+        self.chatView = nil;
     }
     if([ZCUICore getUICore].ZCViewControllerCloseBlock != nil){
         [ZCUICore getUICore].ZCViewControllerCloseBlock(self,ZC_CloseChat);
@@ -414,26 +410,7 @@
     // Dispose of any resources that can be recreated.
 }
 
-/*
-#pragma mark - Navigation
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
-
-
-//-(UIView*)hitTest:(CGPoint)point withEvent:(UIEvent *)event{
-////    UIView * view = [super hitTest:point withEvent:event];
-//    if (view == nil) {
-//        CGPoint staitionPoint = [self.chatView convertPoint:point fromView:self];
-//        if (CGRectContainsPoint(self.chatView.bounds, staitionPoint)) {
-//            view = self.chatView;
-//        }
-//    }
-//}
 -(id)initWithInitInfo:(ZCKitInfo *)info{
     self=[super init];
     if(self){
@@ -461,7 +438,7 @@
 
 
 -(void)dealloc{
-    
+    NSLog(@" ZCChatController dealloc");
 }
 
 @end

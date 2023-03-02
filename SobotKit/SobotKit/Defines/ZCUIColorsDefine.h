@@ -128,7 +128,7 @@
 
 #define ZCRatingBGColor @"ZCRatingBGColor" // #F0AC0E
 
-
+#define ZCArticleTitleTextColor @"ZCArticleTitleTextColor"// 0DAEAF
 
 // 无网络提醒颜色
 #define BgNetworkFailColor  0xe4e4e4

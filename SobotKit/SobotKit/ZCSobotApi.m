@@ -19,6 +19,7 @@
 #import "ZCMsgDetailsVC.h"
 #import "ZCIMChat.h"
 #import "ZCLibGlobalDefine.h"
+#import "ZCLibMessage.h"
 
 @implementation ZCSobotApi
 
@@ -61,6 +62,9 @@
     
     [[ZCUICore getUICore] setKitInfo:info];
     
+    [SobotLocaliable shareSobotLocaliable].absolute_language = [ZCLibClient getZCLibClient].libInitInfo.absolute_language;
+    [SobotLocaliable shareSobotLocaliable].default_language =  [ZCLibClient getZCLibClient].libInitInfo.default_language;
+    [SobotLocaliable shareSobotLocaliable].isCloseSystemRTL = info.isCloseSystemRTL;
      ZCChatController *chat=[[ZCChatController alloc] initWithInitInfo:info];
      chat.chatdelegate = delegate;
      chat.hidesBottomBarWhenPushed = [ZCUICore getUICore].kitInfo.ishidesBottomBarWhenPushed;
@@ -89,6 +93,12 @@
     }
 }
 
++(void)setAppletClickBlock:(BOOL(^)(ZCLibMessage *_Nonnull))appletBlock{
+    if (appletBlock != nil) {
+        [[ZCUICore getUICore] setAppletClickBlock:appletBlock];
+    }
+}
+
 +(void)setZCViewControllerBackClick:(void (^)(id currentVC,ZCPageCloseType type))backBlock{
     [self setFunctionClickListener:backBlock];
 }
@@ -113,7 +123,10 @@
         if ([@"" isEqualToString:sobotConvertToString([ZCLibClient getZCLibClient].libInitInfo.app_key)] && [@"" isEqualToString:sobotConvertToString([ZCLibClient getZCLibClient].libInitInfo.customer_code)]) {
             return;
         }
-        
+    
+    [SobotLocaliable shareSobotLocaliable].absolute_language = [ZCLibClient getZCLibClient].libInitInfo.absolute_language;
+    [SobotLocaliable shareSobotLocaliable].default_language =  [ZCLibClient getZCLibClient].libInitInfo.default_language;
+    [SobotLocaliable shareSobotLocaliable].isCloseSystemRTL = info.isCloseSystemRTL;
         ZCServiceCentreVC *chat=[[ZCServiceCentreVC alloc] initWithInitInfo:info];
         [chat setOpenZCSDKTypeBlock:itemClickBlock];
         chat.hidesBottomBarWhenPushed = [ZCUICore getUICore].kitInfo.ishidesBottomBarWhenPushed;
@@ -397,7 +410,6 @@
                    ResultBlock(@"当前是不是人工客服状态，不能给人工发送消息",1);
             }
         }
-        
     }
     
 }
@@ -419,7 +431,6 @@
     if (!kitInfo) {
         kitInfo = [ZCKitInfo new];
     }
-    
     
     [[ZCUICore getUICore] openSDKWith:[ZCLibClient getZCLibClient].libInitInfo uiInfo:kitInfo Delegate:nil blcok:^(ZCInitStatus code, NSMutableArray *arr, NSString *result) {
         if(code == ZCInitStatusLoadSuc){
@@ -558,7 +569,7 @@
             [[ZCLibServer getLibServer] getChatUserCids:0 config:info.config start:^{
                 
             } success:^(NSDictionary *dict, ZCNetWorkCode sendCode) {
-        //                _isCidLoading = YES;
+        //                _isHadCidLoaded = YES;
                 if(dict[@"data"] == nil){
                     if(resultBlock){
                         resultBlock(info,nil,-3);

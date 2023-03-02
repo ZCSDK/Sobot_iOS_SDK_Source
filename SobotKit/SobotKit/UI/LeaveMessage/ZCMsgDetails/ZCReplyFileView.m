@@ -49,7 +49,7 @@
 //    NSLog(@"fileurlstr ===%@",fileUrlStr);
     fileUrlStr = sobotValidURLString(fileUrlStr);
     
-    NSURL *fileUrl = [NSURL URLWithString:fileUrlStr];
+    NSURL *fileUrl = [NSURL URLWithString:sobotUrlEncodedString(fileUrlStr)];
     
     NSString *iconImgStr;
     if ([fileType isEqualToString:@"xls"] || [fileType isEqualToString:@"xlsx"]) {
@@ -85,6 +85,7 @@
 //    NSLog(@".......fileType...%@",fileType);
     if ([[fileType lowercaseString] isEqualToString:@"jpg"]
         || [[fileType lowercaseString] isEqualToString:@"png"]
+        || [[fileType lowercaseString] isEqualToString:@"jpeg"]
         ||[[fileType lowercaseString] isEqualToString:@"gif"]) {
 //       如果是 图片或者视频，直接显示
 //        UIButton *imgButton = [[UIButton alloc]init];

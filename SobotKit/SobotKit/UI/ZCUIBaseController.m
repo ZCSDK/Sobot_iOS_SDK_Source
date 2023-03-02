@@ -95,15 +95,17 @@
     // Do any additional setup after loading the view.
     [self.view setBackgroundColor:[ZCUITools zcgetBackgroundColor]];
     
-    if(sobotGetSystemDoubleVersion() >= 9.0){
-        if(sobotIsRTLLayout()){
-            [UIView appearance].semanticContentAttribute = UISemanticContentAttributeForceRightToLeft;
-            [UISearchBar appearance].semanticContentAttribute = UISemanticContentAttributeForceRightToLeft;
-            [self.navigationController.navigationBar setSemanticContentAttribute:UISemanticContentAttributeForceRightToLeft];
-        }else{
-            [UIView appearance].semanticContentAttribute = UISemanticContentAttributeForceLeftToRight;
-            [UISearchBar appearance].semanticContentAttribute = UISemanticContentAttributeForceLeftToRight;
-            [self.navigationController.navigationBar setSemanticContentAttribute:UISemanticContentAttributeForceLeftToRight];
+    if (![ZCUICore getUICore].kitInfo.isCloseSystemRTL) {
+        if(sobotGetSystemDoubleVersion() >= 9.0){
+            if(sobotIsRTLLayout()){
+                [UIView appearance].semanticContentAttribute = UISemanticContentAttributeForceRightToLeft;
+                [UISearchBar appearance].semanticContentAttribute = UISemanticContentAttributeForceRightToLeft;
+                [self.navigationController.navigationBar setSemanticContentAttribute:UISemanticContentAttributeForceRightToLeft];
+            }else{
+                [UIView appearance].semanticContentAttribute = UISemanticContentAttributeForceLeftToRight;
+                [UISearchBar appearance].semanticContentAttribute = UISemanticContentAttributeForceLeftToRight;
+                [self.navigationController.navigationBar setSemanticContentAttribute:UISemanticContentAttributeForceLeftToRight];
+            }
         }
     }
     viewWidth = self.view.frame.size.width;
@@ -479,6 +481,7 @@
         UINavigationBarAppearance *appearance = [UINavigationBarAppearance new];
         [appearance configureWithOpaqueBackground];
         appearance.backgroundColor = [ZCUITools zcgetBgBannerColor];
+        appearance.titleTextAttributes = @{NSFontAttributeName:[ZCUITools zcgetTitleFont],NSForegroundColorAttributeName:[ZCUITools zcgetTopViewTextColor]};
         self.navigationController.navigationBar.standardAppearance = appearance;
         self.navigationController.navigationBar.scrollEdgeAppearance = appearance;
     }
@@ -638,8 +641,6 @@
     if(sobotConvertToString([ZCUICore getUICore].kitInfo.helpCenterTel).length > 0 && sobotConvertToString([ZCUICore getUICore].kitInfo.helpCenterTelTitle).length > 0){
         CGFloat itemW =  (viewWidth - ZCNumber(24) - 20)/2;
         serviceButton.frame = CGRectMake(ZCNumber(12), y, itemW, ZCNumber(44));
-        
-        
         UIButton *telButton = [self createHelpCenterOpenButton];
         telButton.frame = CGRectMake(ZCNumber(12) + itemW + 20, y, itemW, ZCNumber(44));
         telButton.tag = 2;

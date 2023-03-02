@@ -64,7 +64,7 @@ typedef NS_ENUM(NSInteger,ExitType) {
     ISUSER          = 5,// 人工优先，点击技能组的留言按钮后，（返回技能组 提交机器人会话）
 };
 
-@interface ZCUILeaveMessageController ()<UIGestureRecognizerDelegate,UIScrollViewDelegate,ZCActionSheetDelegate,ZCXJAlbumDelegate>
+@interface ZCUILeaveMessageController ()<UIGestureRecognizerDelegate,UIScrollViewDelegate,ZCActionSheetDelegate>
 {
  
     
@@ -509,18 +509,18 @@ typedef NS_ENUM(NSInteger,ExitType) {
     _leaveEditView.enclosureFlag = _enclosureFlag;
     _leaveEditView.enclosureShowFlag = _enclosureShowFlag;
     _leaveEditView.coustomArr = _coustomArr;
-    __block ZCUILeaveMessageController *safeSelf = self;
+    __weak ZCUILeaveMessageController *safeSelf = self;
     [_leaveEditView setPageChangedBlock:^(id  _Nonnull object, int code) {
         //code==1 添加成功,code == 2点击完成，跳转页面
         if(code == 3001 && _selectedType!=2){
             [safeSelf goBack];
         }
-        
+
         if(code == 3002){
-            [safeSelf itemsClick:safeSelf->_rightBtn];
+            [safeSelf itemsClick:safeSelf.rightBtn];
         }
     }];
-    
+
     [_leaveEditView loadCustomFields];
     
     
@@ -571,11 +571,11 @@ typedef NS_ENUM(NSInteger,ExitType) {
 #pragma mark -- 页面返回的事件 *******************************************
 // 关闭页面
 -(void)goBack{
-    [self.leaveEditView hideKeyboard];
-    
     if([ZCUICore getUICore].ZCViewControllerCloseBlock != nil){
         [ZCUICore getUICore].ZCViewControllerCloseBlock(self,ZC_CloseLeave);
     }
+    [self.leaveEditView destoryViews];
+    self.leaveEditView = nil;
     
     if(_isExitSDK){
         if (_isNavOpen) {
@@ -670,7 +670,7 @@ typedef NS_ENUM(NSInteger,ExitType) {
 
 
 - (void)dealloc{
-//    NSLog(@" go to dealloc");
+    NSLog(@" go to dealloc");
     // 移除键盘的监听
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 

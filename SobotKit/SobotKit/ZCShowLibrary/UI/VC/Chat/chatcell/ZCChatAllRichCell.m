@@ -21,7 +21,8 @@
 #import "ZCUICore.h"
 #import "ZCVideoPlayer.h"
 #import "ZCObjButton.h"
-
+#import "ZCFileButton.h"
+#import "ZCHtmlCore.h"
 #define MidImageHeight 110
 @interface ZCChatAllRichCell()<ZCMLEmojiLabelDelegate,SobotXHImageViewerDelegate,ZCActionSheetDelegate>{
     NSString    *callURL;
@@ -33,6 +34,10 @@
 @property(nonatomic,strong) UIView *richContentView;
 @property(nonatomic,strong) UIMenuController *menuController;
 
+//@property(nonatomic,strong) UIView *linkBgView;
+//@property(nonatomic,strong) UILabel *linktitleLab;
+//@property(nonatomic,strong) UILabel *linkdescLab;
+//@property(nonatomic,strong) SobotImageView *linkIcon;
 @end
 
 
@@ -197,7 +202,7 @@
     // 内容上下边距12
     CGRect richFrame = CGRectMake(0, bgY + 12, rw, 0);
     _richContentView.frame = richFrame;
-    CGSize s = [ZCChatAllRichCell addRichView:model width:rw with:self.richContentView msgLabel:_lblTextMsg];
+    CGSize s = [self addRichView:model width:rw with:self.richContentView msgLabel:_lblTextMsg];
     for (UIView *view in self.richContentView.subviews) {
         if([view isKindOfClass:[ZCMLEmojiLabel class]]){
             ((ZCMLEmojiLabel *)view).delegate = self;
@@ -206,8 +211,11 @@
             [view addGestureRecognizer:tap];
             view.userInteractionEnabled = YES;
         }else if([view isKindOfClass:[ZCObjButton class]]){
-            [((ZCObjButton *)view) addTarget:self action:@selector(playVideo:) forControlEvents:UIControlEventTouchUpInside];
+                [((ZCObjButton *)view) addTarget:self action:@selector(playVideo:) forControlEvents:UIControlEventTouchUpInside];
+        }else if([view isKindOfClass:[ZCFileButton class]]){
+            [((ZCFileButton *)view) addTarget:self action:@selector(flieClickAction:) forControlEvents:UIControlEventTouchUpInside];
         }else if([view isKindOfClass:[UIButton class]]){
+            // button 放到最后
             [((UIButton *)view) addTarget:self action:@selector(authSensitive:) forControlEvents:UIControlEventTouchUpInside];
         }
     }
@@ -582,13 +590,647 @@
     return [[ZCPlatformTools sharedInstance] getPlatformInfo].config;
 }
 
+-(CGSize )addRichView:(ZCLibMessage *) model width:(CGFloat ) maxWidth with:(UIView *) superView msgLabel:(ZCMLEmojiLabel *) richLabel{
+    CGFloat h = 0;
+    CGFloat lineSpace = [ZCUITools zcgetChatLineSpacing];
+//    CGFloat imgHeight = MidImageHeight;
+    CGFloat imgHeight = [ZCUICore getUICore].kitInfo.richImgHeight > 0 ? [ZCUICore getUICore].kitInfo.richImgHeight : MidImageHeight;
+    CGFloat fileSpace = 10;// 文件之间的间隙
+    // 自己发送的消息，当前认定为敏感信息
+    if(model.includeSensitive > 0 && model.senderType == 0){
+        return [ZCChatAllRichCell getAuthSensitiveView:model  width:maxWidth with:superView msgLabel:richLabel];
+    }
+    // 记录实际最大宽度
+    CGFloat contentWidth = 0;
 
+    if (sobotConvertToString(model.richModel.loopMsgStripe).length > 0) {
+        // 先添加多轮的引导问题提示
+        ZCMLEmojiLabel *label = [ZCChatBaseCell createRichLabel];
+        UIColor *textColor = [ZCUITools zcgetLeftChatTextColor];
+        UIColor *linkColor = [ZCUITools zcgetChatLeftLinkColor];
+        if([ZCChatBaseCell isRightChat:model]){
+            textColor = [ZCUITools zcgetRightChatTextColor];
+            linkColor = [ZCUITools zcgetChatRightlinkColor];
+        }
+        [label setLinkColor:linkColor];
+        [label setTextColor:textColor];
+        if(model.displayMsgStripeattr!=nil){
+            [ZCChatAllRichCell setDisplayAttributedString:model.displayMsgStripeattr label:label model:model guide:YES];
+        }else{
+            [ZCHtmlCore filterHtml:[model getModelDisplayMsgStripeText] result:^(NSString * _Nonnull text1, NSMutableArray * _Nonnull arr, NSMutableArray * _Nonnull links) {
+                if (text1 != nil && text1.length > 0) {
+                    label.attributedText =    [ZCHtmlFilter setGuideHtml:text1 attrs:arr view:label textColor:textColor textFont:[ZCUITools zcgetKitChatFont] linkColor:linkColor];
+                }else{
+                    label.attributedText =   [[NSAttributedString alloc] initWithString:@""];
+                }
+            }];
+        }
+        
+        CGSize s = [label preferredSizeWithMaxWidth:maxWidth];
+        // 添加行间距
+        h = h + s.height + lineSpace;
+        if(contentWidth < s.width){
+            contentWidth = s.width;
+        }
+        
+        if(superView){
+            CGRect f = CGRectMake(0, h - s.height - lineSpace, s.width, s.height);
+            label.frame = f;
+            [superView addSubview:label];
+        }
+    }
+    
+    
+    if(model==nil || model.richModel.richMsgList==nil || [model.richModel.richMsgList isKindOfClass:[NSNull class]] || model.richModel.richMsgList.count == 0){
+        #pragma mark 标题+内容
+        NSString *text = @"";
+        if (model.richModel.multiModel.templateIdType == 4 && model.displayMsgAttr==nil) {
+            text = sobotConvertToString([model getModelDisplayText:YES]);
+        }else{
+            text = sobotConvertToString([model getModelDisplayText]);
+        }
+        // 3.0.9兼容旧版本机器人语音显示空白问题
+        if(sobotConvertToString(text).length == 0 && sobotConvertToString(model.richModel.msgtranslation).length > 0){
+            text = sobotConvertToString(model.richModel.msgtranslation);
+            
+        }
+        if(text.length > 0){
+            ZCMLEmojiLabel *label = nil;
+            if(richLabel){
+                label = richLabel;
+            }else{
+                label = [ZCChatBaseCell createRichLabel];
+            }
+            
+            if([ZCChatBaseCell isRightChat:model]){
+                [label setTextColor:[ZCUITools zcgetRightChatTextColor]];
+                [label setLinkColor:[ZCUITools zcgetChatRightlinkColor]];
+            }else{
+                [label setTextColor:[ZCUITools zcgetLeftChatTextColor]];
+                [label setLinkColor:[ZCUITools zcgetChatLeftLinkColor]];
+            }
+            
+            if(model.displayMsgAttr == nil || model.displayMsgAttr.length == 0){
+                [label setText:text];
+            }else{
+                [ZCChatAllRichCell setDisplayAttributedString:model.displayMsgAttr label:label model:model guide:NO];
+            }
+            CGSize s = [label preferredSizeWithMaxWidth:maxWidth];
+            h = h + s.height + lineSpace;
+            if(contentWidth < s.width){
+                contentWidth = s.width;
+            }
+            
+            if(superView){
+                CGRect f = CGRectMake(0, h - s.height - lineSpace, s.width, s.height);
+                label.frame = f;
+                [superView addSubview:label];
+            }
+            
+            if (model.richModel.msgType == ZCMessageTypeText && sobotIsUrl(text, [ZCUITools zcgetUrlRegular])) {
+               UIView *linkBgView = [[UIView alloc]init];
+                linkBgView.backgroundColor = UIColorFromThemeColor(ZCBgSystemWhiteColor);
+                linkBgView.layer.cornerRadius = 4;
+                linkBgView.layer.masksToBounds = YES;
+                
+               UILabel *linktitleLab = [[UILabel alloc]init];
+                linktitleLab.font = ZCUIFontBold14;
+                linktitleLab.textColor = UIColorFromThemeColor(ZCTextMainColor);
+                [linkBgView addSubview:linktitleLab];
+                linktitleLab.text = ZCSTLocalString(@"解析中...");
+                linktitleLab.numberOfLines = 1;
+                linktitleLab.frame = CGRectMake(10, 10, 240 -54,20);
+                
+                // 超链链接
+                UILabel *linkdescLab = [[UILabel alloc]init];
+                linkdescLab.font = ZCUIFont12;
+                linkdescLab.textColor = UIColorFromThemeColor(ZCTextSubColor);
+                linkdescLab.numberOfLines = 2;
+                [linkdescLab setFrame:CGRectMake(10, 34, 240 -64, 40)];
+                NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:label.text];
+                NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+                [paragraphStyle setLineSpacing:5];//调整行间距
+                [attributedString addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, [label.text length])];
+                linkdescLab.attributedText = attributedString;
+                [linkBgView addSubview:linkdescLab];
+                linkdescLab.lineBreakMode = NSLineBreakByTruncatingTail;
+                
+                SobotImageView *icon = [[SobotImageView alloc]init];
+                icon.frame = CGRectMake(240 - 44, 34, 34, 34);
+                [icon loadWithURL:[NSURL URLWithString:@""] placeholer:[ZCUITools zcuiGetBundleImage:@"zcicon_url_icon"]];
+                [linkBgView addSubview:icon];
+                
+                if (sobotConvertToString(model.richModel.linkTitle).length > 0) {
+                    linktitleLab.text = sobotConvertToString(model.richModel.linkTitle);
+                    linkdescLab.text = sobotConvertToString(model.richModel.linkDesc);
+                    [icon loadWithURL:[NSURL URLWithString:sobotConvertToString(model.richModel.linkIcon)] placeholer:[ZCUITools zcuiGetBundleImage:@"zcicon_url_icon"]];
+                }else{
+                    
+                    [[ZCLibServer getLibServer] getHtmlAnalysisWithURL:sobotConvertToString(text) start:^{
+                    } success:^(NSDictionary *dict, ZCNetWorkCode sendCode) {
+                        if (!sobotIsNull(dict)) {
+                            NSDictionary *data = [dict objectForKey:@"data"];
+                            NSString *title = sobotConvertToString([data objectForKey:@"title"]);
+                            NSString *desc = sobotConvertToString([data objectForKey:@"desc"]);
+                            NSString *imgUrl = sobotConvertToString([data objectForKey:@"imgUrl"]);
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                                linktitleLab.text = sobotConvertToString(title);
+                                linkdescLab.text = sobotConvertToString(desc);
+                                if (sobotConvertToString(desc).length == 0) {
+                                    linkdescLab.text = sobotConvertToString(text);
+                                }
+                                [icon loadWithURL:[NSURL URLWithString:imgUrl] placeholer:[ZCUITools zcuiGetBundleImage:@"zcicon_url_icon"] showActivityIndicatorView:NO];
+                                [linkdescLab sizeToFit];
+                                [[ZCUICore getUICore].listArray enumerateObjectsUsingBlock:^(ZCLibMessage * obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                                    if ([obj.msgId isEqualToString:model.msgId]) {
+                                        obj.richModel.linkDesc = desc;
+                                        obj.richModel.linkTitle = title;
+                                        obj.richModel.linkIcon = imgUrl;
+                                        *stop = YES;
+                                    };
+                                }];
+                            });
+                        }
+                    } failed:^(NSString *errorMessage, ZCNetWorkCode errorCode) {
+                        [ZCHtmlCore websiteFilter:sobotConvertToString(text) result:^(NSString * _Nonnull url, NSString * _Nonnull icon, NSString * _Nonnull title, NSString * _Nonnull desc, NSDictionary * _Nullable dict) {
+                            linktitleLab.text = sobotConvertToString(title);
+                            linkdescLab.text = sobotConvertToString(desc);
+                            if (sobotConvertToString(desc).length == 0) {
+                                linkdescLab.text = sobotConvertToString(text);
+                            }
+                            [[ZCUICore getUICore].listArray enumerateObjectsUsingBlock:^(ZCLibMessage * obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                                if ([obj.msgId isEqualToString:model.msgId]) {
+                                    obj.richModel.linkDesc = desc;
+                                    obj.richModel.linkTitle = title;
+                                    obj.richModel.linkIcon = @"";
+                                    *stop = YES;
+                                };
+                            }];
+                            [linkdescLab sizeToFit];
+                        }];
+                    }];
 
+                }
+                CGSize links = CGSizeMake(240, 78);
+              
+                if(contentWidth < links.width){
+                    contentWidth = links.width;
+                }
+                if(superView){
+                    CGRect f = CGRectMake(0, h + lineSpace, links.width, links.height);
+                    linkBgView.frame = f;
+                    [superView addSubview:linkBgView];
+                    ZCFileButton *btn = [ZCFileButton buttonWithType:UIButtonTypeCustom];
+                    btn.frame = CGRectMake(0, 0, 240, 78);
+                    [btn setBackgroundColor:[UIColor clearColor]];
+                    [linkBgView addSubview:btn];
+                    btn.objTag = text;
+                    [btn addTarget:self action:@selector(urlTextClick:) forControlEvents:UIControlEventTouchUpInside];
+                }
+                h = h + links.height + fileSpace;
+                
+                if (superView) {
+                    [superView addSubview:linkBgView];
+                }
+            }
+            
+        }
+    }else{
+        // {type:0,1,2,3,msg:}
+        // 富文本数组:0：文本，1：图片，2：音频，3：视频，4：文件
+        if([[ZCLibClient sobotGetAppChannel] isEqual:@"ZhiChiSobotUni"]){
+            NSString *msg = [ZCChatAllRichCell getUniDisplayString:model.richModel.richMsgList];
+            ZCMLEmojiLabel *label = nil;
+            if(richLabel){
+                label = richLabel;
+            }else{
+                label = [ZCChatBaseCell createRichLabel];
+            }
+            if([ZCChatBaseCell isRightChat:model]){
+                [label setTextColor:[ZCUITools zcgetRightChatTextColor]];
+                [label setLinkColor:[ZCUITools zcgetChatRightlinkColor]];
+            }else{
+                [label setTextColor:[ZCUITools zcgetLeftChatTextColor]];
+                [label setLinkColor:[ZCUITools zcgetChatLeftLinkColor]];
+            }
+//            if(sobotConvertToString(item[@"name"]).length > 0 && sobotIsUrl(msg)){
+//                [label setText:sobotConvertToString(item[@"name"])];
+//                [label addLinkToURL:[NSURL URLWithString:sobotConvertToString(msg)] withRange:NSMakeRange(0, sobotConvertToString(item[@"name"]).length)];
+//            }else{
+                [label setText:msg];
+//            }
+            
+            CGSize s = [label preferredSizeWithMaxWidth:maxWidth];
+            h = h + s.height + lineSpace;
+            if(contentWidth < s.width){
+                contentWidth = s.width;
+            }
+            
+            if(superView){
+                CGRect f = CGRectMake(0, h - s.height - lineSpace, s.width, s.height);
+                label.frame = f;
+                [superView addSubview:label];
+            }
+        }else{
+            for (int i=0;i<model.richModel.richMsgList.count;i++) {
+                NSDictionary *item =  model.richModel.richMsgList[i];
+                int type = [item[@"type"] intValue];
+                // 0文本,1图片,2音频,3视频,4文件,5对象
+                NSString *msg = sobotConvertToString(item[@"msg"]);
+                if([@"<br>" isEqual:msg] || [@"<br/>" isEqual:msg]){
+                    continue;
+                }
+                
+                if(type == 0){
+                    ZCMLEmojiLabel *label = nil;
+                    if(model.richModel.richMsgList.count == 1 && richLabel){
+                        label = richLabel;
+                    }else{
+                        label = [ZCChatBaseCell createRichLabel];
+                    }
+                    UIColor *textColor = [ZCUITools zcgetLeftChatTextColor];
+                    UIColor *linkColor = [ZCUITools zcgetChatLeftLinkColor];
+                    if([ZCChatBaseCell isRightChat:model]){
+                        textColor = [ZCUITools zcgetRightChatTextColor];
+                        linkColor = [ZCUITools zcgetChatRightlinkColor];
+                    }
+                    [label setTextColor:textColor];
+                    [label setLinkColor:linkColor];
+                    
+                    // 2：音频，3：视频，4：文件
+                    if(type == 3){
+                        if(!sobotIsUrl(msg,@"")){
+                            continue;
+                        }
+                    }
+                    int showType = [sobotConvertToString([item objectForKey:@"showType"]) intValue];
+                    // 如果 是只有一个 并且是开启 show卡片的 并且符合URL正则规则显示 链接卡片
+                    if (model.richModel.richMsgList.count == 1 && sobotIsUrl(msg,[ZCUITools zcgetUrlRegular]) && showType == 0) {
+                        // 说明是超链 显示超链的模块
+                        // 先显示超链
+                        if(sobotConvertToString(item[@"name"]).length > 0 && sobotIsUrl(msg,[ZCUITools zcgetUrlRegular])){
+                            [label setText:[ZCHtmlCore filterHTMLTag:sobotConvertToString(item[@"name"])]];
+                            [label addLinkToURL:[NSURL URLWithString:sobotConvertToString(msg)] withRange:NSMakeRange(0, [ZCHtmlCore filterHTMLTag:sobotConvertToString(item[@"name"])].length)];
+                        }else{
+                            NSMutableAttributedString *attr = item[@"attr"];
+                            if(attr){
+                                [ZCChatAllRichCell setDisplayAttributedString:attr label:label model:model guide:NO];
+                            }else{
+                                // 最后一行过滤所有换行，不是最后一行过滤一个换行
+                                if(i == (model.richModel.richMsgList.count-1)){
+                                    while ([msg hasSuffix:@"\n"]){
+                                        msg = [msg substringToIndex:msg.length - 1];
+                                    }
+                                }
+                                msg = [ZCUITools removeAllHTMLTag:msg];
+                                [label setText:msg];
+                            }
+                        }
+                        
+                        CGSize s = [label preferredSizeWithMaxWidth:maxWidth];
+                        h = h + s.height + lineSpace;
+                        if(contentWidth < s.width){
+                            contentWidth = s.width;
+                        }
+                        
+                        if(superView){
+                            CGRect f = CGRectMake(0, h - s.height - lineSpace, s.width, s.height);
+                            label.frame = f;
+                            [superView addSubview:label];
+                        }
+                        
+                        // 超链模块
+                        UIView *bgView = [[UIView alloc]init];
+                        bgView.backgroundColor = UIColorFromThemeColor(ZCBgSystemWhiteColor);
+                        bgView.layer.cornerRadius = 4;
+                        bgView.layer.masksToBounds = YES;
+                        
+                        UILabel *titleLab = [[UILabel alloc]init];
+                        titleLab.font = ZCUIFontBold14;
+                        titleLab.textColor = UIColorFromThemeColor(ZCTextMainColor);
+                        [bgView addSubview:titleLab];
+                        titleLab.numberOfLines = 1;
+                        titleLab.text = ZCSTLocalString(@"解析中...");
+                        titleLab.frame = CGRectMake(10, 10, 240 -54,20);
+                        
+                        // 超链链接
+                        UILabel *linkLab = [[UILabel alloc]init];
+                        linkLab.font = ZCUIFont12;
+                        linkLab.textColor = UIColorFromThemeColor(ZCTextSubColor);
+                        linkLab.numberOfLines = 2;
+                        [linkLab setFrame:CGRectMake(10, 34, 240 -64, 40)];
+                        NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:label.text];
+                        NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+                        [paragraphStyle setLineSpacing:5];//调整行间距
+                        [attributedString addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, [label.text length])];
+                        linkLab.attributedText = attributedString;
+                        [bgView addSubview:linkLab];
+                        linkLab.lineBreakMode = NSLineBreakByTruncatingTail;
+                        
+                        SobotImageView *icon = [[SobotImageView alloc]init];
+                        icon.frame = CGRectMake(240 - 44, 34, 34, 34);
+                        [icon loadWithURL:[NSURL URLWithString:@""] placeholer:[ZCUITools zcuiGetBundleImage:@"zcicon_url_icon"]];
+                        [bgView addSubview:icon];
+                        if (sobotConvertToString(model.richModel.titleStr).length > 0) {
+                            titleLab.text = sobotConvertToString(model.richModel.titleStr);
+                            linkLab.text = sobotConvertToString(model.richModel.linkDesc);
+                            [icon loadWithURL:[NSURL URLWithString:sobotConvertToString(model.richModel.linkIcon)] placeholer:[ZCUITools zcuiGetBundleImage:@"zcicon_url_icon"]];
+                        }else{
+                            [[ZCLibServer getLibServer] getHtmlAnalysisWithURL:sobotConvertToString(msg) start:^{
+                            } success:^(NSDictionary *dict, ZCNetWorkCode sendCode) {
+                                if (!sobotIsNull(dict)) {
+                                    NSDictionary *data = [dict objectForKey:@"data"];
+                                    NSString *title = sobotConvertToString([data objectForKey:@"title"]);
+                                    NSString *desc = sobotConvertToString([data objectForKey:@"desc"]);
+                                    NSString *imgUrl = sobotConvertToString([data objectForKey:@"imgUrl"]);
+                                    dispatch_async(dispatch_get_main_queue(), ^{
+                                        titleLab.text = sobotConvertToString(title);
+                                        linkLab.text = sobotConvertToString(desc);
+                                        if (sobotConvertToString(desc).length == 0) {
+                                            linkLab.text = sobotConvertToString(msg);
+                                        }
+                                        [icon loadWithURL:[NSURL URLWithString:imgUrl] placeholer:[ZCUITools zcuiGetBundleImage:@"zcicon_url_icon"] showActivityIndicatorView:NO];
+                                        model.richModel.linkDesc = linkLab.text;
+                                        model.richModel.titleStr = linkLab.text;
+                                        [[ZCUICore getUICore].listArray enumerateObjectsUsingBlock:^(ZCLibMessage * obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                                            if ([obj.msgId isEqualToString:model.msgId]) {
+                                                obj.richModel.linkDesc = linkLab.text;
+                                                obj.richModel.linkTitle =titleLab.text;
+                                                obj.richModel.linkIcon = imgUrl;
+                                                *stop = YES;
+                                            };
+                                        }];
+                                        [linkLab sizeToFit];
+                                    });
+                                }
+                            } failed:^(NSString *errorMessage, ZCNetWorkCode errorCode) {
+                                [ZCHtmlCore websiteFilter:sobotConvertToString(msg) result:^(NSString * _Nonnull url, NSString * _Nonnull icon, NSString * _Nonnull title, NSString * _Nonnull desc, NSDictionary * _Nullable dict) {
+                                    titleLab.text = sobotConvertToString(title);
+                                    linkLab.text = sobotConvertToString(desc);
+                                    if (sobotConvertToString(desc).length == 0) {
+                                        linkLab.text = sobotConvertToString(msg);
+                                    }
+                                    [[ZCUICore getUICore].listArray enumerateObjectsUsingBlock:^(ZCLibMessage * obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                                        if ([obj.msgId isEqualToString:model.msgId]) {
+                                            obj.richModel.linkDesc = desc;
+                                            obj.richModel.linkTitle = title;
+                                            obj.richModel.linkIcon = @"";
+                                            *stop = YES;
+                                        };
+                                    }];
+                                    [linkLab sizeToFit];
+                                }];
+                            }];
+                        }
+                        CGSize links = CGSizeMake(240, 78);
+                      
+                        if(contentWidth < links.width){
+                            contentWidth = links.width;
+                        }
+                        if(superView){
+                            CGRect f = CGRectMake(0, h + lineSpace, links.width, links.height);
+                            bgView.frame = f;
+                            [superView addSubview:bgView];
+                            ZCFileButton *btn = [ZCFileButton buttonWithType:UIButtonTypeCustom];
+                            btn.frame = CGRectMake(0, 0, 240, 78);
+                            [btn setBackgroundColor:[UIColor clearColor]];
+                            [bgView addSubview:btn];
+                            btn.objTag = item;
+                            [btn addTarget:self action:@selector(urlClick:) forControlEvents:UIControlEventTouchUpInside];
+                        }
+                        h = h + links.height + fileSpace;
+                    }else{
+                        if(sobotConvertToString(item[@"name"]).length > 0 && sobotIsUrl(msg,[ZCUITools zcgetUrlRegular])){
+                            [label setText:[ZCHtmlCore filterHTMLTag:sobotConvertToString(item[@"name"])]];
+                            [label addLinkToURL:[NSURL URLWithString:sobotConvertToString(msg)] withRange:NSMakeRange(0, [ZCHtmlCore filterHTMLTag:sobotConvertToString(item[@"name"])].length)];
+                        }else{
+                            NSMutableAttributedString *attr = item[@"attr"];
+                            if(attr){
+                                [ZCChatAllRichCell setDisplayAttributedString:attr label:label model:model guide:NO];
+                            }else{
+                                // 最后一行过滤所有换行，不是最后一行过滤一个换行
+                                if(i == (model.richModel.richMsgList.count-1)){
+                                    while ([msg hasSuffix:@"\n"]){
+                                        msg = [msg substringToIndex:msg.length - 1];
+                                    }
+                                }else{
+                    //                if ([msg hasSuffix:@"\n"]){
+                    //                    msg = [msg substringToIndex:msg.length - 1];
+                    //                }
+                                }
+                                msg = [ZCUITools removeAllHTMLTag:msg];
+                                [label setText:msg];
+                            }
+                        }
+                        
+                        CGSize s = [label preferredSizeWithMaxWidth:maxWidth];
+                        h = h + s.height + lineSpace;
+                        if(contentWidth < s.width){
+                            contentWidth = s.width;
+                        }
+                        
+                        if(superView){
+                            CGRect f = CGRectMake(0, h - s.height - lineSpace, s.width, s.height);
+                            label.frame = f;
+                            [superView addSubview:label];
+                        }
+                    }
+                }
+                    
+                // 图片和视频
+                if(type == 1 || type == 3){
+                    if(!sobotIsUrl(msg,[ZCUITools zcgetUrlRegular])){
+                        continue;
+                    }
+                    
+                    if (type == 3) {
+                        // 视频不支持用户自定义
+                        imgHeight = MidImageHeight;
+                    }
+
+                    h = h + imgHeight + fileSpace ;
+                    if(contentWidth < maxWidth){
+                        contentWidth = maxWidth;
+                    }
+                    
+                    if(superView){
+                        SobotImageView *imgView = [[SobotImageView alloc] initWithFrame:CGRectMake(0, h -imgHeight - fileSpace +lineSpace, maxWidth, imgHeight)];
+                        [imgView setContentMode:UIViewContentModeScaleAspectFill];
+                        [imgView.layer setCornerRadius:4.0f];
+                        [imgView.layer setMasksToBounds:YES];
+                        [imgView loadWithURL:[NSURL URLWithString:msg] placeholer:[ZCUITools zcuiGetBundleImage:@"zcicon_default_goods_1"]];
+                        [superView addSubview:imgView];
+                        
+                        if(type == 3){
+                            [imgView loadWithURL:[NSURL URLWithString:@"https://img.sobot.com/chat/common/res/83f5636f-51b7-48d6-9d63-40eba0963bda.png"] placeholer:[ZCUITools zcuiGetBundleImage:@"zcicon_default_goods_1"]];
+                            // 设置一个特殊的tag，不支持点击查看大图
+                            imgView.tag = 101;
+                            ZCObjButton *_playButton = [ZCObjButton buttonWithType:UIButtonTypeCustom];
+                            _playButton.objTag = item;
+                            [_playButton setImage:[ZCUITools zcuiGetBundleImage:@"zcicon_video_play"] forState:0];
+                            [_playButton setFrame:CGRectMake(0, 0, 30, 30)];
+                            [_playButton setBackgroundColor:UIColor.clearColor];
+                            [superView addSubview:_playButton];
+                            _playButton.center = imgView.center;
+                        }
+                    }
+                }
+                // 文件和音频
+                if(type == 4 || type == 2) {
+//                  文件和音频的大小 确定  宽高 120 *70 UI定的
+                    CGSize s = CGSizeMake(240, 70);
+                    if(contentWidth < s.width){
+                        contentWidth = s.width;
+                    }
+                    // 文件
+                    UIView *bgView = [[UIView alloc]init];
+                    bgView.backgroundColor = UIColorFromThemeColor(ZCBgSystemWhiteColor);
+                    bgView.layer.cornerRadius = 4;
+                    bgView.layer.masksToBounds = YES;
+                    
+                    SobotImageView *icon = [[SobotImageView alloc]init];
+                    if (type == 2) {
+                        [icon setImage:[ZCUITools getFileIcon:@"" fileType:4]];
+                    }else if (type == 4){
+                        [icon setImage:[ZCUITools getFileIcon:sobotConvertToString([item objectForKey:@"msg"]) fileType:0]];
+                    }
+                    icon.frame = CGRectMake(15, 15, 34, 40);
+                    [bgView addSubview:icon];
+                    
+                    UILabel *titleLab = [[UILabel alloc]init];
+                    titleLab.font = ZCUIFontBold14;
+                    titleLab.textColor = UIColorFromThemeColor(ZCTextMainColor);;
+                    titleLab.numberOfLines = 1;
+                    [bgView addSubview:titleLab];
+                    titleLab.frame = CGRectMake(CGRectGetMaxX(icon.frame) + 10, 15,160, 20);
+                    titleLab.text = sobotConvertToString([item objectForKey:@"name"]);
+                    titleLab.lineBreakMode = NSLineBreakByTruncatingMiddle;
+                    
+                    UILabel *sizeLab = [[UILabel alloc]init];
+                    sizeLab.font = ZCUIFont12;
+                    sizeLab.textColor = UIColorFromThemeColor(ZCTextSubColor);
+                    sizeLab.text = sobotConvertToString([item objectForKey:@"fileSize"]);
+                    [bgView addSubview:sizeLab];
+                    [bgView setFrame:CGRectMake(CGRectGetMaxX(icon.frame) + 10, CGRectGetMaxY(titleLab.frame) + 3, 160, 20)];
+                    sizeLab.text = sobotConvertToString([item objectForKey:@"fileSize"]);
+                    
+                    ZCFileButton *objBtn = [ZCFileButton buttonWithType:UIButtonTypeCustom];
+                    [objBtn setBackgroundColor:[UIColor clearColor]];
+                    [objBtn setFrame:CGRectMake(0, 0, s.width, s.height)];
+                    objBtn.objTag = item;
+                    [objBtn addTarget:self action:@selector(flieClickAction:) forControlEvents:UIControlEventTouchUpInside];
+                    [bgView addSubview:objBtn];
+                    
+                    if (superView) {
+                        CGRect f = CGRectMake(0, h + fileSpace - lineSpace, s.width, s.height);
+                        bgView.frame = f;
+                        [superView addSubview:bgView];
+                    }
+                    // 添加完控件之后在设置高度
+                    h = h + s.height + fileSpace; // 10 个间隙
+                    
+                }
+                
+            }
+        }
+        
+    }
+    
+    if(sobotConvertToString([model getModelDisplaySugestionText]).length > 0){
+//    if(model.displaySugestionattr){
+        ZCMLEmojiLabel *label = [ZCChatBaseCell createRichLabel];
+        
+        UIColor *textColor = [ZCUITools zcgetLeftChatTextColor];
+        UIColor *linkColor = [ZCUITools zcgetChatLeftLinkColor];
+        if([ZCChatBaseCell isRightChat:model]){
+            textColor = [ZCUITools zcgetRightChatTextColor];
+            linkColor = [ZCUITools zcgetChatRightlinkColor];
+        }
+        [label setLinkColor:linkColor];
+        [label setTextColor:textColor];
+        if(model.displaySugestionattr!=nil){
+            [ZCChatAllRichCell setDisplayAttributedString:model.displaySugestionattr label:label model:model guide:YES];
+        }else{
+            [ZCHtmlCore filterHtml:[model getModelDisplaySugestionText] result:^(NSString * _Nonnull text1, NSMutableArray * _Nonnull arr, NSMutableArray * _Nonnull links) {
+                if (text1 != nil && text1.length > 0) {
+                    label.attributedText =    [ZCHtmlFilter setGuideHtml:text1 attrs:arr view:label textColor:textColor textFont:[ZCUITools zcgetKitChatFont] linkColor:linkColor];
+                }else{
+                    label.attributedText =   [[NSAttributedString alloc] initWithString:@""];
+                }
+            }];
+        }
+        
+        
+        CGSize s = [label preferredSizeWithMaxWidth:maxWidth];
+        // 添加行间距
+        h = h + s.height + lineSpace;
+        if(contentWidth < s.width){
+            contentWidth = s.width;
+        }
+        
+        if(superView){
+            CGRect f = CGRectMake(0, h - s.height - lineSpace, s.width, s.height);
+            label.frame = f;
+            [superView addSubview:label];
+        }
+        
+        
+        if([model.richModel.richmoreurl isEqual:@"zc_refresh_newdata"]){
+            
+            if(superView){
+                // 有换一组的时候，需要最大宽度
+                contentWidth = maxWidth;
+                
+                // 添加线条
+                UIView *_lineView  = [[UIView alloc] init];
+                CGRect lineF = CGRectMake(0, h + 12 - lineSpace, contentWidth , 1);
+                [_lineView setFrame:lineF];
+                _lineView.backgroundColor = [ZCUITools zcgetLineRichColor];
+                [superView addSubview:_lineView];
+                
+                NSString *linkText = ZCSTLocalString(@"换一组");
+                ZCMLEmojiLabel *refreshLabel = [ZCChatBaseCell createRichLabel];
+                if([ZCChatBaseCell isRightChat:model]){
+                    [refreshLabel setTextColor:[ZCUITools zcgetRightChatTextColor]];
+                    [refreshLabel setLinkColor:[ZCUITools zcgetChatRightlinkColor]];
+                }else{
+                    [refreshLabel setTextColor:[ZCUITools zcgetLeftChatTextColor]];
+                    [refreshLabel setLinkColor:[ZCUITools zcgetChatLeftLinkColor]];
+                }
+                [refreshLabel setText:linkText];
+                
+                [refreshLabel setTextAlignment:NSTextAlignmentCenter];
+                [refreshLabel setFont:ZCUIFontBold12];
+                [superView addSubview:refreshLabel];
+                
+                UIImageView *img = [[UIImageView alloc] initWithImage:[ZCUITools zcuiGetBundleImage:@"zcicon_refreshbar_new"] ];
+                [img setFrame:CGRectMake(contentWidth/2 - 38, 10, 10, 10)];
+                [refreshLabel addSubview:img];
+                
+                [refreshLabel addLinkToURL:[NSURL URLWithString:model.richModel.richmoreurl] withRange:NSMakeRange(0, linkText.length)];
+        //        CGSize size = [[self lookMoreLabel]preferredSizeWithMaxWidth:maxWidth];
+                refreshLabel.frame = CGRectMake(0, CGRectGetMaxY(lineF) + 5, contentWidth, 30);
+            }
+            h = h + 12 + 30 + 10;
+        }
+    }
+    
+    if(superView){
+        CGRect f = superView.frame;
+        f.size.width = contentWidth;
+        f.size.height = h - lineSpace;
+        [superView setFrame:f];
+    }
+    return CGSizeMake(contentWidth, h - lineSpace);
+}
+
+#pragma mark - 创建子控件
 +(CGSize )addRichView:(ZCLibMessage *) model width:(CGFloat ) maxWidth with:(UIView *) superView msgLabel:(ZCMLEmojiLabel *) richLabel{
     CGFloat h = 0;
     CGFloat lineSpace = [ZCUITools zcgetChatLineSpacing];
-    CGFloat imgHeight = MidImageHeight;
-    
+//    CGFloat imgHeight = MidImageHeight;
+    CGFloat imgHeight = [ZCUICore getUICore].kitInfo.richImgHeight > 0 ? [ZCUICore getUICore].kitInfo.richImgHeight : MidImageHeight;
+    CGFloat fileSpace = 10;// 文件之间的间隙
     // 自己发送的消息，当前认定为敏感信息
     if(model.includeSensitive > 0 && model.senderType == 0){
         return [self getAuthSensitiveView:model  width:maxWidth with:superView msgLabel:richLabel];
@@ -596,6 +1238,42 @@
     
     // 记录实际最大宽度
     CGFloat contentWidth = 0;
+    
+    if(sobotConvertToString([model getModelDisplayMsgStripeText]).length > 0){
+        ZCMLEmojiLabel *label = [ZCChatBaseCell createRichLabel];
+        UIColor *textColor = [ZCUITools zcgetLeftChatTextColor];
+        UIColor *linkColor = [ZCUITools zcgetChatLeftLinkColor];
+        if([ZCChatBaseCell isRightChat:model]){
+            textColor = [ZCUITools zcgetRightChatTextColor];
+            linkColor = [ZCUITools zcgetChatRightlinkColor];
+        }
+        [label setLinkColor:linkColor];
+        [label setTextColor:textColor];
+        if(model.displayMsgStripeattr!=nil){
+            [self setDisplayAttributedString:model.displayMsgStripeattr label:label model:model guide:YES];
+        }else{
+            [ZCHtmlCore filterHtml:[model getModelDisplayMsgStripeText] result:^(NSString * _Nonnull text1, NSMutableArray * _Nonnull arr, NSMutableArray * _Nonnull links) {
+                if (text1 != nil && text1.length > 0) {
+                    label.attributedText =    [ZCHtmlFilter setGuideHtml:text1 attrs:arr view:label textColor:textColor textFont:[ZCUITools zcgetKitChatFont] linkColor:linkColor];
+                }else{
+                    label.attributedText =   [[NSAttributedString alloc] initWithString:@""];
+                }
+            }];
+        }
+        
+        CGSize s = [label preferredSizeWithMaxWidth:maxWidth];
+        // 添加行间距
+        h = h + s.height + lineSpace;
+        if(contentWidth < s.width){
+            contentWidth = s.width;
+        }
+        if(superView){
+            CGRect f = CGRectMake(0, h - s.height - lineSpace, s.width, s.height);
+            label.frame = f;
+            [superView addSubview:label];
+        }
+    }
+    
     if(model==nil || model.richModel.richMsgList==nil || [model.richModel.richMsgList isKindOfClass:[NSNull class]] || model.richModel.richMsgList.count == 0){
         #pragma mark 标题+内容
         NSString *text = @"";
@@ -641,6 +1319,59 @@
                 label.frame = f;
                 [superView addSubview:label];
             }
+            
+            if (model.richModel.msgType == ZCMessageTypeText && sobotIsUrl(text, [ZCUITools zcgetUrlRegular])) {
+               UIView *linkBgView = [[UIView alloc]init];
+                linkBgView.backgroundColor = UIColorFromThemeColor(ZCBgSystemWhiteColor);
+                
+                UILabel *linktitleLab = [[UILabel alloc]init];
+                linktitleLab.font = ZCUIFontBold14;
+                linktitleLab.textColor = UIColorFromThemeColor(ZCTextMainColor);;
+                [linkBgView addSubview:linktitleLab];
+                linktitleLab.numberOfLines = 1;
+                linktitleLab.frame = CGRectMake(10, 10, 240 -54,20);
+                
+                // 超链链接
+                UILabel *linkdescLab = [[UILabel alloc]init];
+                linkdescLab.font = ZCUIFont12;
+                linkdescLab.textColor = UIColorFromThemeColor(ZCTextSubColor);
+                linkdescLab.numberOfLines = 2;
+                [linkdescLab setFrame:CGRectMake(10, 34, 240 -54, 40)];
+                [linkBgView addSubview:linkdescLab];
+                
+                SobotImageView *icon = [[SobotImageView alloc]init];
+                icon.frame = CGRectMake(maxWidth - 44, 34, 34, 34);
+                [icon loadWithURL:[NSURL URLWithString:@""] placeholer:[ZCUITools zcuiGetBundleImage:@"zcicon_url_icon"]];
+                [linkBgView addSubview:icon];
+//                [ZCHtmlCore websiteFilter:sobotConvertToString(text) result:^(NSString * _Nonnull url, NSString * _Nonnull icon, NSString * _Nonnull title, NSString * _Nonnull desc, NSDictionary * _Nullable dict) {
+//                    _linktitleLab.text = sobotConvertToString(title);
+//                    _linkdescLab.text = sobotConvertToString(desc);
+//                    if (sobotConvertToString(desc).length == 0) {
+//                        _linkdescLab.text = sobotConvertToString(text);
+//                    }
+//                    NSLog(@"识别之后的数据 %@ %@",title,desc);
+//                }];
+                CGSize links = CGSizeMake(240, 78);
+              
+                if(contentWidth < links.width){
+                    contentWidth = links.width;
+                }
+                if(superView){
+                    CGRect f = CGRectMake(0, h + lineSpace, links.width, links.height);
+                    linkBgView.frame = f;
+                    [superView addSubview:linkBgView];
+                    ZCFileButton *btn = [ZCFileButton buttonWithType:UIButtonTypeCustom];
+                    btn.frame = CGRectMake(0, 0, 240, 78);
+                    [btn setBackgroundColor:[UIColor clearColor]];
+                    [linkBgView addSubview:btn];
+                    btn.objTag = text;
+                }
+                h = h + links.height + fileSpace;
+                
+                if (superView) {
+                    [superView addSubview:linkBgView];
+                }
+            }
         }
     }else{
         // {type:0,1,2,3,msg:}
@@ -674,8 +1405,6 @@
             }
             
             if(superView){
-                
-                
                 CGRect f = CGRectMake(0, h - s.height - lineSpace, s.width, s.height);
                 label.frame = f;
                 [superView addSubview:label];
@@ -684,16 +1413,13 @@
             for (int i=0;i<model.richModel.richMsgList.count;i++) {
                 NSDictionary *item =  model.richModel.richMsgList[i];
                 int type = [item[@"type"] intValue];
-                
+                // 0文本,1图片,2音频,3视频,4文件,5对象
                 NSString *msg = sobotConvertToString(item[@"msg"]);
                 if([@"<br>" isEqual:msg] || [@"<br/>" isEqual:msg]){
                     continue;
                 }
-    //            while ([msg hasPrefix:@"\n"]){
-    //                msg = [msg substringFromIndex:1];
-    //            }
                 
-                if(type == 0 || type == 2 || type == 4){
+                if(type == 0){
                     ZCMLEmojiLabel *label = nil;
                     if(model.richModel.richMsgList.count == 1 && richLabel){
                         label = richLabel;
@@ -709,91 +1435,143 @@
                     [label setTextColor:textColor];
                     [label setLinkColor:linkColor];
                     
-                    
                     // 2：音频，3：视频，4：文件
-                    if(type == 2|| type == 3 || type == 4){
+                    if(type == 3){
                         if(!sobotIsUrl(msg,@"")){
                             continue;
                         }
                     }
-                    if(sobotConvertToString(item[@"name"]).length > 0 && sobotIsUrl(msg,[ZCUITools zcgetUrlRegular])){
-                        [label setText:[ZCHtmlCore filterHTMLTag:sobotConvertToString(item[@"name"])]];
-                        [label addLinkToURL:[NSURL URLWithString:sobotConvertToString(msg)] withRange:NSMakeRange(0, [ZCHtmlCore filterHTMLTag:sobotConvertToString(item[@"name"])].length)];
-                    }else{
-                        NSMutableAttributedString *attr = item[@"attr"];
-                        if(attr){
-                            [self setDisplayAttributedString:attr label:label model:model guide:NO];
+                    int showType = [sobotConvertToString(item[@"showType"]) intValue];
+                    // private int showType; //1：卡片，默认0 不是卡片
+                    // 如果 是只有一个 并且是开启 show卡片的 并且符合URL正则规则显示 链接卡片
+                    if (model.richModel.richMsgList.count == 1 && sobotIsUrl(msg,[ZCUITools zcgetUrlRegular]) && showType == 0) {
+                        // 说明是超链 显示超链的模块
+                        // 先显示超链
+                        if(sobotConvertToString(item[@"name"]).length > 0 && sobotIsUrl(msg,[ZCUITools zcgetUrlRegular])){
+                            [label setText:[ZCHtmlCore filterHTMLTag:sobotConvertToString(item[@"name"])]];
+                            [label addLinkToURL:[NSURL URLWithString:sobotConvertToString(msg)] withRange:NSMakeRange(0, [ZCHtmlCore filterHTMLTag:sobotConvertToString(item[@"name"])].length)];
                         }else{
-                            // 最后一行过滤所有换行，不是最后一行过滤一个换行
-                            if(i == (model.richModel.richMsgList.count-1)){
-                                while ([msg hasSuffix:@"\n"]){
-                                    msg = [msg substringToIndex:msg.length - 1];
-                                }
+                            NSMutableAttributedString *attr = item[@"attr"];
+                            if(attr){
+                                [ZCChatAllRichCell setDisplayAttributedString:attr label:label model:model guide:NO];
                             }else{
-                //                if ([msg hasSuffix:@"\n"]){
-                //                    msg = [msg substringToIndex:msg.length - 1];
-                //                }
+                                // 最后一行过滤所有换行，不是最后一行过滤一个换行
+                                if(i == (model.richModel.richMsgList.count-1)){
+                                    while ([msg hasSuffix:@"\n"]){
+                                        msg = [msg substringToIndex:msg.length - 1];
+                                    }
+                                }
+                                msg = [ZCUITools removeAllHTMLTag:msg];
+                                [label setText:msg];
                             }
-                            msg = [ZCUITools removeAllHTMLTag:msg];
-                            
-                            [label setText:msg];
+                        }
+                        
+                        CGSize s = [label preferredSizeWithMaxWidth:maxWidth];
+                        h = h + s.height + lineSpace;
+                        if(contentWidth < s.width){
+                            contentWidth = s.width;
+                        }
+                        
+                        if(superView){
+                            CGRect f = CGRectMake(0, h - s.height - lineSpace, s.width, s.height);
+                            label.frame = f;
+                            [superView addSubview:label];
+                        }
+                        
+                        // 超链模块
+                        UIView *bgView = [[UIView alloc]init];
+                        bgView.backgroundColor = UIColorFromThemeColor(ZCBgSystemWhiteColor);
+                        bgView.layer.cornerRadius = 4;
+                        bgView.layer.masksToBounds = YES;
+                        
+                        UILabel *titleLab = [[UILabel alloc]init];
+                        titleLab.font = ZCUIFontBold14;
+                        titleLab.textColor = UIColorFromThemeColor(ZCTextMainColor);;
+                        [bgView addSubview:titleLab];
+                        titleLab.numberOfLines = 1;
+                        titleLab.frame = CGRectMake(10, 10, 240 -54,20);
+                        
+                        
+                        UILabel *tiplab = [[UILabel alloc]init];
+                        tiplab.font = ZCUIFontBold14;
+                        tiplab.textColor = UIColorFromThemeColor(ZCTextMainColor);
+                        [bgView addSubview:tiplab];
+                        tiplab.numberOfLines = 2;
+                        tiplab.frame = CGRectMake(10, 34, 240 -54,40);
+                    
+                        
+                        SobotImageView *icon = [[SobotImageView alloc]init];
+                        icon.frame = CGRectMake(maxWidth - 44, 34, 34, 34);
+                        [icon loadWithURL:[NSURL URLWithString:@""] placeholer:[ZCUITools zcuiGetBundleImage:@"zcicon_url_icon"]];
+                        [bgView addSubview:icon];
+  
+                        CGSize links = CGSizeMake(240, 78);
+                      
+                        if(contentWidth < links.width){
+                            contentWidth = links.width;
+                        }
+                        if(superView){
+                            CGRect f = CGRectMake(0, h - links.height - lineSpace, links.width, links.height);
+                            bgView.frame = f;
+                            [superView addSubview:bgView];
+                        }
+                        h = h + links.height + fileSpace;
+                    }else{
+                        if(sobotConvertToString(item[@"name"]).length > 0 && sobotIsUrl(msg,[ZCUITools zcgetUrlRegular])){
+                            [label setText:[ZCHtmlCore filterHTMLTag:sobotConvertToString(item[@"name"])]];
+                            [label addLinkToURL:[NSURL URLWithString:sobotConvertToString(msg)] withRange:NSMakeRange(0, [ZCHtmlCore filterHTMLTag:sobotConvertToString(item[@"name"])].length)];
+                        }else{
+                            NSMutableAttributedString *attr = item[@"attr"];
+                            if(attr){
+                                [self setDisplayAttributedString:attr label:label model:model guide:NO];
+                            }else{
+                                // 最后一行过滤所有换行，不是最后一行过滤一个换行
+                                if(i == (model.richModel.richMsgList.count-1)){
+                                    while ([msg hasSuffix:@"\n"]){
+                                        msg = [msg substringToIndex:msg.length - 1];
+                                    }
+                                }else{
+                    //                if ([msg hasSuffix:@"\n"]){
+                    //                    msg = [msg substringToIndex:msg.length - 1];
+                    //                }
+                                }
+                                msg = [ZCUITools removeAllHTMLTag:msg];
+                                [label setText:msg];
+                            }
+                        }
+                        
+                        CGSize s = [label preferredSizeWithMaxWidth:maxWidth];
+                        h = h + s.height + lineSpace;
+                        if(contentWidth < s.width){
+                            contentWidth = s.width;
+                        }
+                        
+                        if(superView){
+                            CGRect f = CGRectMake(0, h - s.height - lineSpace, s.width, s.height);
+                            label.frame = f;
+                            [superView addSubview:label];
                         }
                     }
                     
-                    CGSize s = [label preferredSizeWithMaxWidth:maxWidth];
-                    h = h + s.height + lineSpace;
-                    if(contentWidth < s.width){
-                        contentWidth = s.width;
-                    }
-                    
-                    if(superView){
-                        
-                        
-                        CGRect f = CGRectMake(0, h - s.height - lineSpace, s.width, s.height);
-                        label.frame = f;
-                        [superView addSubview:label];
-                    }
                 }
+                // 图片和视频
                 if(type == 1 || type == 3){
                     if(!sobotIsUrl(msg,[ZCUITools zcgetUrlRegular])){
                         continue;
                     }
                     
-                    // 设置图片的高度
-//                    if (type == 3) {
-//                        imgHeight = MidImageHeight;
-//                    }
-//
-//                    if (type == 1) {
-//                        if ([ZCUICore getUICore].kitInfo.richImgHeight > 0) {
-//                            imgHeight = [ZCUICore getUICore].kitInfo.richImgHeight;
-//                        }
-//                    }
-                                    
-                    h = h + imgHeight + lineSpace;
+                    if (type == 3) {
+                        imgHeight = MidImageHeight;
+                    }
+
+                    h = h + imgHeight + fileSpace;
                     
-                    // 这里需要处理宽度 这里有可能是动态传入的宽度
-//                    CGFloat imgW = maxWidth;
-//                    if (type == 1) {
-//                        if ([ZCUICore getUICore].kitInfo.richImgWidth >0 && [ZCUICore getUICore].kitInfo.richImgWidth<= maxWidth) {
-//                            imgW = [ZCUICore getUICore].kitInfo.richImgWidth;
-//                        }
-//
-//                        if(contentWidth < imgW){
-//                            contentWidth = imgW; // 这里可能要加 间距 需要测试验证
-//                        }
-//                    }
-//                    if (type == 3) {
-//                        if(contentWidth < maxWidth){
-//                            contentWidth = maxWidth; // 这里可能要加 间距 需要测试验证
-//                        }
-//                    }
                     if(contentWidth < maxWidth){
-                        contentWidth = maxWidth; 
+                        contentWidth = maxWidth;
                     }
                     
                     if(superView){
-                        SobotImageView *imgView = [[SobotImageView alloc] initWithFrame:CGRectMake(0, h -imgHeight - lineSpace, maxWidth, imgHeight)];
+                        SobotImageView *imgView = [[SobotImageView alloc] initWithFrame:CGRectMake(0, h -imgHeight - fileSpace, maxWidth, imgHeight)];
                         [imgView setContentMode:UIViewContentModeScaleAspectFill];
                         [imgView.layer setCornerRadius:4.0f];
                         [imgView.layer setMasksToBounds:YES];
@@ -813,6 +1591,58 @@
                             _playButton.center = imgView.center;
                         }
                     }
+                }
+                // 文件和音频
+                if(type == 4 || type == 2) {
+                    CGSize s = CGSizeMake(240, 70);
+                    if(contentWidth < s.width){
+                        contentWidth = s.width;
+                    }
+                    // 文件
+                    UIView *bgView = [[UIView alloc]init];
+                    bgView.backgroundColor = UIColorFromThemeColor(ZCBgSystemWhiteColor);
+                    bgView.layer.cornerRadius = 4;
+                    bgView.layer.masksToBounds = YES;
+                    
+                    SobotImageView *icon = [[SobotImageView alloc]init];
+                    if (type == 2) {
+                        [icon setImage:[ZCUITools getFileIcon:@"" fileType:4]];
+                    }else if (type == 4){
+                        [icon setImage:[ZCUITools getFileIcon:sobotConvertToString([item objectForKey:@"msg"]) fileType:0]];
+                    }
+                    icon.frame = CGRectMake(15, 15, 34, 40);
+                    [bgView addSubview:icon];
+                    
+                    UILabel *titleLab = [[UILabel alloc]init];
+                    titleLab.font = ZCUIFontBold14;
+                    titleLab.textColor = UIColorFromThemeColor(ZCTextMainColor);;
+                    titleLab.numberOfLines = 1;
+                    [bgView addSubview:titleLab];
+                    titleLab.frame = CGRectMake(CGRectGetMaxX(icon.frame) + 10, 15,160, 20);
+                    titleLab.text = sobotConvertToString([item objectForKey:@"name"]);
+                    
+                    UILabel *sizeLab = [[UILabel alloc]init];
+                    sizeLab.font = ZCUIFont12;
+                    sizeLab.textColor =UIColorFromThemeColor(ZCTextSubColor); 
+                    sizeLab.text = sobotConvertToString([item objectForKey:@"fileSize"]);
+                    [bgView addSubview:sizeLab];
+                    [bgView setFrame:CGRectMake(CGRectGetMaxX(icon.frame) + 10, CGRectGetMaxY(titleLab.frame) + 3, 160, 20)];
+                    sizeLab.text = sobotConvertToString([item objectForKey:@"fileSize"]);
+                    
+                    ZCFileButton *objBtn = [ZCFileButton buttonWithType:UIButtonTypeCustom];
+                    [objBtn setBackgroundColor:[UIColor clearColor]];
+                    [objBtn setFrame:CGRectMake(0, 0, s.width, s.height)];
+                    objBtn.objTag = item;
+                    [bgView addSubview:objBtn];
+                    
+                    if (superView) {
+                        CGRect f = CGRectMake(0, h + fileSpace - lineSpace, s.width, s.height);
+                        bgView.frame = f;
+                        [superView addSubview:bgView];
+                    }
+                    // 添加完控件之后在设置高度
+                    h = h + s.height + fileSpace; // 10 个间隙
+                    
                 }
             }
         }
@@ -886,9 +1716,7 @@
                 [refreshLabel setFont:ZCUIFontBold12];
                 [superView addSubview:refreshLabel];
                 
-                
                 UIImageView *img = [[UIImageView alloc] initWithImage:[ZCUITools zcuiGetBundleImage:@"zcicon_refreshbar_new"] ];
-                
                 [img setFrame:CGRectMake(contentWidth/2 - 38, 10, 10, 10)];
                 [refreshLabel addSubview:img];
                 
@@ -900,8 +1728,6 @@
         }
     }
     
-    
-    
     if(superView){
         CGRect f = superView.frame;
         f.size.width = contentWidth;
@@ -911,6 +1737,35 @@
     return CGSizeMake(contentWidth, h - lineSpace);
 }
 
+#pragma mark - 文件点击事件
+-(void)flieClickAction:(ZCFileButton *)sender{
+    NSDictionary *item = (NSDictionary *)(sender.objTag);
+    
+    if ([sobotConvertToString([item objectForKey:@"type"]) intValue] == 4) {
+        self.tempModel.richModel.richmoreurl = sobotConvertToString([item objectForKey:@"msg"]);
+        self.tempModel.richModel.url = sobotConvertToString([item objectForKey:@"msg"]);
+        self.tempModel.richModel.fileSize = sobotConvertToString([item objectForKey:@"fileSize"]);
+        self.tempModel.richModel.fileName = sobotConvertToString([item objectForKey:@"name"]);
+        if(self.delegate && [self.delegate respondsToSelector:@selector(cellItemClick:type:obj:)]){
+            [self.delegate cellItemClick:self.tempModel type:ZCChatCellClickTypeOpenFile obj:sobotConvertToString([item objectForKey:@"msg"])];
+        }
+    }else if([sobotConvertToString([item objectForKey:@"type"]) intValue] == 2){
+        if(self.delegate && [self.delegate respondsToSelector:@selector(cellItemClick:type:obj:)]){
+            [self.delegate cellItemClick:self.tempModel type:ZCChatCellClickTypeOpenAudio obj:sobotConvertToString([item objectForKey:@"msg"])];
+        }
+    }
+}
+
+#pragma mark - 超链的点击
+-(void)urlClick:(ZCFileButton *)sender{
+    NSDictionary *item = (NSDictionary *)(sender.objTag);
+    [self doClickURL:sobotConvertToString([item objectForKey:@"msg"]) text:@""];
+}
+
+-(void)urlTextClick:(ZCFileButton *)sender{
+    NSString *url = (NSString *)(sender.objTag);
+    [self doClickURL:sobotConvertToString(url) text:@""];
+}
 
 +(NSString *)getUniDisplayString:(NSArray *) arr{
     NSString *text = @"";

@@ -12,10 +12,11 @@
 #import "ZCUIColorsDefine.h"
 #import "ZCToolsCore.h"
 #import "ZCVideoPlayer.h"
-
+#import "ZCMLEmojiLabel.h"
+#import "ZCHtmlCore.h"
 #define FileHeight 60
-
-@interface ZCFileCell(){
+#import "ZCPlatformTools.h"
+@interface ZCFileCell()<ZCMLEmojiLabelDelegate>{
 //    UIView *_bgView;
     ZCProgressView *_progressView;
     UILabel *_labFileName;
@@ -24,7 +25,7 @@
     ZCLibMessage *_model;
     UIView *_tapView;
 }
-
+@property (nonatomic,strong) ZCMLEmojiLabel *suglabel;
 @end
 
 @implementation ZCFileCell
@@ -87,7 +88,8 @@
 -(CGFloat) InitDataToView:(ZCLibMessage *)model time:(NSString *)showTime{
     CGFloat height=[super InitDataToView:model time:showTime];
     _model = model;
-    
+    _suglabel.text = @"";
+    _suglabel = nil;
     [_progressView setFaceImage:[ZCUITools getFileIcon:model.richModel.url fileType:model.richModel.fileType]];
     [_labFileSize setText:model.richModel.fileSize];
     [_labFileName setText:sobotTrimString(model.richModel.fileName)];
@@ -95,12 +97,8 @@
         model.progress = 1.0;
     }
     [_progressView setProgress:model.progress];
-    
-        self.ivBgView.hidden = NO;
-
+    self.ivBgView.hidden = NO;
     CGFloat msgX = 0;
-    
-    
     CGSize bgSize = CGSizeMake(self.maxWidth, 70 - 5);
     CGSize iconSize = CGSizeMake(34, 40);
     // 0,自己，1机器人，2客服
@@ -123,8 +121,6 @@
     }
     height = bgSize.height+12;
     
-    
-    //    NSLog(@"_progressView.progress ==++++++++%f",_progressView.progress);
     if (self.isRight && _progressView.progress>0&& _progressView.progress != 1) {
         CGSize cancelBtnSize = CGSizeMake(20, 20);
         cancelBtn.frame = CGRectMake(self.ivBgView.frame.origin.y - cancelBtnSize.width - 10, self.ivBgView.frame.size.height/2 , cancelBtnSize.width, cancelBtnSize.width);
@@ -133,9 +129,59 @@
         cancelBtn.hidden = YES;
     }
     
-    [self setSendStatus:self.ivBgView.frame];
+//    CGFloat sh =  [self setSendStatus:self.ivBgView.frame];
+    // 添加点踩和转人工
+//    [self isAddBottomBgView:self.ivBgView.frame msgIsOneLine:NO];
     
     _tapView.frame = self.ivBgView.frame;
+    
+    if (!self.isRight && sobotConvertToString([model getModelDisplaySugestionText]).length > 0) {
+        // 这里查看是否有关联问题
+        CGFloat h = 0;
+        CGFloat lineSpace = [ZCUITools zcgetChatLineSpacing];
+        // 记录实际最大宽度
+        CGFloat contentWidth = self.maxWidth;
+        // 判断是否是一问多答中有关联问题
+        _suglabel = [ZCChatBaseCell createRichLabel];
+        _suglabel.delegate = self;
+        UIColor *textColor = [ZCUITools zcgetLeftChatTextColor];
+        UIColor *linkColor = [ZCUITools zcgetChatLeftLinkColor];
+        if([ZCChatBaseCell isRightChat:model]){
+            textColor = [ZCUITools zcgetRightChatTextColor];
+            linkColor = [ZCUITools zcgetChatRightlinkColor];
+        }
+        [_suglabel setLinkColor:linkColor];
+        [_suglabel setTextColor:textColor];
+        if(model.displaySugestionattr!=nil){
+            [ZCFileCell setDisplayAttributedString:model.displaySugestionattr label:_suglabel model:model guide:YES];
+        }else{
+            [ZCHtmlCore filterHtml:[model getModelDisplaySugestionText] result:^(NSString * _Nonnull text1, NSMutableArray * _Nonnull arr, NSMutableArray * _Nonnull links) {
+                if (text1 != nil && text1.length > 0) {
+                    self->_suglabel.attributedText =    [ZCHtmlFilter setGuideHtml:text1 attrs:arr view:self->_suglabel textColor:textColor textFont:[ZCUITools zcgetKitChatFont] linkColor:linkColor];
+                }else{
+                    self->_suglabel.attributedText =   [[NSAttributedString alloc] initWithString:@""];
+                }
+            }];
+        }
+        CGSize s = [_suglabel preferredSizeWithMaxWidth:self.maxWidth -45];
+        // 添加行间距
+        h = h + s.height + lineSpace;
+        if(contentWidth < s.width){
+            contentWidth = s.width;
+        }
+        // height +10是间距 和引导问题 ，左边加15间距
+        CGRect f = CGRectMake(15+15, h - s.height - lineSpace + CGRectGetMaxY(_progressView.frame) +10, s.width, s.height);
+        _suglabel.frame = f;
+        [self.contentView addSubview:_suglabel];
+  
+        CGRect ivBgViewF = self.ivBgView.frame;
+        ivBgViewF.size.height = ivBgViewF.size.height + s.height + 10;
+        self.ivBgView.frame = ivBgViewF;
+    }
+    
+    CGFloat sh =  [self setSendStatus:self.ivBgView.frame];
+    // 添加点踩和转人工
+    [self isAddBottomBgView:self.ivBgView.frame msgIsOneLine:NO];
     
     // 0,自己，1机器人，2客服
     if(self.isRight){
@@ -165,9 +211,9 @@
     self.ivBgView.layer.mask = layer;
     [self.ivBgView setNeedsDisplay];
     
-    self.frame = CGRectMake(0, 0, self.viewWidth, height);
+    self.frame = CGRectMake(0, 0, self.viewWidth, height +sh );
     
-    return height;
+    return height + sh;
 }
 
 
@@ -223,23 +269,125 @@
 -(void)resetCellView{
     //    cancelBtn = nil;
     [super resetCellView];
+    _suglabel.text = @"";
 }
 
-
-/*
- // Only override drawRect: if you perform custom drawing.
- // An empty implementation adversely affects performance during animation.
- - (void)drawRect:(CGRect)rect {
- // Drawing code
- }
- */
 
 +(CGFloat)getCellHeight:(ZCLibMessage *)model time:(NSString *)showTime viewWith:(CGFloat)width{
     CGFloat height = [super getCellHeight:model time:showTime viewWith:width];
-    
+    height = height +  [ZCChatBaseCell getStatusHeight:model];
     height=height+FileHeight + 20;
+    
+    // 判断是否是一问多答中有关联问题
+       if(sobotConvertToString([model getModelDisplaySugestionText]).length > 0){
+           ZCMLEmojiLabel *slabel = [ZCChatBaseCell createRichLabel];
+           UIColor *textColor = [ZCUITools zcgetLeftChatTextColor];
+           UIColor *linkColor = [ZCUITools zcgetChatLeftLinkColor];
+           if(model.displaySugestionattr!=nil){
+               [ZCFileCell setDisplayAttributedString:model.displaySugestionattr label:slabel model:model guide:YES];
+           }else{
+               [ZCHtmlCore filterHtml:[model getModelDisplaySugestionText] result:^(NSString * _Nonnull text1, NSMutableArray * _Nonnull arr, NSMutableArray * _Nonnull links) {
+                   if (text1 != nil && text1.length > 0) {
+                       slabel.attributedText =    [ZCHtmlFilter setGuideHtml:text1 attrs:arr view:slabel textColor:textColor textFont:[ZCUITools zcgetKitChatFont] linkColor:linkColor];
+                   }else{
+                       slabel.attributedText =   [[NSAttributedString alloc] initWithString:@""];
+                   }
+               }];
+           }
+           CGSize s = [slabel preferredSizeWithMaxWidth:width-70-45];
+           height = height + s.height + 10;
+       }
+    
     return height;
 }
+
+#pragma mark EmojiLabel链接点击事件
+// 链接点击
+-(void)attributedLabel:(ZCTTTAttributedLabel *)label didSelectLinkWithURL:(NSURL *)url{
+    // 此处得到model 对象对应的值
+    NSString *textStr = label.text;
+    
+    if (label.text) {
+        if(url.absoluteString && [url.absoluteString hasPrefix:@"sobot:"]){
+            int index = [[url.absoluteString stringByReplacingOccurrencesOfString:@"sobot://" withString:@""] intValue];
+            if(index > 0 && self.tempModel.richModel.suggestionArr.count>=index){
+                textStr = [self.tempModel.richModel.suggestionArr objectAtIndex:index-1][@"question"];
+            }
+        }
+        
+    }
+    
+    
+    [self doClickURL:url.absoluteString text:textStr];
+}
+
+// 链接点击
+-(void)ZCMLEmojiLabel:(ZCMLEmojiLabel *)emojiLabel didSelectLink:(NSString *)link withType:(ZCMLEmojiLabelLinkType)type{
+    [self doClickURL:link text:@""];
+}
+
+// 链接点击
+-(void)doClickURL:(NSString *)url text:(NSString * )htmlText{
+    if(url){
+        url=[url stringByReplacingOccurrencesOfString:@"\"" withString:@""];
+        // 用户引导说辞的分类的点击事件
+        if([url hasPrefix:@"sobot:"]){
+            if([url hasPrefix:@"sobot://showallsensitive"]){
+                if(self.delegate && [self.delegate respondsToSelector:@selector(cellItemClick:type:obj:)]){
+                    [self.delegate cellItemClick:self.tempModel type:ZCChatCellClickTypeShowSensitive obj:nil];
+                }
+                return;
+            }
+            int index = [[url stringByReplacingOccurrencesOfString:@"sobot://" withString:@""] intValue];
+            
+            if(index > 0 && self.tempModel.richModel.suggestionArr.count>=index){
+                if(self.delegate && [self.delegate respondsToSelector:@selector(cellItemClick:type:obj:)]){
+                    [self.delegate cellItemClick:self.tempModel type:ZCChatCellClickTypeItemChecked obj:[NSString stringWithFormat:@"%d",index-1]];
+                }
+                return;
+            }
+            
+        }else if ([url hasPrefix:@"robot:"]){
+            // 处理 机器人回复的 技能组点选事件
+            
+//          3.0.8 如果当前 已转人工 ， 不可点击
+            if([self getZCLibConfig].isArtificial){
+                return;
+            }
+            
+            int index = [[url stringByReplacingOccurrencesOfString:@"robot://" withString:@""] intValue];
+            if(index > 0 && self.tempModel.groupList.count>=index){
+                if(self.delegate && [self.delegate respondsToSelector:@selector(cellItemClick:type:obj:)]){
+                    [self.delegate cellItemClick:self.tempModel type:ZCChatCellClickTypeGroupItemChecked obj:[NSString stringWithFormat:@"%d",index-1]];
+                }
+            }
+        }else if([url hasPrefix:@"zc_refresh_newdata"]){
+            if(self.delegate && [self.delegate respondsToSelector:@selector(cellItemClick:type:obj:)]){
+                [self.delegate cellItemClick:self.tempModel type:ZCChatCellClickTypeNewDataGroup obj:url];
+            }
+        }else{
+            if(self.delegate && [self.delegate respondsToSelector:@selector(cellItemLinkClick:type:obj:)]){
+                [self.delegate cellItemLinkClick:htmlText type:ZCChatCellClickTypeOpenURL obj:url];
+            }
+        }
+    }
+}
+
+
+-(ZCLibConfig *) getZCLibConfig{
+    //    return [ZCIMChat getZCIMChat].config;
+    return [[ZCPlatformTools sharedInstance] getPlatformInfo].config;
+}
+
+#pragma mark - gesture delegate
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
+{
+    if ([touch.view isMemberOfClass:[ZCMLEmojiLabel class]]){
+        return NO;
+    }
+    return YES;
+}
+
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
     [super setSelected:selected animated:animated];

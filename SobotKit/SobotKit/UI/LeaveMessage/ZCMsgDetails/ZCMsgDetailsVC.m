@@ -208,15 +208,13 @@ UINavigationControllerDelegate,ZCMLEmojiLabelDelegate>
             [_listArray removeAllObjects];
             // flag ==2 时是 还需要处理
             for (ZCRecordListModel * model in itemArray) {
-                
                 if (model.flag == 2 && model.replayList.count > 0) {
                     for (ZCRecordListModel * item in model.replayList) {
                         item.flag = 2;
                         item.content = model.content;
                         item.timeStr = model.timeStr;
                         item.time = model.time;
-                        
-                        [self.listArray addObject:item];
+                        [weakSelf.listArray addObject:item];
                     }
                 }else{
                     
@@ -225,14 +223,10 @@ UINavigationControllerDelegate,ZCMLEmojiLabelDelegate>
 //                       创建 状态，去掉 附件
 //                        model.fileList = nil;
                     }
-                    
-                    [self.listArray addObject:model];
+                    [weakSelf.listArray addObject:model];
                 }
-                
-                [self reloadReplyButton];
-                    
             }
-            
+            [weakSelf reloadReplyButton];
             
             ZCRecordListModel * model = [_listArray lastObject];
             [ZCHtmlCore filterHtml:[self filterHtmlImage:model.content] result:^(NSString * _Nonnull text1, NSMutableArray * _Nonnull arr, NSMutableArray * _Nonnull links) {
@@ -242,19 +236,10 @@ UINavigationControllerDelegate,ZCMLEmojiLabelDelegate>
                     model.contentAttr =   [[NSAttributedString alloc] initWithString:model.content];
                 }
             }];
-            
-    
         }
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self createStarView];
-            
-            //这里进行UI更新
-            [weakSelf.listTable reloadData];
-            [weakSelf.listTable layoutIfNeeded];
-//            NSLog(@"刷新了");
-        });
-        
+        [self createStarView];
+        //这里进行UI更新
+        [weakSelf.listTable reloadData];
         [self updateReadStatus];
     } failed:^(NSString *errorMessage, ZCNetWorkCode errorCode) {
         [[ZCUIToastTools shareToast] dismisProgress];
@@ -1151,8 +1136,8 @@ UINavigationControllerDelegate,ZCMLEmojiLabelDelegate>
                      
                  }
                  else if ([fileType isEqualToString:@"mp4"]){
-                     NSURL *imgUrl = [NSURL URLWithString:fileUrlStr];
-                     
+                     NSURL *imgUrl = [NSURL URLWithString:sobotUrlEncodedString(fileUrlStr)];
+//                     NSURL *imgUrl = [NSURL URLWithString:fileUrlStr];
                       UIWindow *window = [[ZCToolsCore getToolsCore] getCurWindow];
                       ZCVideoPlayer *player = [[ZCVideoPlayer alloc] initWithFrame:window.bounds withShowInView:window url:imgUrl Image:nil];
                       [player showControlsView];
@@ -1416,7 +1401,11 @@ UINavigationControllerDelegate,ZCMLEmojiLabelDelegate>
     self.zc_imagepicker = [[UIImagePickerController alloc]init];
     self.zc_imagepicker.delegate = self;
     _zc_imagepicker.mediaTypes = [NSArray arrayWithObjects:@"public.movie", @"public.image", nil];
-    self.zc_imagepicker.modalPresentationStyle = UIModalPresentationFullScreen;
+//    self.zc_imagepicker.modalPresentationStyle = UIModalPresentationFullScreen;
+    if (![ZCUICore getUICore].kitInfo.imagepickerStyleUnFull) {
+            _zc_imagepicker.modalPresentationStyle = UIModalPresentationFullScreen;
+        }
+    _zc_imagepicker.view.backgroundColor = UIColorFromThemeColor(ZCBgSystemWhiteColor);
     [ZCSobotCore getPhotoByType:buttonIndex byUIImagePickerController:_zc_imagepicker Delegate:self];
     
 }
@@ -1433,8 +1422,8 @@ UINavigationControllerDelegate,ZCMLEmojiLabelDelegate>
     
     if (imgFileStr.length>0) {
 //        视频预览
-        
-        NSURL *imgUrl = [NSURL fileURLWithPath:imgPathStr];
+        NSURL *imgUrl = [NSURL URLWithString:sobotUrlEncodedString(imgPathStr)];
+//        NSURL *imgUrl = [NSURL fileURLWithPath:imgPathStr];
         UIWindow *window = [[ZCToolsCore getToolsCore] getCurWindow];
         ZCVideoPlayer *player = [[ZCVideoPlayer alloc] initWithFrame:window.bounds withShowInView:window url:imgUrl Image:button.imageView.image];
         [player showControlsView];

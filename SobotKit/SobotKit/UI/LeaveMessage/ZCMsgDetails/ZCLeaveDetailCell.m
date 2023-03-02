@@ -325,7 +325,19 @@
         _timeLab.textColor = UIColorFromThemeColor(ZCTextSubColor);
     }
     // 富文本赋值
-    NSString *text = [[ZCLibMessage new] getHtmlAttrStringWithText:tmp];
+    NSString *text = sobotConvertToString(tmp);
+    text = [text stringByReplacingOccurrencesOfString:@"<font color='red'>" withString:@"<a href=\"sobot://color\">"];
+    text = [text stringByReplacingOccurrencesOfString:@"</font>" withString:@"</a>"];
+    if(![@"" isEqual:text]){
+        
+        while ([text hasPrefix:@"\n"]) {
+            text=[text substringWithRange:NSMakeRange(1, text.length-1)];
+        }
+        while ([text hasSuffix:@"\n"]) {
+            text=[text substringWithRange:NSMakeRange(0, text.length-1)];
+        }
+    }
+    text = [ZCHtmlCore filterHTMLTag:text];
     if(text.length == 0){
         _replycont.text = @"";
     }else{
@@ -433,6 +445,7 @@
                NSString *fileUrlStr = modelDic[@"fileUrl"];
 //                NSArray *imgArray = [[NSArray alloc]initWithObjects:fileUrlStr, nil];
                 if ([fileType isEqualToString:@"jpg"] ||
+                    [fileType isEqualToString:@"jpeg"] ||
                     [fileType isEqualToString:@"png"] ||
                     [fileType isEqualToString:@"gif"] ) {
                     
@@ -460,8 +473,7 @@
                     
                 }
                 else if ([fileType isEqualToString:@"mp4"]){
-                    NSURL *imgUrl = [NSURL URLWithString:fileUrlStr];
-                    
+                    NSURL *imgUrl = [NSURL URLWithString:sobotUrlEncodedString(fileUrlStr)];
                      UIWindow *window = [[ZCToolsCore getToolsCore] getCurWindow];
                      ZCVideoPlayer *player = [[ZCVideoPlayer alloc] initWithFrame:window.bounds withShowInView:window url:imgUrl Image:nil];
                      [player showControlsView];
@@ -514,6 +526,7 @@
                     
                     
                     message.richModel = rich;
+                    rich.fileName = rich.richmoreurl;
                     message.richModel.msg = modelDic[@"fileName"];
                     ZCDocumentLookController *docVc = [[ZCDocumentLookController alloc]init];
                     docVc.message = message;

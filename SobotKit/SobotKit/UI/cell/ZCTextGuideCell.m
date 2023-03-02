@@ -215,7 +215,10 @@
     
     [self didChangeBgColorWithsIsSelect:YES];
     
+    
     [self becomeFirstResponder];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(menuControllerWillHideWithClick) name:UIMenuControllerDidHideMenuNotification object:nil];
     UIMenuController *menuController = [UIMenuController sharedMenuController];
     UIMenuItem *copyItem = [[UIMenuItem alloc]initWithTitle:ZCSTLocalString(@"复制") action:@selector(doCopy)];
     [menuController setMenuItems:@[copyItem]];
@@ -230,6 +233,10 @@
 }
 
 - (void)willHideEditMenu:(id)sender{
+    [self didChangeBgColorWithsIsSelect:NO];
+}
+
+-(void)menuControllerWillHideWithClick{
     [self didChangeBgColorWithsIsSelect:NO];
 }
 

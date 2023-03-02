@@ -172,6 +172,8 @@
  */
 @property (nonatomic,assign) BOOL isCloseInquiryForm;
 
+// 关闭系统设置RTL功能
+@property (nonatomic,assign) BOOL isCloseSystemRTL;
 ////////////////////////////////////////////////////////////////
 #pragma Mark -- 和UI相关的配置参数自定义可选项
 ////////////////////////////////////////////////////////////////
@@ -364,6 +366,9 @@
  */
 @property (nonatomic,strong) UIFont *notificationTopViewLabelFont;
 
+// 顶踩按钮的文字字号
+@property (nonatomic,strong) UIFont *topBtnFont;
+
 /**
  * 帮助中心 标题font
  */
@@ -508,6 +513,11 @@
 @property (nonatomic,strong) UIColor *topViewTextColor;
 
 /**
+ *   "留言消息" 文字颜色
+ */
+@property (nonatomic,strong) UIColor *leaveMsgTextColor;
+
+/**
  *  左边气泡文字颜色
  */
 @property (nonatomic,strong) UIColor *leftChatTextColor;
@@ -632,6 +642,15 @@
  */
 @property (nonatomic,strong) UIColor *topBtnSelColor;
 
+// 聊天对话框中顶踩按钮边框颜色
+@property (nonatomic,strong) UIColor *topBtnLayerNolColor;
+
+// 聊天对话框中顶踩按钮边框选中颜色
+@property (nonatomic,strong) UIColor *topBtnLayerSelColor;
+
+// 聊天对话框中顶踩按钮选中的背景色
+@property (nonatomic,strong) UIColor *topBtnBgSelColor;
+
 /**
  *  顶踩 文字 置灰颜色
  */
@@ -652,6 +671,12 @@
  * 帮助中心 顶部返回的文字颜色
  */
 @property (nonatomic,strong) UIColor *scTopBackTextColor;
+
+
+/**
+ *   超链卡片的标题文字颜色
+ */
+@property (nonatomic,strong) UIColor *linkTitleTextColor;
 
 //=======================================================自定义文字颜色 end ==============================================
 
@@ -797,7 +822,7 @@
  * 自定义 富文本消息中图片的高度 （如果设置的高度 <= 0 取默认高度 110  ）
  * 默认 取110
  */
-//@property (nonatomic,assign) CGFloat richImgHeight;
+@property (nonatomic,assign) CGFloat richImgHeight;
 
 /**
  * 自定义 富文本消息中图片的宽度 （如果传入的宽度 <= 0 取 默认宽度  ，如果传入的宽度 大于最大宽度 取最大宽度）
@@ -805,4 +830,6 @@
  */
 //@property (nonatomic,assign) CGFloat richImgWidth;
 
+// 系统相册 不使用满屏 默认满屏NO；
+@property (nonatomic,assign)BOOL imagepickerStyleUnFull;
 @end

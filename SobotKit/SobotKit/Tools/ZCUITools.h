@@ -122,6 +122,13 @@ typedef NS_ENUM(NSUInteger,ZCThemeStyle){
 
 
 /**
+ *  “留言消息”文字颜色
+ *
+ *  @return
+ */
++(UIColor *)zcgetLeaveMsgTextColor;
+
+/**
  *  左边气泡里面文字颜色
  *
  *  @return
@@ -478,6 +485,10 @@ typedef NS_ENUM(NSUInteger,ZCThemeStyle){
  **/
 +( UIColor *) zcgetTopBtnSelColor;
 
+
+// 点踩 按钮 选中背景色
++(UIColor *)zcgetTopBtnBgSelColor;
+
 /**
  *
  *   顶踩按钮 置灰文字颜色
@@ -574,7 +585,11 @@ typedef NS_ENUM(NSUInteger,ZCThemeStyle){
  */
 +(BOOL)isOpenVoicePermissions;
 
+// 顶踩按钮边框选默认颜色
++(UIColor *)zcgetTopBtnLayerColor;
 
+// 顶踩按钮边框选中的颜色
++(UIColor *)zcgetTopBtnLayerSelColor;
 
 
 /**
@@ -605,7 +620,8 @@ typedef NS_ENUM(NSUInteger,ZCThemeStyle){
  */
 +(UIFont *)zcgetNotifitionTopViewFont;
 
-
+// 顶踩 按钮的字号
++(UIFont *)zcgetTopBtnFont;
 /**
  *  验证文件是否过期
  *
